@@ -1,4 +1,4 @@
-# Tebrikler! Sizler bizim gururumuzsunuz.
+# Tebrikler! Sizler bizim gururumuzsunuz. 🏆
 
 ## 👩 Serpil &nbsp;·&nbsp; 👧 Zeynep
 
