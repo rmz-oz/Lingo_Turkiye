@@ -120,7 +120,40 @@ button.ana:disabled{background:#c3cad3;cursor:default}
 .dugmeler{display:flex;gap:10px;margin-top:16px}
 .dugmeler button{flex:1}
 button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid var(--cizgi)}
+/* sekmeler */
+.tablar{display:flex;gap:6px;padding-bottom:10px}
+.tablar button{flex:1;background:rgba(255,255,255,.12);color:#fff;border:0;
+  border-radius:9px;padding:9px 8px;font:inherit;font-size:15px;font-weight:600;
+  cursor:pointer;transition:background .12s}
+.tablar button.on{background:#fff;color:var(--murekkep);font-weight:700}
+.gizli{display:none}
+/* ders notu */
+.notgiris{margin:18px 0 6px;color:var(--soluk);font-size:15.5px;line-height:1.55}
+.harfsc{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0 4px}
+.harfsc a{background:var(--kart);border:1px solid var(--cizgi);border-radius:8px;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:15px;text-decoration:none;color:var(--murekkep)}
+.harfsc a:hover{background:var(--murekkep);color:#fff;border-color:var(--murekkep)}
+.nk{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:14px 16px;margin:12px 0;box-shadow:var(--golge);scroll-margin-top:110px}
+.nk .nb{display:flex;align-items:center;gap:11px;margin-bottom:9px}
+.nk .nb .rozet{min-width:38px;height:38px;font-size:21px;border-radius:10px}
+.nk .nb span{font-size:14px;color:var(--soluk)}
+.nsat{display:grid;grid-template-columns:112px 1fr;gap:4px 12px;font-size:15.5px;
+  line-height:1.5}
+.nsat dt{font-size:12.5px;text-transform:uppercase;letter-spacing:.4px;
+  color:var(--soluk);font-weight:700;padding-top:3px}
+.nsat dd{margin:0}
+.mw{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;letter-spacing:.8px}
+.gec{margin:22px 0 6px}
+/* taktik sorusu */
+.tur{display:inline-block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;
+  font-weight:700;color:#7a4d00;background:var(--sari);border-radius:6px;
+  padding:2px 8px;margin-bottom:2px}
+.secenek .w.desen{letter-spacing:6px;font-size:22px}
 @media(max-width:420px){
+  .nsat{grid-template-columns:1fr;gap:1px 0}
+  .nsat dt{padding-top:7px}
   .kapak h1{font-size:32px} .sec{grid-template-columns:1fr}
   .secenek .not{font-size:12px}
 }
@@ -131,7 +164,7 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
  <h1>Açılış Quizleri</h1>
  <p>Her harf için: hangi iki kelime daha iyi bir başlangıç verir?</p>
 </div>
-<div class="sec"><a href="4harf.html"><b>4<em>harfli</em></b><span>28 soru · Etap 1 ve etap 3'ün ilk kelimeleri</span></a><a href="5harf.html"><b>5<em>harfli</em></b><span>28 soru · Etap 2 ve etap 3'ün ana kelimeleri</span></a><a href="6harf.html"><b>6<em>harfli</em></b><span>28 soru · Etap 3'ün ikinci kelimeleri</span></a><a href="7harf.html"><b>7<em>harfli</em></b><span>28 soru · Süper lingo — finaldeki 50.000 TL</span></a></div>
+<div class="sec"><a href="4harf.html"><b>4<em>harfli</em></b><span>28 harf ders notu · 54 soru<br>Etap 1 ve etap 3'ün ilk kelimeleri</span></a><a href="5harf.html"><b>5<em>harfli</em></b><span>28 harf ders notu · 54 soru<br>Etap 2 ve etap 3'ün ana kelimeleri</span></a><a href="6harf.html"><b>6<em>harfli</em></b><span>28 harf ders notu · 54 soru<br>Etap 3'ün ikinci kelimeleri</span></a><a href="7harf.html"><b>7<em>harfli</em></b><span>28 harf ders notu · 51 soru<br>Süper lingo — finaldeki 50.000 TL</span></a></div>
 
 <div class="bilgi">
 <h2>Soru tipi</h2>
@@ -151,13 +184,30 @@ en az adayı bırakan ikilidir.</p>
 </div>
 
 <div class="bilgi">
+<h2>Önce ders notu, sonra quiz</h2>
+<p>Her sayfa iki sekmeden oluşuyor. <b>Ders notu</b> sekmesinde 28 harfin her biri
+için kısa bir kart var: o harfin açılış ikilisi, havuzda en çok geçen harfler,
+en yaygın sesli–sessiz düzeni, sık bitişler, yarışmada en çok çıkmış cevaplar ve
+açılışın kaçırdığı tuzak kelime.</p>
+<p>Notları okuduktan sonra <b>Quiz</b> sekmesine geçilir. Quiz iki bölüm:</p>
+<div class="ornek">
+<b>1. bölüm — Açılış:</b> 28 harf, "hangi ikisi daha iyi başlangıç verir".<br>
+<b>2. bölüm — Taktik:</b> ders notundaki bilgilerin sorusu — en çok geçen harf,
+sesli düzeni, en çok çıkmış cevap, açılıştan hiç renk almayan kelime.
+</div>
+<p>İki sekme arasında istediğiniz zaman gidip gelebilirsiniz; quizde kaldığınız
+yer kaybolmaz.</p>
+</div>
+
+<div class="bilgi">
 <h2>Nasıl çalışılır</h2>
 <p>Dört sayfa birbirinden bağımsız. <b>4 harfli</b> çalışmak istediğinizde
 sadece o sayfanın soruları gelir. Her sayfada 28 harf sırayla sorulur, cevap
 verdikçe ilerleme kaydedilir — sayfayı kapatıp sonra kaldığınız yerden devam
 edebilirsiniz.</p>
 <p>Önce <b>4 harfliler</b>, sonra <b>5 harfliler</b>. Arşivde bölüm başına en çok
-cevap ve en yüksek tanınma oranı bu ikisinde.</p>
+cevap ve en yüksek tanınma oranı bu ikisinde. Bir sayfayı bitirmek şart değil —
+her gün birkaç harf yeter.</p>
 </div>
 <div class="dip">Sorular 5–445. bölümlerin cevap arşivi ve TDK Güncel Türkçe
 Sözlük havuzu üzerinden hesaplandı. "Kalan aday" sayısı, o harfle başlayan
