@@ -11,17 +11,29 @@ sayıda **farklı** harfi aynı anda dener ve geriye en az adayı bırakır.
 
 ## Sayfalar
 
+Site `docs/` klasöründedir.
+
 | Sayfa | İçerik |
 |---|---|
-| [`index.html`](index.html) | Giriş, soru tipinin açıklaması |
-| [`4harf.html`](4harf.html) | 4 harfli kelimeler — 28 soru |
-| [`5harf.html`](5harf.html) | 5 harfli kelimeler — 28 soru |
-| [`6harf.html`](6harf.html) | 6 harfli kelimeler — 28 soru |
-| [`7harf.html`](7harf.html) | 7 harfli kelimeler — 28 soru |
+| [`docs/index.html`](docs/index.html) | Giriş, soru tiplerinin açıklaması |
+| [`docs/4harf.html`](docs/4harf.html) | 4 harfli — 28 ders notu + 54 soru |
+| [`docs/5harf.html`](docs/5harf.html) | 5 harfli — 28 ders notu + 54 soru |
+| [`docs/6harf.html`](docs/6harf.html) | 6 harfli — 28 ders notu + 54 soru |
+| [`docs/7harf.html`](docs/7harf.html) | 7 harfli — 28 ders notu + 51 soru |
 
 Dört sayfa birbirinden bağımsızdır: 4 harfli çalışılmak istendiğinde sadece o
-sayfanın soruları gelir. Her sayfada Türk alfabesinin 28 harfi sırayla sorulur;
-ilerleme tarayıcıda saklanır, sayfa kapatılıp kaldığı yerden devam edilebilir.
+sayfanın içeriği gelir. Her sayfa iki sekmelidir.
+
+**Ders notu** — 28 harfin her biri için kısa kart: açılış ikilisi, havuzda en çok
+geçen harfler, en yaygın sesli–sessiz düzeni, sık bitişler, yarışmada en çok
+çıkmış cevaplar, açılışın hiç dokunmadığı tuzak kelime.
+
+**Quiz** — iki bölüm:
+1. **Açılış** (28 soru): hangi ikili daha iyi başlangıç verir.
+2. **Taktik** (23–26 soru): ders notundaki bilgilerin sorusu — en çok geçen harf,
+   sesli düzeni, en çok çıkmış cevap, açılıştan hiç renk almayan kelime.
+
+İlerleme tarayıcıda saklanır; sayfa kapatılıp kaldığı yerden devam edilebilir.
 
 ## Cevaplar nasıl hesaplandı
 
