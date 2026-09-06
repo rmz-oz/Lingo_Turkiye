@@ -1,74 +1,95 @@
-# Lingo Türkiye — Açılış Quizleri
+# LİNGO — Serpil & Zeynep
 
-TRT 1'de yayınlanan **Lingo Türkiye** için açılış stratejisi çalışma quizleri.
+**Tebrikler!** Artık geri dönüşü yok: bu repo açıldığına göre iş ciddiye bindi.
 
-Her soru şu biçimde: *"N harfli, X ile başlayan bir kelime için aşağıdaki beş
-kelimeden hangi ikisi daha iyi bir başlangıç verir?"*
+Aşağıdaki her şey **430 bölümün, 12.034 cevabın** tek tek elden geçirilmesiyle
+çıkarıldı. Yani ekranda ne çıktıysa burada kayıtlı. Sizin işiniz sadece
+ezberlemek — ki o da bize kalmadı, size kaldı.
 
-İlk harf oyunda zaten verili olduğu için asıl mesele ilk iki tahmini doğru
-seçmek — amaç kelimeyi bulmak değil, **elemek**. İyi bir açılış ikilisi çok
-sayıda **farklı** harfi aynı anda dener ve geriye en az adayı bırakır.
+---
 
-## Sayfalar
+## Nereden başlanır
 
-Site `docs/` klasöründedir.
+**1. Oyunu açın** → [`docs/oyun.html`](docs/oyun.html)
 
-| Sayfa | İçerik |
-|---|---|
-| [`docs/oyun.html`](docs/oyun.html) | **Oyunun kendisi** — 3 etap + puzzle + 120 sn final |
-| [`docs/index.html`](docs/index.html) | Giriş, sayfaların açıklaması |
-| [`docs/4harf.html`](docs/4harf.html) | 4 harfli — 28 ders notu + 54 soru |
-| [`docs/5harf.html`](docs/5harf.html) | 5 harfli — 28 ders notu + 54 soru |
-| [`docs/6harf.html`](docs/6harf.html) | 6 harfli — 28 ders notu + 54 soru |
-| [`docs/7harf.html`](docs/7harf.html) | 7 harfli — 28 ders notu + 51 soru |
+Isınma turu. 3 etap, puzzle'lar, 120 saniyelik final. Telefonda oynanır,
+ekran klavyesi Türkçe. Kaybederseniz kimse görmez.
 
-Dört sayfa birbirinden bağımsızdır: 4 harfli çalışılmak istendiğinde sadece o
-sayfanın içeriği gelir. Her sayfa iki sekmelidir.
+**2. Ders notunu okuyun** → [`docs/4harf.html`](docs/4harf.html)
 
-**Ders notu** — 28 harfin her biri için kısa kart: açılış ikilisi, havuzda en çok
-geçen harfler, en yaygın sesli–sessiz düzeni, sık bitişler, yarışmada en çok
-çıkmış cevaplar, açılışın hiç dokunmadığı tuzak kelime.
+Her harf için altı satırlık taktik kartı. "A ile başlayan 4 harfli kelimede
+en çok hangi harf geçer" gibi sorulara verdiğiniz cevap artık tahmin değil,
+bilgi olacak.
 
-**Quiz** — iki bölüm:
-1. **Açılış** (28 soru): hangi ikili daha iyi başlangıç verir.
-2. **Taktik** (23–26 soru): ders notundaki bilgilerin sorusu — en çok geçen harf,
-   sesli düzeni, en çok çıkmış cevap, açılıştan hiç renk almayan kelime.
+**3. Quizi çözün** → aynı sayfanın **Quiz** sekmesi
 
-İlerleme tarayıcıda saklanır; sayfa kapatılıp kaldığı yerden devam edilebilir.
+54 soru. İlk bölüm açılış stratejisi, ikinci bölüm ders notunun sınavı.
+Yanlış yaptığınız harfler kırmızı kalır ve size bakar.
 
-## Cevaplar nasıl hesaplandı
+Dört uzunluk ayrı sayfada:
+[4 harfli](docs/4harf.html) · [5 harfli](docs/5harf.html) ·
+[6 harfli](docs/6harf.html) · [7 harfli](docs/7harf.html)
 
-- **Havuz:** TDK Güncel Türkçe Sözlük'ten, o harfle başlayan ve o uzunlukta olan
-  bütün kelimeler.
-- **Ağırlık:** her kelime, Türkçe derlemdeki kullanım sıklığına göre
-  ağırlıklandırıldı — nadir bir sözlük maddesinin cevap olma ihtimali düşüktür.
-- **Ölçüt:** bir ikilinin puanı, o iki tahmin yapıldıktan sonra renk geri
-  bildirimiyle **geriye kalan aday sayısının beklenen değeri**. Düşük olan iyidir.
-- Beş seçenekten kurulabilecek on ikilinin tamamı hesaplandı; doğru cevap en
-  düşük değeri veren ikili. Sorular, doğru ikili ile ikinci en iyi ikili
-  arasında belirgin fark olacak şekilde seçildi.
-- **J** harfinde havuz 10–17 kelimeden ibaret olduğu için soru yerine listenin
-  tamamı gösteriliyor.
+Hepsinin girişi: [`docs/index.html`](docs/index.html)
 
-Kelime çıkış sayıları 5–445. bölümlerin cevap arşivinden alınmıştır.
+---
 
-## Oyun
+## Arşivin size söyledikleri
 
-`docs/oyun.html` — telefonda oynanacak şekilde yazıldı, ekran klavyesi Türk
-alfabesinin 29 harfini taşır.
+Rakamlar can sıkıcı olabilir, ama sonradan duymaktansa şimdi duyun:
 
-**Akış:** 1. etap 3 × 4 harfli + 8–9 harfli puzzle · 2. etap 3 × 5 harfli +
-9–10 harfli puzzle · 3. etap 4 kelime + 10–11 harfli puzzle · final 120 saniye,
-4'ten 7 harfliye, pas hakkıyla; 7 harfli **süper lingo** ₺50.000.
+- **Çalışsanız da tavan %80.** Yeni bir bölümün cevaplarının beşte dördü daha
+  önce çıkmış kelimelerden gelir. Kalan %20 için kimse hazırlanamaz. Kimse.
+- **Yeni kelime öğrenmek boşa emek.** Geçen sezon ilk kez çıkan 1067 kelimenin
+  971'i bir daha hiç görünmedi. Küs gittiler.
+- **Eski kelime altındır.** Bir kelimenin tekrar çıkma ihtimali, yeni bir
+  kelimeninkinin **4,7 katı**. Yani eski defterleri açmakta fayda var.
+- **Çatı takıntısı.** ÇATI 12 kez çıktı. IŞIK 12, KAPI 12, ÜRÜN 12.
+  Bu dördünü bilmeden stüdyoya gitmeyin.
+- **4 ve 5 harfliler her şeydir.** Bölüm başına en çok cevap orada, tanınma
+  oranı %94 ve %89. 7 harflide tanınma oranı %23 — süper lingo'yu şansa bırakın,
+  onun yerine 5 harflileri ezberleyin.
+- **J harfinden korkmayın.** Havuzda 10 kelime var. Onları da yazdık.
+  JÖLE, JÜRİ, JEST… hepsi bu. J çıkarsa oturup gülersiniz.
 
-**Kurallar:** ilk harf verili, 5 tahmin hakkı, her tahmin için **10 saniye**.
-Yeşil = doğru yerde, sarı = kelimede var yeri yanlış, gri = yok. Tahminin
-sözlükte olması gerekir. Puzzle'da ipucu kelimenin TDK tanımıdır; 3 hak,
-her yanlıştan sonra bir harf açılır.
+---
 
-**Kelime seçimi istatistiğe dayanır:** kelimelerin %80'i arşivde gerçekten
-cevap olmuş kelimelerden, **kaç kez çıktıysa o kadar yüksek ihtimalle** seçilir
-(ÇATI 12 kez çıktığı için 1 kez çıkan bir kelimeden 12 kat olası). Kalan %20
-sözlükten gelir — arşivdeki gerçek oran da budur: son 50 bölümde cevapların
-%80'i daha önce çıkmış kelimeydi. Puzzle kelimelerinin de %80'i yayında
-gerçekten puzzle olmuş kelimelerden seçilir.
+## Oyunun kuralları
+
+- İlk harf hazır gelir, **5 tahmin hakkı** vardır.
+- Her tahmin için **10 saniye**. Süre biterse hak yanar, kimse beklemez.
+- 🟩 doğru yerde · 🟨 kelimede var ama yeri yanlış · ⬜ kelimede yok
+- Tahmininizin sözlükte olması gerekir. "olur mu acaba" işe yaramaz.
+- **Puzzle**'da ipucu kelimenin TDK tanımıdır. 3 hak; her yanlıştan sonra bir
+  harf daha açılır. Tanım bazen yardımcı olur, bazen sizinle dalga geçer:
+
+  > *"Tözün kendisini taşıyan nesne içinde var olması ve var oluşunu
+  > sürdürmesi ilkesi"* — 9 harfli. Kolay gelsin.
+
+- **Final**: 120 saniye, 4 harfliden 7 harfliye. Takılırsanız **PAS**.
+  7 harfliyi bilirseniz **süper lingo, ₺50.000**.
+
+---
+
+## Oyun neden bu kadar tanıdık geliyor?
+
+Çünkü kelimeler rastgele seçilmiyor. Oyunun gördüğü her beş kelimeden dördü
+arşivde **gerçekten cevap olmuş** kelimelerden geliyor ve seçilme ihtimali
+kaç kez çıktığıyla orantılı — ÇATI 12 kez çıktığı için bir kez çıkan bir
+kelimeden **12 kat** daha sık karşınıza gelir. Kalan beşte bir sözlükten
+geliyor; çünkü gerçek hayatta da öyle oluyor.
+
+Puzzle'lar da aynı mantıkla: %80'i yayında gerçekten puzzle olmuş kelimeler.
+
+---
+
+## Küçük notlar
+
+- Quizlerde ve oyunda ilerleme telefonunuzda saklanır. Sayfayı kapatıp
+  sonra kaldığınız yerden devam edebilirsiniz.
+- Oyun kelime havuzunu ayrı bir dosyadan yükler; bu yüzden **linkten açın**,
+  dosyayı indirip çift tıklamak işe yaramaz.
+- Sözlükte olmayıp ekranda kabul edilen cevaplar da var (ADANA, PROFİTOROL,
+  TÜRKİYE…). Onları da listeledik ama siz söylemeyin, hakkınız yanar.
+
+Kolay gelsin. Fazla heyecanlanmayın, sadece 10 saniyeniz var.
