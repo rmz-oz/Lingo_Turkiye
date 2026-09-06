@@ -106,7 +106,7 @@ const $   = s => document.querySelector(s);
 const orta = $("#orta"), klv = $("#klavye"), bar = $("#etapAd"), paraEl = $("#para");
 const sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
 
-const SATIR = 5, SURE = 10;
+const SATIR = 5, SURE = 20;
 const ETAPLAR = [
   {ad:"1. ETAP", kelime:[4,4,4],    puz:[8,9],   pk:1000, pp:5000},
   {ad:"2. ETAP", kelime:[5,5,5],    puz:[9,10],  pk:2000, pp:10000},
@@ -380,7 +380,7 @@ function giris(){
       <b>Gri</b> kelimede yok</p>
     <ul class="kural">
       <li>İlk harf hazır verilir, <b>5 tahmin</b> hakkınız vardır.</li>
-      <li>Her tahmin için <b>10 saniye</b>. Süre biterse hak yanar.</li>
+      <li>Her tahmin için <b>20 saniye</b>. Süre biterse hak yanar.</li>
       <li>Puzzle'da TDK tanımı ipucudur; <b>3 hak</b>, her yanlıştan sonra bir harf açılır.</li>
       <li>Finalde <b>120 saniye</b>, pas hakkı var; 7 harfli <b>süper lingo</b> ₺50.000.</li>
     </ul>
