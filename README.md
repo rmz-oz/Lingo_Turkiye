@@ -15,7 +15,8 @@ Site `docs/` klasöründedir.
 
 | Sayfa | İçerik |
 |---|---|
-| [`docs/index.html`](docs/index.html) | Giriş, soru tiplerinin açıklaması |
+| [`docs/oyun.html`](docs/oyun.html) | **Oyunun kendisi** — 3 etap + puzzle + 120 sn final |
+| [`docs/index.html`](docs/index.html) | Giriş, sayfaların açıklaması |
 | [`docs/4harf.html`](docs/4harf.html) | 4 harfli — 28 ders notu + 54 soru |
 | [`docs/5harf.html`](docs/5harf.html) | 5 harfli — 28 ders notu + 54 soru |
 | [`docs/6harf.html`](docs/6harf.html) | 6 harfli — 28 ders notu + 54 soru |
@@ -50,3 +51,24 @@ geçen harfler, en yaygın sesli–sessiz düzeni, sık bitişler, yarışmada e
   tamamı gösteriliyor.
 
 Kelime çıkış sayıları 5–445. bölümlerin cevap arşivinden alınmıştır.
+
+## Oyun
+
+`docs/oyun.html` — telefonda oynanacak şekilde yazıldı, ekran klavyesi Türk
+alfabesinin 29 harfini taşır.
+
+**Akış:** 1. etap 3 × 4 harfli + 8–9 harfli puzzle · 2. etap 3 × 5 harfli +
+9–10 harfli puzzle · 3. etap 4 kelime + 10–11 harfli puzzle · final 120 saniye,
+4'ten 7 harfliye, pas hakkıyla; 7 harfli **süper lingo** ₺50.000.
+
+**Kurallar:** ilk harf verili, 5 tahmin hakkı, her tahmin için **10 saniye**.
+Yeşil = doğru yerde, sarı = kelimede var yeri yanlış, gri = yok. Tahminin
+sözlükte olması gerekir. Puzzle'da ipucu kelimenin TDK tanımıdır; 3 hak,
+her yanlıştan sonra bir harf açılır.
+
+**Kelime seçimi istatistiğe dayanır:** kelimelerin %80'i arşivde gerçekten
+cevap olmuş kelimelerden, **kaç kez çıktıysa o kadar yüksek ihtimalle** seçilir
+(ÇATI 12 kez çıktığı için 1 kez çıkan bir kelimeden 12 kat olası). Kalan %20
+sözlükten gelir — arşivdeki gerçek oran da budur: son 50 bölümde cevapların
+%80'i daha önce çıkmış kelimeydi. Puzzle kelimelerinin de %80'i yayında
+gerçekten puzzle olmuş kelimelerden seçilir.
