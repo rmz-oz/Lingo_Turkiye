@@ -1,0 +1,166 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lingo Türkiye — Açılış Quizleri</title><style>
+:root{
+  --kagit:#f5f6f8; --kart:#ffffff; --murekkep:#0f1720; --soluk:#5b6673;
+  --cizgi:#dfe3e8; --kirmizi:#c8102e; --mor:#6b21a8; --yesil:#1a7f37;
+  --sari:#f4c95d; --golge:0 1px 2px rgba(15,23,32,.06),0 6px 18px rgba(15,23,32,.05);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  padding-bottom:40px}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+a{color:inherit}
+.sar{max-width:640px;margin:0 auto;padding:0 16px}
+/* ust bar */
+header{background:var(--murekkep);color:#fff;padding:12px 0 0;position:sticky;top:0;z-index:9}
+header .sar{padding-bottom:0}
+.hb{display:flex;align-items:center;gap:12px;padding-bottom:10px}
+.geri{color:#fff;text-decoration:none;font-size:15px;opacity:.75;white-space:nowrap}
+.geri:hover{opacity:1}
+.hb h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.3px;flex:1}
+.skor{font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;
+  background:rgba(255,255,255,.13);padding:3px 10px;border-radius:999px}
+.cubuk{height:4px;background:rgba(255,255,255,.16)}
+.cubuk i{display:block;height:100%;background:var(--sari);width:0;transition:width .3s}
+/* kapak */
+.kapak{padding:34px 0 10px}
+.kapak .ust{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;
+  color:var(--soluk);font-weight:700}
+.kapak h1{font-size:40px;line-height:1.08;margin:8px 0 12px;letter-spacing:-.8px}
+.kapak p{color:var(--soluk);margin:0 0 6px;font-size:16px}
+.sec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0 10px}
+.sec a{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:18px 16px;text-decoration:none;box-shadow:var(--golge);display:block;
+  transition:transform .12s,box-shadow .12s}
+.sec a:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,23,32,.1)}
+.sec b{display:block;font-size:30px;line-height:1;letter-spacing:-1px}
+.sec b em{font-style:normal;font-size:15px;color:var(--soluk);margin-left:5px;
+  letter-spacing:0;font-weight:600}
+.sec span{display:block;font-size:14px;color:var(--soluk);margin-top:7px}
+.bilgi{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:18px 18px 14px;margin:18px 0;box-shadow:var(--golge)}
+.bilgi h2{font-size:16px;margin:0 0 8px}
+.bilgi p{margin:0 0 10px;font-size:15.5px;color:#2c3540}
+.bilgi p:last-child{margin-bottom:0}
+.ornek{background:var(--kagit);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15px;line-height:1.7}
+.ornek .w{font-weight:700}
+.dip{color:var(--soluk);font-size:13.5px;margin-top:20px;line-height:1.6}
+/* soru */
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:20px 18px;margin:20px 0;box-shadow:var(--golge)}
+.rozet{display:inline-flex;align-items:center;justify-content:center;min-width:44px;
+  height:44px;background:var(--murekkep);color:#fff;border-radius:11px;font-size:24px;
+  font-weight:700;padding:0 10px}
+.bas{display:flex;align-items:center;gap:13px;margin-bottom:4px}
+.bas .t{font-size:15px;color:var(--soluk);line-height:1.35}
+.bas .t b{display:block;color:var(--murekkep);font-size:18px;font-weight:700}
+.sorutx{font-size:17px;margin:14px 0 4px;line-height:1.5}
+.ipuc{font-size:14px;color:var(--soluk);margin:0 0 14px}
+.secenek{display:block;width:100%;text-align:left;background:var(--kart);
+  border:1.5px solid var(--cizgi);border-radius:12px;padding:13px 14px;margin-bottom:9px;
+  font:inherit;cursor:pointer;display:flex;align-items:center;gap:12px;
+  transition:border-color .12s,background .12s}
+.secenek:hover{border-color:#b9c1cb}
+.kutu{width:24px;height:24px;border:2px solid #c3cad3;border-radius:7px;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.secenek .w{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:19px;font-weight:700;letter-spacing:1.5px;flex:1}
+.secenek .not{font-size:13px;color:var(--soluk);text-align:right;line-height:1.35;
+  display:none;white-space:nowrap}
+.secenek.on{border-color:var(--murekkep);background:#f0f2f5}
+.secenek.on .kutu{background:var(--murekkep);border-color:var(--murekkep)}
+.secenek.on .kutu:after{content:"✓"}
+.bitti .secenek{cursor:default}
+.bitti .secenek .not{display:block}
+.secenek.dogru{border-color:var(--yesil);background:#eaf6ee}
+.secenek.dogru .kutu{background:var(--yesil);border-color:var(--yesil)}
+.secenek.dogru .kutu:after{content:"✓"}
+.secenek.yanlis{border-color:var(--kirmizi);background:#fdecef}
+.secenek.yanlis .kutu{background:var(--kirmizi);border-color:var(--kirmizi)}
+.secenek.yanlis .kutu:after{content:"✕"}
+.secenek.kacan{border-color:var(--yesil);border-style:dashed;background:#f4faf6}
+button.ana{width:100%;background:var(--murekkep);color:#fff;border:0;border-radius:12px;
+  padding:15px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;margin-top:4px}
+button.ana:disabled{background:#c3cad3;cursor:default}
+.cevap{margin:6px 0 16px;border-top:1px solid var(--cizgi);padding-top:14px;display:none}
+.bitti .cevap{display:block}
+.basl{font-weight:700;font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.basl.iyi{color:var(--yesil)} .basl.kotu{color:var(--kirmizi)}
+.cift{background:var(--murekkep);color:#fff;border-radius:11px;padding:13px 14px;
+  text-align:center;margin-bottom:11px}
+.cift .w{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:22px;
+  font-weight:700;letter-spacing:2px}
+.cift .a{font-size:13.5px;opacity:.8;margin-top:4px}
+.cevap p{margin:0 0 9px;font-size:15.5px;line-height:1.55}
+.cevap p:last-child{margin-bottom:0}
+.harfler{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 11px}
+.harfler span{background:var(--sari);color:#4a3600;font-weight:700;border-radius:6px;
+  padding:3px 9px;font-size:15px;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.rakam{font-variant-numeric:tabular-nums;font-weight:700}
+/* liste karti */
+.wlist{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.wlist span{border:1px solid var(--cizgi);border-radius:7px;padding:4px 9px;font-size:15px;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;background:var(--kagit)}
+.wlist span.c{background:#fdecef;border-color:#f3c2cb;color:var(--kirmizi)}
+.wlist span i{font-style:normal;font-size:11px;opacity:.7;margin-left:3px}
+/* ozet */
+.ozet{text-align:center;padding:12px 0 4px}
+.ozet .buyuk{font-size:56px;font-weight:800;letter-spacing:-2px;line-height:1}
+.ozet .alt{color:var(--soluk);font-size:16px;margin-top:4px}
+.izgara{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0}
+.izgara span{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:16px;background:#e7eaee;color:var(--soluk)}
+.izgara span.d{background:var(--yesil);color:#fff}
+.izgara span.y{background:var(--kirmizi);color:#fff}
+.izgara span.n{background:#e7eaee;color:#98a2ad}
+.dugmeler{display:flex;gap:10px;margin-top:16px}
+.dugmeler button{flex:1}
+button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid var(--cizgi)}
+@media(max-width:420px){
+  .kapak h1{font-size:32px} .sec{grid-template-columns:1fr}
+  .secenek .not{font-size:12px}
+}
+</style></head><body>
+<div class="sar">
+<div class="kapak">
+ <div class="ust">Lingo Türkiye · TRT 1</div>
+ <h1>Açılış Quizleri</h1>
+ <p>Her harf için: hangi iki kelime daha iyi bir başlangıç verir?</p>
+</div>
+<div class="sec"><a href="4harf.html"><b>4<em>harfli</em></b><span>28 soru · Etap 1 ve etap 3'ün ilk kelimeleri</span></a><a href="5harf.html"><b>5<em>harfli</em></b><span>28 soru · Etap 2 ve etap 3'ün ana kelimeleri</span></a><a href="6harf.html"><b>6<em>harfli</em></b><span>28 soru · Etap 3'ün ikinci kelimeleri</span></a><a href="7harf.html"><b>7<em>harfli</em></b><span>28 soru · Süper lingo — finaldeki 50.000 TL</span></a></div>
+
+<div class="bilgi">
+<h2>Soru tipi</h2>
+<p>Lingo'da ilk harf zaten ekranda. Asıl mesele <b>ilk iki tahmini</b> doğru
+seçmek: amaç kelimeyi ilk denemede bulmak değil, <b>elemek</b>. İyi bir açılış
+ikilisi çok sayıda <b>farklı</b> harfi aynı anda dener; hangi harflerin
+kelimede olduğunu ve nerede olduğunu öğrenirsiniz, geriye az sayıda aday kalır.</p>
+<div class="ornek">
+<b>Örnek — 4 harfli, A ile başlayan:</b><br>
+<span class="w mono">AKIL + ATAR</span> &nbsp;→&nbsp; A, K, I, L, T, R = <b>6 harf</b>
+denenir, geriye ortalama <b>10</b> aday kalır.<br>
+<span class="w mono">ANNE + ADAM</span> &nbsp;→&nbsp; A, N, E, D, M = 5 harf,
+üstelik A iki kez; geriye <b>çok daha fazla</b> aday kalır.
+</div>
+<p>Her soruda beş kelime var; <b>ikisini</b> seçeceksiniz. Doğru cevap, geriye
+en az adayı bırakan ikilidir.</p>
+</div>
+
+<div class="bilgi">
+<h2>Nasıl çalışılır</h2>
+<p>Dört sayfa birbirinden bağımsız. <b>4 harfli</b> çalışmak istediğinizde
+sadece o sayfanın soruları gelir. Her sayfada 28 harf sırayla sorulur, cevap
+verdikçe ilerleme kaydedilir — sayfayı kapatıp sonra kaldığınız yerden devam
+edebilirsiniz.</p>
+<p>Önce <b>4 harfliler</b>, sonra <b>5 harfliler</b>. Arşivde bölüm başına en çok
+cevap ve en yüksek tanınma oranı bu ikisinde.</p>
+</div>
+<div class="dip">Sorular 5–445. bölümlerin cevap arşivi ve TDK Güncel Türkçe
+Sözlük havuzu üzerinden hesaplandı. "Kalan aday" sayısı, o harfle başlayan
+bütün sözlük kelimeleri üzerinden, kelimelerin kullanım sıklığıyla
+ağırlıklandırılarak bulundu.</div>
+</div></body></html>
