@@ -108,11 +108,12 @@ const sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
 
 const SATIR = 5, SURE = 20;
 const ETAPLAR = [
-  {ad:"1. ETAP", kelime:[4,4,4],    puz:[8,9],   pk:1000, pp:5000},
-  {ad:"2. ETAP", kelime:[5,5,5],    puz:[9,10],  pk:2000, pp:10000},
-  {ad:"3. ETAP", kelime:[4,5,5,6],  puz:[10,11], pk:3000, pp:15000}
+  {ad:"1. ETAP", kelime:[4,4,4], puz:[8,9],   pk:1000, pp:2000},
+  {ad:"2. ETAP", kelime:[5,5,5], puz:[9,10],  pk:2000, pp:3000},
+  {ad:"3. ETAP", kelime:[6,6,6], puz:[10,11], pk:3000, pp:4000}
 ];
-const FINAL = {sure:120, dizi:[4,4,5,5,6,6,7], odul:{4:2500,5:5000,6:10000,7:50000}, satir:3};
+const TAMBONUS = 1000;
+const FINAL = {sure:120, dizi:[4,4,5,5,6,6,7], odul:{4:2500,5:5000,6:10000,7:250000}, satir:3};
 
 let para = 0, kullanilan = new Set(), sayac = null;
 const GECERLI = {};
@@ -177,19 +178,21 @@ function renk(gizli, tah){
 }
 function durdur(){ if(sayac){ clearInterval(sayac); sayac = null; } }
 function sureGoster(g){ sureKap.classList.toggle("gizli", !g); }
-function sureBasla(sn, bitince){
+function sureBasla(sn, bitince, tikla){
   durdur(); sureGoster(true); sureKap.classList.remove("az");
-  const bas = Date.now(), top = sn*1000;
+  const bas = Date.now(), top = sn*1000; let son = sn;
   sayac = setInterval(() => {
     const kalan = Math.max(0, top - (Date.now()-bas));
     sureBar.style.width = (100*kalan/top) + "%";
     sureKap.classList.toggle("az", kalan < top*0.31);
+    const s2 = Math.ceil(kalan/1000);
+    if(tikla && s2 !== son){ son = s2; tikla(s2); }
     if(kalan <= 0){ durdur(); bitince(); }
-  }, 80);
+  }, 100);
 }
 
 /* ---------------- klavye ---------------- */
-const DIZ = ["abcçdefgğh", "ıijklmnoöp", "rsştuüvyz"];
+const DIZ = ["ertyuıopğü", "asdfghjklşi", "zcvbnmöç"];   // Türkçe Q
 let klvDurum = {}, klvTus = {};
 function klavyeCiz(gir, sil, gonder, pasVar, pas){
   klv.innerHTML = ""; klvTus = {};
@@ -254,8 +257,10 @@ function kelimeOyna(n, odul, opt, bitti){
     tahta.appendChild(d);
   }
   const satirlar = [...tahta.children];
+  let kalanSn = SURE;
   function ustYaz(){
-    $("#ust").textContent = `${n} HARFLİ · ${satirSay - sat} HAK · ₺${TL(odul)}`;
+    const sn = opt.sureyok ? "" : ` · ${kalanSn} SN`;
+    $("#ust").textContent = `${n} HARFLİ · ${satirSay - sat} HAK${sn} · ₺${TL(odul)}`;
     satirlar.forEach((s, k) => s.classList.toggle("aktif", k === sat));
   }
   function yaz(){
@@ -265,7 +270,11 @@ function kelimeOyna(n, odul, opt, bitti){
       h[i].className = "hucre" + (giris[i] ? " dolu" : "");
     }
   }
-  function tik(){ if(!opt.sureyok) sureBasla(SURE, () => sonuclandir(null)); }
+  function tik(){
+    if(opt.sureyok) return;
+    kalanSn = SURE; ustYaz();
+    sureBasla(SURE, () => sonuclandir(null), sn => { kalanSn = sn; ustYaz(); });
+  }
   function gir(c){ if(giris.length < n){ giris += c; yaz(); } }
   function sil(){ if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } }
   function gonder(){
@@ -304,25 +313,33 @@ function kelimeOyna(n, odul, opt, bitti){
 }
 
 /* ---------------- puzzle ---------------- */
-function puzzleOyna(nler, odul, bitti){
+function puzzleOyna(nler, tamOdul, bitti){
   const [kelime, tanim] = puzzleSec(nler);
   const n = kelime.length;
-  let hak = 3, acik = new Set([0]), giris = kelime[0];
+  const TOPSURE = 60, ARALIK = 8, TABAN = 0.2;
+  let acik = new Set([0]), giris = kelime[0], odul = tamOdul, kapandi = false;
   klvDurum = {};
   orta.innerHTML = `<div class="baslik" id="ust"></div>
-    <div class="ipucu"><b>${n} harfli · puzzle · ₺${TL(odul)}</b><span id="tn"></span></div>
-    <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>`;
+    <div class="ipucu"><b>${n} harfli · puzzle</b><span id="tn"></span></div>
+    <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
+    <div class="kucuk" id="alt">Süre azaldıkça harfler açılır, açılan her harf ödülü düşürür.</div>`;
   $("#tn").textContent = tanim;
   const tahta = $("#tahta");
   const d = document.createElement("div"); d.className = "satir aktif";
   d.style.gridTemplateColumns = `repeat(${n}, var(--hg))`;
-  for(let i = 0; i < n; i++){
-    const h = document.createElement("div"); h.className = "hucre";
-    d.appendChild(h);
-  }
+  for(let i = 0; i < n; i++) d.appendChild(Object.assign(
+    document.createElement("div"), {className: "hucre"}));
   tahta.appendChild(d);
   const h = d.children;
-  function ustYaz(){ $("#ust").textContent = `PUZZLE · ${hak} HAK`; }
+  let kalanSn = TOPSURE;
+  function odulHesap(){
+    const ek = acik.size - 1;
+    const v = Math.max(tamOdul*TABAN, tamOdul*(1 - 0.2*ek));
+    odul = Math.round(v/100)*100;
+  }
+  function ustYaz(){
+    $("#ust").textContent = `PUZZLE · ${kalanSn} SN · ₺${TL(odul)}`;
+  }
   function yaz(){
     for(let i = 0; i < n; i++){
       if(acik.has(i)){ h[i].textContent = TRU(kelime[i]); h[i].className = "hucre ilk"; }
@@ -330,34 +347,51 @@ function puzzleOyna(nler, odul, bitti){
              h[i].className = "hucre" + (giris[i] ? " dolu" : ""); }
     }
   }
-  function tik(){ sureBasla(SURE, () => dene(null)); }
-  function gir(c){ if(giris.length < n){ giris += c; yaz(); } }
-  function sil(){ if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } }
-  function dene(t){
-    durdur();
-    if(t === kelime){
-      para += odul; paraYaz(); sureGoster(false);
-      for(let i = 0; i < n; i++){ h[i].textContent = TRU(kelime[i]); h[i].className = "hucre tam"; }
-      return setTimeout(() => bitti(true, kelime), 700);
-    }
-    uyar(t === null ? "Süre doldu" : "Olmadı");
-    hak--;
-    if(hak <= 0){
-      sureGoster(false);
-      for(let i = 0; i < n; i++){ h[i].textContent = TRU(kelime[i]); h[i].className = "hucre yok"; }
-      return setTimeout(() => bitti(false, kelime), 900);
-    }
+  function harfAc(){
     const kapali = [];
     for(let i = 1; i < n; i++) if(!acik.has(i)) kapali.push(i);
-    if(kapali.length) acik.add(kapali[Math.floor(Math.random()*kapali.length)]);
-    giris = kelime[0]; ustYaz(); yaz(); tik();
+    if(!kapali.length) return false;
+    acik.add(kapali[Math.floor(Math.random()*kapali.length)]);
+    odulHesap(); ustYaz(); yaz();
+    return true;
+  }
+  function gir(c){ if(giris.length < n){ giris += c; yaz(); } }
+  function sil(){ if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } }
+  function bitirPuzzle(kazandi){
+    if(kapandi) return; kapandi = true;
+    durdur(); sureGoster(false);
+    for(let i = 0; i < n; i++){
+      h[i].textContent = TRU(kelime[i]);
+      h[i].className = "hucre " + (kazandi ? "tam" : "yok");
+    }
+    if(kazandi){ para += odul; paraYaz(); }
+    setTimeout(() => bitti(kazandi, kelime), kazandi ? 750 : 950);
+  }
+  function dene(t){
+    if(kapandi) return;
+    if(t === kelime) return bitirPuzzle(true);
+    uyar("Olmadı — bir harf açılıyor");
+    giris = kelime[0];
+    sonAcma = Date.now() - bas;          // sayaci sifirla
+    if(!harfAc()) return bitirPuzzle(false);
+    yaz();
   }
   ustYaz(); yaz();
   klavyeCiz(gir, sil, () => {
     if(giris.length < n){ uyar("Harfler eksik"); return; }
     dene(giris);
   }, false);
-  tik();
+  durdur(); sureGoster(true); sureKap.classList.remove("az");
+  const bas = Date.now(); let sonAcma = 0;
+  sayac = setInterval(() => {
+    const gecen = Date.now() - bas, kalan = Math.max(0, TOPSURE*1000 - gecen);
+    sureBar.style.width = (100*kalan/(TOPSURE*1000)) + "%";
+    sureKap.classList.toggle("az", kalan < TOPSURE*1000*0.25);
+    const yeniSn = Math.ceil(kalan/1000);
+    if(yeniSn !== kalanSn){ kalanSn = yeniSn; ustYaz(); }
+    if(gecen - sonAcma >= ARALIK*1000){ sonAcma = gecen; harfAc(); }
+    if(kalan <= 0){ uyar("Süre doldu"); bitirPuzzle(false); }
+  }, 100);
 }
 
 /* ---------------- akis ---------------- */
@@ -381,8 +415,11 @@ function giris(){
     <ul class="kural">
       <li>İlk harf hazır verilir, <b>5 tahmin</b> hakkınız vardır.</li>
       <li>Her tahmin için <b>20 saniye</b>. Süre biterse hak yanar.</li>
-      <li>Puzzle'da TDK tanımı ipucudur; <b>3 hak</b>, her yanlıştan sonra bir harf açılır.</li>
-      <li>Finalde <b>120 saniye</b>, pas hakkı var; 7 harfli <b>süper lingo</b> ₺50.000.</li>
+      <li>Puzzle'da ipucu kelimenin TDK tanımıdır. <b>60 saniye</b> vardır; süre
+          azaldıkça harfler kendiliğinden açılır, yanlış tahmin de bir harf açar.
+          <b>Her açılan harf ödülü düşürür</b> — erken bilen çok kazanır.</li>
+      <li>Bir etaptaki <b>üç kelimeyi de</b> bilirseniz <b>+₺1.000</b> prim.</li>
+      <li>Finalde <b>120 saniye</b>, pas hakkı var; 7 harfli <b>süper lingo</b> ₺250.000.</li>
     </ul>
     ${en ? `<p class="kucuk" style="margin-top:12px">En iyi kazancınız: <b>₺${TL(en)}</b></p>` : ""}
     <button class="buton" onclick="basla()">OYNA</button>`);
@@ -394,16 +431,32 @@ function etapBasla(e){
   const E = ETAPLAR[e];
   bar.textContent = E.ad;
   ekran(`<h2>${E.ad}</h2>
-    <p>${E.kelime.length} kelime (${E.kelime.join(", ")} harfli) ve ardından
+    <p>${E.kelime.length} tane <b>${E.kelime[0]} harfli</b> kelime ve ardından
        ${E.puz.join("–")} harfli bir puzzle.</p>
-    <p class="kucuk">Her kelime <b>₺${TL(E.pk)}</b> · puzzle <b>₺${TL(E.pp)}</b></p>
+    <p class="kucuk">Her kelime <b>₺${TL(E.pk)}</b> · puzzle <b>₺${TL(E.pp)}</b><br>
+       ${E.kelime.length} kelimenin hepsini bilirseniz <b>+₺${TL(TAMBONUS)}</b> prim<br>
+       puzzle ödülü açılan her harfle azalır</p>
     <button class="buton" onclick="etapSira(${e},0)">BAŞLA</button>`);
 }
-function etapSira(e, k){
+function etapSira(e, k, dogruSay){
+  dogruSay = dogruSay || 0;
   const E = ETAPLAR[e];
-  if(k >= E.kelime.length) return etapPuzzle(e);
+  if(k >= E.kelime.length){
+    if(dogruSay === E.kelime.length){
+      para += TAMBONUS; paraYaz();
+      ekran(`<div class="sonuc iyi">${E.kelime.length}'te ${E.kelime.length}!
+        <span class="kw">+₺${TL(TAMBONUS)}</span></div>
+        <p class="kucuk" style="margin-top:10px">${E.kelime[0]} harflilerin hepsini
+        bildiniz — tam isabet primi hesabınıza eklendi.</p>
+        <button class="buton" id="dv">PUZZLE'A GEÇ</button>`);
+      $("#dv").onclick = () => etapPuzzle(e);
+      return;
+    }
+    return etapPuzzle(e);
+  }
   bar.textContent = `${E.ad} · ${k+1}/${E.kelime.length}`;
-  kelimeOyna(E.kelime[k], E.pk, {}, (ok, w) => sonucAra(ok, w, () => etapSira(e, k+1)));
+  kelimeOyna(E.kelime[k], E.pk, {},
+    (ok, w) => sonucAra(ok, w, () => etapSira(e, k+1, dogruSay + (ok?1:0))));
 }
 function etapPuzzle(e){
   const E = ETAPLAR[e];
@@ -438,7 +491,7 @@ function finalGiris(){
   ekran(`<h2>FİNAL</h2>
     <p><b>120 saniye</b>. Kelimeler 4 harfliden başlar, 7 harfliye kadar uzar.
        Bilemediğinizde <b>PAS</b> deyip sonrakine geçebilirsiniz.</p>
-    <p class="kucuk">₺2.500 · ₺5.000 · ₺10.000 · süper lingo <b>₺50.000</b></p>
+    <p class="kucuk">₺2.500 · ₺5.000 · ₺10.000 · süper lingo <b>₺250.000</b></p>
     <button class="buton" onclick="finalBasla()">BAŞLA</button>`);
 }
 function finalBasla(){
