@@ -1,0 +1,260 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>6 harfli — Lingo Açılış Quizi</title><style>
+:root{
+  --kagit:#f5f6f8; --kart:#ffffff; --murekkep:#0f1720; --soluk:#5b6673;
+  --cizgi:#dfe3e8; --kirmizi:#c8102e; --mor:#6b21a8; --yesil:#1a7f37;
+  --sari:#f4c95d; --golge:0 1px 2px rgba(15,23,32,.06),0 6px 18px rgba(15,23,32,.05);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:17px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  padding-bottom:40px}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+a{color:inherit}
+.sar{max-width:640px;margin:0 auto;padding:0 16px}
+/* ust bar */
+header{background:var(--murekkep);color:#fff;padding:12px 0 0;position:sticky;top:0;z-index:9}
+header .sar{padding-bottom:0}
+.hb{display:flex;align-items:center;gap:12px;padding-bottom:10px}
+.geri{color:#fff;text-decoration:none;font-size:15px;opacity:.75;white-space:nowrap}
+.geri:hover{opacity:1}
+.hb h1{font-size:17px;margin:0;font-weight:700;letter-spacing:.3px;flex:1}
+.skor{font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;
+  background:rgba(255,255,255,.13);padding:3px 10px;border-radius:999px}
+.cubuk{height:4px;background:rgba(255,255,255,.16)}
+.cubuk i{display:block;height:100%;background:var(--sari);width:0;transition:width .3s}
+/* kapak */
+.kapak{padding:34px 0 10px}
+.kapak .ust{font-size:13px;letter-spacing:2.4px;text-transform:uppercase;
+  color:var(--soluk);font-weight:700}
+.kapak h1{font-size:40px;line-height:1.08;margin:8px 0 12px;letter-spacing:-.8px}
+.kapak p{color:var(--soluk);margin:0 0 6px;font-size:16px}
+.sec{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0 10px}
+.sec a{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:18px 16px;text-decoration:none;box-shadow:var(--golge);display:block;
+  transition:transform .12s,box-shadow .12s}
+.sec a:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,23,32,.1)}
+.sec b{display:block;font-size:30px;line-height:1;letter-spacing:-1px}
+.sec b em{font-style:normal;font-size:15px;color:var(--soluk);margin-left:5px;
+  letter-spacing:0;font-weight:600}
+.sec span{display:block;font-size:14px;color:var(--soluk);margin-top:7px}
+.bilgi{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:18px 18px 14px;margin:18px 0;box-shadow:var(--golge)}
+.bilgi h2{font-size:16px;margin:0 0 8px}
+.bilgi p{margin:0 0 10px;font-size:15.5px;color:#2c3540}
+.bilgi p:last-child{margin-bottom:0}
+.ornek{background:var(--kagit);border-radius:10px;padding:12px 14px;margin:10px 0;
+  font-size:15px;line-height:1.7}
+.ornek .w{font-weight:700}
+.dip{color:var(--soluk);font-size:13.5px;margin-top:20px;line-height:1.6}
+/* soru */
+.kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:20px 18px;margin:20px 0;box-shadow:var(--golge)}
+.rozet{display:inline-flex;align-items:center;justify-content:center;min-width:44px;
+  height:44px;background:var(--murekkep);color:#fff;border-radius:11px;font-size:24px;
+  font-weight:700;padding:0 10px}
+.bas{display:flex;align-items:center;gap:13px;margin-bottom:4px}
+.bas .t{font-size:15px;color:var(--soluk);line-height:1.35}
+.bas .t b{display:block;color:var(--murekkep);font-size:18px;font-weight:700}
+.sorutx{font-size:17px;margin:14px 0 4px;line-height:1.5}
+.ipuc{font-size:14px;color:var(--soluk);margin:0 0 14px}
+.secenek{display:block;width:100%;text-align:left;background:var(--kart);
+  border:1.5px solid var(--cizgi);border-radius:12px;padding:13px 14px;margin-bottom:9px;
+  font:inherit;cursor:pointer;display:flex;align-items:center;gap:12px;
+  transition:border-color .12s,background .12s}
+.secenek:hover{border-color:#b9c1cb}
+.kutu{width:24px;height:24px;border:2px solid #c3cad3;border-radius:7px;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.secenek .w{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  font-size:19px;font-weight:700;letter-spacing:1.5px;flex:1}
+.secenek .not{font-size:13px;color:var(--soluk);text-align:right;line-height:1.35;
+  display:none;white-space:nowrap}
+.secenek.on{border-color:var(--murekkep);background:#f0f2f5}
+.secenek.on .kutu{background:var(--murekkep);border-color:var(--murekkep)}
+.secenek.on .kutu:after{content:"✓"}
+.bitti .secenek{cursor:default}
+.bitti .secenek .not{display:block}
+.secenek.dogru{border-color:var(--yesil);background:#eaf6ee}
+.secenek.dogru .kutu{background:var(--yesil);border-color:var(--yesil)}
+.secenek.dogru .kutu:after{content:"✓"}
+.secenek.yanlis{border-color:var(--kirmizi);background:#fdecef}
+.secenek.yanlis .kutu{background:var(--kirmizi);border-color:var(--kirmizi)}
+.secenek.yanlis .kutu:after{content:"✕"}
+.secenek.kacan{border-color:var(--yesil);border-style:dashed;background:#f4faf6}
+button.ana{width:100%;background:var(--murekkep);color:#fff;border:0;border-radius:12px;
+  padding:15px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;margin-top:4px}
+button.ana:disabled{background:#c3cad3;cursor:default}
+.cevap{margin:6px 0 16px;border-top:1px solid var(--cizgi);padding-top:14px;display:none}
+.bitti .cevap{display:block}
+.basl{font-weight:700;font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.basl.iyi{color:var(--yesil)} .basl.kotu{color:var(--kirmizi)}
+.cift{background:var(--murekkep);color:#fff;border-radius:11px;padding:13px 14px;
+  text-align:center;margin-bottom:11px}
+.cift .w{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:22px;
+  font-weight:700;letter-spacing:2px}
+.cift .a{font-size:13.5px;opacity:.8;margin-top:4px}
+.cevap p{margin:0 0 9px;font-size:15.5px;line-height:1.55}
+.cevap p:last-child{margin-bottom:0}
+.harfler{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 11px}
+.harfler span{background:var(--sari);color:#4a3600;font-weight:700;border-radius:6px;
+  padding:3px 9px;font-size:15px;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.rakam{font-variant-numeric:tabular-nums;font-weight:700}
+/* liste karti */
+.wlist{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
+.wlist span{border:1px solid var(--cizgi);border-radius:7px;padding:4px 9px;font-size:15px;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;background:var(--kagit)}
+.wlist span.c{background:#fdecef;border-color:#f3c2cb;color:var(--kirmizi)}
+.wlist span i{font-style:normal;font-size:11px;opacity:.7;margin-left:3px}
+/* ozet */
+.ozet{text-align:center;padding:12px 0 4px}
+.ozet .buyuk{font-size:56px;font-weight:800;letter-spacing:-2px;line-height:1}
+.ozet .alt{color:var(--soluk);font-size:16px;margin-top:4px}
+.izgara{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0}
+.izgara span{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:16px;background:#e7eaee;color:var(--soluk)}
+.izgara span.d{background:var(--yesil);color:#fff}
+.izgara span.y{background:var(--kirmizi);color:#fff}
+.izgara span.n{background:#e7eaee;color:#98a2ad}
+.dugmeler{display:flex;gap:10px;margin-top:16px}
+.dugmeler button{flex:1}
+button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid var(--cizgi)}
+@media(max-width:420px){
+  .kapak h1{font-size:32px} .sec{grid-template-columns:1fr}
+  .secenek .not{font-size:12px}
+}
+</style></head><body>
+<header><div class="sar">
+ <div class="hb"><a class="geri" href="index.html">‹ Geri</a>
+  <h1>6 HARFLİ · AÇILIŞ QUİZİ</h1>
+  <span class="skor" id="skor">0 / 0</span></div>
+</div>
+ <div class="cubuk"><i id="cubuk"></i></div>
+</header>
+<div class="sar" id="alan"></div>
+<script>
+const SORULAR = [{"harf": "A", "uzunluk": 6, "havuz": 492, "secenekler": [{"k": "AFERİN", "er": 70.3, "harf": "A E F İ N R", "cikti": 2}, {"k": "AKILLI", "er": 44.9, "harf": "A I K L", "cikti": 0}, {"k": "AKTRİS", "er": 37.4, "harf": "A İ K R S T", "cikti": 0}, {"k": "ALINMA", "er": 13.7, "harf": "A I L M N", "cikti": 0}, {"k": "AYRICA", "er": 31.5, "harf": "A C I R Y", "cikti": 0}], "dogru": [2, 3], "cift": ["ALINMA", "AKTRİS"], "er": 1.9, "rakip": 4.0, "yeni_harf": ["I", "İ", "K", "L", "M", "N", "R", "S", "T"], "harf_sayisi": 10}, {"harf": "B", "uzunluk": 6, "havuz": 399, "secenekler": [{"k": "BAYRAM", "er": 30.8, "harf": "A B M R Y", "cikti": 3}, {"k": "BENLİK", "er": 21.3, "harf": "B E İ K L N", "cikti": 0}, {"k": "BİRKAÇ", "er": 20.1, "harf": "A B Ç İ K R", "cikti": 0}, {"k": "BUNDAN", "er": 41.4, "harf": "A B D N U", "cikti": 0}, {"k": "BUNLAR", "er": 13.7, "harf": "A B L N R U", "cikti": 0}], "dogru": [0, 1], "cift": ["BENLİK", "BAYRAM"], "er": 1.9, "rakip": 3.6, "yeni_harf": ["A", "E", "İ", "K", "L", "M", "N", "R", "Y"], "harf_sayisi": 10}, {"harf": "C", "uzunluk": 6, "havuz": 105, "secenekler": [{"k": "CENAZE", "er": 4.6, "harf": "A C E N Z", "cikti": 0}, {"k": "CENTER", "er": 7.4, "harf": "C E N R T", "cikti": 0}, {"k": "CERRAH", "er": 7.8, "harf": "A C E H R", "cikti": 0}, {"k": "CEZALI", "er": 4.4, "harf": "A C E I L Z", "cikti": 0}, {"k": "CÜZDAN", "er": 10.7, "harf": "A C D N Ü Z", "cikti": 3}], "dogru": [1, 3], "cift": ["CEZALI", "CENTER"], "er": 1.4, "rakip": 2.0, "yeni_harf": ["A", "E", "I", "L", "N", "R", "T", "Z"], "harf_sayisi": 9}, {"harf": "Ç", "uzunluk": 6, "havuz": 185, "secenekler": [{"k": "ÇAĞLAR", "er": 15.0, "harf": "A Ç Ğ L R", "cikti": 0}, {"k": "ÇENTİK", "er": 15.4, "harf": "Ç E İ K N T", "cikti": 0}, {"k": "ÇEVİRİ", "er": 33.0, "harf": "Ç E İ R V", "cikti": 2}, {"k": "ÇIKMAK", "er": 10.0, "harf": "A Ç I K M", "cikti": 0}, {"k": "ÇOKTAN", "er": 13.0, "harf": "A Ç K N O T", "cikti": 0}], "dogru": [0, 1], "cift": ["ÇAĞLAR", "ÇENTİK"], "er": 1.7, "rakip": 2.5, "yeni_harf": ["A", "E", "Ğ", "İ", "K", "L", "N", "R", "T"], "harf_sayisi": 10}, {"harf": "D", "uzunluk": 6, "havuz": 304, "secenekler": [{"k": "DAKİKA", "er": 31.2, "harf": "A D İ K", "cikti": 4}, {"k": "DERTLİ", "er": 14.6, "harf": "D E İ L R T", "cikti": 0}, {"k": "DIŞARI", "er": 53.2, "harf": "A D I R Ş", "cikti": 0}, {"k": "DOKSAN", "er": 20.8, "harf": "A D K N O S", "cikti": 0}, {"k": "DOKTOR", "er": 49.2, "harf": "D K O R T", "cikti": 2}], "dogru": [1, 3], "cift": ["DERTLİ", "DOKSAN"], "er": 1.7, "rakip": 3.1, "yeni_harf": ["A", "E", "İ", "K", "L", "N", "O", "R", "S", "T"], "harf_sayisi": 11}, {"harf": "E", "uzunluk": 6, "havuz": 214, "secenekler": [{"k": "EDİNME", "er": 7.8, "harf": "D E İ M N", "cikti": 0}, {"k": "EĞİTİM", "er": 16.6, "harf": "E Ğ İ M T", "cikti": 2}, {"k": "EKSTRA", "er": 18.1, "harf": "A E K R S T", "cikti": 1}, {"k": "ELBİSE", "er": 8.2, "harf": "B E İ L S", "cikti": 3}, {"k": "ENERJİ", "er": 9.4, "harf": "E İ J N R", "cikti": 1}], "dogru": [0, 2], "cift": ["EDİNME", "EKSTRA"], "er": 1.4, "rakip": 1.9, "yeni_harf": ["A", "D", "İ", "K", "M", "N", "R", "S", "T"], "harf_sayisi": 10}, {"harf": "F", "uzunluk": 6, "havuz": 144, "secenekler": [{"k": "FAHİŞE", "er": 13.1, "harf": "A E F H İ Ş", "cikti": 0}, {"k": "FARAZİ", "er": 5.5, "harf": "A F İ R Z", "cikti": 0}, {"k": "FAVORİ", "er": 6.2, "harf": "A F İ O R V", "cikti": 2}, {"k": "FİLETO", "er": 6.0, "harf": "E F İ L O T", "cikti": 0}, {"k": "FİNCAN", "er": 10.7, "harf": "A C F İ N", "cikti": 6}], "dogru": [1, 3], "cift": ["FARAZİ", "FİLETO"], "er": 1.3, "rakip": 1.7, "yeni_harf": ["A", "E", "İ", "L", "O", "R", "T", "Z"], "harf_sayisi": 9}, {"harf": "G", "uzunluk": 6, "havuz": 213, "secenekler": [{"k": "GELENİ", "er": 9.7, "harf": "E G İ L N", "cikti": 0}, {"k": "GERÇEK", "er": 11.3, "harf": "Ç E G K R", "cikti": 6}, {"k": "GİTMEK", "er": 14.4, "harf": "E G İ K M T", "cikti": 0}, {"k": "GİTSİN", "er": 42.7, "harf": "G İ N S T", "cikti": 0}, {"k": "GÜMRÜK", "er": 21.9, "harf": "G K M R Ü", "cikti": 4}], "dogru": [0, 4], "cift": ["GELENİ", "GÜMRÜK"], "er": 1.7, "rakip": 2.3, "yeni_harf": ["E", "İ", "K", "L", "M", "N", "R", "Ü"], "harf_sayisi": 9}, {"harf": "H", "uzunluk": 6, "havuz": 194, "secenekler": [{"k": "HAMİLE", "er": 8.4, "harf": "A E H İ L M", "cikti": 1}, {"k": "HARİKA", "er": 8.5, "harf": "A H İ K R", "cikti": 3}, {"k": "HAYRAN", "er": 10.7, "harf": "A H N R Y", "cikti": 1}, {"k": "HERKES", "er": 15.1, "harf": "E H K R S", "cikti": 2}, {"k": "HİÇBİR", "er": 33.6, "harf": "B Ç H İ R", "cikti": 0}], "dogru": [0, 2], "cift": ["HAMİLE", "HAYRAN"], "er": 1.6, "rakip": 2.4, "yeni_harf": ["A", "E", "İ", "L", "M", "N", "R", "Y"], "harf_sayisi": 9}, {"harf": "I", "uzunluk": 6, "havuz": 47, "secenekler": [{"k": "ISINMA", "er": 2.3, "harf": "A I M N S", "cikti": 0}, {"k": "ISIRIK", "er": 3.0, "harf": "I K R S", "cikti": 0}, {"k": "ISITMA", "er": 2.4, "harf": "A I M S T", "cikti": 1}, {"k": "IŞIKLI", "er": 2.6, "harf": "I K L Ş", "cikti": 0}, {"k": "IZGARA", "er": 7.9, "harf": "A G I R Z", "cikti": 3}], "dogru": [0, 3], "cift": ["ISINMA", "IŞIKLI"], "er": 1.2, "rakip": 1.2, "yeni_harf": ["A", "K", "L", "M", "N", "S", "Ş"], "harf_sayisi": 8}, {"harf": "İ", "uzunluk": 6, "havuz": 215, "secenekler": [{"k": "İÇİNDE", "er": 13.3, "harf": "Ç D E İ N", "cikti": 0}, {"k": "İKİNCİ", "er": 12.7, "harf": "C İ K N", "cikti": 0}, {"k": "İKİŞER", "er": 10.9, "harf": "E İ K R Ş", "cikti": 0}, {"k": "İLGİLİ", "er": 24.6, "harf": "G İ L", "cikti": 0}, {"k": "İNCİLİ", "er": 11.0, "harf": "C İ L N", "cikti": 0}], "dogru": [2, 4], "cift": ["İKİŞER", "İNCİLİ"], "er": 2.0, "rakip": 3.2, "yeni_harf": ["C", "E", "K", "L", "N", "R", "Ş"], "harf_sayisi": 8}, {"harf": "J", "uzunluk": 6, "tip": "liste", "havuz": 17, "kelimeler": [{"k": "JERSEY", "cikti": 0}, {"k": "JAMBON", "cikti": 0}, {"k": "JAGUAR", "cikti": 0}, {"k": "JAKUZİ", "cikti": 0}, {"k": "JÖLELİ", "cikti": 0}, {"k": "JİGOLO", "cikti": 0}, {"k": "JALUZİ", "cikti": 0}, {"k": "JANJAN", "cikti": 0}, {"k": "JAPONE", "cikti": 0}, {"k": "JARGON", "cikti": 0}, {"k": "JEOLOG", "cikti": 0}, {"k": "JORJET", "cikti": 0}, {"k": "JUDOCU", "cikti": 0}, {"k": "JULLÜK", "cikti": 0}, {"k": "JURNAL", "cikti": 0}, {"k": "JÜBİLE", "cikti": 0}, {"k": "JÜLYEN", "cikti": 0}]}, {"harf": "K", "uzunluk": 6, "havuz": 645, "secenekler": [{"k": "KARDEŞ", "er": 51.0, "harf": "A D E K R Ş", "cikti": 4}, {"k": "KILMAK", "er": 30.7, "harf": "A I K L M", "cikti": 0}, {"k": "KONSER", "er": 43.7, "harf": "E K N O R S", "cikti": 3}, {"k": "KURBAN", "er": 35.7, "harf": "A B K N R U", "cikti": 1}, {"k": "KUTSAL", "er": 40.0, "harf": "A K L S T U", "cikti": 0}], "dogru": [1, 2], "cift": ["KILMAK", "KONSER"], "er": 2.8, "rakip": 4.4, "yeni_harf": ["A", "E", "I", "L", "M", "N", "O", "R", "S"], "harf_sayisi": 10}, {"harf": "L", "uzunluk": 6, "havuz": 93, "secenekler": [{"k": "LAHANA", "er": 13.5, "harf": "A H L N", "cikti": 4}, {"k": "LAPTOP", "er": 8.8, "harf": "A L O P T", "cikti": 1}, {"k": "LASTİK", "er": 4.0, "harf": "A İ K L S T", "cikti": 5}, {"k": "LAVABO", "er": 13.0, "harf": "A B L O V", "cikti": 0}, {"k": "LEOPAR", "er": 6.7, "harf": "A E L O P R", "cikti": 1}], "dogru": [2, 4], "cift": ["LASTİK", "LEOPAR"], "er": 1.4, "rakip": 1.9, "yeni_harf": ["A", "E", "İ", "K", "O", "P", "R", "S", "T"], "harf_sayisi": 10}, {"harf": "M", "uzunluk": 6, "havuz": 500, "secenekler": [{"k": "MASTER", "er": 17.0, "harf": "A E M R S T", "cikti": 0}, {"k": "MEKTUP", "er": 31.1, "harf": "E K M P T U", "cikti": 3}, {"k": "MENKUL", "er": 18.3, "harf": "E K L M N U", "cikti": 0}, {"k": "MESELA", "er": 33.7, "harf": "A E L M S", "cikti": 1}, {"k": "MİLLET", "er": 34.1, "harf": "E İ L M T", "cikti": 1}], "dogru": [0, 2], "cift": ["MASTER", "MENKUL"], "er": 2.2, "rakip": 4.9, "yeni_harf": ["A", "E", "K", "L", "N", "R", "S", "T", "U"], "harf_sayisi": 10}, {"harf": "N", "uzunluk": 6, "havuz": 101, "secenekler": [{"k": "NAKAVT", "er": 11.0, "harf": "A K N T V", "cikti": 0}, {"k": "NEFRET", "er": 6.3, "harf": "E F N R T", "cikti": 0}, {"k": "NEREDE", "er": 7.3, "harf": "D E N R", "cikti": 0}, {"k": "NEYMİŞ", "er": 7.7, "harf": "E İ M N Ş Y", "cikti": 0}, {"k": "NUMARA", "er": 10.7, "harf": "A M N R U", "cikti": 6}], "dogru": [0, 2], "cift": ["NEREDE", "NAKAVT"], "er": 1.3, "rakip": 1.7, "yeni_harf": ["A", "D", "E", "K", "R", "T", "V"], "harf_sayisi": 8}, {"harf": "O", "uzunluk": 6, "havuz": 142, "secenekler": [{"k": "OLACAK", "er": 6.6, "harf": "A C K L O", "cikti": 0}, {"k": "OLAMAZ", "er": 10.3, "harf": "A L M O Z", "cikti": 0}, {"k": "ORADAN", "er": 7.9, "harf": "A D N O R", "cikti": 0}, {"k": "ORTADA", "er": 8.5, "harf": "A D O R T", "cikti": 0}, {"k": "OTURUM", "er": 10.5, "harf": "M O R T U", "cikti": 2}], "dogru": [0, 4], "cift": ["OLACAK", "OTURUM"], "er": 1.4, "rakip": 2.0, "yeni_harf": ["A", "C", "K", "L", "M", "R", "T", "U"], "harf_sayisi": 9}, {"harf": "Ö", "uzunluk": 6, "havuz": 97, "secenekler": [{"k": "ÖDEMEK", "er": 7.9, "harf": "D E K M Ö", "cikti": 0}, {"k": "ÖNCEKİ", "er": 6.2, "harf": "C E İ K N Ö", "cikti": 0}, {"k": "ÖRTMEK", "er": 7.3, "harf": "E K M Ö R T", "cikti": 0}, {"k": "ÖYLECE", "er": 6.8, "harf": "C E L Ö Y", "cikti": 0}, {"k": "ÖZENLİ", "er": 4.8, "harf": "E İ L N Ö Z", "cikti": 0}], "dogru": [2, 4], "cift": ["ÖZENLİ", "ÖRTMEK"], "er": 1.2, "rakip": 1.7, "yeni_harf": ["E", "İ", "K", "L", "M", "N", "R", "T", "Z"], "harf_sayisi": 10}, {"harf": "P", "uzunluk": 6, "havuz": 235, "secenekler": [{"k": "PANELİ", "er": 7.0, "harf": "A E İ L N P", "cikti": 0}, {"k": "PARLAK", "er": 7.3, "harf": "A K L P R", "cikti": 3}, {"k": "PEKALA", "er": 9.9, "harf": "A E K L P", "cikti": 1}, {"k": "PİSLİK", "er": 23.6, "harf": "İ K L P S", "cikti": 0}, {"k": "PORSUK", "er": 17.5, "harf": "K O P R S U", "cikti": 0}], "dogru": [0, 4], "cift": ["PANELİ", "PORSUK"], "er": 1.4, "rakip": 1.9, "yeni_harf": ["A", "E", "İ", "K", "L", "N", "O", "R", "S", "U"], "harf_sayisi": 11}, {"harf": "R", "uzunluk": 6, "havuz": 102, "secenekler": [{"k": "RAĞMEN", "er": 4.9, "harf": "A E Ğ M N R", "cikti": 0}, {"k": "RAHİBE", "er": 5.2, "harf": "A B E H İ R", "cikti": 0}, {"k": "RAHMET", "er": 3.8, "harf": "A E H M R T", "cikti": 0}, {"k": "RENKLİ", "er": 5.0, "harf": "E İ K L N R", "cikti": 1}, {"k": "RÜZGAR", "er": 19.3, "harf": "A G R Ü Z", "cikti": 4}], "dogru": [2, 3], "cift": ["RAHMET", "RENKLİ"], "er": 1.1, "rakip": 1.5, "yeni_harf": ["A", "E", "H", "İ", "K", "L", "M", "N", "T"], "harf_sayisi": 10}, {"harf": "S", "uzunluk": 6, "havuz": 444, "secenekler": [{"k": "SAĞLIK", "er": 39.5, "harf": "A Ğ I K L S", "cikti": 6}, {"k": "SANİYE", "er": 22.6, "harf": "A E İ N S Y", "cikti": 5}, {"k": "SARMAL", "er": 22.9, "harf": "A L M R S", "cikti": 0}, {"k": "SEÇKİN", "er": 31.3, "harf": "Ç E İ K N S", "cikti": 3}, {"k": "SİGARA", "er": 36.2, "harf": "A G İ R S", "cikti": 0}], "dogru": [2, 3], "cift": ["SARMAL", "SEÇKİN"], "er": 2.3, "rakip": 3.3, "yeni_harf": ["A", "Ç", "E", "İ", "K", "L", "M", "N", "R"], "harf_sayisi": 10}, {"harf": "Ş", "uzunluk": 6, "havuz": 132, "secenekler": [{"k": "ŞALGAM", "er": 10.9, "harf": "A G L M Ş", "cikti": 3}, {"k": "ŞEREFE", "er": 22.2, "harf": "E F R Ş", "cikti": 0}, {"k": "ŞEYTAN", "er": 8.4, "harf": "A E N Ş T Y", "cikti": 0}, {"k": "ŞİRKET", "er": 6.5, "harf": "E İ K R Ş T", "cikti": 1}, {"k": "ŞURADA", "er": 13.1, "harf": "A D R Ş U", "cikti": 0}], "dogru": [0, 3], "cift": ["ŞİRKET", "ŞALGAM"], "er": 1.2, "rakip": 1.7, "yeni_harf": ["A", "E", "G", "İ", "K", "L", "M", "R", "T"], "harf_sayisi": 10}, {"harf": "T", "uzunluk": 6, "havuz": 494, "secenekler": [{"k": "TAHMİN", "er": 25.4, "harf": "A H İ M N T", "cikti": 3}, {"k": "TAKTİR", "er": 14.0, "harf": "A İ K R T", "cikti": 0}, {"k": "TEKRAR", "er": 26.5, "harf": "A E K R T", "cikti": 0}, {"k": "TEMSİL", "er": 24.8, "harf": "E İ L M S T", "cikti": 2}, {"k": "TERCİH", "er": 37.3, "harf": "C E H İ R T", "cikti": 2}], "dogru": [1, 3], "cift": ["TAKTİR", "TEMSİL"], "er": 2.7, "rakip": 3.9, "yeni_harf": ["A", "E", "İ", "K", "L", "M", "R", "S"], "harf_sayisi": 9}, {"harf": "U", "uzunluk": 6, "havuz": 110, "secenekler": [{"k": "UFACIK", "er": 11.4, "harf": "A C F I K U", "cikti": 0}, {"k": "ULUSAL", "er": 11.5, "harf": "A L S U", "cikti": 1}, {"k": "UTANMA", "er": 6.2, "harf": "A M N T U", "cikti": 0}, {"k": "UYKULU", "er": 7.2, "harf": "K L U Y", "cikti": 0}, {"k": "UYUMAK", "er": 6.0, "harf": "A K M U Y", "cikti": 0}], "dogru": [2, 3], "cift": ["UTANMA", "UYKULU"], "er": 1.2, "rakip": 1.7, "yeni_harf": ["A", "K", "L", "M", "N", "T", "Y"], "harf_sayisi": 8}, {"harf": "Ü", "uzunluk": 6, "havuz": 64, "secenekler": [{"k": "ÜÇÜNCÜ", "er": 6.5, "harf": "C Ç N Ü", "cikti": 0}, {"k": "ÜRETİM", "er": 4.1, "harf": "E İ M R T Ü", "cikti": 2}, {"k": "ÜSTSÜZ", "er": 7.7, "harf": "S T Ü Z", "cikti": 0}, {"k": "ÜYELİK", "er": 4.8, "harf": "E İ K L Ü Y", "cikti": 0}, {"k": "ÜZÜMLÜ", "er": 3.5, "harf": "L M Ü Z", "cikti": 0}], "dogru": [1, 4], "cift": ["ÜZÜMLÜ", "ÜRETİM"], "er": 1.1, "rakip": 1.4, "yeni_harf": ["E", "İ", "L", "M", "R", "T", "Z"], "harf_sayisi": 8}, {"harf": "V", "uzunluk": 6, "havuz": 81, "secenekler": [{"k": "VERİCİ", "er": 5.2, "harf": "C E İ R V", "cikti": 0}, {"k": "VİCDAN", "er": 5.9, "harf": "A C D İ N V", "cikti": 1}, {"k": "VOLKAN", "er": 5.6, "harf": "A K L N O V", "cikti": 3}, {"k": "VURGUN", "er": 15.9, "harf": "G N R U V", "cikti": 0}, {"k": "VURUCU", "er": 23.5, "harf": "C R U V", "cikti": 0}], "dogru": [0, 2], "cift": ["VERİCİ", "VOLKAN"], "er": 1.2, "rakip": 1.9, "yeni_harf": ["A", "C", "E", "İ", "K", "L", "N", "O", "R"], "harf_sayisi": 10}, {"harf": "Y", "uzunluk": 6, "havuz": 194, "secenekler": [{"k": "YALNIZ", "er": 9.5, "harf": "A I L N Y Z", "cikti": 4}, {"k": "YARDIM", "er": 13.4, "harf": "A D I M R Y", "cikti": 3}, {"k": "YERİNE", "er": 42.7, "harf": "E İ N R Y", "cikti": 0}, {"k": "YUMRUK", "er": 25.1, "harf": "K M R U Y", "cikti": 1}, {"k": "YÜKSEK", "er": 36.7, "harf": "E K S Ü Y", "cikti": 5}], "dogru": [0, 3], "cift": ["YALNIZ", "YUMRUK"], "er": 1.8, "rakip": 2.8, "yeni_harf": ["A", "I", "K", "L", "M", "N", "R", "U", "Z"], "harf_sayisi": 10}, {"harf": "Z", "uzunluk": 6, "havuz": 81, "secenekler": [{"k": "ZEKALI", "er": 3.5, "harf": "A E I K L Z", "cikti": 0}, {"k": "ZEKİCE", "er": 7.2, "harf": "C E İ K Z", "cikti": 0}, {"k": "ZENGİN", "er": 9.4, "harf": "E G İ N Z", "cikti": 4}, {"k": "ZİNCİR", "er": 8.2, "harf": "C İ N R Z", "cikti": 3}, {"k": "ZORLUK", "er": 11.8, "harf": "K L O R U Z", "cikti": 0}], "dogru": [0, 3], "cift": ["ZEKALI", "ZİNCİR"], "er": 1.2, "rakip": 1.6, "yeni_harf": ["A", "C", "E", "I", "İ", "K", "L", "N", "R"], "harf_sayisi": 10}];
+const ANAHTAR = "lingo_quiz_6";
+let i = 0, dogru = 0, cevaplanan = 0, gecmis = [];
+try{ const k = JSON.parse(localStorage.getItem(ANAHTAR) || "null");
+     if(k && k.n === SORULAR.length){ i=k.i; dogru=k.d; cevaplanan=k.c; gecmis=k.g; } }catch(e){}
+function kaydet(){ try{ localStorage.setItem(ANAHTAR,
+  JSON.stringify({n:SORULAR.length,i:i,d:dogru,c:cevaplanan,g:gecmis})); }catch(e){} }
+const $ = s => document.querySelector(s);
+function ust(){
+  $("#skor").textContent = dogru + " / " + cevaplanan;
+  $("#cubuk").style.width = (100*i/SORULAR.length) + "%";
+}
+function ciz(){
+  ust();
+  if(i >= SORULAR.length){ return ozet(); }
+  const q = SORULAR[i];
+  if(q.tip === "liste") return liste(q);
+  let sec = new Set(), bitti = false;
+  const el = document.createElement("div");
+  el.className = "kart";
+  el.innerHTML = `
+   <div class="bas"><span class="rozet">${q.harf}</span>
+    <span class="t">Soru ${i+1} / ${SORULAR.length}<b>${q.uzunluk} harfli, ${q.harf} ile başlayan</b></span></div>
+   <div class="sorutx">Aşağıdaki beş kelimeden <b>hangi ikisi</b> daha iyi bir
+    başlangıç verir?</div>
+   <div class="ipuc">İki tane seçin. Havuzda ${q.havuz} kelime var.</div>
+   <div id="secler"></div>
+   <div class="cevap" id="cev"></div>
+   <button class="ana" id="btn" disabled>Kontrol et</button>`;
+  $("#alan").innerHTML = ""; $("#alan").appendChild(el);
+  const kap = el.querySelector("#secler");
+  q.secenekler.forEach((o, j) => {
+    const b = document.createElement("button");
+    b.className = "secenek";
+    b.innerHTML = `<span class="kutu"></span><span class="w">${o.k}</span>
+      <span class="not">tek başına<br><b class="rakam">${o.er}</b> aday kalır</span>`;
+    b.onclick = () => {
+      if(bitti) return;
+      if(sec.has(j)){ sec.delete(j); b.classList.remove("on"); }
+      else if(sec.size < 2){ sec.add(j); b.classList.add("on"); }
+      el.querySelector("#btn").disabled = sec.size !== 2;
+    };
+    kap.appendChild(b);
+  });
+  el.querySelector("#btn").onclick = () => {
+    if(!bitti){
+      bitti = true; el.classList.add("bitti");
+      const d = new Set(q.dogru);
+      const tam = [...sec].every(x => d.has(x));
+      kap.querySelectorAll(".secenek").forEach((b, j) => {
+        b.classList.remove("on");
+        if(sec.has(j) && d.has(j)) b.classList.add("dogru");
+        else if(sec.has(j)) b.classList.add("yanlis");
+        else if(d.has(j)) b.classList.add("kacan");
+      });
+      dogru += tam ? 1 : 0; cevaplanan++; gecmis.push(tam ? 1 : 0);
+      el.querySelector("#cev").innerHTML = aciklama(q, tam);
+      el.querySelector("#btn").textContent =
+        (i === SORULAR.length - 1) ? "Sonuçlar ▸" : "Sonraki soru ▸";
+      ust(); kaydet();
+      el.querySelector("#cev").scrollIntoView({behavior:"smooth", block:"nearest"});
+    } else { i++; kaydet(); ciz(); window.scrollTo(0,0); }
+  };
+}
+function aciklama(q, tam){
+  const h = q.yeni_harf.map(c => `<span>${c}</span>`).join("");
+  const kat = (q.rakip / q.er).toFixed(1);
+  return `
+   <div class="basl ${tam?"iyi":"kotu"}">${tam?"✓ Doğru":"✕ Doğru cevap şu ikili"}</div>
+   <div class="cift"><div class="w">${q.cift[0]} + ${q.cift[1]}</div>
+     <div class="a">geriye ortalama <b>${q.er}</b> aday kalır</div></div>
+   <p>İlk harf ${q.harf} zaten biliniyor. Bu ikili onun dışında
+      <b>${q.yeni_harf.length} yeni harf</b> dener:</p>
+   <div class="harfler">${h}</div>
+   <p>Toplam <b>${q.harf_sayisi}</b> farklı harf denenmiş olur. Bu beş kelimeden
+      kurulabilecek <b>ikinci en iyi ikili</b> geriye
+      <b class="rakam">${q.rakip}</b> aday bırakıyor — yani ${kat} katı.</p>
+   <p style="color:var(--soluk);font-size:14.5px">Not: tek başına en iyi kelime,
+      ikili olarak en iyisi olmak zorunda değil. Önemli olan iki kelimenin
+      <b>birlikte</b> kaç <b>farklı</b> harf denediğidir; aynı harfi iki kez
+      denemek boşa tahmindir.</p>`;
+}
+function liste(q){
+  const ws = q.kelimeler.map(o =>
+    `<span class="${o.cikti?"c":""}">${o.k}${o.cikti?`<i>${o.cikti}×</i>`:""}</span>`).join("");
+  const el = document.createElement("div");
+  el.className = "kart";
+  el.innerHTML = `
+   <div class="bas"><span class="rozet">${q.harf}</span>
+    <span class="t">Soru ${i+1} / ${SORULAR.length}<b>${q.uzunluk} harfli, ${q.harf} ile başlayan</b></span></div>
+   <div class="sorutx">Bu harfte soru yok — havuzda sadece
+     <b>${q.havuz} kelime</b> var.</div>
+   <div class="ipuc">Açılış hesabı yapmaya gerek yok; listenin tamamı bu.
+     Kırmızı olanlar yarışmada çıkmış cevaplar.</div>
+   <div class="wlist">${ws}</div>
+   <button class="ana" id="btn">${i === SORULAR.length-1 ? "Sonuçlar ▸" : "Sonraki soru ▸"}</button>`;
+  $("#alan").innerHTML = ""; $("#alan").appendChild(el);
+  el.querySelector("#btn").onclick = () => { i++; kaydet(); ciz(); window.scrollTo(0,0); };
+}
+function ozet(){
+  $("#cubuk").style.width = "100%";
+  const yuzde = cevaplanan ? Math.round(100*dogru/cevaplanan) : 0;
+  const kutucuk = SORULAR.map((q, j) => {
+    if(q.tip === "liste") return `<span class="n">${q.harf}</span>`;
+    const idx = SORULAR.slice(0, j).filter(x => x.tip !== "liste").length;
+    const v = gecmis[idx];
+    return `<span class="${v===1?"d":v===0?"y":"n"}">${q.harf}</span>`;
+  }).join("");
+  $("#alan").innerHTML = `<div class="kart">
+    <div class="ozet"><div class="buyuk">${dogru} / ${cevaplanan}</div>
+      <div class="alt">%${yuzde} doğru · 6 harfli açılış quizi</div></div>
+    <div class="izgara">${kutucuk}</div>
+    <p style="color:var(--soluk);font-size:15px;margin:0">Yeşil harfleri
+      biliyorsunuz. Kırmızı harflerde açılış ikiliniz zayıf kaldı — o harfleri
+      tekrar edin.</p>
+    <div class="dugmeler">
+      <button class="ana ikinci" onclick="sifirla()">Baştan başla</button>
+      <button class="ana" onclick="location.href='index.html'">Diğer quizler</button>
+    </div></div>`;
+  ust();
+}
+function sifirla(){ i=0; dogru=0; cevaplanan=0; gecmis=[]; kaydet(); ciz(); window.scrollTo(0,0); }
+ciz();
+</script></body></html>
