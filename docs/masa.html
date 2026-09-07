@@ -562,8 +562,8 @@ const NET = {
   },
   hostMesaj(c, m){
     if(m.t==="katil"){
-      c.masa=m.masa; c.ad=m.ad;
-      if(M.S && M.S.masalar[m.masa]) M.S.masalar[m.masa].online=true;
+      c.masa=(typeof m.masa==="number")?m.masa:-1; c.ad=m.ad;
+      if(M.S && M.S.masalar[c.masa]) M.S.masalar[c.masa].online=true;
       c.send({t:"sen", masa:m.masa});
       agYaz(); if(M.S) M.gonder();
       return;
@@ -786,19 +786,12 @@ function giris(){
       <b>Final</b> 200 saniye, 4→5→6→7 harfli. Biriken paranın yarısı / tamamı /
         2 katı; 7 harfliyi bilirse <b>2 katı + ₺250.000</b>, bilemezse sıfır.<br>
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
-    <button class="buton mor" onclick="kurEkran()">🎛 MASA YÖNETİMİNİ BEN KURAYIM</button>
+    <button class="buton mor" onclick="odaAc()">🎛 MASA YÖNETİMİNİ BEN KURAYIM</button>
     <button class="buton ikinci" onclick="katilEkran()">BİR ODAYA KATIL</button>
     <p class="izle" style="margin-top:10px">Kuran cihaz oyunu yönetir; sayfayı açık
       tutmalı. Diğerleri linkle katılır.</p>`);
 }
-function kurEkran(){
-  ekran(`<h2>Masaları yazın</h2>
-    ${ADLAR.map((a,i)=>`<input class="ad" id="a${i}" maxlength="18" value="${a}">`).join("")}
-    <button class="buton" onclick="odaAc()">ODAYI AÇ ▸</button>
-    <button class="buton ikinci" onclick="giris()">geri</button>`);
-}
 function odaAc(){
-  ADLAR=[0,1,2].map(i=>$("#a"+i).value.trim()||("Masa "+(i+1)));
   const k=kod4();
   ekran(`<h2>Oda açılıyor…</h2><p class="izle">Bağlantı kuruluyor</p>`);
   NET.kurucuBasla(k, err=>{
@@ -833,34 +826,31 @@ function linkKopya(u){ if(navigator.clipboard) navigator.clipboard.writeText(u)
   .then(()=>uyariGoster("Link kopyalandı")); }
 function katilEkran(kod){
   const k=(kod||location.hash.replace("#","")||"").toUpperCase();
-  ekran(`<h2>Odaya katıl</h2>
-    <input class="ad" id="kd" maxlength="4" placeholder="ODA KODU" value="${k}"
-      style="letter-spacing:4px;text-transform:uppercase">
-    <input class="ad" id="ad" maxlength="18" placeholder="Adınız"
-      value="${localStorage.getItem("lingo_ad")||""}">
-    <p class="izle">Hangi masadasınız?</p>
-    <div id="ms">${[0,1,2].map(i=>`<button class="buton ikinci" onclick="masaSec(${i})"
-      id="m${i}">Masa ${i+1}</button>`).join("")}</div>
-    <button class="buton" id="kt" onclick="katilOl()" disabled>KATIL ▸</button>`);
-  window.__masa=-1;
+  if(k.length!==4){
+    return ekran(`<h2>Oda linki gerekli</h2>
+      <p>Masa yönetimini kuran kişinin gönderdiği <b>linke</b> dokunun.
+         Kod elle yazmanıza gerek yok.</p>
+      <button class="buton ikinci" onclick="giris()">geri</button>`);
+  }
+  ekran(`<span class="rozet">${k}</span>
+    <h2>Hangi masadasınız?</h2>
+    <p class="izle">Masanıza dokunun, oyun hemen başlar.</p>
+    ${ADLAR.map((a,i)=>`<button class="buton ${i===0?"":"ikinci"}"
+      onclick="katilOl('${k}',${i})">${a}</button>`).join("")}
+    <button class="buton ikinci" style="margin-top:14px"
+      onclick="katilOl('${k}',-1)">👀 Sadece izleyeceğim</button>`);
 }
-function masaSec(i){
-  window.__masa=i;
-  [0,1,2].forEach(k=>$("#m"+k).className="buton ikinci");
-  $("#m"+i).className="buton";
-  $("#kt").disabled=false;
-}
-function katilOl(){
-  const k=$("#kd").value.trim().toUpperCase(), ad=$("#ad").value.trim();
-  if(k.length!==4||window.__masa<0) return uyariGoster("Kod ve masa gerekli");
-  try{ localStorage.setItem("lingo_ad", ad); }catch(e){}
+function katilOl(k, masa){
+  const ad = masa>=0 ? ADLAR[masa] : "İzleyici";
   ekran(`<h2>Bağlanılıyor…</h2><p class="izle">${k} odasına</p>`);
-  NET.katilBasla(k, ad, window.__masa, err=>{
+  NET.katilBasla(k, ad, masa, err=>{
     if(err) return ekran(`<h2>Bağlanılamadı</h2>
-      <p>Oda kodunu kontrol edin, kuran kişinin sayfası açık olmalı.</p>
+      <p>Kuran kişinin sayfası açık olmalı. Linke tekrar dokunun.</p>
       <button class="buton" onclick="katilEkran('${k}')">TEKRAR DENE</button>`);
     kodEl.classList.remove("gizli"); kodEl.textContent=k;
-    ekran(`<h2>Bağlandınız</h2><p>Masa yönetiminin başlatması bekleniyor…</p>`);
+    ekran(`<h2>Bağlandınız</h2>
+      <p>${masa>=0?ADLAR[masa]+" masasındasınız.":"İzleyici olarak bağlandınız."}<br>
+         Masa yönetiminin başlatması bekleniyor…</p>`);
   });
 }
 function yeniden(){ M.kur(ADLAR); M.basla(); }
