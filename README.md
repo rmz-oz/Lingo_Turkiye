@@ -6,6 +6,10 @@
 
 <br>
 
+## 🎲 [AİLECE YARIŞ](https://rmz-oz.github.io/Lingo_Turkiye/yaris.html)
+
+<br>
+
 ## ▶ [OYNA](https://rmz-oz.github.io/Lingo_Turkiye/oyun.html)
 
 <br>
