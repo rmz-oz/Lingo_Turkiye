@@ -88,6 +88,8 @@ button{font:inherit;cursor:pointer}
 input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:10px;
   padding:11px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;
   margin:5px 0}
+input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:10px;
+  padding:11px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;margin:5px 0}
 .link{background:#0a1119;border:1px dashed var(--cizgi);border-radius:10px;padding:10px;
   font-size:12px;color:var(--soluk);word-break:break-all;margin:8px 0;
   font-family:ui-monospace,Menlo,monospace;user-select:text}
@@ -633,6 +635,11 @@ const NET = {
     if(m.t==="buzz") return M.buz(c.masa);
     if(m.t==="pas"){ if(c.masa===S.cevaplayan) M.pas(); return; }
     if(m.t==="karar"){ if(S.fin && c.masa===S.fin.masa) M.karar(!!m.devam); return; }
+    if(m.t==="masa"){
+      c.masa=m.i;
+      if(M.S && M.S.masalar[m.i]) M.S.masalar[m.i].online=true;
+      agYaz(); M.gonder(); return;
+    }
     if(c.masa!==S.cevaplayan) return;
     if(m.t==="harf") M.harf(m.c);
     else if(m.t==="sil") M.sil();
@@ -750,6 +757,7 @@ function skorCiz(S){
 }
 function ciz(S){
   SON=S;
+  if(!NET.host && !masaSoruldu) return masaSecEkrani(S);
   if(S.faz==="lobi") return;
   kodEl.classList.remove("gizli"); kodEl.textContent=NET.kod||"";
   etEl.textContent = S.bitti ? "OYUN BİTTİ" : ETAPAD[Math.min(S.etap,3)];
@@ -893,7 +901,12 @@ M.temiz=function(){
 };
 
 /* ================= kurulum ekranlari ================= */
-let ADLAR=["Serpil & Zeynep","Yusuf","Ramiz"];
+const VARSAYILAN=["Serpil & Zeynep","Yusuf","Ramiz"];
+const HAZIR=[VARSAYILAN, ["Deniz","Toprak","Rüzgâr"]];
+let ADLAR=VARSAYILAN.slice();
+try{ const k=JSON.parse(localStorage.getItem("lingo_masalar")||"null");
+     if(Array.isArray(k)&&k.length===3) ADLAR=k; }catch(e){}
+let masaSoruldu=false;
 function giris(){
   etEl.textContent="MASA YARIŞMASI";
   ekran(`<h1>LİNGO MASA YARIŞMASI</h1>
@@ -923,6 +936,11 @@ function odaAc(){
       <button class="buton ikinci" onclick="giris()">geri</button>`);
     M.kur(ADLAR); NET.tazele();
     kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    odaEkrani();
+    agYaz();
+  });
+}
+function odaEkrani(){
     const url=location.origin+location.pathname;
     ekran(`<h2>Oda hazır</h2>
       <p>Herkes bu sayfayı açıp <b>BEN HAZIRA KONARIM</b>'a dokunsun,
@@ -932,11 +950,31 @@ function odaAc(){
          WHATSAPP'TAN LİNK GÖNDER</a>
       <p class="izle" id="bek">Katılanlar bekleniyor…</p>
       <button class="buton" onclick="M.basla()">OYUNU BAŞLAT ▸</button>
+      <button class="buton ikinci" onclick="isimEkrani()">İSİMLERİ DEĞİŞTİR</button>
       <p class="izle">Masa yönetimi sizde. Siz de bir masaya oturabilirsiniz:</p>
       ${ADLAR.map((a,i)=>`<button class="buton ikinci" onclick="NET.benim=${i};agYaz();
         uyariGoster('${a.replace(/'/g,"")} masasındasınız')">${a}</button>`).join("")}`);
-    agYaz();
-  });
+}
+function isimEkrani(){
+  ekran(`<h2>Masa isimleri</h2>
+    <p class="izle">Hazır takımlar:</p>
+    ${HAZIR.map((h,i)=>`<button class="buton ikinci" onclick="isimSeti(${i})">
+      ${h.join(" · ")}</button>`).join("")}
+    <p class="izle" style="margin-top:12px">Ya da kendiniz yazın:</p>
+    ${[0,1,2].map(i=>`<input class="ad" id="ai${i}" maxlength="18" value="${ADLAR[i]}">`).join("")}
+    <button class="buton" onclick="isimKaydet()">KAYDET ▸</button>`);
+}
+function isimSeti(i){
+  ADLAR=HAZIR[i].slice(); isimUygula(); uyariGoster("İsimler değişti");
+}
+function isimKaydet(){
+  ADLAR=[0,1,2].map(i=>($("#ai"+i).value.trim()||VARSAYILAN[i]).slice(0,18));
+  isimUygula(); uyariGoster("İsimler kaydedildi");
+}
+function isimUygula(){
+  try{ localStorage.setItem("lingo_masalar", JSON.stringify(ADLAR)); }catch(e){}
+  if(M.S){ ADLAR.forEach((a,i)=>{ if(M.S.masalar[i]) M.S.masalar[i].ad=a; }); M.gonder(); }
+  odaEkrani();
 }
 function uyariGoster(m){
   const d=document.createElement("div");
@@ -948,29 +986,31 @@ function uyariGoster(m){
 function linkKopya(u){ if(navigator.clipboard) navigator.clipboard.writeText(u)
   .then(()=>uyariGoster("Link kopyalandı")); }
 function katilEkran(){
+  ekran(`<h2>Bağlanılıyor…</h2><p class="izle">Masalar getiriliyor</p>`);
+  NET.katilBasla(null, "", -1, err=>{
+    if(err) return ekran(`<h2>Bağlanılamadı</h2>
+      <p>Masayı kuran cihazın sayfası açık olmalı.
+         Önce biri <b>MASAYI BEN KURARIM</b>'a dokunsun.</p>
+      <button class="buton" onclick="katilEkran()">TEKRAR DENE</button>
+      <button class="buton ikinci" onclick="giris()">geri</button>`);
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    ekran(`<h2>Bağlandınız</h2><p class="izle">Masalar bekleniyor…</p>`);
+  });
+}
+/* isimler kurandan geldikten sonra masa secimi */
+function masaSecEkrani(S){
   ekran(`<span class="rozet">${ODAAD}</span>
     <h2>Hangi masadasınız?</h2>
-    <p class="izle">Masanıza dokunun — kod ya da isim yazmak yok.</p>
-    ${ADLAR.map((a,i)=>`<button class="buton ${i===0?"":"ikinci"}"
-      onclick="katilOl(${i})">${a}</button>`).join("")}
+    <p class="izle">Masanıza dokunun.</p>
+    ${S.masalar.map((m,i)=>`<button class="buton ${i===0?"":"ikinci"}"
+      onclick="masaAl(${i})">${m.ad}</button>`).join("")}
     <button class="buton ikinci" style="margin-top:14px"
-      onclick="katilOl(-1)">👀 Sadece izleyeceğim</button>
-    <button class="buton ikinci" onclick="giris()">geri</button>`);
+      onclick="masaAl(-1)">Sadece izleyeceğim</button>`);
 }
-function katilOl(masa){
-  const ad = masa>=0 ? ADLAR[masa] : "İzleyici";
-  ekran(`<h2>Bağlanılıyor…</h2>
-    <p class="izle">${masa>=0?ADLAR[masa]:"İzleyici"} olarak</p>`);
-  NET.katilBasla(null, ad, masa, err=>{
-    if(err) return ekran(`<h2>Bağlanılamadı</h2>
-      <p>Masa yönetimini kuran cihazın sayfası açık olmalı.
-         Önce biri <b>MASAYI BEN KURARIM</b>'a dokunsun.</p>
-      <button class="buton" onclick="katilEkran()">TEKRAR DENE</button>`);
-    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
-    ekran(`<h2>Bağlandınız</h2>
-      <p>${masa>=0?ADLAR[masa]+" masasındasınız.":"İzleyici olarak bağlandınız."}<br>
-         Masa yönetiminin başlatması bekleniyor…</p>`);
-  });
+function masaAl(i){
+  NET.benim=i; masaSoruldu=true;
+  NET.yolla({t:"masa", i});
+  agYaz(); if(SON) ciz(SON);
 }
 function yeniden(){ M.kur(ADLAR); M.basla(); }
 document.addEventListener("keydown", e=>{
