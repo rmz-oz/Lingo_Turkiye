@@ -243,6 +243,7 @@ function kelimeOyna(n, odul, opt, bitti){
   klvDurum = {};
   orta.innerHTML = `<div class="baslik" id="ust"></div>
     <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
+    ${opt.pas ? '<button class="buton ikinci" id="pasb" disabled>PAS</button>' : ''}
     <div class="kucuk" id="alt"></div>`;
   const tahta = $("#tahta");
   for(let r = 0; r < satirSay; r++){
@@ -256,6 +257,17 @@ function kelimeOyna(n, odul, opt, bitti){
     tahta.appendChild(d);
   }
   const satirlar = [...tahta.children];
+  let pasli = false;
+  if(opt.pas){
+    const pb = $("#pasb");
+    pb.style.cssText = "margin-top:8px;max-width:430px";
+    pb.onclick = () => { if(!pasli && sat > 0){ pasli = true; opt.pas(); } };
+  }
+  function pasYaz(){
+    const pb = $("#pasb");
+    if(pb){ pb.disabled = sat < 1;
+      pb.textContent = sat < 1 ? "PAS — önce bir tahmin yapın" : "PAS — başka kelime ▸"; }
+  }
   let kalanSn = SURE;
   function ustYaz(){
     const sn = opt.sureyok ? "" : ` · ${kalanSn} SN`;
@@ -304,9 +316,9 @@ function kelimeOyna(n, odul, opt, bitti){
     sat++; giris = gizli[0];
     if(sat >= satirSay){ if(!opt.sureyok) sureGoster(false);
       return setTimeout(() => bitti(false, gizli), 500); }
-    ustYaz(); yaz(); tik();
+    ustYaz(); yaz(); pasYaz(); tik();
   }
-  ustYaz(); yaz();
+  ustYaz(); yaz(); pasYaz();
   klavyeCiz(gir, sil, gonder);
   tik();
   return {gonder, sil, gir};
@@ -524,7 +536,9 @@ function finalGiris(){
        eve götüreceğiniz finalde belli olacak.</p>
     <p class="kucuk"><b>200 saniye</b> · dört kelime: 4, 5, 6 ve 7 harfli ·
        her kelime için <b>5 hak</b>. Bir kelimeyi bilemezseniz final biter,
-       o ana kadar çıktığınız basamağı kazanırsınız.</p>
+       o ana kadar çıktığınız basamağı kazanırsınız.<br>
+       Takılırsanız <b>PAS</b> ile aynı uzunlukta başka bir kelime alabilirsiniz —
+       ama önce <b>en az bir tahmin</b> yapmanız gerekir, süre işlemeye devam eder.</p>
     <table class="merd">${sat}</table>
     <p class="kucuk" style="color:var(--kirmizi)"><b>Dikkat:</b> 7 harfliye gelip
        bilemezseniz kazancınız <b>sıfır</b> olur.</p>
@@ -542,7 +556,9 @@ function finalKelime(){
   const n = FINAL.dizi[fIdx]; fSuan = n;
   bar.textContent = n === 7 ? "SÜPER LİNGO" : `FİNAL · ${n} HARFLİ`;
   const tut = sayac;
-  kelimeOyna(n, fKazanc(n), {satir: FINAL.satir, sureyok: true, odulYok: true},
+  kelimeOyna(n, fKazanc(n),
+    {satir: FINAL.satir, sureyok: true, odulYok: true,
+     pas: () => { if(!fBitti) finalKelime(); }},
     (ok) => {
       if(fBitti) return;
       if(ok){ fEnIyi = n; para = finalOdul(); paraYaz(); fIdx++; finalKelime(); }

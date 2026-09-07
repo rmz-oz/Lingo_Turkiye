@@ -557,6 +557,13 @@ const M = {
     S.msjTip="bek";
     this.gonder();
   },
+  pas(){
+    const S=this.S;
+    if(S.faz!=="final" || S.aktif<1) return;      // once en az bir tahmin
+    S.mesaj="Pas — aynı uzunlukta yeni kelime"; S.msjTip="bek";
+    this.gonder();
+    setTimeout(()=>{ if(S.faz==="final") this.finKelime(); }, 700);
+  },
   finBitir(){
     const S=this.S, F=S.fin; this.dur();
     const sifir = (F.suan===7 && F.enIyi!==7);
@@ -603,6 +610,7 @@ const NET = {
     if(!M.S) return;
     const S=M.S;
     if(m.t==="buzz") return M.buz(c.masa);
+    if(m.t==="pas"){ if(c.masa===S.cevaplayan) M.pas(); return; }
     if(c.masa!==S.cevaplayan) return;
     if(m.t==="harf") M.harf(m.c);
     else if(m.t==="sil") M.sil();
@@ -712,7 +720,8 @@ function ciz(S){
       <p><b>${S.masalar[F.masa].ad}</b> finalde. Üç etapta topladığı
          <b>₺${TL(t)}</b>'nin ne kadarını eve götüreceği burada belli olacak.</p>
       <p class="izle"><b>200 saniye</b> · 4, 5, 6 ve 7 harfli birer kelime ·
-         her biri için 5 hak</p>
+         her biri için 5 hak · takılınca <b>PAS</b> ile aynı uzunlukta yeni kelime
+         (önce en az bir tahmin şart)</p>
       ${sr}
       <p style="color:var(--kirmizi);font-size:14px">7 harfliye gelip bilemezse
          kazanç <b>sıfır</b> olur.</p>
@@ -762,6 +771,10 @@ function ciz(S){
       <div class="msj ${S.msjTip}">${S.mesaj}</div>`;
   if(dupz && S.buzz.acik && S.buzz.kalan.includes(NET.benim))
     h+=`<button class="buzz" id="bz2">BAS!</button>`;
+  if(S.faz==="final" && NET.benim===S.cevaplayan)
+    h+=`<button class="buton ikinci" id="pasb" ${S.aktif<1?"disabled":""}
+      style="max-width:460px">${S.aktif<1?"PAS — önce bir tahmin yapın"
+                                        :"PAS — başka kelime ▸"}</button>`;
   orta.innerHTML=h;
   const t=$("#tahta");
   const satirSay = puz ? 1 : (S.faz==="duello" ? DUELLO.hak
@@ -790,6 +803,7 @@ function ciz(S){
     t.appendChild(d);
   }
   if(dupz && $("#bz2")) $("#bz2").onclick=()=>NET.yolla({t:"buzz"});
+  if($("#pasb")) $("#pasb").onclick=()=>NET.yolla({t:"pas"});
   klavye(!benCevap);
   klvBoya(S);
 }
