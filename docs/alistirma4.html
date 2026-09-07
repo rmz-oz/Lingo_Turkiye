@@ -134,6 +134,8 @@ const skorEl = $("#skor"), sureKap = $("#sure"), sureBar = sureKap.querySelector
 let VERI = null, GECERLI = null, sayac = null;
 let sira = 0, dogru = 0, kullanilan = new Set(), gecmis = [];
 let HARF = null, ARS = [], YEN = [], HEDEF = TOPLAM;
+let KARISIK = false, BLOK = [], blokIdx = -1;
+const BLOKBOY = 3, BLOKSAY = 3;              // karisik: 3 harf x 3 kelime
 
 /* ---- kelime secimi: %80 arsiv (cikis sayisiyla agirlikli), %20 sozluk ---- */
 let KUM = null;
@@ -144,8 +146,24 @@ function havuzKur(L){
   if(L) YEN = YEN.filter(w => w[0] === L);
   if(!ARS.length && !YEN.length && L)
     YEN = [...GECERLI].filter(w => w[0] === L);
-  const top = ARS.length + YEN.length;
-  HEDEF = Math.max(1, Math.min(TOPLAM, top));
+}
+function havuzBoy(L){
+  const a = VERI.arsiv[N].filter(x => x[0][0] === L).length;
+  const y = (VERI.yeni[N] || []).filter(w => w[0] === L).length;
+  return a + y;
+}
+/* karisik mod: arsivdeki agirligina gore 3 farkli harf sec */
+function blokSec(){
+  const uygun = Object.keys(DERS.harf).filter(L => havuzBoy(L) >= BLOKBOY);
+  const agirlik = uygun.map(L => VERI.arsiv[N].filter(x => x[0][0] === L).length + 1);
+  const sec = [];
+  const kalan = uygun.slice(), ag = agirlik.slice();
+  while(sec.length < BLOKSAY && kalan.length){
+    let t = ag.reduce((x, y) => x + y, 0), r = Math.random()*t, i = 0;
+    while(i < kalan.length - 1 && (r -= ag[i]) > 0) i++;
+    sec.push(kalan[i]); kalan.splice(i, 1); ag.splice(i, 1);
+  }
+  return sec;
 }
 function kumul(){
   if(KUM) return KUM;
@@ -241,7 +259,10 @@ function kelimeOyna(){
   const satirlar = [...tahta.children];
   function ustYaz(){
     $("#ust").textContent =
-      `${sira+1}. KELİME / ${HEDEF} · ${SATIR - sat} HAK · ${kalanSn} SN`;
+      (KARISIK
+        ? `${TRU(HARF)} · ${sira % BLOKBOY + 1}/${BLOKBOY} · TOPLAM ${sira+1}/${HEDEF}`
+        : `${sira+1}. KELİME / ${HEDEF}`)
+      + ` · ${SATIR - sat} HAK · ${kalanSn} SN`;
     satirlar.forEach((s, k) => s.classList.toggle("aktif", k === sat));
   }
   function yaz(){
@@ -357,24 +378,42 @@ function ekran(html){
 }
 function sonraki(){
   if(sira >= HEDEF) return ozet();
+  if(KARISIK){
+    const b = Math.floor(sira / BLOKBOY);
+    if(b !== blokIdx){
+      blokIdx = b; havuzKur(BLOK[b]);
+      bar.textContent = `KARIŞIK · ${N} HARFLİ · ${TRU(BLOK[b])}`;
+    }
+  }
   kelimeOyna();
 }
 function basla(L){
-  havuzKur(L || null);
-  sira = 0; dogru = 0; kullanilan = new Set(); gecmis = []; skorYaz();
-  bar.textContent = L ? `ALIŞTIRMA · 4 HARFLİ · ${TRU(L)}` : "ALIŞTIRMA · 4 HARFLİ";
-  kelimeOyna();
+  sira = 0; dogru = 0; kullanilan = new Set(); gecmis = []; blokIdx = -1;
+  KARISIK = !L;
+  if(L){
+    havuzKur(L);
+    HEDEF = Math.max(1, Math.min(TOPLAM, ARS.length + YEN.length));
+    bar.textContent = `ALIŞTIRMA · 4 HARFLİ · ${TRU(L)}`;
+  } else {
+    BLOK = blokSec();
+    HEDEF = BLOK.length * BLOKBOY;
+    HARF = null;
+  }
+  skorYaz(); sonraki();
 }
 function ozet(){
-  const en = +(localStorage.getItem("lingo_alistirma_" + N + (HARF || "")) || 0);
-  if(dogru > en) localStorage.setItem("lingo_alistirma_" + N + (HARF || ""), dogru);
+  const en = +(localStorage.getItem("lingo_alistirma_" + N + (KARISIK ? "K" : HARF)) || 0);
+  if(dogru > en) localStorage.setItem("lingo_alistirma_" + N + (KARISIK ? "K" : HARF), dogru);
   const sat = gecmis.map(g =>
     `<span class="k ${g.ok ? "c2" : "c8"}">${TRU(g.w)}</span>`).join("");
-  ekran(`<p class="kucuk">${N} HARFLİ ALIŞTIRMA${HARF ? " · " + TRU(HARF) : ""}</p>
+  const bas = KARISIK ? "KARIŞIK · " + BLOK.map(TRU).join(" · ")
+                      : TRU(HARF) + " HARFİ";
+  ekran(`<p class="kucuk">${N} HARFLİ ALIŞTIRMA · ${bas}</p>
     <div class="tutar">${dogru} / ${HEDEF}</div>
     <div class="wrap" style="justify-content:center;margin:14px 0">${sat}</div>
-    <p class="kucuk">${dogru > en ? "En iyiniz bu!" : "En iyiniz: " + en + " / " + TOPLAM}</p>
-    <button class="buton" onclick="basla(HARF)">AYNI HARFTEN DEVAM</button>
+    <p class="kucuk">${dogru > en ? "En iyiniz bu!" : "En iyiniz: " + en}</p>
+    <button class="buton" onclick="basla(${KARISIK ? "null" : "'" + HARF + "'"})">
+      ${KARISIK ? "YENİ 9 KELİME" : "AYNI HARFTEN DEVAM"}</button>
     <button class="buton ikinci" onclick="giris()">BAŞKA HARF SEÇ</button>`);
 }
 function giris(){
@@ -395,10 +434,11 @@ function giris(){
        yanındaki sayı o harfte sözlükte kaç 4 harfli kelime olduğudur.</p>
     <div class="lej3"><i class="z1">kolay</i><i class="z2">orta</i><i class="z3">zor</i></div>
     <div class="hgrid">${tus}</div>
-    <button class="buton ikinci karis" onclick="basla(null)">KARIŞIK — bütün harfler</button>
+    <button class="buton ikinci karis" onclick="basla(null)">KARIŞIK — 3 harf × 3 kelime</button>
     <p class="kucuk" style="margin-top:12px">Seçtiğiniz harften arka arkaya
-       <b>10 kelime</b> gelir; ilk harf verilidir, <b>5 hak</b> ve her tahmin için
-       <b>20 saniye</b>. Bilemediğinizde o harfin <b>doğru açılış ikilisi</b> ve
+       <b>10 kelime</b> gelir. <b>Karışık</b>ta ise 9 kelime: rastgele üç harf,
+       her harften <b>üçer kelime peş peşe</b>. İlk harf verilidir, <b>5 hak</b>
+       ve her tahmin için <b>20 saniye</b>. Bilemediğinizde o harfin <b>doğru açılış ikilisi</b> ve
        çıkmış kelimeleri gösterilir.</p>
     <p class="kucuk">4 harfli cevapların <b>%95</b>'i daha önce çıkmış bir
        kelime, <b>%5</b>'i ilk kez soruluyor.</p></div>`;
