@@ -57,7 +57,8 @@ button{font:inherit;cursor:pointer}
 #klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
 #klavye button{flex:1 1 0;min-width:0;height:46px;border:0;border-radius:7px;
   background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
-#klavye button.gnis{flex:1.7 1 0;font-size:13px;letter-spacing:.5px}
+#klavye button.gnis{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
+#klavye button.dar{flex:1.25 1 0;font-size:12.5px;letter-spacing:.5px}
 #klavye button.tam{background:var(--yesil)}
 #klavye button.var{background:var(--sari);color:#231a00}
 #klavye button.yok{background:#1e2933;color:#5d6b7a}
@@ -202,30 +203,20 @@ function sureBasla(sn, bitince, tikla){
 /* ---------------- klavye ---------------- */
 const DIZ = ["ertyuıopğü", "asdfghjklşi", "zcvbnmöç"];   // Türkçe Q
 let klvDurum = {}, klvTus = {};
-function klavyeCiz(gir, sil, gonder, pasVar, pas){
+function klavyeCiz(gir, sil, gonder){
   klv.innerHTML = ""; klvTus = {};
   DIZ.forEach((sr, k) => {
     const d = document.createElement("div"); d.className = "sr";
-    if(k === 2){
-      const b = document.createElement("button"); b.className = "gnis";
-      b.textContent = pasVar ? "PAS" : "SİL";
-      b.onclick = pasVar ? pas : sil; d.appendChild(b);
-    }
     for(const c of sr){
       const b = document.createElement("button"); b.textContent = TRU(c);
       b.onclick = () => gir(c); klvTus[c] = b; d.appendChild(b);
     }
-    if(k === 2){
-      const b = document.createElement("button"); b.className = "gnis";
-      b.textContent = "TAMAM"; b.onclick = gonder; d.appendChild(b);
-    }
+    if(k === 1){ const b = document.createElement("button");     // SİL, TAMAM'in ustunde
+      b.className = "dar"; b.textContent = "SİL"; b.onclick = sil; d.appendChild(b); }
+    if(k === 2){ const b = document.createElement("button");
+      b.className = "gnis"; b.textContent = "TAMAM"; b.onclick = gonder; d.appendChild(b); }
     klv.appendChild(d);
   });
-  if(pasVar){
-    const d = document.createElement("div"); d.className = "sr";
-    const b = document.createElement("button"); b.className = "gnis";
-    b.textContent = "SİL"; b.onclick = sil; d.appendChild(b); klv.appendChild(d);
-  }
   klv.classList.remove("gizli");
   for(const c in klvDurum) if(klvTus[c]) klvTus[c].className = klvDurum[c];
 }
@@ -316,7 +307,7 @@ function kelimeOyna(n, odul, opt, bitti){
     ustYaz(); yaz(); tik();
   }
   ustYaz(); yaz();
-  klavyeCiz(gir, sil, gonder, !!opt.pas, opt.pas || (()=>{}));
+  klavyeCiz(gir, sil, gonder);
   tik();
   return {gonder, sil, gir};
 }
@@ -389,7 +380,7 @@ function puzzleOyna(nler, tamOdul, bitti){
   klavyeCiz(gir, sil, () => {
     if(giris.length < n){ uyar("Harfler eksik"); return; }
     dene(giris);
-  }, false);
+  });
   durdur(); sureGoster(true); sureKap.classList.remove("az");
   const bas = Date.now(); let sonAcma = 0;
   sayac = setInterval(() => {
