@@ -89,6 +89,13 @@ button{font:inherit;cursor:pointer}
 .sonuc.iyi{color:var(--yesil)} .sonuc.kotu{color:var(--kirmizi)}
 .sonuc .kw{font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;
   color:var(--altin);display:block;font-size:22px;margin-top:3px}
+table.merd{width:100%;border-collapse:collapse;margin:12px 0 4px;font-size:15.5px}
+table.merd td{padding:6px 2px;border-bottom:1px solid var(--cizgi);text-align:left;
+  color:var(--soluk)}
+table.merd td:last-child{text-align:right;color:var(--murekkep);
+  font-variant-numeric:tabular-nums}
+table.merd tr:last-child td{border-bottom:0;color:var(--altin)}
+table.merd tr:last-child td b{color:var(--altin)}
 .gizli{display:none!important}
 </style></head><body>
 
@@ -113,7 +120,8 @@ const ETAPLAR = [
   {ad:"3. ETAP", kelime:[6,6,6], puz:[10,11], pk:3000, pp:4000}
 ];
 const TAMBONUS = 1000;
-const FINAL = {sure:120, dizi:[4,4,5,5,6,6,7], odul:{4:2500,5:5000,6:10000,7:250000}, satir:3};
+const FINAL = {sure:200, dizi:[4,5,6,7], carpan:{4:0.5, 5:1, 6:2, 7:2},
+               superEk:250000, satir:5};
 
 let para = 0, kullanilan = new Set(), sayac = null;
 const GECERLI = {};
@@ -297,7 +305,8 @@ function kelimeOyna(n, odul, opt, bitti){
       for(let i = 0; i < n; i++) h[i].className = "hucre " + r[i];
       klvBoya(tah, r);
       if(tah === gizli){
-        para += odul; paraYaz(); if(!opt.sureyok) sureGoster(false);
+        if(!opt.odulYok){ para += odul; paraYaz(); }
+        if(!opt.sureyok) sureGoster(false);
         return setTimeout(() => bitti(true, gizli), 620);
       }
     }
@@ -419,7 +428,10 @@ function giris(){
           azaldıkça harfler kendiliğinden açılır, yanlış tahmin de bir harf açar.
           <b>Her açılan harf ödülü düşürür</b> — erken bilen çok kazanır.</li>
       <li>Bir etaptaki <b>üç kelimeyi de</b> bilirseniz <b>+₺1.000</b> prim.</li>
-      <li>Finalde <b>120 saniye</b>, pas hakkı var; 7 harfli <b>süper lingo</b> ₺250.000.</li>
+      <li>Final <b>200 saniye</b>: 4, 5, 6 ve 7 harfli birer kelime, her biri için
+          5 hak. Ne kadar yukarı çıkarsanız üç etapta biriktirdiğinizin o kadar
+          büyük katını alırsınız — 7 harfliyi bilirseniz <b>iki katı + ₺250.000</b>,
+          bilemezseniz <b>sıfır</b>.</li>
     </ul>
     ${en ? `<p class="kucuk" style="margin-top:12px">En iyi kazancınız: <b>₺${TL(en)}</b></p>` : ""}
     <button class="buton" onclick="basla()">OYNA</button>`);
@@ -485,38 +497,68 @@ function kacKez(w){
 }
 
 /* ---------------- final ---------------- */
-let fIdx = 0, fKazanc = 0;
+let fIdx = 0, fTaban = 0, fEnIyi = 0, fSuan = 0, fBitti = false;
+function fKazanc(n){
+  return n === 7 ? fTaban*2 + FINAL.superEk : Math.round(fTaban*FINAL.carpan[n]/100)*100;
+}
+function finalOdul(){ return fEnIyi ? fKazanc(fEnIyi) : 0; }
 function finalGiris(){
   bar.textContent = "FİNAL";
+  fTaban = para;
+  const sat = FINAL.dizi.map(n => `<tr><td>${n} harfli${n===7?" · süper lingo":""}</td>
+      <td><b>₺${TL(fKazanc(n))}</b></td></tr>`).join("");
   ekran(`<h2>FİNAL</h2>
-    <p><b>120 saniye</b>. Kelimeler 4 harfliden başlar, 7 harfliye kadar uzar.
-       Bilemediğinizde <b>PAS</b> deyip sonrakine geçebilirsiniz.</p>
-    <p class="kucuk">₺2.500 · ₺5.000 · ₺10.000 · süper lingo <b>₺250.000</b></p>
+    <p>Üç etapta <b>₺${TL(fTaban)}</b> biriktirdiniz. Bunun ne kadarını
+       eve götüreceğiniz finalde belli olacak.</p>
+    <p class="kucuk"><b>200 saniye</b> · dört kelime: 4, 5, 6 ve 7 harfli ·
+       her kelime için <b>5 hak</b>. Bir kelimeyi bilemezseniz final biter,
+       o ana kadar çıktığınız basamağı kazanırsınız.</p>
+    <table class="merd">${sat}</table>
+    <p class="kucuk" style="color:var(--kirmizi)"><b>Dikkat:</b> 7 harfliye gelip
+       bilemezseniz kazancınız <b>sıfır</b> olur.</p>
     <button class="buton" onclick="finalBasla()">BAŞLA</button>`);
 }
 function finalBasla(){
-  fIdx = 0; fKazanc = 0;
-  sureBasla(FINAL.sure, () => { sureGoster(false); finalBitir(); });
+  fIdx = 0; fEnIyi = 0; fSuan = 0; fBitti = false;
+  para = 0; paraYaz();
+  sureBasla(FINAL.sure, () => finalBitir());
   finalKelime();
 }
 function finalKelime(){
-  if(fIdx >= FINAL.dizi.length){ durdur(); return finalBitir(); }
-  const n = FINAL.dizi[fIdx], odul = FINAL.odul[n];
-  bar.textContent = n === 7 ? "SÜPER LİNGO" : `FİNAL · ${fIdx+1}/${FINAL.dizi.length}`;
-  const kaydet = sayac;
-  kelimeOyna(n, odul, {satir: FINAL.satir, sureyok: true, pas: () => { fIdx++; finalKelime(); }},
-    (ok) => { if(ok) fKazanc += odul; fIdx++; finalKelime(); });
-  sayac = kaydet; sureGoster(true);
+  if(fBitti) return;
+  if(fIdx >= FINAL.dizi.length) return finalBitir();
+  const n = FINAL.dizi[fIdx]; fSuan = n;
+  bar.textContent = n === 7 ? "SÜPER LİNGO" : `FİNAL · ${n} HARFLİ`;
+  const tut = sayac;
+  kelimeOyna(n, fKazanc(n), {satir: FINAL.satir, sureyok: true, odulYok: true},
+    (ok) => {
+      if(fBitti) return;
+      if(ok){ fEnIyi = n; para = finalOdul(); paraYaz(); fIdx++; finalKelime(); }
+      else finalBitir();
+    });
+  sayac = tut; sureGoster(true);
 }
 function finalBitir(){
+  if(fBitti) return; fBitti = true;
   durdur(); sureGoster(false); klv.classList.add("gizli");
+  const sifirlandi = (fSuan === 7 && fEnIyi !== 7);
+  para = sifirlandi ? 0 : finalOdul();
+  paraYaz();
   const en = +(localStorage.getItem("lingo_oyun_rekor") || 0);
   if(para > en) localStorage.setItem("lingo_oyun_rekor", para);
   bar.textContent = "OYUN BİTTİ";
-  ekran(`<p class="kucuk">TOPLAM KAZANÇ</p>
+  let not;
+  if(fEnIyi === 7) not = `<b style="color:var(--altin)">SÜPER LİNGO!</b>
+    ₺${TL(fTaban)} × 2 + ₺${TL(FINAL.superEk)}`;
+  else if(sifirlandi) not = `7 harfliye kadar geldiniz ama bilemediniz —
+    ₺${TL(fKazanc(6))} elden gitti.`;
+  else if(fEnIyi) not = `${fEnIyi} harfliye kadar çıktınız.
+    ₺${TL(fTaban)} biriktirmiştiniz.`;
+  else not = `Finalde ilk kelimeyi geçemediniz. ₺${TL(fTaban)} elden gitti.`;
+  ekran(`<p class="kucuk">EVE GÖTÜRDÜĞÜNÜZ</p>
     <div class="tutar">₺${TL(para)}</div>
-    <p class="kucuk" style="margin-top:10px">Finalde ₺${TL(fKazanc)} ·
-      ${para > en ? "yeni rekor!" : "en iyi: ₺" + TL(en)}</p>
+    <p class="kucuk" style="margin-top:10px">${not}</p>
+    <p class="kucuk">${para > en ? "Yeni rekor!" : "En iyi: ₺" + TL(en)}</p>
     <button class="buton" onclick="giris()">TEKRAR OYNA</button>
     <button class="buton ikinci" onclick="location.href='index.html'">ÇALIŞMA SAYFALARI</button>`);
 }
