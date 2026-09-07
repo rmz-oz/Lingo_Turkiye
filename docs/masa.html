@@ -777,8 +777,9 @@ function ciz(S){
                                         :"PAS — başka kelime ▸"}</button>`;
   orta.innerHTML=h;
   const t=$("#tahta");
-  const satirSay = puz ? 1 : (S.faz==="duello" ? DUELLO.hak
-                    : (S.faz==="final" ? FINAL.satir : SATIR));
+  const taban = S.faz==="duello" ? DUELLO.hak : (S.faz==="final" ? FINAL.satir : SATIR);
+  /* tahta gerektigi kadar uzar: calmada 6., 7. satir asagi eklenir */
+  const satirSay = puz ? 1 : Math.max(taban, S.satirlar.length + (S.acik ? 0 : 1));
   for(let r=0;r<satirSay;r++){
     const d=document.createElement("div");
     d.className="satir"+((r===S.satirlar.length&&!puz)||puz?" aktif":"");
