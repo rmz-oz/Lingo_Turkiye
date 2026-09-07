@@ -260,8 +260,9 @@ const M = {
     S.aktif++; S.hak=(S.faz==="final"?FINAL.satir:SATIR)-S.aktif; S.giris=this.GIZLI[0];
     if(S.faz==="final"){
       if(S.aktif>=FINAL.satir){
-        S.acik=this.GIZLI; S.mesaj=`Bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
-        this.gonder(); return setTimeout(()=>this.finBitir(), 2000);
+        S.acik=this.GIZLI;
+        S.mesaj=`Bilinemedi — doğru cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+        this.gonder(); return setTimeout(()=>this.finBitir(), 2600);
       }
       S.mesaj=`${S.hak} hak kaldı`; S.msjTip="bek";
       return this.gonder();
@@ -560,9 +561,10 @@ const M = {
   pas(){
     const S=this.S;
     if(S.faz!=="final" || S.aktif<1) return;      // once en az bir tahmin
-    S.mesaj="Pas — aynı uzunlukta yeni kelime"; S.msjTip="bek";
+    S.acik=this.GIZLI;
+    S.mesaj=`Pas — cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
     this.gonder();
-    setTimeout(()=>{ if(S.faz==="final") this.finKelime(); }, 700);
+    setTimeout(()=>{ if(S.faz==="final") this.finKelime(); }, 2200);
   },
   finBitir(){
     const S=this.S, F=S.fin; this.dur();
@@ -832,6 +834,8 @@ function ciz(S){
                c.textContent=g?TRU(g):""; c.className="hucre"+(g?" dolu":""); }
       } else if(r<S.satirlar.length){
         c.textContent=TRU(S.satirlar[r].h[i]||""); c.className="hucre "+S.satirlar[r].r[i];
+      } else if(r===S.satirlar.length && S.acik){
+        c.textContent=TRU(S.acik[i]); c.className="hucre tam";
       } else if(r===S.satirlar.length){
         if(i===0){ c.textContent=TRU(S.giris[0]||""); c.className="hucre ilk"; }
         else { c.textContent=S.giris[i]?TRU(S.giris[i]):""; c.className="hucre"+(S.giris[i]?" dolu":""); }
