@@ -261,7 +261,20 @@ function kelimeOyna(n, odul, opt, bitti){
   if(opt.pas){
     const pb = $("#pasb");
     pb.style.cssText = "margin-top:8px;max-width:430px";
-    pb.onclick = () => { if(!pasli && sat > 0){ pasli = true; opt.pas(); } };
+    pb.onclick = () => {
+      if(!pasli && sat > 0){ pasli = true; cevabiGoster("Pas", opt.pas); } };
+  }
+  function cevabiGoster(etiket, sonra){
+    if(!opt.sureyok) durdur();              // finalde global saat calismaya devam eder
+    const pb = $("#pasb"); if(pb){ pb.disabled = true; }
+    klv.classList.add("gizli");
+    const alt = $("#alt");
+    if(alt) alt.innerHTML =
+      `<div style="margin-top:9px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;
+         color:var(--soluk);font-weight:700">${etiket} · doğru cevap</div>
+       <div style="font-family:ui-monospace,Menlo,monospace;font-size:25px;font-weight:800;
+         letter-spacing:4px;color:var(--altin);margin-top:3px">${TRU(gizli)}</div>`;
+    setTimeout(sonra, 1900);
   }
   function pasYaz(){
     const pb = $("#pasb");
@@ -314,7 +327,9 @@ function kelimeOyna(n, odul, opt, bitti){
       }
     }
     sat++; giris = gizli[0];
-    if(sat >= satirSay){ if(!opt.sureyok) sureGoster(false);
+    if(sat >= satirSay){
+      if(!opt.sureyok) sureGoster(false);
+      if(opt.sureyok) return cevabiGoster("Bilinemedi", () => bitti(false, gizli));
       return setTimeout(() => bitti(false, gizli), 500); }
     ustYaz(); yaz(); pasYaz(); tik();
   }
