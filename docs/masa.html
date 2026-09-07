@@ -122,6 +122,8 @@ const FINAL = {sure:200, dizi:[4,5,6,7], carpan:{4:0.5,5:1,6:2,7:2},
                superEk:250000, satir:5};
 const PRIM = 1000, SATIR = 5, SURE = 25, CALSURE = 15, PUZSURE = 60, PUZARALIK = 8, KELSAY = 3;
 const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP — DÜELLO","FİNAL"];
+/* tek sabit oda: kod yazmaya gerek yok, herkes ayni odaya girer */
+const ODA = "lingotr-ailecuk-szyr", ODAAD = "AİLECÜK";
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const TRL = s => s.replace(/I/g,"ı").replace(/İ/g,"i").toLowerCase();
 const TL = n => n.toLocaleString("tr-TR");
@@ -549,8 +551,8 @@ const M = {
 const NET = {
   peer:null, host:false, baglar:[], baglanti:null, kod:null, benim:-1,
   kurucuBasla(kod, tamam){
-    this.host=true; this.kod=kod;
-    this.peer=new Peer("lingotr-"+kod, {debug:0});
+    this.host=true; this.kod=ODAAD;
+    this.peer=new Peer(ODA, {debug:0});
     this.peer.on("open", ()=>tamam(null));
     this.peer.on("error", e=>tamam(e.type||"hata"));
     this.peer.on("connection", c=>{
@@ -578,10 +580,10 @@ const NET = {
   },
   yayinla(m){ for(const c of this.baglar) if(c.open) c.send(m); },
   katilBasla(kod, ad, masa, tamam){
-    this.host=false; this.kod=kod; this.benim=masa;
+    this.host=false; this.kod=ODAAD; this.benim=masa;
     this.peer=new Peer({debug:0});
     this.peer.on("open", ()=>{
-      const c=this.peer.connect("lingotr-"+kod, {reliable:true});
+      const c=this.peer.connect(ODA, {reliable:true});
       this.baglanti=c;
       c.on("open", ()=>{ c.send({t:"katil", masa, ad}); tamam(null); agYaz(); });
       c.on("data", m=>{ if(m.t==="durum") ciz(m.d); if(m.t==="sen") this.benim=m.masa; });
@@ -768,8 +770,6 @@ M.temiz=function(){
 };
 
 /* ================= kurulum ekranlari ================= */
-function kod4(){ const A="ABCDEFGHKLMNPRSTUVYZ23456789"; let s="";
-  for(let i=0;i<4;i++) s+=A[Math.floor(Math.random()*A.length)]; return s; }
 let ADLAR=["Serpil & Zeynep","Yusuf","Ramiz"];
 function giris(){
   etEl.textContent="MASA YARIŞMASI";
@@ -792,21 +792,23 @@ function giris(){
       tutmalı. Diğerleri linkle katılır.</p>`);
 }
 function odaAc(){
-  const k=kod4();
   ekran(`<h2>Oda açılıyor…</h2><p class="izle">Bağlantı kuruluyor</p>`);
-  NET.kurucuBasla(k, err=>{
-    if(err) return ekran(`<h2>Oda açılamadı</h2><p>${err}</p>
-      <button class="buton" onclick="odaAc()">TEKRAR DENE</button>`);
+  NET.kurucuBasla(null, err=>{
+    if(err) return ekran(`<h2>Oda açılamadı</h2>
+      <p>${err==="unavailable-id"
+        ? "Zaten açık bir oda var — başka bir cihazda ya da sekmede. Onu kapatıp tekrar deneyin."
+        : "Bağlantı kurulamadı: "+err}</p>
+      <button class="buton" onclick="odaAc()">TEKRAR DENE</button>
+      <button class="buton ikinci" onclick="giris()">geri</button>`);
     M.kur(ADLAR);
-    kodEl.classList.remove("gizli"); kodEl.textContent=k;
-    const url=location.origin+location.pathname+"#"+k;
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    const url=location.origin+location.pathname;
     ekran(`<h2>Oda hazır</h2>
-      <p>Kod <b style="letter-spacing:3px">${k}</b></p>
-      <div class="link">${url}</div>
-      <button class="buton" onclick="linkKopya('${url}')">LİNKİ KOPYALA</button>
+      <p>Herkes bu sayfayı açıp <b>BİR ODAYA KATIL</b>'a dokunsun,
+         sonra masasını seçsin. Kod yok.</p>
       <a class="buton mor" style="text-decoration:none"
-         href="https://wa.me/?text=${encodeURIComponent("Lingo masa yarışması! Katıl: "+url)}">
-         WHATSAPP'TAN GÖNDER</a>
+         href="https://wa.me/?text=${encodeURIComponent("Ailecük başlıyor! Aç ve masanı seç: "+url)}">
+         WHATSAPP'TAN LİNK GÖNDER</a>
       <p class="izle" id="bek">Katılanlar bekleniyor…</p>
       <button class="buton" onclick="M.basla()">OYUNU BAŞLAT ▸</button>
       <p class="izle">Masa yönetimi sizde. Siz de bir masaya oturabilirsiniz:</p>
@@ -824,30 +826,26 @@ function uyariGoster(m){
 }
 function linkKopya(u){ if(navigator.clipboard) navigator.clipboard.writeText(u)
   .then(()=>uyariGoster("Link kopyalandı")); }
-function katilEkran(kod){
-  const k=(kod||location.hash.replace("#","")||"").toUpperCase();
-  if(k.length!==4){
-    return ekran(`<h2>Oda linki gerekli</h2>
-      <p>Masa yönetimini kuran kişinin gönderdiği <b>linke</b> dokunun.
-         Kod elle yazmanıza gerek yok.</p>
-      <button class="buton ikinci" onclick="giris()">geri</button>`);
-  }
-  ekran(`<span class="rozet">${k}</span>
+function katilEkran(){
+  ekran(`<span class="rozet">${ODAAD}</span>
     <h2>Hangi masadasınız?</h2>
-    <p class="izle">Masanıza dokunun, oyun hemen başlar.</p>
+    <p class="izle">Masanıza dokunun — kod ya da isim yazmak yok.</p>
     ${ADLAR.map((a,i)=>`<button class="buton ${i===0?"":"ikinci"}"
-      onclick="katilOl('${k}',${i})">${a}</button>`).join("")}
+      onclick="katilOl(${i})">${a}</button>`).join("")}
     <button class="buton ikinci" style="margin-top:14px"
-      onclick="katilOl('${k}',-1)">👀 Sadece izleyeceğim</button>`);
+      onclick="katilOl(-1)">👀 Sadece izleyeceğim</button>
+    <button class="buton ikinci" onclick="giris()">geri</button>`);
 }
-function katilOl(k, masa){
+function katilOl(masa){
   const ad = masa>=0 ? ADLAR[masa] : "İzleyici";
-  ekran(`<h2>Bağlanılıyor…</h2><p class="izle">${k} odasına</p>`);
-  NET.katilBasla(k, ad, masa, err=>{
+  ekran(`<h2>Bağlanılıyor…</h2>
+    <p class="izle">${masa>=0?ADLAR[masa]:"İzleyici"} olarak</p>`);
+  NET.katilBasla(null, ad, masa, err=>{
     if(err) return ekran(`<h2>Bağlanılamadı</h2>
-      <p>Kuran kişinin sayfası açık olmalı. Linke tekrar dokunun.</p>
-      <button class="buton" onclick="katilEkran('${k}')">TEKRAR DENE</button>`);
-    kodEl.classList.remove("gizli"); kodEl.textContent=k;
+      <p>Masa yönetimini kuran cihazın sayfası açık olmalı.
+         Önce biri <b>MASA YÖNETİMİNİ BEN KURAYIM</b>'a dokunsun.</p>
+      <button class="buton" onclick="katilEkran()">TEKRAR DENE</button>`);
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
     ekran(`<h2>Bağlandınız</h2>
       <p>${masa>=0?ADLAR[masa]+" masasındasınız.":"İzleyici olarak bağlandınız."}<br>
          Masa yönetiminin başlatması bekleniyor…</p>`);
@@ -866,7 +864,7 @@ function yukle(){
   fetch("oyun-veri.json").then(r=>{ if(!r.ok) throw 0; return r.json(); })
     .then(d=>{ VERI=d; GECERLI={};
       for(const n in VERI.gecerli) GECERLI[n]=new Set(VERI.gecerli[n]);
-      if(location.hash.length===5) katilEkran(); else giris(); })
+      giris(); })
     .catch(()=>ekran(`<h2>Yüklenemedi</h2>
       <button class="buton" onclick="location.reload()">YENİLE</button>`));
 }
