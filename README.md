@@ -6,6 +6,10 @@
 
 <br>
 
+## 📺 [MASA YARIŞMASI](https://rmz-oz.github.io/Lingo_Turkiye/masa.html)
+
+<br>
+
 ## 🎲 [AİLECE YARIŞ](https://rmz-oz.github.io/Lingo_Turkiye/yaris.html)
 
 <br>
