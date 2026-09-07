@@ -617,6 +617,12 @@ const NET = {
     else if(m.t==="gonder") M.gonderTahmin();
   },
   yayinla(m){ for(const c of this.baglar) if(c.open) c.send(m); },
+  tazele(){                                   // 2 sn'de bir tam durum: kacan paket onarilir
+    if(this._t) return;
+    this._t=setInterval(()=>{
+      if(this.host && M.S && this.baglar.length) this.yayinla({t:"durum", d:M.temiz()});
+    }, 2000);
+  },
   katilBasla(kod, ad, masa, tamam){
     this.host=false; this.kod=ODAAD; this.benim=masa;
     this.peer=new Peer({debug:0});
@@ -658,9 +664,12 @@ function klavye(kilit){
     DIZ.forEach((sr,k)=>{
       const d=document.createElement("div"); d.className="sr";
       for(const c of sr){ const b=document.createElement("button");
-        b.textContent=TRU(c); b.onclick=()=>NET.yolla({t:"harf", c}); klvTus[c]=b; d.appendChild(b); }
+        b.textContent=TRU(c);
+        b.onclick=()=>{ yerelHarf(c); NET.yolla({t:"harf", c}); };
+        klvTus[c]=b; d.appendChild(b); }
       if(k===1){ const b=document.createElement("button"); b.className="dar";
-        b.textContent="SİL"; b.onclick=()=>NET.yolla({t:"sil"}); d.appendChild(b); }
+        b.textContent="SİL"; b.onclick=()=>{ yerelSil(); NET.yolla({t:"sil"}); };
+        d.appendChild(b); }
       if(k===2){ const b=document.createElement("button"); b.className="gnis";
         b.textContent="TAMAM"; b.onclick=()=>NET.yolla({t:"gonder"}); d.appendChild(b); }
       klv.appendChild(d);
@@ -669,6 +678,34 @@ function klavye(kilit){
   }
   klv.classList.remove("gizli");
   klv.classList.toggle("kilit", kilit);
+}
+/* yerel yanki: sunucudan cevap beklemeden kendi ekranina yaz.
+   Hemen ardindan gelen resmi durum zaten uzerine yazar. */
+function yerelHarf(c){
+  const S=SON; if(!S || NET.benim!==S.cevaplayan) return;
+  if(S.faz==="puzzle"||S.faz==="dupuzzle"){
+    const P=S.puzzle; if(!P||!S.pgir) return;
+    for(let i=0;i<P.n;i++){
+      if(P.acik.includes(i)) continue;
+      if(!S.pgir[i]){ S.pgir[i]=c; return ciz(S); }
+    }
+    return;
+  }
+  if(["kelime","calma","duello","final"].includes(S.faz) && S.giris.length<S.n){
+    S.giris+=c; ciz(S);
+  }
+}
+function yerelSil(){
+  const S=SON; if(!S || NET.benim!==S.cevaplayan) return;
+  if(S.faz==="puzzle"||S.faz==="dupuzzle"){
+    const P=S.puzzle; if(!P||!S.pgir) return;
+    for(let i=P.n-1;i>=0;i--){
+      if(P.acik.includes(i)) continue;
+      if(S.pgir[i]){ S.pgir[i]=null; return ciz(S); }
+    }
+    return;
+  }
+  if(S.giris && S.giris.length>1){ S.giris=S.giris.slice(0,-1); ciz(S); }
 }
 function klvBoya(S){
   const dur={}, o={tam:3,var:2,yok:1};
@@ -846,7 +883,7 @@ function odaAc(){
         : "Bağlantı kurulamadı: "+err}</p>
       <button class="buton" onclick="odaAc()">TEKRAR DENE</button>
       <button class="buton ikinci" onclick="giris()">geri</button>`);
-    M.kur(ADLAR);
+    M.kur(ADLAR); NET.tazele();
     kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
     const url=location.origin+location.pathname;
     ekran(`<h2>Oda hazır</h2>
