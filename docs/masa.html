@@ -1,0 +1,635 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f1720">
+<title>Lingo Masa Yarışması</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
+<style>
+:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
+  --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--gri:#3a4756;
+  --kirmizi:#d94a5a;--altin:#f4c95d;--mor:#6c5ce7}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;user-select:none}
+button{font:inherit;cursor:pointer}
+#bar{display:flex;align-items:center;gap:9px;padding:8px 11px;background:#0a1119;
+  border-bottom:1px solid var(--cizgi);flex:none;font-size:12.5px}
+#bar .kod{background:var(--mor);color:#fff;border-radius:999px;padding:3px 11px;
+  font-weight:800;letter-spacing:1.5px}
+#bar .et{color:var(--altin);font-weight:800;letter-spacing:.8px;text-transform:uppercase}
+#bar .ag{margin-left:auto;color:var(--soluk)}
+#bar .ag b{color:var(--yesil)}
+#sure{width:100%;height:4px;background:#22303d;flex:none}
+#sure i{display:block;height:100%;background:var(--altin);width:100%}
+#sure.az i{background:var(--kirmizi)}
+/* skor tablosu */
+#skor{display:flex;gap:5px;padding:7px 8px;background:#0d151f;flex:none;
+  border-bottom:1px solid var(--cizgi)}
+#skor .m{flex:1;background:var(--kart);border:1.5px solid var(--cizgi);border-radius:9px;
+  padding:6px 5px;text-align:center;min-width:0}
+#skor .m.on{border-color:var(--altin);background:#241f10}
+#skor .m.ben{box-shadow:inset 0 0 0 1.5px var(--mor)}
+#skor .m b{display:block;font-size:12px;font-weight:800;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+#skor .m i{font-style:normal;font-size:13px;font-weight:800;color:var(--altin);
+  font-variant-numeric:tabular-nums}
+#skor .m u{display:block;text-decoration:none;font-size:9.5px;color:var(--soluk);
+  letter-spacing:.4px;text-transform:uppercase}
+#orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:10px;gap:9px;min-height:0}
+#orta.ust{justify-content:flex-start}
+.baslik{font-size:12.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--soluk);
+  font-weight:700;text-align:center}
+.baslik b{color:var(--altin)}
+#tahta{display:grid;gap:5px;justify-content:center}
+#tahta .satir{display:grid;gap:5px}
+.hucre{width:var(--hg);height:var(--hg);border:2px solid var(--cizgi);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:calc(var(--hg)*.52);
+  background:#141d27}
+.hucre.ilk{border-color:#4a5a6b;color:var(--altin)}
+.hucre.dolu{border-color:#4a5a6b}
+.hucre.tam{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.hucre.var{background:var(--sari);border-color:var(--sari);color:#231a00}
+.hucre.yok{background:var(--gri);border-color:var(--gri);color:#8fa0b0}
+.satir.aktif .hucre{border-color:#5d6f82}
+.ipucu{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;
+  padding:11px 13px;max-width:460px;text-align:center;font-size:16px;line-height:1.4}
+.ipucu b{color:var(--altin);display:block;font-size:11px;letter-spacing:1.1px;
+  text-transform:uppercase;margin-bottom:5px}
+#klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  background:#0a1119;border-top:1px solid var(--cizgi)}
+#klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
+#klavye button{flex:1 1 0;min-width:0;height:44px;border:0;border-radius:7px;
+  background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
+#klavye button.gnis{flex:1.9 1 0;font-size:13px}
+#klavye button.dar{flex:1.25 1 0;font-size:12.5px}
+#klavye button.tam{background:var(--yesil)}
+#klavye button.var{background:var(--sari);color:#231a00}
+#klavye button.yok{background:#1e2933;color:#5d6b7a}
+#klavye.kilit{opacity:.35;pointer-events:none}
+.izle{text-align:center;font-size:13px;color:var(--soluk);padding:9px}
+.buzz{width:100%;max-width:460px;background:var(--kirmizi);color:#fff;border:0;
+  border-radius:16px;padding:26px;font-size:26px;font-weight:800;letter-spacing:2px;
+  box-shadow:0 6px 22px rgba(217,74,90,.4);animation:nab 1s infinite}
+@keyframes nab{50%{transform:scale(.97)}}
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:18px 16px;max-width:460px;width:100%;text-align:center}
+.kutu h1{font-size:26px;margin:0 0 6px;letter-spacing:-.5px}
+.kutu h2{font-size:19px;margin:0 0 8px}
+.kutu p{color:var(--soluk);margin:0 0 10px;font-size:15px;line-height:1.5}
+.kutu p b{color:var(--murekkep)}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:12px;padding:14px;font-weight:800;font-size:16.5px;margin-top:9px}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.buton.mor{background:linear-gradient(135deg,#6c5ce7,#8e6ce8);color:#fff}
+.buton:disabled{background:#3a4756;color:#8b98a6}
+input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:10px;
+  padding:11px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;
+  margin:5px 0}
+.link{background:#0a1119;border:1px dashed var(--cizgi);border-radius:10px;padding:10px;
+  font-size:12px;color:var(--soluk);word-break:break-all;margin:8px 0;
+  font-family:ui-monospace,Menlo,monospace;user-select:text}
+.msj{text-align:center;font-size:15px;font-weight:700;padding:6px 10px;border-radius:9px}
+.msj.iyi{background:#173d27;color:#7fe0a6}
+.msj.kotu{background:#3d1720;color:#f2a3ad}
+.msj.bek{background:#22303d;color:var(--soluk)}
+.kw{font-family:ui-monospace,Menlo,monospace;font-size:24px;font-weight:800;
+  letter-spacing:4px;color:var(--altin)}
+.gizli{display:none!important}
+</style></head><body>
+<div id="bar"><a href="index.html" style="color:var(--soluk);text-decoration:none">‹</a>
+  <span class="kod gizli" id="kod"></span><span class="et" id="et"></span>
+  <span class="ag" id="ag"></span></div>
+<div id="sure" class="gizli"><i></i></div>
+<div id="skor" class="gizli"></div>
+<div id="orta"></div>
+<div id="klavye" class="gizli"></div>
+<script>
+/* ================= sabitler ================= */
+const ETAPLAR = [
+  {n:4, pk:1000, pp:2000, puz:[8,9],   cal:false, ad:"1. ETAP"},
+  {n:5, pk:2000, pp:3000, puz:[9,10],  cal:true,  ad:"2. ETAP"},
+  {n:6, pk:3000, pp:4000, puz:[10,11], cal:true,  ad:"3. ETAP"}
+];
+const PRIM = 1000, SATIR = 5, SURE = 25, CALSURE = 15, PUZSURE = 60, PUZARALIK = 8, KELSAY = 3;
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const TRL = s => s.replace(/I/g,"ı").replace(/İ/g,"i").toLowerCase();
+const TL = n => n.toLocaleString("tr-TR");
+const $ = s => document.querySelector(s);
+const orta=$("#orta"), klv=$("#klavye"), skorEl=$("#skor"), etEl=$("#et"),
+      agEl=$("#ag"), kodEl=$("#kod"), sureKap=$("#sure"), sureBar=sureKap.querySelector("i");
+let VERI=null, GECERLI=null;
+
+/* ================= oyun motoru (sadece kurucuda calisir) ================= */
+const M = {
+  S: null, GIZLI: null, PUZ: null, sayac: null, yayin: null,
+  kur(adlar){
+    this.S = {
+      faz:"lobi", masalar: adlar.map(a=>({ad:a, para:0, online:false})),
+      etap:0, sira:0, ki:0, n:4, satirlar:[], aktif:0, giris:"", hak:SATIR, sn:SURE,
+      dogru:0, puzzle:null, buzz:{acik:false, kim:null, kalan:[]},
+      cevaplayan:0, mesaj:"", msjTip:"bek", acik:null, bitti:false
+    };
+  },
+  dur(){ if(this.sayac){ clearInterval(this.sayac); this.sayac=null; } },
+  /* --- kelime secimi --- */
+  kelimeSec(n){
+    n=String(n);
+    const A=VERI.arsiv[n], Y=VERI.yeni[n]||[];
+    for(let t=0;t<400;t++){
+      let w;
+      if(Math.random()<0.8||!Y.length){
+        let top=0; const c=[];
+        for(const [x,k] of A){ top+=k; c.push(top); }
+        const r=Math.random()*top; let lo=0,hi=c.length-1;
+        while(lo<hi){ const m=(lo+hi)>>1; if(c[m]<=r) lo=m+1; else hi=m; }
+        w=A[lo][0];
+      } else w=Y[Math.floor(Math.pow(Math.random(),1.8)*Y.length)];
+      if(w && !this.kul.has(w)){ this.kul.add(w); return w; }
+    }
+    return A[0][0];
+  },
+  puzzleSec(nler){
+    for(let t=0;t<300;t++){
+      const n=String(nler[Math.floor(Math.random()*nler.length)]);
+      const L=VERI.puzzle[n]; if(!L||!L.length) continue;
+      const alt=L.filter(x=>x[2]>0), hav=(Math.random()<0.8&&alt.length)?alt:L;
+      const s=hav[Math.floor(Math.random()*hav.length)];
+      if(s && !this.kul.has(s[0])){ this.kul.add(s[0]); return s; }
+    }
+    return VERI.puzzle["9"][0];
+  },
+  /* --- akis --- */
+  basla(){ this.kul=new Set(); this.S.faz="oyun"; this.S.etap=0; this.S.sira=0;
+           this.S.ki=0; this.S.dogru=0; this.kelimeAc(); },
+  kelimeAc(){
+    const E=ETAPLAR[this.S.etap], S=this.S;
+    S.faz="kelime"; S.n=E.n; S.cevaplayan=S.sira;
+    S.buzz={acik:false, kim:null, kalan:[]};
+    this.GIZLI=this.kelimeSec(E.n);
+    S.satirlar=[]; S.aktif=0; S.hak=SATIR; S.giris=this.GIZLI[0]; S.acik=null;
+    S.mesaj=`${S.masalar[S.sira].ad} — ${S.ki+1}. kelime · ₺${TL(E.pk)}`; S.msjTip="bek";
+    this.saat(SURE, ()=>this.satirBitir(null));
+    this.gonder();
+  },
+  saat(sn, bitince){
+    this.dur(); const b=Date.now(), top=sn*1000;
+    this.S.sn=sn; this.S.top=sn;
+    this.sayac=setInterval(()=>{
+      const kalan=Math.max(0, top-(Date.now()-b));
+      const s2=Math.ceil(kalan/1000);
+      if(s2!==this.S.sn){ this.S.sn=s2; this.gonder(); }
+      if(kalan<=0){ this.dur(); bitince(); }
+    },120);
+  },
+  harf(c){ const S=this.S;
+    if(S.faz!=="kelime"&&S.faz!=="calma"&&S.faz!=="puzzle") return;
+    const n = S.faz==="puzzle" ? S.puzzle.n : S.n;
+    if(S.giris.length<n){ S.giris+=c; this.gonder(); } },
+  sil(){ const S=this.S; if(S.giris.length>1){ S.giris=S.giris.slice(0,-1); this.gonder(); } },
+  gonderTahmin(){
+    const S=this.S;
+    if(S.faz==="puzzle") return this.puzDene();
+    const n=S.n;
+    if(S.giris.length<n) return;
+    if(!GECERLI[n].has(S.giris)){ S.mesaj="Sözlükte yok"; S.msjTip="kotu"; this.gonder(); return; }
+    this.satirBitir(S.giris);
+  },
+  renk(g,t){
+    const n=g.length, r=new Array(n).fill("yok"), kal={};
+    for(let i=0;i<n;i++) if(t[i]===g[i]) r[i]="tam"; else kal[g[i]]=(kal[g[i]]||0)+1;
+    for(let i=0;i<n;i++) if(r[i]!=="tam"&&kal[t[i]]>0){ r[i]="var"; kal[t[i]]--; }
+    return r;
+  },
+  satirBitir(tah){
+    const S=this.S, E=ETAPLAR[S.etap];
+    this.dur();
+    if(tah===null){ S.satirlar.push({h:[...S.giris.padEnd(S.n,"·")], r:new Array(S.n).fill("yok")}); }
+    else{
+      const r=this.renk(this.GIZLI,tah);
+      S.satirlar.push({h:[...tah], r});
+      if(tah===this.GIZLI){
+        const kim=S.cevaplayan;
+        S.masalar[kim].para += E.pk;
+        S.acik=this.GIZLI;
+        S.mesaj=`${S.masalar[kim].ad} bildi! +₺${TL(E.pk)}`; S.msjTip="iyi";
+        if(kim===S.sira) S.dogru++;
+        this.gonder();
+        return setTimeout(()=>this.sonrakiKelime(), 1800);
+      }
+    }
+    S.aktif++; S.hak=SATIR-S.aktif; S.giris=this.GIZLI[0];
+    if(S.faz==="calma"){ return this.calmaBitti(); }
+    if(S.aktif>=SATIR){
+      if(E.cal) return this.calmaAc();
+      S.acik=this.GIZLI; S.mesaj=`Bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+      this.gonder();
+      return setTimeout(()=>this.sonrakiKelime(), 2000);
+    }
+    this.saat(SURE, ()=>this.satirBitir(null));
+    this.gonder();
+  },
+  /* --- calma (buzzer) --- */
+  calmaAc(){
+    const S=this.S;
+    S.faz="buzz";
+    S.buzz={acik:true, kim:null, kalan:S.masalar.map((_,i)=>i).filter(i=>i!==S.sira)};
+    S.mesaj="Masaya geçmedi — BASAN cevaplar!"; S.msjTip="bek";
+    this.saat(10, ()=>{
+      if(!S.buzz.kim){ S.acik=this.GIZLI; S.mesaj=`Kimse basmadı — ${TRU(this.GIZLI)}`;
+        S.msjTip="kotu"; this.gonder(); setTimeout(()=>this.sonrakiKelime(),2000); }
+    });
+    this.gonder();
+  },
+  buz(i){
+    const S=this.S;
+    if(S.faz!=="buzz"||!S.buzz.acik) return;
+    if(!S.buzz.kalan.includes(i)) return;
+    S.buzz.acik=false; S.buzz.kim=i;
+    S.buzz.kalan=S.buzz.kalan.filter(x=>x!==i);
+    S.faz="calma"; S.cevaplayan=i; S.giris=this.GIZLI[0];
+    S.mesaj=`${S.masalar[i].ad} bastı — tek tahmin, ${CALSURE} saniye`; S.msjTip="bek";
+    this.saat(CALSURE, ()=>this.satirBitir(null));
+    this.gonder();
+  },
+  calmaBitti(){
+    const S=this.S;
+    if(S.buzz.kalan.length){
+      const i=S.buzz.kalan.shift();
+      S.faz="calma"; S.cevaplayan=i; S.giris=this.GIZLI[0];
+      S.mesaj=`Sıra ${S.masalar[i].ad} masasında — tek tahmin`; S.msjTip="bek";
+      this.saat(CALSURE, ()=>this.satirBitir(null));
+      return this.gonder();
+    }
+    S.acik=this.GIZLI; S.mesaj=`Kimse bilemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+    this.gonder(); setTimeout(()=>this.sonrakiKelime(), 2000);
+  },
+  /* --- sonraki --- */
+  sonrakiKelime(){
+    const S=this.S, E=ETAPLAR[S.etap];
+    S.ki++;
+    if(S.ki<KELSAY) return this.kelimeAc();
+    if(S.dogru===KELSAY){
+      S.masalar[S.sira].para += PRIM;
+      S.mesaj=`${S.masalar[S.sira].ad} — 3'te 3! +₺${TL(PRIM)}`; S.msjTip="iyi";
+      this.gonder();
+      return setTimeout(()=>this.puzzleAc(), 2000);
+    }
+    this.puzzleAc();
+  },
+  puzzleAc(){
+    const S=this.S, E=ETAPLAR[S.etap];
+    const [w,t]=this.puzzleSec(E.puz);
+    this.GIZLI=w; this.PUZ={odul:E.pp, tam:E.pp};
+    S.faz="puzzle"; S.cevaplayan=S.sira;
+    S.puzzle={n:w.length, tanim:t, acik:[0], odul:E.pp};
+    S.giris=w[0]; S.satirlar=[]; S.acik=null;
+    S.mesaj=`${S.masalar[S.sira].ad} — puzzle · ₺${TL(E.pp)}`; S.msjTip="bek";
+    let ac=0;
+    this.dur();
+    const b=Date.now(), top=PUZSURE*1000; S.sn=PUZSURE; S.top=PUZSURE;
+    this.sayac=setInterval(()=>{
+      const gec=Date.now()-b, kalan=Math.max(0,top-gec);
+      const s2=Math.ceil(kalan/1000);
+      let dg=false;
+      if(s2!==S.sn){ S.sn=s2; dg=true; }
+      if(gec-ac>=PUZARALIK*1000){ ac=gec; if(this.puzHarfAc()) dg=true; }
+      if(dg) this.gonder();
+      if(kalan<=0){ this.dur(); this.puzBitir(false); }
+    },150);
+    this.gonder();
+  },
+  puzHarfAc(){
+    const S=this.S, w=this.GIZLI, kapali=[];
+    for(let i=1;i<w.length;i++) if(!S.puzzle.acik.includes(i)) kapali.push(i);
+    if(!kapali.length) return false;
+    S.puzzle.acik.push(kapali[Math.floor(Math.random()*kapali.length)]);
+    const ek=S.puzzle.acik.length-1;
+    S.puzzle.odul=Math.round(Math.max(this.PUZ.tam*0.2, this.PUZ.tam*(1-0.2*ek))/100)*100;
+    S.giris=w[0];
+    return true;
+  },
+  puzDene(){
+    const S=this.S;
+    if(S.giris.length<S.puzzle.n) return;
+    if(S.giris===this.GIZLI) return this.puzBitir(true);
+    S.mesaj="Olmadı — bir harf açılıyor"; S.msjTip="kotu";
+    this.puzHarfAc(); this.gonder();
+  },
+  puzBitir(ok){
+    const S=this.S;
+    this.dur();
+    S.acik=this.GIZLI;
+    if(ok){ S.masalar[S.sira].para += S.puzzle.odul;
+      S.mesaj=`Puzzle çözüldü! +₺${TL(S.puzzle.odul)}`; S.msjTip="iyi"; }
+    else { S.mesaj=`Puzzle bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu"; }
+    this.gonder();
+    setTimeout(()=>this.sonrakiMasa(), 2200);
+  },
+  sonrakiMasa(){
+    const S=this.S;
+    S.sira++; S.ki=0; S.dogru=0;
+    if(S.sira<S.masalar.length) return this.kelimeAc();
+    S.sira=0; S.etap++;
+    if(S.etap>=ETAPLAR.length) return this.bitir();
+    S.faz="etapsonu";
+    S.mesaj=`${ETAPLAR[S.etap].ad} başlıyor — ${ETAPLAR[S.etap].n} harfli`;
+    S.msjTip="bek"; this.gonder();
+    setTimeout(()=>this.kelimeAc(), 2500);
+  },
+  bitir(){
+    const S=this.S; this.dur(); S.faz="bitti"; S.bitti=true;
+    const en=Math.max(...S.masalar.map(m=>m.para));
+    S.mesaj="Kazanan: " + S.masalar.filter(m=>m.para===en).map(m=>m.ad).join(" ve ");
+    S.msjTip="iyi"; this.gonder();
+  },
+  /* --- yayin --- */
+  temiz(){
+    const S=JSON.parse(JSON.stringify(this.S));
+    return S;
+  },
+  gonder(){ const d=this.temiz(); ciz(d); NET.yayinla({t:"durum", d}); }
+};
+
+/* ================= ag katmani ================= */
+const NET = {
+  peer:null, host:false, baglar:[], baglanti:null, kod:null, benim:-1,
+  kurucuBasla(kod, tamam){
+    this.host=true; this.kod=kod;
+    this.peer=new Peer("lingotr-"+kod, {debug:0});
+    this.peer.on("open", ()=>tamam(null));
+    this.peer.on("error", e=>tamam(e.type||"hata"));
+    this.peer.on("connection", c=>{
+      this.baglar.push(c);
+      c.on("data", m=>this.hostMesaj(c, m));
+      c.on("open", ()=>{ if(M.S) c.send({t:"durum", d:M.temiz()}); agYaz(); });
+      c.on("close", ()=>{ this.baglar=this.baglar.filter(x=>x!==c); agYaz(); });
+    });
+  },
+  hostMesaj(c, m){
+    if(m.t==="katil"){
+      c.masa=m.masa; c.ad=m.ad;
+      if(M.S && M.S.masalar[m.masa]) M.S.masalar[m.masa].online=true;
+      c.send({t:"sen", masa:m.masa});
+      agYaz(); if(M.S) M.gonder();
+      return;
+    }
+    if(!M.S) return;
+    const S=M.S;
+    if(m.t==="buzz") return M.buz(c.masa);
+    if(c.masa!==S.cevaplayan) return;
+    if(m.t==="harf") M.harf(m.c);
+    else if(m.t==="sil") M.sil();
+    else if(m.t==="gonder") M.gonderTahmin();
+  },
+  yayinla(m){ for(const c of this.baglar) if(c.open) c.send(m); },
+  katilBasla(kod, ad, masa, tamam){
+    this.host=false; this.kod=kod; this.benim=masa;
+    this.peer=new Peer({debug:0});
+    this.peer.on("open", ()=>{
+      const c=this.peer.connect("lingotr-"+kod, {reliable:true});
+      this.baglanti=c;
+      c.on("open", ()=>{ c.send({t:"katil", masa, ad}); tamam(null); agYaz(); });
+      c.on("data", m=>{ if(m.t==="durum") ciz(m.d); if(m.t==="sen") this.benim=m.masa; });
+      c.on("close", ()=>{ agYaz(); ekran(`<h2>Bağlantı koptu</h2>
+        <p>Masa yönetimi kapandı ya da ağ düştü.</p>
+        <button class="buton" onclick="location.reload()">YENİDEN BAĞLAN</button>`); });
+      setTimeout(()=>{ if(!c.open) tamam("baglanamadi"); }, 12000);
+    });
+    this.peer.on("error", e=>tamam(e.type||"hata"));
+  },
+  yolla(m){ if(this.host) this.hostMesaj({masa:this.benim}, m);
+            else if(this.baglanti && this.baglanti.open) this.baglanti.send(m); }
+};
+function agYaz(){
+  if(NET.host) agEl.innerHTML = `<b>${NET.baglar.length}</b> bağlı · yönetim sizde`;
+  else agEl.innerHTML = NET.baglanti && NET.baglanti.open ? "<b>bağlı</b>" : "bağlanıyor…";
+}
+
+/* ================= arayuz ================= */
+let SON=null;
+function ekran(html){
+  klv.classList.add("gizli"); sureKap.classList.add("gizli");
+  orta.className=""; orta.innerHTML=`<div class="kutu">${html}</div>`;
+}
+function hucreBoy(n){
+  const g=Math.min(window.innerWidth-26, 420);
+  return Math.max(26, Math.min(50, Math.floor((g-(n-1)*5)/n)));
+}
+const DIZ=["ertyuıopğü","asdfghjklşi","zcvbnmöç"];
+let klvTus={};
+function klavye(kilit){
+  if(klv.dataset.kur!=="1"){
+    klv.innerHTML=""; klvTus={};
+    DIZ.forEach((sr,k)=>{
+      const d=document.createElement("div"); d.className="sr";
+      for(const c of sr){ const b=document.createElement("button");
+        b.textContent=TRU(c); b.onclick=()=>NET.yolla({t:"harf", c}); klvTus[c]=b; d.appendChild(b); }
+      if(k===1){ const b=document.createElement("button"); b.className="dar";
+        b.textContent="SİL"; b.onclick=()=>NET.yolla({t:"sil"}); d.appendChild(b); }
+      if(k===2){ const b=document.createElement("button"); b.className="gnis";
+        b.textContent="TAMAM"; b.onclick=()=>NET.yolla({t:"gonder"}); d.appendChild(b); }
+      klv.appendChild(d);
+    });
+    klv.dataset.kur="1";
+  }
+  klv.classList.remove("gizli");
+  klv.classList.toggle("kilit", kilit);
+}
+function klvBoya(S){
+  const dur={}, o={tam:3,var:2,yok:1};
+  for(const s of S.satirlar) for(let i=0;i<s.h.length;i++){
+    const c=TRL(s.h[i]); if(!/[a-zçğıiöşü]/.test(c)) continue;
+    if((o[dur[c]]||0)<o[s.r[i]]) dur[c]=s.r[i];
+  }
+  for(const c in klvTus) klvTus[c].className = dur[c]||"";
+}
+function skorCiz(S){
+  skorEl.classList.remove("gizli");
+  skorEl.innerHTML=S.masalar.map((m,i)=>
+    `<div class="m ${i===S.sira?"on":""} ${i===NET.benim?"ben":""}">
+       <b>${m.ad}</b><i>₺${TL(m.para)}</i>
+       <u>${i===S.cevaplayan?"cevapta":(i===S.sira?"sırada":"&nbsp;")}</u></div>`).join("");
+}
+function ciz(S){
+  SON=S;
+  if(S.faz==="lobi") return;
+  kodEl.classList.remove("gizli"); kodEl.textContent=NET.kod||"";
+  etEl.textContent = S.bitti ? "OYUN BİTTİ" : ETAPLAR[Math.min(S.etap,2)].ad;
+  skorCiz(S);
+  const benCevap = NET.benim===S.cevaplayan;
+  if(S.faz==="bitti"){
+    const sr=S.masalar.map((m,i)=>({...m})).sort((a,b)=>b.para-a.para);
+    ekran(`<h1>🏆 ${S.mesaj.replace("Kazanan: ","")}</h1>
+      ${sr.map((m,i)=>`<p style="font-size:17px;margin:6px 0">
+        ${i+1}. <b>${m.ad}</b> — ₺${TL(m.para)}</p>`).join("")}
+      ${NET.host?'<button class="buton" onclick="yeniden()">YENİ OYUN</button>':''}`);
+    skorEl.classList.add("gizli"); return;
+  }
+  if(S.faz==="buzz"){
+    sureKap.classList.remove("gizli");
+    sureBar.style.width=(100*S.sn/(S.top||10))+"%";
+    orta.className="";
+    const bende=S.buzz.kalan.includes(NET.benim);
+    orta.innerHTML=`<div class="msj bek">${S.mesaj}</div>
+      ${bende?'<button class="buzz" id="bz">BAS!</button>'
+             :'<div class="izle">Diğer masalar butona basıyor…</div>'}`;
+    if(bende) $("#bz").onclick=()=>NET.yolla({t:"buzz"});
+    klv.classList.add("gizli"); return;
+  }
+  if(S.faz==="etapsonu"){ ekran(`<h2>${S.mesaj}</h2>`); return; }
+  /* kelime / calma / puzzle */
+  sureKap.classList.remove("gizli");
+  sureBar.style.width=(100*S.sn/(S.top||SURE))+"%";
+  sureKap.classList.toggle("az", S.sn<=Math.max(3,(S.top||SURE)*0.25));
+  const puz = S.faz==="puzzle";
+  const n = puz ? S.puzzle.n : S.n;
+  orta.className="";
+  let h=`<div class="baslik">${S.faz==="calma"?"ÇALMA — ":""}
+    <b>${S.masalar[S.cevaplayan].ad}</b> · ${n} HARFLİ · ${S.sn} SN
+    ${puz?"":" · "+S.hak+" HAK"}</div>`;
+  if(puz) h+=`<div class="ipucu"><b>puzzle · ₺${TL(S.puzzle.odul)}</b>${S.puzzle.tanim}</div>`;
+  h+=`<div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
+      <div class="msj ${S.msjTip}">${S.mesaj}</div>`;
+  orta.innerHTML=h;
+  const t=$("#tahta");
+  const satirSay = puz ? 1 : SATIR;
+  for(let r=0;r<satirSay;r++){
+    const d=document.createElement("div");
+    d.className="satir"+((r===S.satirlar.length&&!puz)||puz?" aktif":"");
+    d.style.gridTemplateColumns=`repeat(${n}, var(--hg))`;
+    for(let i=0;i<n;i++){
+      const c=document.createElement("div"); c.className="hucre";
+      if(puz){
+        const j=S.puzzle.acik.indexOf(i);
+        if(S.acik){ c.textContent=TRU(S.acik[i]); c.className="hucre tam"; }
+        else if(j>=0){ c.textContent=TRU((S.puzzle.harfler||[])[j]||"?");
+                       c.className="hucre ilk"; }
+        else { c.textContent=S.giris[i]?TRU(S.giris[i]):""; c.className="hucre"+(S.giris[i]?" dolu":""); }
+      } else if(r<S.satirlar.length){
+        c.textContent=TRU(S.satirlar[r].h[i]||""); c.className="hucre "+S.satirlar[r].r[i];
+      } else if(r===S.satirlar.length){
+        if(i===0){ c.textContent=TRU(S.giris[0]||""); c.className="hucre ilk"; }
+        else { c.textContent=S.giris[i]?TRU(S.giris[i]):""; c.className="hucre"+(S.giris[i]?" dolu":""); }
+      }
+      d.appendChild(c);
+    }
+    t.appendChild(d);
+  }
+  klavye(!benCevap);
+  klvBoya(S);
+}
+/* puzzle'da acilan harfleri herkes gorsun diye durumda tasiyoruz */
+M.temiz=function(){
+  const S=JSON.parse(JSON.stringify(this.S));
+  if(S.puzzle && this.GIZLI) S.puzzle.harfler=S.puzzle.acik.map(i=>this.GIZLI[i]);
+  return S;
+};
+
+/* ================= kurulum ekranlari ================= */
+function kod4(){ const A="ABCDEFGHKLMNPRSTUVYZ23456789"; let s="";
+  for(let i=0;i<4;i++) s+=A[Math.floor(Math.random()*A.length)]; return s; }
+let ADLAR=["Serpil & Zeynep","Yusuf","Ramiz"];
+function giris(){
+  etEl.textContent="MASA YARIŞMASI";
+  ekran(`<h1>LİNGO MASA YARIŞMASI</h1>
+    <p>Üç masa, sırayla. Herkes kendi telefonundan oynar,
+       <b>tahminler anlık olarak herkesin ekranında</b> görünür.</p>
+    <button class="buton mor" onclick="kurEkran()">🎛 MASA YÖNETİMİNİ BEN KURAYIM</button>
+    <button class="buton ikinci" onclick="katilEkran()">BİR ODAYA KATIL</button>
+    <p class="izle" style="margin-top:10px">Kuran cihaz oyunu yönetir; sayfayı açık
+      tutmalı. Diğerleri linkle katılır.</p>`);
+}
+function kurEkran(){
+  ekran(`<h2>Masaları yazın</h2>
+    ${ADLAR.map((a,i)=>`<input class="ad" id="a${i}" maxlength="18" value="${a}">`).join("")}
+    <button class="buton" onclick="odaAc()">ODAYI AÇ ▸</button>
+    <button class="buton ikinci" onclick="giris()">geri</button>`);
+}
+function odaAc(){
+  ADLAR=[0,1,2].map(i=>$("#a"+i).value.trim()||("Masa "+(i+1)));
+  const k=kod4();
+  ekran(`<h2>Oda açılıyor…</h2><p class="izle">Bağlantı kuruluyor</p>`);
+  NET.kurucuBasla(k, err=>{
+    if(err) return ekran(`<h2>Oda açılamadı</h2><p>${err}</p>
+      <button class="buton" onclick="odaAc()">TEKRAR DENE</button>`);
+    M.kur(ADLAR);
+    kodEl.classList.remove("gizli"); kodEl.textContent=k;
+    const url=location.origin+location.pathname+"#"+k;
+    ekran(`<h2>Oda hazır</h2>
+      <p>Kod <b style="letter-spacing:3px">${k}</b></p>
+      <div class="link">${url}</div>
+      <button class="buton" onclick="linkKopya('${url}')">LİNKİ KOPYALA</button>
+      <a class="buton mor" style="text-decoration:none"
+         href="https://wa.me/?text=${encodeURIComponent("Lingo masa yarışması! Katıl: "+url)}">
+         WHATSAPP'TAN GÖNDER</a>
+      <p class="izle" id="bek">Katılanlar bekleniyor…</p>
+      <button class="buton" onclick="M.basla()">OYUNU BAŞLAT ▸</button>
+      <p class="izle">Masa yönetimi sizde. Siz de bir masaya oturabilirsiniz:</p>
+      ${ADLAR.map((a,i)=>`<button class="buton ikinci" onclick="NET.benim=${i};agYaz();
+        uyariGoster('${a.replace(/'/g,"")} masasındasınız')">${a}</button>`).join("")}`);
+    agYaz();
+  });
+}
+function uyariGoster(m){
+  const d=document.createElement("div");
+  d.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:80px;"+
+    "background:#f2f5f8;color:#0f1720;padding:9px 16px;border-radius:999px;"+
+    "font-weight:700;z-index:30";
+  d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),1400);
+}
+function linkKopya(u){ if(navigator.clipboard) navigator.clipboard.writeText(u)
+  .then(()=>uyariGoster("Link kopyalandı")); }
+function katilEkran(kod){
+  const k=(kod||location.hash.replace("#","")||"").toUpperCase();
+  ekran(`<h2>Odaya katıl</h2>
+    <input class="ad" id="kd" maxlength="4" placeholder="ODA KODU" value="${k}"
+      style="letter-spacing:4px;text-transform:uppercase">
+    <input class="ad" id="ad" maxlength="18" placeholder="Adınız"
+      value="${localStorage.getItem("lingo_ad")||""}">
+    <p class="izle">Hangi masadasınız?</p>
+    <div id="ms">${[0,1,2].map(i=>`<button class="buton ikinci" onclick="masaSec(${i})"
+      id="m${i}">Masa ${i+1}</button>`).join("")}</div>
+    <button class="buton" id="kt" onclick="katilOl()" disabled>KATIL ▸</button>`);
+  window.__masa=-1;
+}
+function masaSec(i){
+  window.__masa=i;
+  [0,1,2].forEach(k=>$("#m"+k).className="buton ikinci");
+  $("#m"+i).className="buton";
+  $("#kt").disabled=false;
+}
+function katilOl(){
+  const k=$("#kd").value.trim().toUpperCase(), ad=$("#ad").value.trim();
+  if(k.length!==4||window.__masa<0) return uyariGoster("Kod ve masa gerekli");
+  try{ localStorage.setItem("lingo_ad", ad); }catch(e){}
+  ekran(`<h2>Bağlanılıyor…</h2><p class="izle">${k} odasına</p>`);
+  NET.katilBasla(k, ad, window.__masa, err=>{
+    if(err) return ekran(`<h2>Bağlanılamadı</h2>
+      <p>Oda kodunu kontrol edin, kuran kişinin sayfası açık olmalı.</p>
+      <button class="buton" onclick="katilEkran('${k}')">TEKRAR DENE</button>`);
+    kodEl.classList.remove("gizli"); kodEl.textContent=k;
+    ekran(`<h2>Bağlandınız</h2><p>Masa yönetiminin başlatması bekleniyor…</p>`);
+  });
+}
+function yeniden(){ M.kur(ADLAR); M.basla(); }
+document.addEventListener("keydown", e=>{
+  if(klv.classList.contains("gizli")||klv.classList.contains("kilit")) return;
+  if(e.key==="Enter") NET.yolla({t:"gonder"});
+  else if(e.key==="Backspace") NET.yolla({t:"sil"});
+  else if(e.key.length===1){ const c=TRL(e.key); if(klvTus[c]) NET.yolla({t:"harf", c}); }
+});
+window.addEventListener("resize", ()=>{ if(SON) ciz(SON); });
+function yukle(){
+  ekran(`<h1>LİNGO MASA</h1><p>Kelime havuzu yükleniyor…</p>`);
+  fetch("oyun-veri.json").then(r=>{ if(!r.ok) throw 0; return r.json(); })
+    .then(d=>{ VERI=d; GECERLI={};
+      for(const n in VERI.gecerli) GECERLI[n]=new Set(VERI.gecerli[n]);
+      if(location.hash.length===5) katilEkran(); else giris(); })
+    .catch(()=>ekran(`<h2>Yüklenemedi</h2>
+      <button class="buton" onclick="location.reload()">YENİLE</button>`));
+}
+yukle();
+</script></body></html>
