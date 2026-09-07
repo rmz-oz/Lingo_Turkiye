@@ -317,7 +317,8 @@ function puzzleOyna(nler, tamOdul, bitti){
   const [kelime, tanim] = puzzleSec(nler);
   const n = kelime.length;
   const TOPSURE = 60, ARALIK = 8, TABAN = 0.2;
-  let acik = new Set([0]), giris = kelime[0], odul = tamOdul, kapandi = false;
+  let acik = new Set([0]), gir = new Array(n).fill(null), odul = tamOdul, kapandi = false;
+  gir[0] = kelime[0];
   klvDurum = {};
   orta.innerHTML = `<div class="baslik" id="ust"></div>
     <div class="ipucu"><b>${n} harfli · puzzle</b><span id="tn"></span></div>
@@ -343,20 +344,40 @@ function puzzleOyna(nler, tamOdul, bitti){
   function yaz(){
     for(let i = 0; i < n; i++){
       if(acik.has(i)){ h[i].textContent = TRU(kelime[i]); h[i].className = "hucre ilk"; }
-      else { h[i].textContent = giris[i] ? TRU(giris[i]) : "";
-             h[i].className = "hucre" + (giris[i] ? " dolu" : ""); }
+      else { h[i].textContent = gir[i] ? TRU(gir[i]) : "";
+             h[i].className = "hucre" + (gir[i] ? " dolu" : ""); }
     }
+  }
+  function tahmin(){
+    let t = "";
+    for(let i = 0; i < n; i++){
+      if(acik.has(i)) t += kelime[i];
+      else if(gir[i]) t += gir[i];
+      else return null;
+    }
+    return t;
   }
   function harfAc(){
     const kapali = [];
     for(let i = 1; i < n; i++) if(!acik.has(i)) kapali.push(i);
     if(!kapali.length) return false;
-    acik.add(kapali[Math.floor(Math.random()*kapali.length)]);
+    const yeni = kapali[Math.floor(Math.random()*kapali.length)];
+    acik.add(yeni); gir[yeni] = null;
     odulHesap(); ustYaz(); yaz();
     return true;
   }
-  function gir(c){ if(giris.length < n){ giris += c; yaz(); } }
-  function sil(){ if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } }
+  function harfGir(c){
+    for(let i = 0; i < n; i++){
+      if(acik.has(i)) continue;
+      if(!gir[i]){ gir[i] = c; return yaz(); }
+    }
+  }
+  function sil(){
+    for(let i = n-1; i >= 0; i--){
+      if(acik.has(i)) continue;
+      if(gir[i]){ gir[i] = null; return yaz(); }
+    }
+  }
   function bitirPuzzle(kazandi){
     if(kapandi) return; kapandi = true;
     durdur(); sureGoster(false);
@@ -371,15 +392,15 @@ function puzzleOyna(nler, tamOdul, bitti){
     if(kapandi) return;
     if(t === kelime) return bitirPuzzle(true);
     uyar("Olmadı — bir harf açılıyor");
-    giris = kelime[0];
     sonAcma = Date.now() - bas;          // sayaci sifirla
     if(!harfAc()) return bitirPuzzle(false);
     yaz();
   }
   ustYaz(); yaz();
-  klavyeCiz(gir, sil, () => {
-    if(giris.length < n){ uyar("Harfler eksik"); return; }
-    dene(giris);
+  klavyeCiz(harfGir, sil, () => {
+    const t = tahmin();
+    if(t === null){ uyar("Boş kutular var"); return; }
+    dene(t);
   });
   durdur(); sureGoster(true); sureKap.classList.remove("az");
   const bas = Date.now(); let sonAcma = 0;
