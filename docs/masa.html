@@ -198,9 +198,25 @@ const M = {
   },
   harf(c){ const S=this.S;
     if(!["kelime","calma","puzzle","duello","dupuzzle","final"].includes(S.faz)) return;
-    const n = (S.faz==="puzzle"||S.faz==="dupuzzle") ? S.puzzle.n : S.n;
-    if(S.giris.length<n){ S.giris+=c; this.gonder(); } },
-  sil(){ const S=this.S; if(S.giris.length>1){ S.giris=S.giris.slice(0,-1); this.gonder(); } },
+    if(S.faz==="puzzle"||S.faz==="dupuzzle"){
+      const P=S.puzzle;
+      for(let i=0;i<P.n;i++){
+        if(P.acik.includes(i)) continue;          // acilmis harf zaten yerinde
+        if(!S.pgir[i]){ S.pgir[i]=c; return this.gonder(); }
+      }
+      return;
+    }
+    if(S.giris.length<S.n){ S.giris+=c; this.gonder(); } },
+  sil(){ const S=this.S;
+    if(S.faz==="puzzle"||S.faz==="dupuzzle"){
+      const P=S.puzzle;
+      for(let i=P.n-1;i>=0;i--){
+        if(P.acik.includes(i)) continue;
+        if(S.pgir[i]){ S.pgir[i]=null; return this.gonder(); }
+      }
+      return;
+    }
+    if(S.giris.length>1){ S.giris=S.giris.slice(0,-1); this.gonder(); } },
   gonderTahmin(){
     const S=this.S;
     if(S.faz==="puzzle"||S.faz==="dupuzzle") return this.puzDene();
@@ -337,6 +353,7 @@ const M = {
     this.GIZLI=w; this.PUZ={odul:E.pp, tam:E.pp};
     S.faz="puzzle"; S.cevaplayan=S.sira;
     S.puzzle={n:w.length, tanim:t, acik:[0], odul:E.pp};
+    S.pgir=new Array(w.length).fill(null);
     S.giris=w[0]; S.satirlar=[]; S.acik=null;
     S.mesaj=`${S.masalar[S.sira].ad} — puzzle · ₺${TL(E.pp)}`; S.msjTip="bek";
     let ac=0;
@@ -357,7 +374,9 @@ const M = {
     const S=this.S, w=this.GIZLI, kapali=[];
     for(let i=1;i<w.length;i++) if(!S.puzzle.acik.includes(i)) kapali.push(i);
     if(!kapali.length) return false;
-    S.puzzle.acik.push(kapali[Math.floor(Math.random()*kapali.length)]);
+    const yeni=kapali[Math.floor(Math.random()*kapali.length)];
+    S.puzzle.acik.push(yeni);
+    if(S.pgir) S.pgir[yeni]=null;
     const ek=S.puzzle.acik.length-1;
     S.puzzle.odul=Math.round(Math.max(this.PUZ.tam*0.2, this.PUZ.tam*(1-0.2*ek))/100)*100;
     S.giris=w[0];
@@ -371,18 +390,28 @@ const M = {
     if(S.buzz.kalan.length){ S.buzz.acik=true; this.gonder(); }
     else this.duPuzBitir(false);
   },
+  puzTahmin(){
+    const S=this.S, P=S.puzzle;
+    let t="";
+    for(let i=0;i<P.n;i++){
+      if(P.acik.includes(i)) t+=this.GIZLI[i];
+      else if(S.pgir[i]) t+=S.pgir[i];
+      else return null;                      // bosluk var
+    }
+    return t;
+  },
   puzDene(){
     const S=this.S;
+    const t=this.puzTahmin();
+    if(t===null){ S.mesaj="Boş kutular var"; S.msjTip="kotu"; return this.gonder(); }
     if(S.faz==="dupuzzle"){
-      if(S.giris.length<S.puzzle.n) return;
-      if(S.giris===this.GIZLI){
+      if(t===this.GIZLI){
         if(S.puzSaat){ clearTimeout(S.puzSaat); S.puzSaat=null; }
         return this.duPuzBitir(true);
       }
       return this.duPuzYanlis();
     }
-    if(S.giris.length<S.puzzle.n) return;
-    if(S.giris===this.GIZLI) return this.puzBitir(true);
+    if(t===this.GIZLI) return this.puzBitir(true);
     S.mesaj="Olmadı — bir harf açılıyor"; S.msjTip="kotu";
     this.puzHarfAc(); this.gonder();
   },
@@ -455,6 +484,7 @@ const M = {
     this.GIZLI=w; this.PUZ={odul:DUELLO.puzOdul, tam:DUELLO.puzOdul};
     S.faz="dupuzzle";
     S.puzzle={n:w.length, tanim:t, acik:[0], odul:DUELLO.puzOdul};
+    S.pgir=new Array(w.length).fill(null);
     S.giris=w[0]; S.satirlar=[]; S.acik=null;
     S.buzz={acik:true, kim:null, kalan:[...S.kalanlar]};
     S.cevaplayan=-1;
@@ -747,7 +777,8 @@ function ciz(S){
         if(S.acik){ c.textContent=TRU(S.acik[i]); c.className="hucre tam"; }
         else if(j>=0){ c.textContent=TRU((S.puzzle.harfler||[])[j]||"?");
                        c.className="hucre ilk"; }
-        else { c.textContent=S.giris[i]?TRU(S.giris[i]):""; c.className="hucre"+(S.giris[i]?" dolu":""); }
+        else { const g=(S.pgir||[])[i];
+               c.textContent=g?TRU(g):""; c.className="hucre"+(g?" dolu":""); }
       } else if(r<S.satirlar.length){
         c.textContent=TRU(S.satirlar[r].h[i]||""); c.className="hucre "+S.satirlar[r].r[i];
       } else if(r===S.satirlar.length){
