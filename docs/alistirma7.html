@@ -1,0 +1,365 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f1720">
+<title>7 harfli alıştırma — Lingo</title>
+<style>
+:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
+  --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--gri:#3a4756;
+  --kirmizi:#d94a5a;--altin:#f4c95d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;user-select:none}
+button{font:inherit;cursor:pointer}
+#bar{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0a1119;
+  border-bottom:1px solid var(--cizgi);flex:none}
+#bar .etap{font-size:13px;letter-spacing:1px;font-weight:700;color:var(--altin);
+  text-transform:uppercase}
+#bar a{color:var(--soluk);text-decoration:none;font-size:14px}
+#bar .para{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums}
+#sure{width:100%;height:4px;background:#22303d;flex:none}
+#sure i{display:block;height:100%;background:var(--altin);width:100%}
+#sure.az i{background:var(--kirmizi)}
+#orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:12px;gap:10px;min-height:0}
+#orta.ust{justify-content:flex-start}
+.baslik{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--soluk);
+  font-weight:700;text-align:center}
+#tahta{display:grid;gap:5px;justify-content:center}
+#tahta .satir{display:grid;gap:5px}
+.hucre{width:var(--hg);height:var(--hg);border:2px solid var(--cizgi);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:calc(var(--hg)*.52);
+  background:#141d27}
+.hucre.ilk{border-color:#4a5a6b;color:var(--altin)}
+.hucre.dolu{border-color:#4a5a6b}
+.hucre.tam{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.hucre.var{background:var(--sari);border-color:var(--sari);color:#231a00}
+.hucre.yok{background:var(--gri);border-color:var(--gri);color:#8fa0b0}
+.satir.aktif .hucre{border-color:#5d6f82}
+.satir.sarsil{animation:sars .35s}
+@keyframes sars{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
+  75%{transform:translateX(7px)}}
+#klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  background:#0a1119;border-top:1px solid var(--cizgi)}
+#klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
+#klavye button{flex:1 1 0;min-width:0;height:46px;border:0;border-radius:7px;
+  background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
+#klavye button.gnis{flex:1.7 1 0;font-size:13px;letter-spacing:.5px}
+#klavye button.tam{background:var(--yesil)}
+#klavye button.var{background:var(--sari);color:#231a00}
+#klavye button.yok{background:#1e2933;color:#5d6b7a}
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:20px 18px;max-width:520px;width:100%;text-align:center}
+.kutu h1{font-size:30px;margin:0 0 6px;letter-spacing:-.5px}
+.kutu h2{font-size:20px;margin:0 0 8px}
+.kutu p{color:var(--soluk);margin:0 0 10px;font-size:15.5px;line-height:1.55}
+.kutu p b{color:var(--murekkep)}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:12px;padding:15px;font-weight:800;font-size:17px;margin-top:10px}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.kucuk{font-size:13.5px;color:var(--soluk);line-height:1.5}
+.tutar{font-size:44px;font-weight:800;color:var(--altin);letter-spacing:-1px;line-height:1.1}
+.uyari{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#f2f5f8;
+  color:#0f1720;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14.5px;
+  z-index:20;box-shadow:0 6px 22px rgba(0,0,0,.4)}
+/* degerlendirme */
+.dgr{max-width:560px;width:100%;text-align:left}
+.dgr .yanlis{background:var(--kart);border:1px solid var(--kirmizi);border-radius:14px;
+  padding:14px 16px;text-align:center;margin-bottom:10px}
+.dgr .yanlis span{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--kirmizi);font-weight:700;display:block;margin-bottom:4px}
+.dgr .yanlis b{font-family:ui-monospace,Menlo,monospace;font-size:26px;letter-spacing:3px}
+.dgr .yanlis i{display:block;font-style:normal;font-size:14px;color:var(--soluk);
+  margin-top:6px;line-height:1.45}
+.dgr .oner{background:#132a1c;border:1px solid #2e6b45;border-radius:14px;
+  padding:14px 16px;text-align:center;margin-bottom:12px}
+.dgr .oner span{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;
+  color:#6fcf97;font-weight:700;display:block;margin-bottom:6px}
+.dgr .oner b{font-family:ui-monospace,Menlo,monospace;font-size:23px;letter-spacing:2px;
+  display:block}
+.dgr .oner i{font-style:normal;font-size:13.5px;color:#9fd4b4;display:block;margin-top:5px}
+.dgr h3{font-size:13px;letter-spacing:1.2px;text-transform:uppercase;color:var(--soluk);
+  margin:14px 0 8px}
+.wrap{display:flex;flex-wrap:wrap;gap:5px}
+.k{display:inline-block;padding:4px 8px;border-radius:6px;font-size:14px;font-weight:700;
+  font-family:ui-monospace,Menlo,monospace;letter-spacing:.5px;white-space:nowrap}
+.k em{font-style:normal;font-size:9.5px;letter-spacing:0;margin-left:3px;opacity:.75;
+  font-family:inherit;vertical-align:2px}
+.k.bu{outline:2.5px solid var(--kirmizi);outline-offset:1.5px}
+.c1{background:#fff9e3;color:#8a7000}.c2{background:#ffefb0;color:#7d5c00}
+.c3{background:#ffe085;color:#7a4d00}.c4{background:#ffca6b;color:#7a3d00}
+.c5{background:#ffae5e;color:#7a2e00}.c6{background:#f98e63;color:#762005}
+.c7{background:#e56a63;color:#fff}.c8{background:#cf4a72;color:#fff}
+.c9{background:#a3348a;color:#fff}.c10{background:#6a2b84;color:#fff}
+.lej{display:flex;gap:3px;flex-wrap:wrap;align-items:center;margin:6px 0 0;
+  font-size:11.5px;color:var(--soluk)}
+.lej i{font-style:normal;padding:2px 6px;border-radius:4px;font-weight:700;font-size:11px}
+.gizli{display:none!important}
+</style></head><body>
+<div id="bar"><a href="index.html">‹</a><span class="etap">ALIŞTIRMA · 7 HARFLİ</span>
+  <span class="para" id="skor">0 / 0</span></div>
+<div id="sure" class="gizli"><i></i></div>
+<div id="orta"></div>
+<div id="klavye" class="gizli"></div>
+<script>
+const N = 7, DERS = {"a":{"c":["ALDATMA","ARSENİK"],"e":1.8,"h":641,"k":[["ADAPTÖR",1,[1,0,0]],["ADİSYON",1,[0,0,1]],["AĞUSTOS",1,[0,0,1]],["ALÇIPAN",1,[0,0,1]],["ALTYAPI",1,[0,0,1]],["AMBALAJ",1,[0,0,1]],["ANEKDOT",1,[0,0,1]],["ARKADAŞ",3,[2,1,0]],["ATASÖZÜ",1,[0,0,1]]]},"b":{"c":["BENEKLİ","BARIŞMA"],"e":1.4,"h":588,"k":[["BAKLAVA",1,[0,1,0]],["BALABAN",1,[1,0,0]],["BANDROL",1,[0,1,0]],["BEREKET",1,[0,0,1]],["BEZELYE",1,[0,1,0]],["BİLEZİK",2,[0,1,1]],["BİLMECE",1,[0,0,1]],["BÖRÜLCE",1,[0,1,0]],["BULANIK",1,[0,1,0]],["BULAŞIK",1,[0,1,0]],["BULMACA",1,[1,0,0]]]},"c":{"c":["CEKETLİ","CANAVAR"],"e":1.2,"h":116,"k":[]},"ç":{"c":["ÇALIŞMA","ÇEKİNCE"],"e":1.3,"h":272,"k":[["ÇAMAŞIR",2,[2,0,0]],["ÇEKİRGE",1,[1,0,0]],["ÇEKMECE",1,[1,0,0]],["ÇELİŞKİ",1,[1,0,0]],["ÇİMENTO",1,[0,0,1]]]},"d":{"c":["DEMİNKİ","DUYARLI"],"e":1.4,"h":500,"k":[["DAKTİLO",1,[0,0,1]],["DANIŞMA",1,[0,1,0]],["DEPOZİT",1,[0,1,0]],["DEREOTU",1,[0,0,1]],["DOMATES",1,[1,0,0]],["DÜZAYAK",1,[0,0,1]],["DÜZENLİ",1,[1,0,0]]]},"e":{"c":["ERİŞMEK","ELEMENT"],"e":1.5,"h":319,"k":[["EĞLENCE",1,[1,0,0]],["ELDİVEN",1,[0,0,1]]]},"f":{"c":["FERİBOT","FAYDALI"],"e":1.1,"h":164,"k":[["FABRİKA",1,[1,0,0]],["FASULYE",3,[1,1,1]],["FEDAKAR",1,[0,1,0]],["FELSEFE",1,[1,0,0]],["FERİBOT",1,[0,0,1]],["FERMUAR",1,[0,1,0]],["FIRTINA",1,[1,0,0]]]},"g":{"c":["GENÇLİK","GÖTÜRME"],"e":1.3,"h":296,"k":[["GEZEGEN",2,[0,1,1]],["GÖKYÜZÜ",1,[0,0,1]],["GÖZLEME",2,[0,1,1]],["GÖZYAŞI",1,[0,0,1]],["GÜRÜLTÜ",1,[0,1,0]]]},"h":{"c":["HÜNERLİ","HATASIZ"],"e":1.3,"h":258,"k":[["HAMARAT",1,[0,1,0]],["HARARET",1,[0,0,1]],["HARMONİ",1,[0,1,0]],["HASTANE",1,[1,0,0]],["HAZİRAN",1,[0,1,0]],["HEYECAN",2,[1,0,1]],["HİPOTEZ",1,[0,1,0]]]},"ı":{"c":["ISITMAK","ISRARLI"],"e":1.1,"h":60,"k":[["IHLAMUR",1,[1,0,0]],["ISIRGAN",3,[1,1,1]],["ISPANAK",1,[0,0,1]]]},"i":{"c":["İNTİHAR","İZLEMEK"],"e":1.6,"h":384,"k":[["İHTİMAL",1,[1,0,0]],["İMTİHAN",1,[0,0,1]],["İRTİBAT",1,[0,1,0]],["İTFAİYE",1,[1,0,0]]]},"j":{"c":null,"e":null,"h":12,"k":[]},"k":{"c":["KİRALIK","KOMUTAN"],"e":2.1,"h":916,"k":[["KADAYIF",1,[1,0,0]],["KALİBRE",1,[0,0,1]],["KANARYA",1,[0,1,0]],["KARAVAN",1,[0,1,0]],["KARINCA",1,[0,0,1]],["KARIŞIK",1,[0,0,1]],["KARİYER",1,[0,0,1]],["KARİZMA",1,[0,1,0]],["KIRLENT",1,[0,0,1]],["KİRALIK",1,[0,0,1]],["KORİDOR",1,[0,0,1]],["KUMANDA",2,[1,1,0]],["KUMBARA",1,[0,0,1]]]},"l":{"c":["LİMONLU","LEKESİZ"],"e":1.1,"h":106,"k":[["LEBLEBİ",1,[1,0,0]],["LOKANTA",1,[1,0,0]]]},"m":{"c":["MAKARNA","MÜLTECİ"],"e":1.4,"h":493,"k":[["MAHALLE",1,[0,0,1]],["MANTIKA",1,[0,0,1]],["MANZARA",1,[0,1,0]],["MARATON",1,[0,1,0]],["MENEKŞE",1,[0,1,0]],["MENEMEN",1,[0,0,1]],["MENGENE",1,[1,0,0]],["MENTEŞE",1,[0,0,1]],["MERHABA",1,[1,0,0]],["MİSAFİR",1,[0,1,0]],["MOBİLYA",2,[0,1,1]],["MUALLİM",1,[1,0,0]],["MUSAKKA",1,[0,0,1]],["MUŞAMBA",1,[0,1,0]],["MÜŞTERİ",1,[0,1,0]]]},"n":{"c":["NASİHAT","NÜKLEER"],"e":1.2,"h":118,"k":[["NAKARAT",1,[1,0,0]],["NAKLİYE",1,[1,0,0]],["NASİHAT",2,[1,1,0]],["NEZAKET",1,[0,1,0]],["NİHAYET",1,[0,1,0]],["NİLÜFER",1,[1,0,0]],["NİTEKİM",1,[0,0,1]]]},"o":{"c":["OTURMAK","OKYANUS"],"e":1.2,"h":189,"k":[["OKSİJEN",1,[0,1,0]],["OKUYUCU",1,[1,0,0]],["OKYANUS",2,[1,1,0]],["ORGANİK",1,[1,0,0]],["OYUNCAK",4,[1,1,2]]]},"ö":{"c":["ÖNCÜLÜK","ÖĞRETİM"],"e":1.1,"h":133,"k":[["ÖĞRENCİ",1,[1,0,0]],["ÖRÜMCEK",1,[0,1,0]],["ÖZÇEKİM",2,[0,1,1]],["ÖZLEMEK",1,[1,0,0]]]},"p":{"c":["PROTEİN","PASAKLI"],"e":1.2,"h":236,"k":[["PALMİYE",1,[0,1,0]],["PAPATYA",2,[1,1,0]],["PARAŞÜT",1,[1,0,0]],["PATATES",2,[0,1,1]],["PENCERE",2,[1,1,0]],["PERİŞAN",1,[1,0,0]],["PERİYOT",1,[0,0,1]],["PERVANE",1,[0,1,0]],["PIRILTI",1,[0,0,1]],["PROBLEM",1,[1,0,0]]]},"r":{"c":["RADİKAL","RESTORE"],"e":1.1,"h":106,"k":[["RAFADAN",1,[1,0,0]],["REKABET",1,[0,1,0]],["RÖNTGEN",1,[0,1,0]]]},"s":{"c":["SATILIK","SEMİNER"],"e":1.5,"h":606,"k":[["SATILIK",1,[0,0,1]],["SAYISAL",2,[1,1,0]],["SEÇENEK",1,[0,1,0]],["SERAMİK",2,[0,1,1]],["SERBEST",1,[0,1,0]],["SPATULA",1,[0,0,1]],["SPONSOR",1,[0,0,1]],["STAJYER",1,[0,0,1]],["SÜPÜRGE",1,[0,1,0]]]},"ş":{"c":["ŞEFTALİ","ŞIMARIK"],"e":1.1,"h":137,"k":[["ŞAMPUAN",2,[2,0,0]],["ŞEFTALİ",1,[1,0,0]],["ŞEMSİYE",2,[1,1,0]],["ŞIMARIK",1,[1,0,0]],["ŞÖBİYET",1,[0,0,1]]]},"t":{"c":["TERSLİK","TANIŞMA"],"e":1.5,"h":540,"k":[["TANITIM",1,[0,0,1]],["TARATOR",1,[0,0,1]],["TASARIM",2,[2,0,0]],["TAVSİYE",1,[0,1,0]],["TESTERE",1,[1,0,0]],["TİYATRO",1,[1,0,0]],["TORPİDO",1,[0,0,1]],["TRAKTÖR",1,[0,1,0]],["TÜKETİM",1,[0,0,1]],["TÜRKİYE",1,[1,0,0]]]},"u":{"c":["UZAKTAN","UYDURUK"],"e":1.2,"h":116,"k":[["UTANGAÇ",1,[1,0,0]]]},"ü":{"c":["ÜSTELİK","ÜZERİNE"],"e":1.1,"h":77,"k":[["ÜCRETLİ",1,[1,0,0]]]},"v":{"c":["VASİYET","VURULMA"],"e":1.1,"h":114,"k":[["VANİLYA",1,[1,0,0]],["VİTAMİN",1,[0,1,0]],["VİYADÜK",1,[0,0,1]]]},"y":{"c":["YATIRIM","YENİLİK"],"e":1.3,"h":353,"k":[["YABANCI",1,[1,0,0]],["YAKAMOZ",1,[0,1,0]],["YARIÇAP",1,[0,0,1]],["YARIŞMA",2,[2,0,0]],["YASEMİN",2,[0,1,1]],["YATIRIM",1,[1,0,0]],["YÖNETİM",1,[0,1,0]],["YÖRÜNGE",1,[0,1,0]],["YUMURTA",1,[1,0,0]]]},"z":{"c":["ZAMANLI","ZİYARET"],"e":1.1,"h":79,"k":[["ZİYAFET",1,[0,0,1]],["ZİYARET",3,[0,2,1]]]}};
+const TOPLAM = 10, SATIR = 5, SURE = 20;
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const TRL = s => s.replace(/I/g,"ı").replace(/İ/g,"i").toLowerCase();
+const $ = s => document.querySelector(s);
+const orta = $("#orta"), klv = $("#klavye"), bar = document.querySelector("#bar .etap");
+const skorEl = $("#skor"), sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
+let VERI = null, GECERLI = null, sayac = null;
+let sira = 0, dogru = 0, kullanilan = new Set(), gecmis = [];
+
+/* ---- kelime secimi: %80 arsiv (cikis sayisiyla agirlikli), %20 sozluk ---- */
+let KUM = null;
+function kumul(){
+  if(KUM) return KUM;
+  const a = VERI.arsiv[N], c = []; let t = 0;
+  for(const [w, k] of a){ t += k; c.push(t); }
+  return KUM = {c, t, a};
+}
+function agirlikli(){
+  const {c, t, a} = kumul(), r = Math.random()*t;
+  let lo = 0, hi = c.length-1;
+  while(lo < hi){ const m = (lo+hi)>>1; if(c[m] <= r) lo = m+1; else hi = m; }
+  return a[lo][0];
+}
+function kelimeSec(){
+  const Y = VERI.yeni[N] || [];
+  for(let t = 0; t < 400; t++){
+    let w;
+    if(Math.random() < 0.80 || !Y.length) w = agirlikli();
+    else w = Y[Math.floor(Math.pow(Math.random(), 1.8) * Y.length)];
+    if(w && !kullanilan.has(w)){ kullanilan.add(w); return w; }
+  }
+  return agirlikli();
+}
+/* ---- yardimcilar ---- */
+function uyar(m){
+  const d = document.createElement("div"); d.className = "uyari"; d.textContent = m;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1300);
+}
+function renk(g, t){
+  const n = g.length, r = new Array(n).fill("yok"), kal = {};
+  for(let i = 0; i < n; i++)
+    if(t[i] === g[i]) r[i] = "tam"; else kal[g[i]] = (kal[g[i]]||0)+1;
+  for(let i = 0; i < n; i++)
+    if(r[i] !== "tam" && kal[t[i]] > 0){ r[i] = "var"; kal[t[i]]--; }
+  return r;
+}
+function durdur(){ if(sayac){ clearInterval(sayac); sayac = null; } }
+function sureGoster(g){ sureKap.classList.toggle("gizli", !g); }
+function skorYaz(){ skorEl.textContent = dogru + " / " + sira; }
+const DIZ = ["ertyuıopğü", "asdfghjklşi", "zcvbnmöç"];
+let klvDurum = {}, klvTus = {};
+function klavyeCiz(gir, sil, gonder){
+  klv.innerHTML = ""; klvTus = {};
+  DIZ.forEach((sr, k) => {
+    const d = document.createElement("div"); d.className = "sr";
+    if(k === 2){ const b = document.createElement("button");
+      b.className = "gnis"; b.textContent = "SİL"; b.onclick = sil; d.appendChild(b); }
+    for(const c of sr){
+      const b = document.createElement("button"); b.textContent = TRU(c);
+      b.onclick = () => gir(c); klvTus[c] = b; d.appendChild(b);
+    }
+    if(k === 2){ const b = document.createElement("button");
+      b.className = "gnis"; b.textContent = "TAMAM"; b.onclick = gonder; d.appendChild(b); }
+    klv.appendChild(d);
+  });
+  klv.classList.remove("gizli");
+}
+function klvBoya(t, r){
+  const o = {tam:3, var:2, yok:1};
+  for(let i = 0; i < t.length; i++){
+    const c = t[i];
+    if((o[klvDurum[c]]||0) < o[r[i]]){ klvDurum[c] = r[i];
+      if(klvTus[c]) klvTus[c].className = r[i]; }
+  }
+}
+function hucreBoy(n){
+  const g = Math.min(window.innerWidth - 30, 430);
+  return Math.max(30, Math.min(56, Math.floor((g - (n-1)*5) / n)));
+}
+/* ---- kelime ---- */
+function kelimeOyna(){
+  const gizli = kelimeSec();
+  let sat = 0, giris = gizli[0], kalanSn = SURE, kapandi = false;
+  klvDurum = {};
+  orta.className = ""; 
+  orta.innerHTML = `<div class="baslik" id="ust"></div>
+    <div id="tahta" style="--hg:${hucreBoy(N)}px"></div>`;
+  const tahta = $("#tahta");
+  for(let r = 0; r < SATIR; r++){
+    const d = document.createElement("div"); d.className = "satir";
+    d.style.gridTemplateColumns = `repeat(${N}, var(--hg))`;
+    for(let i = 0; i < N; i++){
+      const h = document.createElement("div");
+      h.className = "hucre" + (i === 0 ? " ilk" : "");
+      if(i === 0) h.textContent = TRU(gizli[0]);
+      d.appendChild(h);
+    }
+    tahta.appendChild(d);
+  }
+  const satirlar = [...tahta.children];
+  function ustYaz(){
+    $("#ust").textContent =
+      `${sira+1}. KELİME / ${TOPLAM} · ${SATIR - sat} HAK · ${kalanSn} SN`;
+    satirlar.forEach((s, k) => s.classList.toggle("aktif", k === sat));
+  }
+  function yaz(){
+    const h = satirlar[sat].children;
+    for(let i = 1; i < N; i++){
+      h[i].textContent = giris[i] ? TRU(giris[i]) : "";
+      h[i].className = "hucre" + (giris[i] ? " dolu" : "");
+    }
+  }
+  function tik(){
+    durdur(); sureGoster(true); sureKap.classList.remove("az");
+    kalanSn = SURE; ustYaz();
+    const bas = Date.now(), top = SURE*1000;
+    sayac = setInterval(() => {
+      const kalan = Math.max(0, top - (Date.now()-bas));
+      sureBar.style.width = (100*kalan/top) + "%";
+      sureKap.classList.toggle("az", kalan < top*0.3);
+      const s2 = Math.ceil(kalan/1000);
+      if(s2 !== kalanSn){ kalanSn = s2; ustYaz(); }
+      if(kalan <= 0){ durdur(); bitirSatir(null); }
+    }, 100);
+  }
+  function sarsil(){
+    satirlar[sat].classList.add("sarsil");
+    setTimeout(() => satirlar[sat].classList.remove("sarsil"), 360);
+  }
+  function bitirSatir(tah){
+    if(kapandi) return;
+    durdur();
+    if(tah === null){
+      const h = satirlar[sat].children;
+      for(let i = 1; i < N; i++){ h[i].textContent = "·"; h[i].className = "hucre yok"; }
+      uyar("Süre doldu");
+    } else {
+      const r = renk(gizli, tah), h = satirlar[sat].children;
+      for(let i = 0; i < N; i++) h[i].className = "hucre " + r[i];
+      klvBoya(tah, r);
+      if(tah === gizli){
+        kapandi = true; sureGoster(false); dogru++; sira++; skorYaz();
+        gecmis.push({w: gizli, ok: true});
+        return setTimeout(sonraki, 700);
+      }
+    }
+    sat++; giris = gizli[0];
+    if(sat >= SATIR){
+      kapandi = true; sureGoster(false); sira++; skorYaz();
+      gecmis.push({w: gizli, ok: false});
+      return setTimeout(() => degerlendir(gizli), 550);
+    }
+    ustYaz(); yaz(); tik();
+  }
+  ustYaz(); yaz();
+  klavyeCiz(
+    c => { if(giris.length < N){ giris += c; yaz(); } },
+    () => { if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } },
+    () => {
+      if(giris.length < N){ uyar("Harfler eksik"); sarsil(); return; }
+      if(!GECERLI.has(giris)){ uyar("Sözlükte yok"); sarsil(); return; }
+      bitirSatir(giris);
+    });
+  tik();
+}
+/* ---- degerlendirme ---- */
+function sinif(n){ return "c" + Math.min(n, 10); }
+function degerlendir(w){
+  durdur(); sureGoster(false); klv.classList.add("gizli");
+  const L = w[0], D = DERS[L] || {k: []};
+  const bu = TRU(w);
+  const cip = ([k, t, s]) =>
+    `<span class="k ${sinif(t)}${k === bu ? " bu" : ""}">${k}<em>${s.join("·")}</em></span>`;
+  const lej = [1,2,3,4,5,6,7,8,9,10].map(i =>
+    `<i class="${sinif(i)}">${i === 10 ? "10+" : i}</i>`).join("");
+  const oner = D.c
+    ? `<div class="oner"><span>bu harfte böyle başlamalıydınız</span>
+        <b>${D.c[0]} + ${D.c[1]}</b>
+        <i>Bu ikili ${TRU(L)} ile başlayan ${N} harfli ${D.h} kelimeyi
+        ortalama <b>${D.e}</b> adaya indirir. Aynı harfi iki kez denemek yerine
+        olabildiğince çok <b>farklı</b> harf deneyin.</i></div>`
+    : `<div class="oner"><span>bu harfte</span><b>${TRU(L)}</b>
+        <i>Havuz çok küçük olduğu için açılış hesabı yapılmıyor —
+        aşağıdaki liste zaten kısa.</i></div>`;
+  const liste = D.k.length
+    ? `<h3>${TRU(L)} ile başlayan ${N} harfli — yayında çıkan ${D.k.length} kelime</h3>
+       <div class="wrap">${D.k.map(cip).join("")}</div>
+       <div class="lej">kaç kez çıktı: ${lej}
+         &nbsp;·&nbsp; küçük rakamlar: 1. · 2. · 3. sezon</div>`
+    : `<h3>${TRU(L)} ile başlayan ${N} harfli hiç cevap çıkmadı</h3>`;
+  orta.className = "ust";
+  orta.innerHTML = `<div class="dgr">
+    <div class="yanlis"><span>bilemediniz</span><b>${bu}</b>
+      <i>${(VERI.kac && VERI.kac[w])
+          ? "Bu kelime yayında " + VERI.kac[w] + " kez cevap oldu."
+          : "Bu kelime yayında hiç çıkmadı, sözlükten geldi."}</i></div>
+    ${oner}
+    ${liste}
+    <button class="buton" id="dv">DEVAM ▸</button></div>`;
+  $("#dv").onclick = sonraki;
+  orta.scrollTop = 0;
+}
+/* ---- akis ---- */
+function ekran(html){
+  durdur(); sureGoster(false); klv.classList.add("gizli");
+  orta.className = ""; orta.innerHTML = `<div class="kutu">${html}</div>`;
+}
+function sonraki(){
+  if(sira >= TOPLAM) return ozet();
+  kelimeOyna();
+}
+function basla(){
+  sira = 0; dogru = 0; kullanilan = new Set(); gecmis = []; skorYaz();
+  kelimeOyna();
+}
+function ozet(){
+  const en = +(localStorage.getItem("lingo_alistirma_" + N) || 0);
+  if(dogru > en) localStorage.setItem("lingo_alistirma_" + N, dogru);
+  const sat = gecmis.map(g =>
+    `<span class="k ${g.ok ? "c2" : "c8"}">${TRU(g.w)}</span>`).join("");
+  ekran(`<p class="kucuk">${N} HARFLİ ALIŞTIRMA</p>
+    <div class="tutar">${dogru} / ${TOPLAM}</div>
+    <div class="wrap" style="justify-content:center;margin:14px 0">${sat}</div>
+    <p class="kucuk">${dogru > en ? "En iyiniz bu!" : "En iyiniz: " + en + " / " + TOPLAM}</p>
+    <button class="buton" onclick="basla()">YENİ 10 KELİME</button>
+    <button class="buton ikinci" onclick="location.href='index.html'">GERİ DÖN</button>`);
+}
+function giris(){
+  ekran(`<h1>7 HARFLİ ALIŞTIRMA</h1>
+    <p>Arka arkaya <b>10 kelime</b>. Sadece 7 harfli kelimeler gelir; ilk harf
+       verilidir, <b>5 tahmin hakkınız</b> ve her tahmin için <b>20 saniyeniz</b> var.</p>
+    <p class="kucuk">Bilemediğiniz kelimede o harf için <b>doğru açılış ikilisi</b>
+       gösterilir; altında o harfle başlayan bütün çıkmış kelimeler, kaç kez ve
+       hangi sezonda çıktıklarıyla listelenir.</p>
+    <button class="buton" onclick="basla()">BAŞLA</button>`);
+}
+function yukle(){
+  ekran(`<h1>7 HARFLİ ALIŞTIRMA</h1><p>Kelime havuzu yükleniyor…</p>`);
+  fetch("oyun-veri.json").then(r => { if(!r.ok) throw 0; return r.json(); })
+    .then(d => { VERI = d; GECERLI = new Set(VERI.gecerli[N]); giris(); })
+    .catch(() => ekran(`<h2>Yüklenemedi</h2>
+      <p>Bağlantınızı kontrol edip sayfayı yenileyin.</p>
+      <button class="buton" onclick="location.reload()">YENİLE</button>`));
+}
+document.addEventListener("keydown", e => {
+  if(klv.classList.contains("gizli")) return;
+  const k = e.key;
+  const bul = t => [...klv.querySelectorAll("button")].find(x => x.textContent === t);
+  if(k === "Enter"){ const b = bul("TAMAM"); if(b) b.click(); }
+  else if(k === "Backspace"){ const b = bul("SİL"); if(b) b.click(); }
+  else if(k.length === 1){ const c = TRL(k); if(klvTus[c]) klvTus[c].click(); }
+});
+window.addEventListener("resize", () => {
+  const t = $("#tahta"); if(!t) return;
+  t.style.setProperty("--hg", hucreBoy(N) + "px");
+});
+yukle();
+</script></body></html>
