@@ -21,3 +21,7 @@
 ### 🎯 [Alıştırma — 6 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma6.html)
 
 ### 🎯 [Alıştırma — 7 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma7.html)
+
+<br>
+
+### 🖨️ [Duvar sayfası — renkli çıktı, tek A4](https://rmz-oz.github.io/Lingo_Turkiye/Lingo_Acilis_Duvar.pdf)
