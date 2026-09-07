@@ -243,6 +243,7 @@ const M = {
         S.acik=this.GIZLI;
         S.mesaj=`Doğru! Garantilenen: ₺${TL(S.finKazanc)}`; S.msjTip="iyi";
         this.gonder();
+        if(S.n===6) return setTimeout(()=>this.finKarar(), 1500);
         F.idx++;
         return setTimeout(()=>this.finKelime(), 1500);
       }
@@ -535,15 +536,33 @@ const M = {
     const t=this.S.fin.taban;
     return n===7 ? t*2 + FINAL.superEk : Math.round(t*FINAL.carpan[n]/100)*100;
   },
-  finBasla(){
-    const S=this.S; S.faz="final"; S.fin.idx=0; S.fin.enIyi=0; S.finKazanc=0;
-    this.dur();
-    const b0=Date.now(), top=FINAL.sure*1000; S.sn=FINAL.sure; S.top=FINAL.sure;
+  finSaat(sn){
+    const S=this.S; this.dur();
+    const b0=Date.now(), top=sn*1000; S.sn=sn; S.top=FINAL.sure;
     this.sayac=setInterval(()=>{
       const kalan=Math.max(0, top-(Date.now()-b0)), s2=Math.ceil(kalan/1000);
       if(s2!==S.sn){ S.sn=s2; this.gonder(); }
       if(kalan<=0){ this.dur(); this.finBitir(); }
     },150);
+  },
+  finBasla(){
+    const S=this.S; S.faz="final"; S.fin.idx=0; S.fin.enIyi=0; S.finKazanc=0;
+    this.finSaat(FINAL.sure);
+    this.finKelime();
+  },
+  /* 6 harfliden sonra: tamam mi devam mi */
+  finKarar(){
+    const S=this.S; this.dur();
+    S.faz="finalkarar";
+    S.mesaj=`6 harfliyi bildi — garanti ₺${TL(S.finKazanc)}`; S.msjTip="iyi";
+    this.gonder();
+  },
+  karar(devam){
+    const S=this.S;
+    if(S.faz!=="finalkarar") return;
+    if(!devam){ S.fin.suan=6; return this.finBitir(); }
+    S.fin.idx++; S.faz="final";
+    this.finSaat(Math.max(5, S.sn));
     this.finKelime();
   },
   finKelime(){
@@ -613,6 +632,7 @@ const NET = {
     const S=M.S;
     if(m.t==="buzz") return M.buz(c.masa);
     if(m.t==="pas"){ if(c.masa===S.cevaplayan) M.pas(); return; }
+    if(m.t==="karar"){ if(S.fin && c.masa===S.fin.masa) M.karar(!!m.devam); return; }
     if(c.masa!==S.cevaplayan) return;
     if(m.t==="harf") M.harf(m.c);
     else if(m.t==="sil") M.sil();
@@ -768,6 +788,22 @@ function ciz(S){
                 :'<p class="izle">Masa yönetiminin başlatması bekleniyor…</p>'}`);
     return;
   }
+  if(S.faz==="finalkarar"){
+    const F=S.fin, risk=F.taban*2+FINAL.superEk, benim=NET.benim===F.masa;
+    ekran(`<h2>Tamam mı, devam mı?</h2>
+      <p><b>${S.masalar[F.masa].ad}</b> 6 harfliyi bildi.
+         Şu anki garantisi <b style="color:var(--altin)">₺${TL(S.finKazanc)}</b>.</p>
+      <p class="izle">Devam ederse 7 harfli <b>süper lingo</b>:
+         bilirse <b>₺${TL(risk)}</b>, bilemezse <b style="color:var(--kirmizi)">sıfır</b>.
+         Kalan süre <b>${S.sn}</b> saniye (şu an duruyor).</p>
+      ${benim
+        ? `<button class="buton" style="background:var(--yesil);color:#fff"
+             onclick="NET.yolla({t:'karar',devam:false})">TAMAM — ₺${TL(S.finKazanc)} ile bitir</button>
+           <button class="buton" onclick="NET.yolla({t:'karar',devam:true})">
+             DEVAM — süper lingo ▸</button>`
+        : `<p class="izle">Karar ${S.masalar[F.masa].ad} masasında…</p>`}`);
+    skorCiz(S); return;
+  }
   if(S.faz==="eleme"){
     ekran(`<h2 style="color:var(--kirmizi)">${S.mesaj}</h2>
       <p>3. etap düello olarak devam ediyor:</p>
@@ -873,8 +909,8 @@ function giris(){
       <b>Final</b> 200 saniye, 4→5→6→7 harfli. Biriken paranın yarısı / tamamı /
         2 katı; 7 harfliyi bilirse <b>2 katı + ₺250.000</b>, bilemezse sıfır.<br>
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
-    <button class="buton mor" onclick="odaAc()">🎛 MASA YÖNETİMİNİ BEN KURAYIM</button>
-    <button class="buton ikinci" onclick="katilEkran()">BİR ODAYA KATIL</button>
+    <button class="buton mor" onclick="odaAc()">🎛 MASA KUR</button>
+    <button class="buton ikinci" onclick="katilEkran()">ODAYA KATIL</button>
     <p class="izle" style="margin-top:10px">Kuran cihaz oyunu yönetir; sayfayı açık
       tutmalı. Diğerleri linkle katılır.</p>`);
 }
@@ -891,7 +927,7 @@ function odaAc(){
     kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
     const url=location.origin+location.pathname;
     ekran(`<h2>Oda hazır</h2>
-      <p>Herkes bu sayfayı açıp <b>BİR ODAYA KATIL</b>'a dokunsun,
+      <p>Herkes bu sayfayı açıp <b>ODAYA KATIL</b>'a dokunsun,
          sonra masasını seçsin. Kod yok.</p>
       <a class="buton mor" style="text-decoration:none"
          href="https://wa.me/?text=${encodeURIComponent("Ailecük başlıyor! Aç ve masanı seç: "+url)}">
@@ -930,7 +966,7 @@ function katilOl(masa){
   NET.katilBasla(null, ad, masa, err=>{
     if(err) return ekran(`<h2>Bağlanılamadı</h2>
       <p>Masa yönetimini kuran cihazın sayfası açık olmalı.
-         Önce biri <b>MASA YÖNETİMİNİ BEN KURAYIM</b>'a dokunsun.</p>
+         Önce biri <b>MASA KUR</b>'a dokunsun.</p>
       <button class="buton" onclick="katilEkran()">TEKRAR DENE</button>`);
     kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
     ekran(`<h2>Bağlandınız</h2>

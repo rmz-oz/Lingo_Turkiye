@@ -536,7 +536,7 @@ function kacKez(w){
 }
 
 /* ---------------- final ---------------- */
-let fIdx = 0, fTaban = 0, fEnIyi = 0, fSuan = 0, fBitti = false;
+let fIdx = 0, fTaban = 0, fEnIyi = 0, fSuan = 0, fBitti = false, fKalan = FINAL.sure;
 function fKazanc(n){
   return n === 7 ? fTaban*2 + FINAL.superEk : Math.round(fTaban*FINAL.carpan[n]/100)*100;
 }
@@ -562,7 +562,8 @@ function finalGiris(){
 function finalBasla(){
   fIdx = 0; fEnIyi = 0; fSuan = 0; fBitti = false;
   para = 0; paraYaz();
-  sureBasla(FINAL.sure, () => finalBitir());
+  fKalan = FINAL.sure;
+  sureBasla(FINAL.sure, () => finalBitir(), sn => { fKalan = sn; });
   finalKelime();
 }
 function finalKelime(){
@@ -576,10 +577,34 @@ function finalKelime(){
      pas: () => { if(!fBitti) finalKelime(); }},
     (ok) => {
       if(fBitti) return;
-      if(ok){ fEnIyi = n; para = finalOdul(); paraYaz(); fIdx++; finalKelime(); }
+      if(ok){
+        fEnIyi = n; para = finalOdul(); paraYaz();
+        if(n === 6) return finalKarar();
+        fIdx++; finalKelime();
+      }
       else finalBitir();
     });
   sayac = tut; sureGoster(true);
+}
+function finalKarar(){
+  durdur();
+  const g = finalOdul(), r = fTaban*2 + FINAL.superEk;
+  ekran(`<h2>Tamam mı, devam mı?</h2>
+    <p>6 harfliyi bildiniz. Şu anki garantiniz
+       <b style="color:var(--altin)">₺${TL(g)}</b>.</p>
+    <p class="kucuk">Devam ederseniz 7 harfli <b>süper lingo</b>:
+       bilirseniz <b>₺${TL(r)}</b>, bilemezseniz
+       <b style="color:var(--kirmizi)">sıfır</b>.
+       Kalan süre <b>${fKalan}</b> saniye — şu an duruyor.</p>
+    <button class="buton" style="background:var(--yesil);color:#fff"
+      onclick="finalDur()">TAMAM — ₺${TL(g)} ile bitir</button>
+    <button class="buton" onclick="finalDevam()">DEVAM — süper lingo ▸</button>`);
+}
+function finalDur(){ fSuan = 6; finalBitir(); }
+function finalDevam(){
+  fIdx++;
+  sureBasla(Math.max(5, fKalan), () => finalBitir(), sn => { fKalan = sn; });
+  finalKelime();
 }
 function finalBitir(){
   if(fBitti) return; fBitti = true;
