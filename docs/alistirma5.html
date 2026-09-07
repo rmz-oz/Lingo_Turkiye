@@ -116,6 +116,32 @@ button{font:inherit;cursor:pointer}
 .lej3{display:flex;gap:5px;justify-content:center;align-items:center;
   margin:10px 0 2px;font-size:12px;color:var(--soluk);flex-wrap:wrap}
 .lej3 i{font-style:normal;padding:2px 9px;border-radius:5px;font-weight:700;font-size:11.5px}
+/* yardimli mod */
+.yrd{width:100%;max-width:560px;margin-top:2px}
+.yrd .yb{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--soluk);
+  letter-spacing:.6px;text-transform:uppercase;font-weight:700;margin-bottom:5px}
+.yrd .yb b{color:var(--yesil);font-size:15px}
+.yrd .yb u{margin-left:auto;text-decoration:none;color:#63707e;font-weight:600}
+.yw{display:flex;flex-wrap:wrap;gap:4px;max-height:34vh;overflow-y:auto;
+  padding:2px 1px 4px}
+.yw span{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;font-weight:700;
+  padding:2px 6px;border-radius:5px;letter-spacing:.5px;white-space:nowrap}
+.yw span.ok{background:#1e4d33;color:#7fe0a6;border:1px solid #2e9e5b}
+.yw span.no{background:transparent;color:#4d5763;text-decoration:line-through;
+  border:1px solid #232e3a;font-weight:600}
+.anah{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;
+  padding:11px 14px;margin-top:12px;cursor:pointer}
+.anah .t{text-align:left}
+.anah .t b{display:block;font-size:15.5px}
+.anah .t i{font-style:normal;font-size:12.5px;color:var(--soluk);line-height:1.35;
+  display:block;margin-top:2px}
+.anah .sw{width:46px;height:26px;border-radius:99px;background:#3a4756;flex:none;
+  position:relative;transition:background .15s}
+.anah .sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;
+  border-radius:99px;background:#fff;transition:left .15s}
+.anah.on .sw{background:var(--yesil)}
+.anah.on .sw:after{left:23px}
 .gizli{display:none!important}
 </style></head><body>
 <div id="bar"><a href="index.html">‹</a><span class="etap">ALIŞTIRMA · 5 HARFLİ</span>
@@ -135,6 +161,8 @@ let VERI = null, GECERLI = null, sayac = null;
 let sira = 0, dogru = 0, kullanilan = new Set(), gecmis = [];
 let HARF = null, ARS = [], YEN = [], HEDEF = TOPLAM;
 let KARISIK = false, BLOK = [], blokIdx = -1;
+let YARDIM = false, HAVUZL = [];
+try{ YARDIM = localStorage.getItem("lingo_yardim_" + N) === "1"; }catch(e){}
 const BLOKBOY = 3, BLOKSAY = 3;              // karisik: 3 harf x 3 kelime
 
 /* ---- kelime secimi: %80 arsiv (cikis sayisiyla agirlikli), %20 sozluk ---- */
@@ -146,6 +174,7 @@ function havuzKur(L){
   if(L) YEN = YEN.filter(w => w[0] === L);
   if(!ARS.length && !YEN.length && L)
     YEN = [...GECERLI].filter(w => w[0] === L);
+  HAVUZL = L ? [...GECERLI].filter(w => w[0] === L).sort() : [];
 }
 function havuzBoy(L){
   const a = VERI.arsiv[N].filter(x => x[0][0] === L).length;
@@ -232,18 +261,32 @@ function klvBoya(t, r){
       if(klvTus[c]) klvTus[c].className = r[i]; }
   }
 }
-function hucreBoy(n){
+function hucreBoy(n, kucuk){
   const g = Math.min(window.innerWidth - 30, 430);
-  return Math.max(30, Math.min(56, Math.floor((g - (n-1)*5) / n)));
+  return Math.max(26, Math.min(kucuk ? 40 : 56, Math.floor((g - (n-1)*5) / n)));
 }
 /* ---- kelime ---- */
 function kelimeOyna(){
   const gizli = kelimeSec();
   let sat = 0, giris = gizli[0], kalanSn = SURE, kapandi = false;
   klvDurum = {};
-  orta.className = ""; 
+  const gecmisT = [];
+  orta.className = YARDIM ? "ust" : "";
   orta.innerHTML = `<div class="baslik" id="ust"></div>
-    <div id="tahta" style="--hg:${hucreBoy(N)}px"></div>`;
+    <div id="tahta" style="--hg:${hucreBoy(N, YARDIM)}px"></div>
+    ${YARDIM ? '<div class="yrd" id="yrd"></div>' : ""}`;
+  function yardimCiz(){
+    if(!YARDIM) return;
+    const uy = w => gecmisT.every(t => renk(w, t.w).join("") === t.r.join(""));
+    const ok = [], no = [];
+    for(const w of HAVUZL) (uy(w) ? ok : no).push(w);
+    $("#yrd").innerHTML =
+      `<div class="yb">kalan <b>${ok.length}</b> / ${HAVUZL.length} kelime
+         <u>${no.length ? no.length + " elendi" : "henüz eleme yok"}</u></div>
+       <div class="yw">
+         ${ok.map(w => `<span class="ok">${TRU(w)}</span>`).join("")}
+         ${no.map(w => `<span class="no">${TRU(w)}</span>`).join("")}</div>`;
+  }
   const tahta = $("#tahta");
   for(let r = 0; r < SATIR; r++){
     const d = document.createElement("div"); d.className = "satir";
@@ -300,6 +343,7 @@ function kelimeOyna(){
       const r = renk(gizli, tah), h = satirlar[sat].children;
       for(let i = 0; i < N; i++) h[i].className = "hucre " + r[i];
       klvBoya(tah, r);
+      gecmisT.push({w: tah, r}); yardimCiz();
       if(tah === gizli){
         kapandi = true; sureGoster(false); dogru++; sira++; skorYaz();
         gecmis.push({w: gizli, ok: true});
@@ -314,7 +358,7 @@ function kelimeOyna(){
     }
     ustYaz(); yaz(); tik();
   }
-  ustYaz(); yaz();
+  ustYaz(); yaz(); yardimCiz();
   klavyeCiz(
     c => { if(giris.length < N){ giris += c; yaz(); } },
     () => { if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } },
@@ -388,6 +432,11 @@ function sonraki(){
   }
   kelimeOyna();
 }
+function yardimDegis(){
+  YARDIM = !YARDIM;
+  try{ localStorage.setItem("lingo_yardim_" + N, YARDIM ? "1" : "0"); }catch(e){}
+  $("#anah").classList.toggle("on", YARDIM);
+}
 function basla(L){
   sira = 0; dogru = 0; kullanilan = new Set(); gecmis = []; blokIdx = -1;
   KARISIK = !L;
@@ -437,6 +486,11 @@ function giris(){
     <div class="lej3"><i class="z1">kolay</i><i class="z2">orta</i><i class="z3">zor</i></div>
     <div class="hgrid">${tus}</div>
     <button class="buton ikinci karis" onclick="basla(null)">KARIŞIK — 3 harf × 3 kelime</button>
+    <div class="anah ${YARDIM ? "on" : ""}" id="anah" onclick="yardimDegis()">
+      <span class="t"><b>Yardımlı mod</b>
+        <i>Her tahminden sonra hâlâ mümkün olan kelimeler yeşil,
+           elenenler üstü çizili görünür.</i></span>
+      <span class="sw"></span></div>
     <p class="kucuk" style="margin-top:12px">Seçtiğiniz harften arka arkaya
        <b>10 kelime</b> gelir. <b>Karışık</b>ta ise 9 kelime: rastgele üç harf,
        her harften <b>üçer kelime peş peşe</b>. İlk harf verilidir, <b>5 hak</b>
@@ -464,7 +518,7 @@ document.addEventListener("keydown", e => {
 });
 window.addEventListener("resize", () => {
   const t = $("#tahta"); if(!t) return;
-  t.style.setProperty("--hg", hucreBoy(N) + "px");
+  t.style.setProperty("--hg", hucreBoy(N, YARDIM) + "px");
 });
 yukle();
 </script></body></html>
