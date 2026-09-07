@@ -909,10 +909,10 @@ function giris(){
       <b>Final</b> 200 saniye, 4→5→6→7 harfli. Biriken paranın yarısı / tamamı /
         2 katı; 7 harfliyi bilirse <b>2 katı + ₺250.000</b>, bilemezse sıfır.<br>
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
-    <button class="buton mor" onclick="odaAc()">🎛 MASA KUR</button>
-    <button class="buton ikinci" onclick="katilEkran()">ODAYA KATIL</button>
-    <p class="izle" style="margin-top:10px">Kuran cihaz oyunu yönetir; sayfayı açık
-      tutmalı. Diğerleri linkle katılır.</p>`);
+    <button class="buton mor" onclick="odaAc()">🍽 MASAYI BEN KURARIM</button>
+    <button class="buton ikinci" onclick="katilEkran()">🍴 BEN HAZIRA KONARIM</button>
+    <p class="izle" style="margin-top:10px">Kuran da yarışıyor — sadece oyunu onun
+      telefonu yürütüyor, o yüzden sayfası açık kalsın.</p>`);
 }
 function odaAc(){
   ekran(`<h2>Oda açılıyor…</h2><p class="izle">Bağlantı kuruluyor</p>`);
@@ -927,7 +927,7 @@ function odaAc(){
     kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
     const url=location.origin+location.pathname;
     ekran(`<h2>Oda hazır</h2>
-      <p>Herkes bu sayfayı açıp <b>ODAYA KATIL</b>'a dokunsun,
+      <p>Herkes bu sayfayı açıp <b>BEN HAZIRA KONARIM</b>'a dokunsun,
          sonra masasını seçsin. Kod yok.</p>
       <a class="buton mor" style="text-decoration:none"
          href="https://wa.me/?text=${encodeURIComponent("Ailecük başlıyor! Aç ve masanı seç: "+url)}">
@@ -966,7 +966,7 @@ function katilOl(masa){
   NET.katilBasla(null, ad, masa, err=>{
     if(err) return ekran(`<h2>Bağlanılamadı</h2>
       <p>Masa yönetimini kuran cihazın sayfası açık olmalı.
-         Önce biri <b>MASA KUR</b>'a dokunsun.</p>
+         Önce biri <b>MASAYI BEN KURARIM</b>'a dokunsun.</p>
       <button class="buton" onclick="katilEkran()">TEKRAR DENE</button>`);
     kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
     ekran(`<h2>Bağlandınız</h2>
