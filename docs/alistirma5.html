@@ -338,9 +338,10 @@ function degerlendir(w){
   const oner = D.c
     ? `<div class="oner"><span>bu harfte böyle başlamalıydınız</span>
         <b>${D.c[0]} + ${D.c[1]}</b>
-        <i>Bu ikili ${TRU(L)} ile başlayan ${N} harfli ${D.h} kelimeyi
-        ortalama <b>${D.e}</b> adaya indirir. Aynı harfi iki kez denemek yerine
-        olabildiğince çok <b>farklı</b> harf deneyin.</i></div>`
+        <i>${TRU(L)} ile başlayan ${N} harfli <b>${D.h}</b> kelime var; bu iki
+        tahminden sonra geriye ortalama sadece <b>${D.e}</b> kelime kalır.
+        Aynı harfi iki kez denemek yerine olabildiğince çok
+        <b>farklı</b> harf deneyin.</i></div>`
     : `<div class="oner"><span>bu harfte</span><b>${TRU(L)}</b>
         <i>Havuz çok küçük olduğu için açılış hesabı yapılmıyor —
         aşağıdaki liste zaten kısa.</i></div>`;
@@ -423,15 +424,16 @@ function giris(){
   const tus = hs.map((h, i) => {
     const z = i < ucte ? "z1" : (i < 2*ucte ? "z2" : "z3");
     return `<button class="${z}" onclick="basla('${h.L}')">
-      <b>${TRU(h.L)}</b><i>${h.hv} kelime</i><em>${h.er} aday</em></button>`;
+      <b>${TRU(h.L)}</b><i>${h.hv} kelime</i><em>→ ${h.er} kalır</em></button>`;
   }).join("");
   durdur(); sureGoster(false); klv.classList.add("gizli");
   orta.className = "ust";
   orta.innerHTML = `<div class="sec">
     <h1>5 HARFLİ ALIŞTIRMA</h1>
     <p class="not">Hangi harfle çalışacaksınız? <b>Kolaydan zora</b> sıralı.<br>
-       Renk, iki iyi tahminden sonra geriye kaç aday kaldığını gösterir;
-       yanındaki sayı o harfte sözlükte kaç 5 harfli kelime olduğudur.</p>
+       <b>Üstteki sayı</b>: o harfte sözlükte kaç 5 harfli kelime var.<br>
+       <b>Alttaki sayı</b>: en iyi iki tahmini yaptıktan sonra geriye ortalama
+       kaç kelime kalır. Küçükse harf kolay — iki tahmin kelimeyi belirler.</p>
     <div class="lej3"><i class="z1">kolay</i><i class="z2">orta</i><i class="z3">zor</i></div>
     <div class="hgrid">${tus}</div>
     <button class="buton ikinci karis" onclick="basla(null)">KARIŞIK — 3 harf × 3 kelime</button>
