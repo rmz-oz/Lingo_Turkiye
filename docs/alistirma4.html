@@ -129,23 +129,17 @@ button{font:inherit;cursor:pointer}
 /* yardimli mod */
 .yrd{width:100%;max-width:620px;margin-top:2px;display:flex;gap:10px;
   align-items:flex-start}
-.ysol{flex:0 0 168px;background:#132a1c;border:1px solid #2e6b45;border-radius:10px;
+.ysol{flex:0 0 150px;background:#132a1c;border:1px solid #2e6b45;border-radius:10px;
   padding:9px 10px}
 .ysag{flex:1;min-width:0}
 .ysol .yh{font-size:10.5px;letter-spacing:.7px;text-transform:uppercase;
   color:#6fcf97;font-weight:800;margin-bottom:6px;line-height:1.3}
-.ysol .yp{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;font-weight:700;
-  color:#d8f3e2;letter-spacing:.4px;margin-bottom:3px;display:flex;
-  align-items:baseline;gap:5px}
-.ysol .yp i{font-style:normal;font-family:inherit;font-size:10px;color:#7fb99a;
-  margin-left:auto;white-space:nowrap}
-.ysol .yn{font-size:10.5px;color:#9fd4b4;line-height:1.4;margin-top:7px;
-  border-top:1px solid #2e6b45;padding-top:6px}
+.ysol .yp{font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:700;
+  color:#d8f3e2;letter-spacing:.4px;margin-bottom:4px}
 @media(max-width:560px){
   .yrd{flex-direction:column;gap:7px}
   .ysol{flex:none;width:100%}
   .ysol .yp{display:inline-flex;margin:0 10px 3px 0}
-  .ysol .yp i{margin-left:5px}
 }
 .yrd .yb{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--soluk);
   letter-spacing:.6px;text-transform:uppercase;font-weight:700;margin-bottom:5px}
@@ -317,13 +311,10 @@ function kelimeOyna(){
     for(const w of HAVUZL) (uy(w) ? ok : no).push(w);
     const D = DERS.harf[HARF] || {};
     const cift = (D.p || []).slice(0, 3).map(x =>
-      `<div class="yp">${x[0]} + ${x[1]}<i>→ ${x[2]}</i></div>`).join("");
+      `<div class="yp">${x[0]} + ${x[1]}</div>`).join("");
     el.innerHTML =
       `${cift ? `<div class="ysol"><div class="yh">İyi başlangıç ikilileri</div>
-         ${cift}
-         <div class="yn">Bunları denemeniz şansınızı artırır — en çok
-           <b>farklı</b> harfi test edip geriye en az kelime bırakırlar.
-           Sağdaki sayı kaç kelime kalacağını gösterir.</div></div>` : ""}
+         ${cift}</div>` : ""}
        <div class="ysag">
          <div class="yb">kalan <b>${ok.length}</b> / ${HAVUZL.length} kelime
            <u>${no.length ? no.length + " elendi" : "henüz eleme yok"}</u></div>
