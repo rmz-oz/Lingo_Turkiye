@@ -214,8 +214,9 @@ table.rek td.tl{text-align:right;color:var(--yesil);font-weight:800;
 <div id="jokbar" class="gizli"></div>
 <div id="klavye" class="gizli"></div>
 
-<script src="rozet.js"></script>
-<script src="ses.js"></script>
+<script src="rozet.js?v=3"></script>
+<script>if(typeof LG_kervanMeta !== "function") window.LG_kervanMeta = function(){ return {}; };</script>
+<script src="ses.js?v=3"></script>
 <script>
 const $ = s => document.querySelector(s);
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -1513,11 +1514,20 @@ function yukle(){
     for(const n of [4,5,6,7]) GECERLI[n] = new Set(ov.gecerli[n]);
     basla();
   }).catch(e => {
-    orta.innerHTML = `<div class="kutu ort"><h2>Veri yüklenemedi</h2>
-      <p class="kucuk">Bağlantını kontrol edip sayfayı yenile.</p>
-      <button class="buton" onclick="location.reload()">YENİLE</button></div>`;
+    const m = (e && (e.message || e)) + "";
+    orta.classList.add("ort");
+    orta.innerHTML = `<div class="kutu ort"><h2>Açılamadı</h2>
+      <p class="kucuk">Sayfa güncellendiği için tarayıcıda eski bir dosya kalmış
+        olabilir. Aşağıdaki düğme önbelleği temizleyip yeniden yükler.</p>
+      <button class="buton" onclick="tazele()">TEMİZLE VE YENİLE</button>
+      <p class="kucuk" style="margin-top:10px;opacity:.6">${m}</p></div>`;
   });
 }
+window.tazele = function(){
+  try{ if(window.caches && caches.keys)
+    caches.keys().then(k => k.forEach(x => caches.delete(x))); }catch(e){}
+  location.replace(location.pathname + "?t=" + Date.now());
+};
 addEventListener("resize", () => {
   const t = $("#tahta"); if(!t) return;
   const n = t.querySelector(".satir") ? t.querySelector(".satir").children.length : 5;
