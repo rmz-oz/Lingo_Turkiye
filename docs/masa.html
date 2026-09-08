@@ -108,6 +108,7 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 <div id="skor" class="gizli"></div>
 <div id="orta"></div>
 <div id="klavye" class="gizli"></div>
+<script src="rozet.js"></script>
 <script>
 /* ================= sabitler ================= */
 const ETAPLAR = [
@@ -763,9 +764,12 @@ function skorCiz(S){
     const dur = el ? "izleyici" : (i===S.cevaplayan ? "cevapta"
       : (S.faz==="duello"&&S.duSira[1]===i ? "bekliyor"
       : (i===S.sira&&S.etap<2 ? "sırada" : "&nbsp;")));
+    const unv = (i===NET.benim && typeof LG_unvan==="function")
+      ? LG_unvan(LG_defter(m.ad).length).simdi.ad : null;
     return `<div class="m ${i===S.sira&&!el?"on":""} ${i===NET.benim?"ben":""}"
        style="${el?"opacity:.5":""}">
-       <b>${m.ad}</b><i>₺${TL(m.para)}</i><u>${dur}</u></div>`;}).join("");
+       <b>${m.ad}</b><i>₺${TL(m.para)}</i>
+       <u>${unv ? unv : dur}</u></div>`;}).join("");
 }
 function ciz(S){
   SON=S;
@@ -786,6 +790,16 @@ function ciz(S){
         ${S.elenen===m.i?"opacity:.45":""}">
         ${i+1}. <b>${m.ad}</b> — ₺${TL(m.para)}
         ${S.elenen===m.i?" <span style='font-size:13px'>(2. etapta elendi)</span>":""}</p>`).join("")}
+      ${(function(){
+        const ad = (NET.benim>=0 && S.masalar[NET.benim]) ? S.masalar[NET.benim].ad : null;
+        if(!ad) return "";
+        const U = LG_unvan(LG_defter(ad).length), ra = LG_acik(ad);
+        return `<div class="msj bek" style="text-align:left;margin-top:10px">
+          <b style="color:var(--altin)">${U.simdi.ad}</b> · ${ad}
+          ${U.sonraki ? `<div style="font-size:12.5px;color:var(--soluk);margin-top:3px">
+            ${U.sonraki.ad} için ${U.kalan} kelime daha</div>` : ""}
+          ${ra.length ? `<div style="margin-top:7px;font-size:19px">
+            ${ra.map(r=>r.e).join(" ")}</div>` : ""}</div>`;})()}
       <a class="buton ikinci" style="text-decoration:none" href="rapor.html">
         📊 GELİŞİM RAPORU</a>
       ${NET.host?'<button class="buton" onclick="yeniden()">YENİ OYUN</button>':''}`);

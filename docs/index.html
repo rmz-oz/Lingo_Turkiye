@@ -40,6 +40,14 @@ header .sar{padding-bottom:0}
 .sec b em{font-style:normal;font-size:15px;color:var(--soluk);margin-left:5px;
   letter-spacing:0;font-weight:600}
 .sec span{display:block;font-size:14px;color:var(--soluk);margin-top:7px}
+.serit{display:none;align-items:center;gap:9px;background:var(--kart);
+  border:1px solid var(--cizgi);border-radius:999px;padding:8px 14px;margin:14px 0 0;
+  font-size:14px;text-decoration:none;color:var(--murekkep)}
+.serit .av{width:26px;height:26px;border-radius:50%;background:#0f1720;color:#f4c95d;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.serit b{font-weight:700}
+.serit em{font-style:normal;color:var(--soluk)}
+.serit u{margin-left:auto;text-decoration:none;color:var(--soluk);font-size:18px}
 .plankart{display:block;background:linear-gradient(135deg,#6c5ce7,#8e6ce8);
   color:#fff;border-radius:14px;padding:16px;margin:10px 0 8px;text-decoration:none;
   box-shadow:0 5px 18px rgba(108,92,231,.28)}
@@ -189,6 +197,7 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
 }
 </style></head><body>
 <div class="sar">
+<div class="serit" id="serit"></div>
 <div class="kapak">
  <div class="ust">Lingo Türkiye · TRT 1</div>
  <h1>Çalışma ve Oyun</h1>
@@ -279,4 +288,22 @@ her gün birkaç harf yeter.</p>
 Sözlük havuzu üzerinden hesaplandı. "Kalan aday" sayısı, o harfle başlayan
 bütün sözlük kelimeleri üzerinden, kelimelerin kullanım sıklığıyla
 ağırlıklandırılarak bulundu.</div>
-</div></body></html>
+</div><script src="rozet.js"></script>
+<script>
+(function(){
+  try{
+    var k = LG_kisi();
+    if(!k || k === LG_KAYITSIZ) return;
+    var d = LG_defter(k); if(!d.length) return;
+    var U = LG_unvan(d.length), ra = LG_acik(k);
+    var e = document.getElementById("serit");
+    e.style.display = "flex";
+    e.innerHTML = '<span class="av">' + k[0].toLocaleUpperCase("tr") + '</span>' +
+      '<span><b>' + k + '</b> <em>· ' + U.simdi.ad + '</em></span>' +
+      '<em style="margin-left:auto">' + ra.length + '/28 rozet</em><u>›</u>';
+    e.onclick = function(){ location.href = "plan.html"; };
+    e.style.cursor = "pointer";
+  }catch(e){}
+})();
+</script>
+</body></html>

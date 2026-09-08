@@ -106,6 +106,7 @@ table.merd tr:last-child td b{color:var(--altin)}
 <div id="orta"></div>
 <div id="klavye" class="gizli"></div>
 
+<script src="rozet.js"></script>
 <script>
 let VERI = null, TANIM = {};
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -488,7 +489,24 @@ function giris(){
     ${en ? `<p class="kucuk" style="margin-top:12px">En iyi kazancınız: <b>₺${TL(en)}</b></p>` : ""}
     <button class="buton" onclick="basla()">OYNA</button>`);
 }
-function basla(){ etapBasla(0); }
+let oyunBasiRoz = [];
+function basla(){
+  const k = LG_kisi();
+  oyunBasiRoz = (k && k !== LG_KAYITSIZ) ? LG_acik(k).map(r=>r.a) : [];
+  etapBasla(0);
+}
+function rozOzet(){
+  const k = LG_kisi();
+  if(!k || k === LG_KAYITSIZ) return "";
+  const U = LG_unvan(LG_defter(k).length);
+  const yeni = LG_acik(k).filter(r => oyunBasiRoz.indexOf(r.a) < 0);
+  return `<div class="not" style="text-align:left;margin-top:12px">
+      <b style="color:var(--altin)">${U.simdi.ad}</b>
+      <span style="color:var(--soluk);font-size:13px"> · ${k}${U.sonraki
+        ? " · " + U.sonraki.ad + " için " + U.kalan + " kelime" : ""}</span>
+      ${yeni.length ? `<div style="margin-top:9px;font-size:13.5px">Bu oyunda kazandın:
+        ${yeni.map(r=>r.e+" <b>"+r.a+"</b>").join(" · ")}</div>` : ""}</div>`;
+}
 
 function etapBasla(e){
   if(e >= ETAPLAR.length) return finalGiris();
@@ -639,6 +657,7 @@ function finalBitir(){
   ekran(`<p class="kucuk">EVE GÖTÜRDÜĞÜNÜZ</p>
     <div class="tutar">₺${TL(para)}</div>
     <p class="kucuk" style="margin-top:10px">${not}</p>
+    ${rozOzet()}
     <p class="kucuk">${para > en ? "Yeni rekor!" : "En iyi: ₺" + TL(en)}</p>
     <button class="buton" onclick="giris()">TEKRAR OYNA</button>
     <button class="buton ikinci" onclick="location.href='index.html'">ÇALIŞMA SAYFALARI</button>`);
