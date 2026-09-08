@@ -223,6 +223,7 @@ const BOLUM = [
         "yalnız bir kelimeyle açılıyor."}
 ];
 const UZUN = [4,5,6,7];
+const BASLANGIC = 100;   /* yola cikarken kesedeki akce */
 const TABAN = {4:500, 5:1000, 6:2000, 7:4000};
 const SUPER = 250000;
 
@@ -450,7 +451,8 @@ function oku(){ try{ return JSON.parse(localStorage.getItem(anahtar()) || "null"
 function sil(){ try{ localStorage.removeItem(anahtar()); }catch(e){} S = null; }
 
 function bosDurum(){
-  return {etap:0, kalp:3, maxKalp:3, akce:0, para:0, sahip:[], jok:{}, seri:0,
+  return {etap:0, kalp:3, maxKalp:3, akce:BASLANGIC, para:0, sahip:[], jok:{}, seri:0,
+          baslangic:1,
           gorulen:[], takilan:[], sonuc:[], hanNo:0, bolumGirisi:0, satici:[], stok:null,
           yenileme:0, kalkanBitti:false, nazarBitti:false, bitti:null,
           dogru:[], hatali:[]};
@@ -1179,8 +1181,9 @@ function girisEkran(){
         bölümde 4, 5, 6 ve 7 harfli birer kelime. Her kelime için <b>5 tahmin</b> ve
         bölüme göre <b>16–25 saniye</b>. Bilemediğin etap bir <b>kalp</b> götürür;
         üç kalp biterse yolculuk durur.</p>
-      <p class="kucuk">Her bölüm sonunda bir <b>han</b> var. Etaplarda kazandığın
-        <b>akçe</b> ile joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
+      <p class="kucuk">Her bölüm sonunda bir <b>han</b> var. Kesende
+        <b>🪙 ${TL(BASLANGIC)} akçe</b> ile yola çıkarsın, etaplarda kazandıkça artar;
+        akçeyle joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
         son kapıda ödenir — açarsan <b>iki katı + ₺${TL(SUPER)}</b>.</p>
       <p class="kucuk">Şu an <b>${LG_unvan(d.length).simdi.ad}</b> ünvanındasın ve
         <b>${acik}/${URUN.length}</b> ürün açık. ${
@@ -1230,6 +1233,7 @@ function basla(){
     S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
     kaydet(); return girisEkran(); }
   if(!S.sonuc) S.sonuc = [];
+  if(!S.baslangic){ S.baslangic = 1; S.akce += BASLANGIC; kaydet(); }
   if(!S.satici || !S.satici.length)
     S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
   if(S.bitti) return sonEkran();
