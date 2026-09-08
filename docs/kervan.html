@@ -870,6 +870,8 @@ function etapBasla(zorlaKelime){
           ♻️ İKİNCİ ŞANS KULLAN (${jokAdet("ikincisans")})</button>
           <p class="kucuk">Kalbin geri gelir, aynı uzunlukta yeni bir kelime gelir.</p>` : ""}
         <button class="buton" onclick="ilerle()">DEVAM ▸</button>
+        <button class="buton ikinci" onclick="yolEkran()">🗺 YOL HARİTASI</button>
+        <a class="buton ikinci" href="index.html">ANA SAYFA</a>
       </div>`);
   }
   window.ikinciSans = function(){
@@ -1013,6 +1015,7 @@ function bolumGiris(b){
         Her tahmin için <b>${bl.sure + YY().sureFark} saniye</b>, ödüller
         <b>${carp}×</b> katsayıyla ödenir.</p>
       <button class="buton" onclick="etapBasla()">YOLA ÇIK ▸</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
     </div>` + yolCiz(), false);
 }
 function yolEkran(){
@@ -1025,6 +1028,7 @@ function yolEkran(){
       <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
       <button class="buton ikinci" onclick="katalogEkran()">📜 TÜM ÜRÜNLER VE KİLİTLER</button>
       <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI VE REKORLAR</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
     </div>` + yolCiz(), false);
 }
 
@@ -1098,6 +1102,7 @@ function hanEkran(h){
       <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
       <button class="buton" onclick="handanCik(${h})">${
         ilk ? "KERVANI YOLA ÇIKAR ▸" : "YOLA DEVAM ▸"}</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
     </div>`, false);
 }
 window.urunAc = function(id){
@@ -1451,6 +1456,7 @@ function girisEkran(){
       <button class="buton ikinci" onclick="katalogEkran()">📜 TÜM ÜRÜNLER VE KİLİTLER</button>
       <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI</button>
       <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
     </div>`);
 }
 function devamEkran(){
@@ -1465,6 +1471,7 @@ function devamEkran(){
       <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI VE REKORLAR</button>
       <button class="buton ikinci" onclick="sifirla()">YENİ YOLCULUK — bunu sil</button>
       <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
     </div>`);
 }
 window.sifirla = function(){
