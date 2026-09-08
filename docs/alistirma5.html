@@ -212,6 +212,15 @@ button{font:inherit;cursor:pointer}
 .unvkut .c{height:5px;background:#22303d;border-radius:3px;margin-top:7px;overflow:hidden}
 .unvkut .c i{display:block;height:100%;background:var(--altin)}
 .lgroz{font-size:15px;margin-right:2px}
+.uret{background:linear-gradient(135deg,#3a2f0c,#4a3a10);border:1px solid var(--altin);
+  border-radius:13px;padding:14px;margin:10px 0 4px;text-align:center}
+.uret b{display:block;font-size:19px;color:var(--altin);letter-spacing:-.2px;
+  margin-bottom:10px}
+.ub{display:flex;gap:8px}
+.ub .buton{margin-top:0;font-size:14px;padding:12px 6px}
+input.adg{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:11px;
+  padding:13px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;
+  margin:8px 0}
 .gizli{display:none!important}
 </style></head><body>
 <div id="bar"><a href="index.html">‹</a><span class="etap">ALIŞTIRMA · 5 HARFLİ</span>
@@ -248,7 +257,48 @@ function kisiKaydet(){
   try{ localStorage.setItem("lingo_kisi", KISI);
        localStorage.setItem("lingo_kisiler", JSON.stringify(KISILER)); }catch(e){}
 }
-function kisiSec(ad){ KISI = ad; kisiKaydet(); giris(); }
+function kisiSec(ad){
+  KISI = ad; kisiKaydet(); giris();
+}
+/* --- takma ad ureteci --- */
+const SIFAT = ["Uykucu","İnatçı","Şanslı","Aceleci","Korkusuz","Mütevazı","Zıpır",
+  "Sabırsız","Kurnaz","Gizemli","Hırslı","Kıvrak","Efsanevi","Tatlı Dilli",
+  "Soğukkanlı","Meraklı","Gözü Kara","Neşeli","Dikkatli","Fırtına Gibi",
+  "Usul Usul","Tereddütsüz","Şüpheci","Azimli"];
+const UNVANAD = ["Harf Avcısı","Sözlük Faresi","Puzzle Kurdu","Çatı Ustası",
+  "Klavye Şövalyesi","Kelime Canavarı","Ünlü Harf","Tahta Bekçisi","Sesli Harf",
+  "Beşli Uzmanı","Kelime Cambazı","Harf Terbiyecisi","Lingo Çırağı","Sözcük Dedektifi",
+  "Alfabe Korsanı","Yedi Harfli Kahraman","Puzzle Şairi","Kelime Bahçıvanı"];
+let uretilen = "";
+function adUret(){
+  const s = SIFAT[Math.floor(Math.random()*SIFAT.length)];
+  const u = UNVANAD[Math.floor(Math.random()*UNVANAD.length)];
+  uretilen = s + " " + u;
+  const e = $("#uretim");
+  if(e){ e.innerHTML = `<div class="uret"><b>${uretilen}</b>
+    <div class="ub">
+      <button class="buton ikinci" onclick="adUret()">🎲 BAŞKA BİR AD</button>
+      <button class="buton" onclick="adEkle(uretilen)">BU OLSUN ▸</button>
+    </div></div>`; }
+}
+function adYazEkrani(){
+  durdur(); sureGoster(false); klv.classList.add("gizli"); cizYardim = null;
+  orta.className = "";
+  orta.innerHTML = `<div class="kutu">
+    <h2>Adını yaz</h2>
+    <p class="kucuk">Gerçek adın olabilir, takma ad da. Sonuçların bu adla tutulur.</p>
+    <input class="adg" id="yeniad" maxlength="20" placeholder="Adınız"
+      autocomplete="off">
+    <button class="buton" onclick="adEkle(($('#yeniad').value||'').trim())">KAYDET ▸</button>
+    <button class="buton ikinci" onclick="kisiEkrani()">geri</button></div>`;
+  setTimeout(()=>{ const i=$("#yeniad"); if(i) i.focus(); }, 200);
+}
+function adEkle(ad){
+  ad = (ad||"").slice(0,20).trim();
+  if(!ad) return;
+  if(KISILER.indexOf(ad) < 0) KISILER.push(ad);
+  KISI = ad; kisiKaydet(); giris();
+}
 function kisiEkrani(){
   durdur(); sureGoster(false); klv.classList.add("gizli"); cizYardim = null;
   orta.className = "";
@@ -269,6 +319,11 @@ function kisiEkrani(){
     <div class="kgrid">${KISILER.map(a =>
       `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
       ).join("")}</div>
+    <div id="uretim"></div>
+    <div class="ub" style="margin-top:10px">
+      <button class="buton ikinci" onclick="adUret()">🎲 BANA BİR AD BUL</button>
+      <button class="buton ikinci" onclick="adYazEkrani()">✏️ KENDİM YAZAYIM</button>
+    </div>
     <button class="buton ikinci" style="margin-top:6px"
       onclick="kisiSec('${KAYITSIZ}')">
       KAYIT TUTMA<small style="display:block;font-size:12px;font-weight:600;opacity:.7;
