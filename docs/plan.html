@@ -1,0 +1,280 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f1720">
+<title>4 günlük çalışma planı — Lingo</title>
+<style>
+:root{--kagit:#0f1720;--kart:#1a2430;--kart2:#141d27;--murekkep:#f2f5f8;--soluk:#8b98a6;
+  --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--kirmizi:#d94a5a;--altin:#f4c95d;
+  --mor:#6c5ce7}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
+button{font:inherit;cursor:pointer}
+header{background:#0a1119;border-bottom:1px solid var(--cizgi);padding:11px 14px;
+  display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:5}
+header a{color:var(--soluk);text-decoration:none;font-size:16px}
+header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:uppercase}
+.sar{max-width:640px;margin:0 auto;padding:18px 14px 48px}
+h1{font-size:27px;margin:0 0 4px;letter-spacing:-.6px}
+h2{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--soluk);
+  margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--cizgi);font-weight:800}
+p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
+/* geri sayim */
+.sayim{background:linear-gradient(135deg,#6c5ce7,#8e6ce8);border-radius:16px;
+  padding:18px;text-align:center;margin:0 0 16px;box-shadow:0 6px 20px rgba(108,92,231,.28)}
+.sayim b{display:block;font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1}
+.sayim span{display:block;font-size:13px;opacity:.9;margin-top:4px;letter-spacing:.5px}
+.sayim input{background:rgba(255,255,255,.15);border:0;border-radius:8px;color:#fff;
+  font:inherit;font-size:13px;padding:5px 9px;margin-top:10px}
+/* kisi + unvan */
+.kisi{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:12px 15px;margin:0 0 10px;cursor:pointer}
+.kisi .sol{display:flex;align-items:center;gap:10px}
+.kisi .av{width:36px;height:36px;border-radius:50%;background:var(--altin);color:#1a1200;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
+.kisi b{font-size:16.5px;display:block;line-height:1.2}
+.kisi i{font-style:normal;font-size:12.5px;color:var(--altin);font-weight:700}
+.kisi u{text-decoration:none;color:var(--yesil);font-weight:700;font-size:13px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;
+  margin:0 0 14px}
+.kgrid button{background:var(--kart2);border:1.5px solid var(--cizgi);border-radius:12px;
+  padding:12px 8px;color:var(--murekkep);font-weight:700;font-size:15px}
+.kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
+/* gun kartlari */
+.gun{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  margin-bottom:11px;overflow:hidden}
+.gun.bugun{border-color:var(--altin)}
+.gun .bas{padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.gun .no{width:38px;height:38px;border-radius:11px;background:var(--kart2);
+  border:1.5px solid var(--cizgi);display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:17px;flex:none}
+.gun.tam .no{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.gun.bugun .no{border-color:var(--altin);color:var(--altin)}
+.gun .bilgi{flex:1;min-width:0}
+.gun .bilgi b{display:block;font-size:16.5px;letter-spacing:-.2px}
+.gun .bilgi span{display:block;font-size:12.5px;color:var(--soluk);margin-top:2px}
+.gun .oran{font-size:13px;font-weight:800;color:var(--soluk);font-variant-numeric:tabular-nums}
+.gun .cub{height:4px;background:#22303d}
+.gun .cub i{display:block;height:100%;background:var(--yesil);transition:width .3s}
+.gun .ic{padding:2px 16px 14px;display:none}
+.gun.acik .ic{display:block}
+.nicin{background:var(--kart2);border-left:3px solid var(--altin);border-radius:0 8px 8px 0;
+  padding:9px 12px;font-size:13.5px;color:var(--soluk);line-height:1.5;margin:6px 0 12px}
+.gorev{display:flex;align-items:flex-start;gap:11px;padding:10px 0;
+  border-bottom:1px solid var(--cizgi)}
+.gorev:last-child{border-bottom:0}
+.kut{width:24px;height:24px;border:2px solid #46566a;border-radius:7px;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;
+  cursor:pointer;margin-top:1px}
+.gorev.ok .kut{background:var(--yesil);border-color:var(--yesil)}
+.gorev.ok .kut:after{content:"✓"}
+.gorev .met{flex:1;font-size:15px;line-height:1.45}
+.gorev.ok .met{color:var(--soluk);text-decoration:line-through}
+.gorev .met a{color:var(--altin);text-decoration:none;font-weight:700;
+  border-bottom:1px dotted var(--altin)}
+.hedef{background:var(--kart2);border:1px dashed var(--cizgi);border-radius:10px;
+  padding:10px 12px;margin-top:11px;font-size:13.5px;color:var(--soluk)}
+.hedef b{color:var(--murekkep)}
+/* rozetler */
+.roz{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:8px}
+.roz div{background:var(--kart2);border:1px solid var(--cizgi);border-radius:13px;
+  padding:12px 8px;text-align:center;opacity:.4}
+.roz div.ac{opacity:1;border-color:var(--altin);background:var(--kart)}
+.roz .em{font-size:24px;line-height:1}
+.roz b{display:block;font-size:12px;margin-top:5px;letter-spacing:.3px}
+.roz span{display:block;font-size:10.5px;color:var(--soluk);margin-top:3px;line-height:1.35}
+.unv{background:var(--kart);border:1px solid var(--altin);border-radius:14px;
+  padding:14px 16px;margin-bottom:10px;text-align:center}
+.unv b{display:block;font-size:20px;color:var(--altin);letter-spacing:-.3px}
+.unv span{font-size:13px;color:var(--soluk)}
+.unv .cub{height:6px;background:#22303d;border-radius:4px;margin-top:9px;overflow:hidden}
+.unv .cub i{display:block;height:100%;background:var(--altin)}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:13px;padding:14px;font-weight:800;font-size:16px;margin-top:10px;
+  text-align:center;text-decoration:none}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+</style></head><body>
+<header><a href="index.html">‹</a><b>Çalışma planı</b></header>
+<div class="sar" id="alan"></div>
+<script>
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const $ = s => document.querySelector(s);
+function defter(ad){
+  try{ const d = JSON.parse(localStorage.getItem("lingo_defter_"+ad)||"[]");
+       return Array.isArray(d) ? d : []; }catch(e){ return []; }
+}
+const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
+let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false, acikGun = 0;
+try{
+  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
+  if(Array.isArray(k) && k.length) KISILER = k.slice();
+  for(let i=0;i<localStorage.length;i++){
+    const key = localStorage.key(i);
+    if(key && key.indexOf("lingo_defter_")===0){
+      const a = key.slice(13); if(a && KISILER.indexOf(a)<0) KISILER.push(a);
+    }
+  }
+  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
+  if(KISILER.indexOf(KISI)<0) KISILER.unshift(KISI);
+}catch(e){ KISI = KISILER[0]; }
+
+/* --- yarisma tarihi --- */
+function tarihAl(){ return localStorage.getItem("lingo_yarisma") || "2026-09-12"; }
+function tarihYaz(v){ try{ localStorage.setItem("lingo_yarisma", v); }catch(e){} ciz(); }
+function kalanGun(){
+  const t = new Date(tarihAl()+"T00:00:00");
+  const b = new Date(); b.setHours(0,0,0,0);
+  return Math.max(0, Math.round((t-b)/86400000));
+}
+/* --- gorev durumu --- */
+function planAl(){
+  try{ return JSON.parse(localStorage.getItem("lingo_plan_"+KISI)||"{}"); }catch(e){ return {}; }
+}
+function gorevDegis(id){
+  const p = planAl(); p[id] = !p[id];
+  try{ localStorage.setItem("lingo_plan_"+KISI, JSON.stringify(p)); }catch(e){}
+  ciz();
+}
+function kisiSec(a){ KISI=a; secimAcik=false;
+  try{ localStorage.setItem("lingo_kisi",a); }catch(e){} ciz(); }
+
+/* --- 4 gunluk program --- */
+const GUNLER = [
+  {ad:"Açılış ezberi", sure:"45 dakika",
+   nicin:"En çok gelen 10 harf (K S B D T M A P Y E) tüm cevapların <b>%59'unu</b> "+
+         "oluşturuyor. Bu harflerin açılış ikililerini bilmek, her soruya doğru "+
+         "başlamak demek — ezberlenecek toplam 20 ikili.",
+   gorev:[
+     'Ders notu: <a href="4harf.html">4 harfli</a> sayfasını aç, K S B D T M A P Y E harflerinin açılış ikililerini oku',
+     'Ders notu: <a href="5harf.html">5 harfli</a> sayfasında aynı 10 harfin ikililerini oku',
+     '<a href="alistirma4.html#h=k">4 harfli K</a> ile bir tur · sonra S ve B',
+     'Açılış quizi: <a href="4harf.html">4 harfli sayfanın Quiz sekmesi</a>, 1. bölüm'],
+   hedef:"30 kelime çöz · başarı %60'ın üstünde"},
+  {ad:"Kalabalık harfler", sure:"50 dakika",
+   nicin:"5 harfliler bölüm başına en çok soru gelen grup (13,6 soru) ve K S B D T "+
+         "tek başına tüm cevapların <b>%35'i</b>. Bugün bu beş harfin kelimelerini görüyorsun.",
+   gorev:[
+     '<a href="alistirma5.html#h=k">5 harfli K</a> · <a href="alistirma5.html#h=s">S</a> · <a href="alistirma5.html#h=b">B</a> — birer tur',
+     '<a href="alistirma5.html#h=d">5 harfli D</a> ve <a href="alistirma5.html#h=t">T</a> — birer tur',
+     'Yardımlı modu aç, kelimelerin nasıl elendiğini izle',
+     '<a href="alistirma4.html">4 harfli karışık</a> — 2 tur'],
+   hedef:"50 kelime çöz · 5 harflide başarı %60'ın üstünde"},
+  {ad:"Uzun kelimeler ve puzzle", sure:"45 dakika",
+   nicin:"6 harflide tanınma %70'e düşüyor, puzzle ise cevapların %22'si ve ayrı "+
+         "bir beceri: tanımdan kelime bulmak. Bugün ikisini çalışıyorsun.",
+   gorev:[
+     '<a href="alistirma6.html#h=k">6 harfli K</a> · <a href="alistirma6.html#h=m">M</a> · <a href="alistirma6.html#h=b">B</a> — birer tur',
+     '<a href="oyun.html">Tek kişilik oyunu</a> baştan sona oyna — üç puzzle çıkacak',
+     '<a href="7harf.html">7 harfli ders notuna</a> göz at (23 soru, sadece tanışmak için)',
+     'Puzzle\'da takıldığın tanımları not et'],
+   hedef:"40 kelime çöz · en az 2 puzzle çöz"},
+  {ad:"Prova günü", sure:"40 dakika",
+   nicin:"Bugün yeni şey öğrenilmez, eksikler kapatılır ve yarışma temposuna alışılır. "+
+         "Süre baskısı altında oynamak, bilmekten farklı bir beceri.",
+   gorev:[
+     '<a href="rapor.html">Rapora bak</a>, en zayıf 3 harfini bul',
+     'O üç harften birer tur alıştırma yap',
+     '<a href="masa.html">Ailecük</a>\'te tam bir yarışma oyna — etaplar, düello, final',
+     'Duvar sayfasındaki açılış ikililerine son bir bakış'],
+   hedef:"Ailecük\'te bir tam tur · rapordaki kırmızı harf sayısı azalsın"}
+];
+
+/* --- unvanlar --- */
+const UNVAN = [
+  {n:0,   ad:"Çaylak"},        {n:25,  ad:"Heveskâr"},
+  {n:75,  ad:"Kelime Avcısı"}, {n:150, ad:"Harf Ustası"},
+  {n:300, ad:"Lingo Şampiyonu"}
+];
+/* --- rozetler --- */
+function rozetler(d){
+  const bil = d.filter(r=>r.k>0), ilk = bil.filter(r=>r.k===1).length;
+  let seri = 0, enSeri = 0;
+  for(const r of d){ if(r.k>0){ seri++; enSeri = Math.max(enSeri, seri); } else seri = 0; }
+  const gunler = new Set(d.map(r=>new Date(r.t).toDateString())).size;
+  const grup = (f)=>{ const g=d.filter(f); const b=g.filter(r=>r.k>0).length;
+    return {t:g.length, o:g.length?Math.round(100*b/g.length):0}; };
+  const g4=grup(r=>r.n===4), g5=grup(r=>r.n===5), g6=grup(r=>r.n===6);
+  const gk=grup(r=>r.h==="k");
+  const ort = bil.length ? bil.reduce((t,r)=>t+r.k,0)/bil.length : 9;
+  return [
+   {e:"🌱",a:"İlk Adım",   s:"10 kelime",            v:d.length>=10},
+   {e:"🔟",a:"Elli",       s:"50 kelime",            v:d.length>=50},
+   {e:"💯",a:"Yüzler",     s:"100 kelime",           v:d.length>=100},
+   {e:"🎯",a:"Keskin Nişancı",s:"10 kelime ilk tahminde",v:ilk>=10},
+   {e:"🔥",a:"Seri",       s:"5 kelime üst üste",    v:enSeri>=5},
+   {e:"⚡",a:"Uzun Seri",  s:"10 kelime üst üste",   v:enSeri>=10},
+   {e:"👑",a:"K Fatihi",   s:"K'de 8 kelime, %70+",  v:gk.t>=8 && gk.o>=70},
+   {e:"4️⃣",a:"Dörtlü Ustası",s:"4 harflide 30 kelime, %80+",v:g4.t>=30&&g4.o>=80},
+   {e:"5️⃣",a:"Beşli Ustası", s:"5 harflide 30 kelime, %70+",v:g5.t>=30&&g5.o>=70},
+   {e:"6️⃣",a:"Altılı Cesareti",s:"6 harflide 15 kelime",v:g6.t>=15},
+   {e:"🚀",a:"Hızlı",      s:"ortalama 2 tahmin altı",v:d.length>=20 && ort<=2},
+   {e:"📅",a:"Azimli",     s:"4 ayrı günde çalışma", v:gunler>=4}
+  ];
+}
+
+function ciz(){
+  const d = defter(KISI), p = planAl();
+  const kalan = kalanGun();
+  const unv = UNVAN.slice().reverse().find(u=>d.length>=u.n) || UNVAN[0];
+  const sonraki = UNVAN.find(u=>u.n>d.length);
+  const roz = rozetler(d), acikRoz = roz.filter(r=>r.v).length;
+
+  /* bugun hangi gun: tamamlanmamis ilk gun */
+  let bugun = GUNLER.findIndex((g,i)=>
+    g.gorev.some((_,j)=>!p[(i+1)+"-"+j]));
+  if(bugun < 0) bugun = GUNLER.length-1;
+
+  const gunHtml = GUNLER.map((g,i)=>{
+    const say = g.gorev.filter((_,j)=>p[(i+1)+"-"+j]).length;
+    const oran = Math.round(100*say/g.gorev.length);
+    const tam = say === g.gorev.length;
+    const ac = acikGun === i+1 || (acikGun === 0 && i === bugun);
+    return `<div class="gun ${tam?"tam":""} ${i===bugun&&!tam?"bugun":""} ${ac?"acik":""}">
+      <div class="bas" onclick="acikGun=${acikGun===i+1?0:i+1};ciz()">
+        <div class="no">${tam?"✓":(i+1)}</div>
+        <div class="bilgi"><b>${i+1}. gün — ${g.ad}</b>
+          <span>${g.sure} · ${say}/${g.gorev.length} görev</span></div>
+        <div class="oran">%${oran}</div></div>
+      <div class="cub"><i style="width:${oran}%"></i></div>
+      <div class="ic">
+        <div class="nicin">${g.nicin}</div>
+        ${g.gorev.map((t,j)=>`<div class="gorev ${p[(i+1)+"-"+j]?"ok":""}">
+          <span class="kut" onclick="gorevDegis('${(i+1)}-${j}')"></span>
+          <span class="met">${t}</span></div>`).join("")}
+        <div class="hedef">🎯 <b>Günün hedefi:</b> ${g.hedef}</div>
+      </div></div>`;
+  }).join("");
+
+  const topGorev = GUNLER.reduce((t,g)=>t+g.gorev.length,0);
+  const yapilan = Object.values(p).filter(Boolean).length;
+
+  $("#alan").innerHTML = `
+    <div class="sayim"><b>${kalan}</b><span>${kalan?"GÜN KALDI":"YARIŞMA GÜNÜ"}</span>
+      <input type="date" value="${tarihAl()}" onchange="tarihYaz(this.value)"></div>
+    <div class="kisi" onclick="secimAcik=!secimAcik;ciz()">
+      <span class="sol"><span class="av">${TRU(KISI[0]||"?")}</span>
+        <span><b>${KISI}</b><i>${unv.ad}</i></span></span>
+      <u>${secimAcik?"kapat":"kişi değiştir"}</u></div>
+    ${secimAcik?`<div class="kgrid">${KISILER.map(a=>
+      `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
+      ).join("")}</div>`:""}
+    <div class="unv"><b>${unv.ad}</b>
+      <span>${d.length} kelime çözüldü${sonraki
+        ? ` · ${sonraki.ad} için ${sonraki.n-d.length} kelime daha` : " · en üst ünvan"}</span>
+      <div class="cub"><i style="width:${sonraki
+        ? Math.round(100*(d.length-unv.n)/(sonraki.n-unv.n)) : 100}%"></i></div></div>
+
+    <h2>Program · ${yapilan}/${topGorev} görev</h2>
+    ${gunHtml}
+
+    <h2>Rozetler · ${acikRoz}/${roz.length}</h2>
+    <div class="roz">${roz.map(r=>`<div class="${r.v?"ac":""}">
+      <div class="em">${r.e}</div><b>${r.a}</b><span>${r.s}</span></div>`).join("")}</div>
+
+    <a class="buton" href="alistirma5.html">BUGÜNKÜ ALIŞTIRMAYA BAŞLA</a>
+    <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORU</a>
+    <a class="buton ikinci" href="index.html">ANA SAYFA</a>`;
+}
+ciz();
+</script></body></html>
