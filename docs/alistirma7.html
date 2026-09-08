@@ -231,6 +231,8 @@ button{font:inherit;cursor:pointer}
 input.adg{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:11px;
   padding:13px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;
   margin:8px 0}
+.sifir{font-size:12.5px;color:#5f6b78;text-align:center;margin-top:14px;line-height:1.6}
+.sifir span{color:var(--kirmizi);cursor:pointer;text-decoration:underline}
 .gizli{display:none!important}
 </style></head><body>
 <div id="bar"><a href="index.html">‹</a><span class="etap">ALIŞTIRMA · 7 HARFLİ</span>
@@ -258,19 +260,27 @@ let YARDIM = false, HAVUZL = [], cizYardim = null;
 /* --- kim calisiyor --- */
 const KISI_VAR = ["Serpil","Zeynep"];
 const KAYITSIZ = "__kayitsiz__";
-let KISILER = KISI_VAR.slice(), KISI = null;
-try{
-  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
-  if(Array.isArray(k) && k.length) KISILER = k;
-  KISI = localStorage.getItem("lingo_kisi") || null;
-  if(KISI && KISI !== KAYITSIZ && KISILER.indexOf(KISI) < 0) KISI = null;
-}catch(e){}
+let KISILER = LG_kisiler(KISI_VAR), KISI = LG_kisiDogrula(KISILER);
 function kisiKaydet(){
   try{ localStorage.setItem("lingo_kisi", KISI);
        localStorage.setItem("lingo_kisiler", JSON.stringify(KISILER)); }catch(e){}
 }
 function kisiSec(ad){
   KISI = ad; kisiKaydet(); giris();
+}
+function listeSifirla(){
+  if(!confirm("Kişi listesi Serpil ve Zeynep olarak sıfırlansın mı?\n" +
+              "Çalışma kayıtları silinmez.")) return;
+  LG_listeSifirla(KISI_VAR);
+  KISILER = LG_kisiler(KISI_VAR); KISI = LG_kisiDogrula(KISILER);
+  kisiEkrani();
+}
+function hepsiniSil(){
+  if(!confirm("Bu telefondaki BÜTÜN Lingo verileri silinecek:\n" +
+              "kayıtlar, rozetler, ünvanlar, plan ve isimler.\n\nEmin misiniz?")) return;
+  LG_hepsiniSil();
+  KISILER = KISI_VAR.slice(); KISI = null;
+  kisiEkrani();
 }
 /* --- takma ad ureteci --- */
 const SIFAT = ["Uykucu","İnatçı","Şanslı","Aceleci","Korkusuz","Mütevazı","Zıpır",
@@ -335,6 +345,10 @@ function kisiEkrani(){
     <div class="ub" style="margin-top:10px">
       <button class="buton ikinci" onclick="adUret()">🎲 BANA BİR AD BUL</button>
       <button class="buton ikinci" onclick="adYazEkrani()">✏️ KENDİM YAZAYIM</button>
+    </div>
+    <div class="sifir">
+      <span onclick="listeSifirla()">Kişi listesini sıfırla</span> ·
+      <span onclick="hepsiniSil()">tüm verileri sil</span>
     </div>
     <button class="buton ikinci" style="margin-top:6px"
       onclick="kisiSec('${KAYITSIZ}')">
@@ -788,7 +802,7 @@ function ozet(){
     <div class="wrap" style="justify-content:center;margin:14px 0">${sat}</div>
     <p class="kucuk">${dogru > en ? "En iyiniz bu!" : "En iyiniz: " + en}</p>
     ${turRozet()}${unvHtml()}
-    ${(KISI && KISI !== KAYITSIZ && LG_defter(KISI).length >= 40)
+    ${(KISI && KISI !== KAYITSIZ && LG_defter(KISI).length >= 250)
       ? `<a class="buton ikinci" style="text-decoration:none" href="sertifika.html">
           🏅 SERTİFİKAMI GÖR</a>` : ""}
     <button class="buton" onclick="${OZEL!==null ? "location.href='rapor.html'"

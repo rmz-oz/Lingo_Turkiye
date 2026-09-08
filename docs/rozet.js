@@ -8,6 +8,57 @@ function LG_defter(ad){
 function LG_plan(ad){
   try{ return JSON.parse(localStorage.getItem("lingo_plan_"+ad)||"{}"); }catch(e){ return {}; }
 }
+/* --- kisi listesi: eski isimleri kaydi yoksa temizler --- */
+const LG_ESKI = ["Yusuf","Ramiz","Misafir"];
+function LG_kisiler(varsayilan){
+  let kayitli = null;
+  try{ const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
+       if(Array.isArray(k)) kayitli = k; }catch(e){}
+  const liste = varsayilan.slice();
+  for(const a of (kayitli || [])){
+    if(liste.indexOf(a) >= 0) continue;
+    if(LG_ESKI.indexOf(a) >= 0 && LG_defter(a).length === 0) continue;  /* eski, kaydi yok */
+    liste.push(a);
+  }
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const key = localStorage.key(i);
+      if(key && key.indexOf("lingo_defter_") === 0){
+        const a = key.slice(13);
+        if(a && liste.indexOf(a) < 0) liste.push(a);
+      }
+    }
+  }catch(e){}
+  if(!kayitli || kayitli.join("|") !== liste.join("|")){
+    try{ localStorage.setItem("lingo_kisiler", JSON.stringify(liste)); }catch(e){}
+  }
+  return liste;
+}
+/* gecerli kisi silinmisse temizle */
+function LG_kisiDogrula(liste){
+  let k = null;
+  try{ k = localStorage.getItem("lingo_kisi"); }catch(e){}
+  if(k === LG_KAYITSIZ) return k;
+  if(k && liste.indexOf(k) < 0){
+    try{ localStorage.removeItem("lingo_kisi"); }catch(e){}
+    return null;
+  }
+  return k;
+}
+/* --- sifirlama --- */
+function LG_listeSifirla(varsayilan){
+  try{ localStorage.setItem("lingo_kisiler", JSON.stringify(varsayilan.slice())); }catch(e){}
+}
+function LG_hepsiniSil(){
+  try{
+    const sil = [];
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(k && k.indexOf("lingo_") === 0) sil.push(k);
+    }
+    for(const k of sil) localStorage.removeItem(k);
+  }catch(e){}
+}
 const LG_UNVAN = [
   {n:0,    ad:"Çaylak"},              {n:5,    ad:"İlk Kıvılcım"},
   {n:12,   ad:"Acemi"},               {n:25,   ad:"Heveskâr"},

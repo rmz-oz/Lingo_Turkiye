@@ -115,20 +115,10 @@ const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
 const defter = LG_defter;
 const KISI_VAR = ["Serpil","Zeynep"];
-let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false, acikGun = 0;
-try{
-  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
-  if(Array.isArray(k) && k.length) KISILER = k.slice();
-  for(let i=0;i<localStorage.length;i++){
-    const key = localStorage.key(i);
-    if(key && key.indexOf("lingo_defter_")===0){
-      const a = key.slice(13); if(a && KISILER.indexOf(a)<0) KISILER.push(a);
-    }
-  }
-  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
-  if(KISI === "__kayitsiz__") KISI = KISILER.find(a=>defter(a).length) || KISILER[0];
-  if(KISILER.indexOf(KISI)<0) KISILER.unshift(KISI);
-}catch(e){ KISI = KISILER[0]; }
+let KISILER = LG_kisiler(KISI_VAR), KISI = null, secimAcik = false, acikGun = 0;
+KISI = LG_kisiDogrula(KISILER);
+if(!KISI || KISI === LG_KAYITSIZ)
+  KISI = KISILER.find(a => LG_defter(a).length) || KISILER[0];
 
 /* --- yarisma tarihi --- */
 function tarihAl(){ return localStorage.getItem("lingo_yarisma") || "2026-09-12"; }

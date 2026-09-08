@@ -65,20 +65,10 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
 const KISI_VAR = ["Serpil","Zeynep"];
-let KISILER = KISI_VAR.slice(), KISI = null, secim = false;
-try{
-  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
-  if(Array.isArray(k) && k.length) KISILER = k.slice();
-  for(let i=0;i<localStorage.length;i++){
-    const key = localStorage.key(i);
-    if(key && key.indexOf("lingo_defter_")===0){
-      const a = key.slice(13); if(a && KISILER.indexOf(a)<0) KISILER.push(a);
-    }
-  }
-  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
-  if(KISI === LG_KAYITSIZ || KISILER.indexOf(KISI) < 0)
-    KISI = KISILER.find(a=>LG_defter(a).length) || KISILER[0];
-}catch(e){ KISI = KISILER[0]; }
+let KISILER = LG_kisiler(KISI_VAR), KISI = null, secim = false;
+KISI = LG_kisiDogrula(KISILER);
+if(!KISI || KISI === LG_KAYITSIZ)
+  KISI = KISILER.find(a => LG_defter(a).length) || KISILER[0];
 function kisiSec(a){ KISI=a; secim=false; ciz(); }
 const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos",
   "Eylül","Ekim","Kasım","Aralık"];
@@ -88,10 +78,10 @@ function ciz(){
   const secErit = `<div class="kgrid">${KISILER.map(a=>
     `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">
       ${a}</button>`).join("")}</div>`;
-  if(d.length < 20){
+  if(d.length < 250){
     $("#alan").innerHTML = secErit + `<div class="bos">
-      Sertifika için en az <b>20 kelime</b> gerekiyor.<br>
-      ${KISI} adına şu an ${d.length} kayıt var.</div>
+      Sertifika için en az <b>250 kelime</b> gerekiyor.<br>
+      ${KISI} adına şu an <b>${d.length}</b> kayıt var — ${250-d.length} kelime kaldı.</div>
       <a class="buton" href="alistirma5.html">ALIŞTIRMAYA BAŞLA</a>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>`;
     return;
