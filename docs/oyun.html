@@ -24,6 +24,10 @@ button{font:inherit;cursor:pointer}
   text-transform:uppercase}
 #bar .para{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums;font-size:16px}
 #bar .para em{font-style:normal;color:var(--soluk);font-weight:600;font-size:13px}
+#bar #sesd{border:1px solid var(--cizgi);background:transparent;border-radius:99px;
+  width:34px;height:28px;padding:0;font-size:14px;line-height:1;color:#fff;
+  margin-left:10px;flex:none}
+#bar #sesd.kapali{opacity:.45}
 #sure{width:100%;height:4px;background:#22303d;flex:none}
 #sure i{display:block;height:100%;background:var(--altin);width:100%;transition:width .1s linear}
 #sure.az i{background:var(--kirmizi)}
@@ -103,7 +107,8 @@ table.merd tr:last-child td b{color:var(--altin)}
 </style></head><body>
 
 <div id="bar"><span class="etap" id="etapAd">LİNGO TÜRKİYE</span>
-  <span class="para" id="para"><em>₺</em>0</span></div>
+  <span class="para" id="para"><em>₺</em>0</span>
+  <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button></div>
 <div id="sure" class="gizli"><i></i></div>
 <div id="orta"></div>
 <div id="klavye" class="gizli"></div>
@@ -120,10 +125,12 @@ const sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
 
 const SATIR = 5, SURE = 20;
 const ETAPLAR = [
-  {ad:"1. ETAP", kelime:[4,4,4], puz:[8,9],   pk:1000, pp:2000},
-  {ad:"2. ETAP", kelime:[5,5,5], puz:[9,10],  pk:2000, pp:3000},
-  {ad:"3. ETAP", kelime:[6,6,6], puz:[10,11], pk:3000, pp:4000}
+  {ad:"1. ETAP", kelime:[4,4,4], puz:[8,9],  pk:1000, pp:2000},
+  {ad:"2. ETAP", kelime:[5,5,5], puz:[9,10], pk:1500, pp:3000}
 ];
+/* 3. etap: odul her tahminde duser (Ailecuk duellosuyla ayni) */
+const AZALAN = {odul:[2000,1600,1200,800,400], puz:[10,11], puzOdul:4000,
+                bolum:[{n:5, adet:4}, {n:6, adet:4}]};
 const TAMBONUS = 1000;
 const FINAL = {sure:200, dizi:[4,5,6,7], carpan:{4:0.5, 5:1, 6:2, 7:2},
                superEk:250000, satir:5};
@@ -297,9 +304,12 @@ function kelimeOyna(n, odul, opt, bitti){
       pb.textContent = sat < 1 ? "PAS — önce bir tahmin yapın" : "PAS — başka kelime ▸"; }
   }
   let kalanSn = SURE;
+  const azalanOdul = () => opt.azalan
+    ? opt.azalan[Math.min(sat, opt.azalan.length-1)] : odul;
   function ustYaz(){
     const sn = opt.sureyok ? "" : ` · ${kalanSn} SN`;
-    $("#ust").textContent = `${n} HARFLİ · ${satirSay - sat} HAK${sn} · ₺${TL(odul)}`;
+    $("#ust").textContent =
+      `${n} HARFLİ · ${satirSay - sat} HAK${sn} · ₺${TL(azalanOdul())}`;
     satirlar.forEach((s, k) => s.classList.toggle("aktif", k === sat));
   }
   function yaz(){
@@ -338,7 +348,7 @@ function kelimeOyna(n, odul, opt, bitti){
       if(tah !== gizli) LG_ses("yanlis");
       if(tah === gizli){
         LG_ses("dogru"); defterYaz(gizli, sat + 1);
-        if(!opt.odulYok){ para += odul; paraYaz(); }
+        if(!opt.odulYok){ para += azalanOdul(); paraYaz(); }
         if(!opt.sureyok) sureGoster(false);
         return setTimeout(() => bitti(true, gizli), 620);
       }
@@ -484,7 +494,8 @@ function giris(){
       <li>Puzzle'da ipucu kelimenin TDK tanımıdır. <b>60 saniye</b> vardır; süre
           azaldıkça harfler kendiliğinden açılır, yanlış tahmin de bir harf açar.
           <b>Her açılan harf ödülü düşürür</b> — erken bilen çok kazanır.</li>
-      <li>Bir etaptaki <b>üç kelimeyi de</b> bilirseniz <b>+₺1.000</b> prim.</li>
+      <li>1. ve 2. etapta <b>üç kelimeyi de</b> bilirseniz <b>+₺1.000</b> prim.</li>
+      <li>3. etapta ödül <b>her tahminde düşer</b>: ₺2.000'den ₺400'e iner.</li>
       <li>Final <b>200 saniye</b>: 4, 5, 6 ve 7 harfli birer kelime, her biri için
           5 hak. Ne kadar yukarı çıkarsanız üç etapta biriktirdiğinizin o kadar
           büyük katını alırsınız — 7 harfliyi bilirseniz <b>iki katı + ₺250.000</b>,
@@ -513,7 +524,7 @@ function rozOzet(){
 }
 
 function etapBasla(e){
-  if(e >= ETAPLAR.length) return finalGiris();
+  if(e >= ETAPLAR.length) return ucBasla();
   const E = ETAPLAR[e];
   bar.textContent = E.ad;
   ekran(`<h2>${E.ad}</h2>
@@ -570,6 +581,43 @@ function kacKez(w){
   return `<p class="kucuk">Yayında <b style="color:var(--altin)">${k} kez</b> cevap oldu.</p>`;
 }
 
+/* ---------------- 3. etap: azalan odul ---------------- */
+let uc = {bol:0, ki:0};
+function ucBasla(){
+  uc = {bol:0, ki:0};
+  bar.textContent = "3. ETAP";
+  ekran(`<h2>3. ETAP</h2>
+    <p>İki bölüm: önce <b>4 tane 5 harfli</b> kelime ve bir puzzle,
+       sonra <b>4 tane 6 harfli</b> kelime ve bir puzzle.</p>
+    <p class="kucuk">Bu etapta ödül <b>her tahminde düşer</b>: ilk tahminde
+       ₺2.000, sonra ₺1.600 · ₺1.200 · ₺800 · son hakta ₺400.
+       Erken bulmak para demek.<br>
+       Puzzle'lar 10–11 harfli, her biri <b>₺${TL(AZALAN.puzOdul)}</b>.</p>
+    <button class="buton" onclick="ucKelime()">BAŞLA</button>`);
+}
+function ucKelime(){
+  const B = AZALAN.bolum[uc.bol];
+  bar.textContent = `3. ETAP · ${B.n} HARFLİ ${uc.ki+1}/${B.adet}`;
+  kelimeOyna(B.n, AZALAN.odul[0], {azalan: AZALAN.odul},
+    (ok, w) => sonucAra(ok, w, () => {
+      uc.ki++;
+      if(uc.ki < B.adet) return ucKelime();
+      ucPuzzle();
+    }));
+}
+function ucPuzzle(){
+  bar.textContent = "3. ETAP · PUZZLE";
+  puzzleOyna(AZALAN.puz, AZALAN.puzOdul, (ok, w) => sonucAra(ok, w, () => {
+    uc.bol++; uc.ki = 0;
+    if(uc.bol < AZALAN.bolum.length){
+      const B = AZALAN.bolum[uc.bol];
+      ekran(`<h2>${B.n} harfli bölüm</h2>
+        <p>${B.adet} kelime, ardından bir puzzle. Ödül yine ilk tahminde
+           ₺2.000'den başlayıp düşüyor.</p>
+        <button class="buton" onclick="ucKelime()">DEVAM ▸</button>`);
+    } else finalGiris();
+  }));
+}
 /* ---------------- final ---------------- */
 let fIdx = 0, fTaban = 0, fEnIyi = 0, fSuan = 0, fBitti = false, fKalan = FINAL.sure;
 function fKazanc(n){
@@ -676,6 +724,7 @@ document.addEventListener("keydown", e => {
   else if(k.length === 1){ const c = k.toLowerCase(); if(klvTus[c]) klvTus[c].click(); }
 });
 function yukle(){
+  LG_sesDugme(document.getElementById("sesd"));
   orta.innerHTML = `<div class="kutu"><h1>LİNGO</h1>
     <p>Kelime havuzu yükleniyor…</p></div>`;
   fetch("oyun-veri.json").then(r => {
