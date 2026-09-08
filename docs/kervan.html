@@ -331,11 +331,13 @@ const HANTUR = ["Jokerci · tek kullanımlık ipuçları",
 const URUN = [
  /* --- 1. han: jokerler --- */
  {id:"harfver", ad:"Elif'in Harfi", em:"🔤", tip:"joker", han:0, fiyat:40, tek:1,
+  agirlik:4,
   kisa:"Bir harfi doğru yerinde açar",
   tam:"Etap sırasında dokununca kelimenin bilinmeyen bir harfi doğru yerinde açılır ve "+
       "o kutu artık değişmez. Aynı etapta birkaç kez kullanabilirsin, her kullanım bir "+
       "adet harcar.", kilit:null},
  {id:"sonharf", ad:"Ömer'in Son Harfi", em:"🔚", tip:"joker", han:0, fiyat:45, tek:1,
+  agirlik:4,
   kisa:"Kelimenin son harfini açar",
   tam:"İlk harf zaten hediye veriliyor; bu joker son harfi de açar. Kelimenin iki ucunu "+
       "bilmek, ortayı tahmin etmeyi çok kolaylaştırır.", kilit:null},
@@ -348,11 +350,13 @@ const URUN = [
   tam:"Saat tamamen durur ve 10 saniye boyunca rahatça düşünürsün. Süre ekleme değil "+
       "durdurma olduğu için, kalan sürenin tamamı korunur.", kilit:{u:2}},
  {id:"eleme", ad:"Ramiz'in Elemesi", em:"🚫", tip:"joker", han:0, fiyat:60, tek:1,
+  agirlik:2,
   kisa:"Kelimede olmayan 3 harfi klavyede karartır",
   tam:"Kelimede bulunmayan üç harf klavyede grileşir. Yanlış harflere boşuna tahmin "+
       "harcamanı önler; özellikle 6 ve 7 harfli kelimelerde çok işe yarar.",
   kilit:{r:"Keskin Nişancı"}},
  {id:"sozluksayfasi", ad:"Elif'in Sözlük Sayfası", em:"📖", tip:"joker", han:0, fiyat:65, tek:1,
+  agirlik:2,
   kisa:"Kelimenin TDK tanımını gösterir",
   tam:"Kelimenin sözlük anlamı ekranda açılır — tıpkı puzzle ipucu gibi. Anlamı okuyunca "+
       "kelime çoğu zaman kendiliğinden gelir.", kilit:{u:5}},
@@ -367,6 +371,7 @@ const URUN = [
       "uzunlukta yeni bir kelime gelir ve süre baştan başlar. Tahminlerin silinir.",
   kilit:{u:3}},
  {id:"unluavi", ad:"Ezgi'nin Ünlü Avı", em:"🅰", tip:"joker", han:0, fiyat:90, tek:1,
+  agirlik:4,
   kisa:"Bütün sesli harflerin yerini gösterir",
   tam:"Kelimedeki a, e, ı, i, o, ö, u, ü harflerinin hepsi doğru yerlerinde açılır. "+
       "Türkçede sesli harfler iskeleti kurar; gerisi genellikle tahmin edilir.",
@@ -376,6 +381,7 @@ const URUN = [
   tam:"Riskli joker: etabı bilirsen ödül iki katına çıkar, bilemezsen harcadığın akçe "+
       "boşa gider. Kolay göründüğün bir kelimede kullan.", kilit:{r:"Seri"}},
  {id:"anagram", ad:"Çağrı'nın Anagramı", em:"🔀", tip:"joker", han:0, fiyat:100, tek:1,
+  agirlik:2,
   kisa:"Kelimenin harflerini karışık gösterir",
   tam:"Kelimedeki bütün harfler karışık sırayla ekranda listelenir. Hangi harflerin "+
       "olduğunu bilirsin, sıralamayı sen bulursun.", kilit:{r:"Yapboz"}},
@@ -406,6 +412,7 @@ const URUN = [
   tam:"Kalan bütün etapların süresi 5 saniye artar. Son bölümlerde süre 16 saniyeye "+
       "kadar indiği için değeri yolun sonuna doğru artar.", kilit:{r:"Hız Rekoru"}},
  {id:"keskingoz", ad:"Bilal'in Keskin Gözü", em:"👁", tip:"yetenek", han:1, fiyat:180,
+  agirlik:2,
   kisa:"İlk tahminden sonra bir yanlış harf kendiliğinden elenir",
   tam:"Her etapta ilk tahminini yaptıktan sonra, kelimede bulunmayan bir harf klavyede "+
       "otomatik grileşir. Her etapta yeniden çalışır, tükenmez.", kilit:{u:4}},
@@ -420,6 +427,7 @@ const URUN = [
       "fazla ödenir. Bir etabı kaçırırsan seri sıfırlanır, yeniden kurabilirsin.",
   kilit:{r:"Efsane Seri"}},
  {id:"alfabesezgisi", ad:"Bilal'in Alfabe Sezgisi", em:"🧠", tip:"yetenek", han:1, fiyat:250,
+  agirlik:4,
   kisa:"7 harfli etaplarda ilk iki harf açık başlar",
   tam:"Yolculuğun en zor etapları 7 harflilerdir; yarısı sözlükten gelir. Bu yetenekle "+
       "o etaplarda iki harf hediye başlar. Beş 7 harfli etabın hepsinde çalışır.",
@@ -468,6 +476,7 @@ const URUN = [
       "etaplarda süreyi hangi bölümde olursan ol 25 saniyeye sabitler.",
   kilit:{r:"Duvar Ustası"}},
  {id:"pusula", ad:"Figen'in Pusulası", em:"🧭", tip:"tilsim", han:2, fiyat:195,
+  agirlik:4,
   kisa:"Her bölümün ilk etabında bir harf bedava açılır",
   tam:"Her bölümün 4 harfli ilk etabında, ilk harfin dışında bir harf daha hediye "+
       "açılır. Kalan bölüm sayısı kadar çalışır.", kilit:{r:"Dört Uzunluk"}},
@@ -501,6 +510,7 @@ const URUN = [
 ,
  /* --- ek jokerler --- */
  {id:"varharf", ad:"Ömer'in Kulağı", em:"🦻", tip:"joker", han:0, fiyat:60, tek:1,
+  agirlik:2,
   kisa:"Kelimede olan bir harfi klavyede sarıya boyar",
   tam:"Kelimede kesinlikle bulunan bir harfi klavyede sarı yapar — yerini söylemez, "+
       "sadece var olduğunu. Eleme jokerinin tersi: o olmayanı, bu olanı gösterir.",
@@ -560,10 +570,12 @@ const URUN = [
   tam:"Türkçede kelimenin iskeletini sesli harfler kurar. Kaç tane olduğunu bilmek, "+
       "hangi kalıbı deneyeceğini büyük ölçüde belirler.", kilit:null},
  {id:"konum", ad:"Elif'in Cetveli", em:"📏", tip:"joker", han:0, fiyat:55, tek:1,
+  agirlik:4,
   kisa:"Kelimenin tam ortasındaki harfi açar",
   tam:"İlk harf zaten verili; bu joker ortadaki harfi açar. Kelimenin iki ucu ile "+
       "ortasını bilmek, kalanı tahmin etmeyi çok kolaylaştırır.", kilit:null},
  {id:"ikiharf", ad:"Ramiz'in Çifte Harfi", em:"🔠", tip:"joker", han:0, fiyat:85, tek:1,
+  agirlik:4,
   kisa:"İki harfi birden doğru yerinde açar",
   tam:"Tek harf yetmediğinde: rastgele iki bilinmeyen harf birden, doğru yerlerinde "+
       "açılır. Yedi harfli etaplarda bir tahmin hakkı kadar değerlidir.",
@@ -606,10 +618,12 @@ const URUN = [
 ,
  /* --- Melek Hatun'un mallari --- */
  {id:"mFisilti", ad:"Melek Hatun'un Fısıltısı", em:"🤫", tip:"joker", han:0, fiyat:95, tek:1,
+  agirlik:4,
   kisa:"Kelimenin ikinci harfini açar",
   tam:"İlk harf zaten verili; bu joker ikinci harfi de açar. Yedi harfli etaplarda "+
       "başlangıcı kurtarır.", kilit:null},
  {id:"mDefter", ad:"Melek Hatun'un Not Defteri", em:"📔", tip:"joker", han:0, fiyat:80, tek:1,
+  agirlik:2,
   kisa:"Tanımı ve sesli harf sayısını birlikte verir",
   tam:"Kelimenin sözlük anlamını gösterir, altına da kaç sesli harf içerdiğini yazar. "+
       "İki jokerin işini tek seferde yapar.", kilit:null},
@@ -630,6 +644,7 @@ const URUN = [
   tam:"Nazar boncuğu gibi çalışır ama yığılabilir: kaç tane aldıysan o kadar kez "+
       "kalbini korur. Her kullanımda bir kanat kırılır.", kilit:null},
  {id:"mTuy", ad:"Melek Hatun'un Tüyü", em:"🪶", tip:"tilsim", han:2, fiyat:255,
+  agirlik:4,
   kisa:"Her etapta bir harf bedava açılır",
   tam:"Yolculuğun kalanında her etapta, ilk harfin dışında bir harf daha hediye "+
       "açılır. Yolun başında alınırsa en güçlü tılsımdır.", kilit:{r:"Dört Uzunluk"}},
@@ -642,6 +657,7 @@ const URUN = [
   tam:"Bölümün 4 harfli ilk etabında her tahmin için 8 saniye daha verilir. "+
       "Yığılabilir.", kilit:null},
  {id:"mAyna", ad:"Melek Hatun'un Aynası", em:"🪞", tip:"tilsim", han:2, fiyat:230,
+  agirlik:2,
   kisa:"Her yanlış tahminden sonra bir yanlış harf elenir",
   tam:"Keskin Göz yalnızca ilk tahminden sonra çalışır; ayna her yanlış tahminden "+
       "sonra kelimede olmayan bir harfi klavyede karartır.", kilit:{r:"Usta Nişancı"}},
@@ -684,7 +700,12 @@ const URUN = [
  {id:"mKandil", ad:"Melek Hatun'un Kandili", em:"🏮", tip:"tilsim", han:3, fiyat:235, yigin:1,
   kisa:"Bütün etaplarda süre 8 saniye uzun",
   tam:"Yolculuğun kalanında her tahmin için 8 saniye daha verilir. Saat Ustası ile "+
-      "birlikte kullanılabilir, yığılabilir.", kilit:null}
+      "birlikte kullanılabilir, yığılabilir.", kilit:null},
+ {id:"katalog", ad:"Ramiz'in Kataloğu", em:"🗂", tip:"yetenek", han:1, fiyat:220, yigin:1,
+  kisa:"Hanlarda iki ürün daha görünür",
+  tam:"Ramiz her malın kaydını tutar: tezgâhta iki ürün daha açılır. Sevilen'in "+
+      "Sözlük Cildi ve Melek Hatun'un Yüzüğü ile birlikte çalışır, yığılabilir — "+
+      "iki tane alırsan dört ürün daha görürsün.", kilit:null}
 ];
 const URUNID = {}; URUN.forEach(u => URUNID[u.id] = u);
 
@@ -1378,13 +1399,19 @@ function stokKur(h){
   const tip = HANTIP[h];
   const gecmis = new Set(HANTIP.slice(0, h + 1));     /* onceki hanlarin mallari da */
   const adet = 4 + ((sahipmi("sozlukcildi") || seviye() >= 3) ? 1 : 0)
-                 + (sahipmi("mYuzuk") ? 1 : 0);
+                 + (sahipmi("mYuzuk") ? 1 : 0) + kac("katalog") * 2;
   const olur = u => kilitDurum(u).acik && (u.tek || u.yigin || !sahipmi(u.id));
   const kendi = URUN.filter(u => u.han === tip && olur(u));
   const digerleri = URUN.filter(u => u.han !== tip && gecmis.has(u.han) && olur(u));
   const secilen = [];
-  const cek = arr => { if(!arr.length) return;
-    secilen.push(arr.splice(Math.floor(Math.random()*arr.length), 1)[0].id); };
+  /* agirlikli cekilis: harf actiran urunlerin cikma sansi daha yuksek */
+  const cek = arr => {
+    if(!arr.length) return;
+    const top = arr.reduce((t, u) => t + (u.agirlik || 1), 0);
+    let r = Math.random() * top, k = 0;
+    for(; k < arr.length; k++){ r -= (arr[k].agirlik || 1); if(r <= 0) break; }
+    secilen.push(arr.splice(Math.min(k, arr.length - 1), 1)[0].id);
+  };
   cek(kendi); cek(kendi);                             /* hanın kendi uzmanlığı öne */
   const kalan = kendi.concat(digerleri);
   while(secilen.length < adet && kalan.length) cek(kalan);
