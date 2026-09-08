@@ -1237,6 +1237,23 @@ function basla(){
   devamEkran();
 }
 
+/* ---- fiziksel klavye (bilgisayarda oynayanlar icin) ---- */
+document.addEventListener("keydown", e => {
+  if(klv.classList.contains("gizli")) return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if(k === "Enter"){
+    const b = [...klv.querySelectorAll("button")].find(x => x.textContent === "TAMAM");
+    if(b){ e.preventDefault(); b.click(); }
+  } else if(k === "Backspace"){
+    const b = [...klv.querySelectorAll("button")].find(x => x.textContent === "SİL");
+    if(b){ e.preventDefault(); b.click(); }
+  } else if(k.length === 1){
+    const c = k.toLocaleLowerCase("tr");
+    if(klvTus[c]){ e.preventDefault(); klvTus[c].click(); }
+  }
+});
+
 /* ================= yukleme ================= */
 const GECERLI = {};
 function yukle(){
