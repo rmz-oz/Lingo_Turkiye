@@ -180,6 +180,18 @@ button{font:inherit;cursor:pointer}
   letter-spacing:5px;color:#fff;background:var(--yesil);border-radius:12px;
   padding:12px 10px;margin-bottom:10px}
 .kutla .kn{font-size:15px;color:var(--soluk);margin-bottom:16px}
+/* kisi */
+.kisi{display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:999px;
+  padding:7px 14px;margin:0 auto 10px;font-size:14px;color:var(--soluk);
+  cursor:pointer;max-width:340px}
+.kisi b{color:var(--murekkep);font-size:15px}
+.kisi u{text-decoration:none;color:var(--yesil);font-weight:700;font-size:13px}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;
+  margin:10px 0}
+.kgrid button{background:#22303d;border:1.5px solid var(--cizgi);border-radius:11px;
+  padding:14px 6px;color:var(--murekkep);font-weight:700;font-size:16px}
+.kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
 .gizli{display:none!important}
 </style></head><body>
 <div id="bar"><a href="index.html">‹</a><span class="etap">ALIŞTIRMA · 6 HARFLİ</span>
@@ -199,8 +211,49 @@ const skorEl = $("#skor"), sureKap = $("#sure"), sureBar = sureKap.querySelector
 let VERI = null, GECERLI = null, sayac = null;
 let sira = 0, dogru = 0, kullanilan = new Set(), gecmis = [];
 let HARF = null, ARS = [], YEN = [], HEDEF = TOPLAM;
-let KARISIK = false, BLOK = [], blokIdx = -1;
+let KARISIK = false, BLOK = [], blokIdx = -1, OZEL = null;
 let YARDIM = false, HAVUZL = [], cizYardim = null;
+/* --- kim calisiyor --- */
+const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
+let KISILER = KISI_VAR.slice(), KISI = null;
+try{
+  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
+  if(Array.isArray(k) && k.length) KISILER = k;
+  KISI = localStorage.getItem("lingo_kisi") || null;
+  if(KISI && KISILER.indexOf(KISI) < 0) KISI = null;
+}catch(e){}
+function kisiKaydet(){
+  try{ localStorage.setItem("lingo_kisi", KISI);
+       localStorage.setItem("lingo_kisiler", JSON.stringify(KISILER)); }catch(e){}
+}
+function kisiSec(ad){ KISI = ad; kisiKaydet(); giris(); }
+function kisiEkrani(){
+  durdur(); sureGoster(false); klv.classList.add("gizli"); cizYardim = null;
+  orta.className = "";
+  orta.innerHTML = `<div class="kutu">
+    <h1>Kim çalışıyor?</h1>
+    <p class="kucuk">Sonuçlar kişiye özel tutulur; sonra istediğiniz zaman
+       değiştirebilirsiniz.</p>
+    <div class="kgrid">${KISILER.map(a =>
+      `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
+      ).join("")}</div></div>`;
+  orta.scrollTop = 0;
+}
+/* --- calisma defteri --- */
+function defterAnahtar(){ return "lingo_defter_" + (KISI||"?"); }
+function defterOku(){
+  try{ const d = JSON.parse(localStorage.getItem(defterAnahtar())||"[]");
+       return Array.isArray(d) ? d : []; }catch(e){ return []; }
+}
+function defterYaz(w, hak){
+  if(!KISI) return;
+  try{
+    const d = defterOku();
+    d.push({w: w, n: w.length, h: w[0], k: hak, t: Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(defterAnahtar(), JSON.stringify(d));
+  }catch(e){}
+}
 try{ YARDIM = localStorage.getItem("lingo_yardim_" + N) === "1"; }catch(e){}
 const BLOKBOY = 3, BLOKSAY = 3;              // karisik: 3 harf x 3 kelime
 
@@ -247,6 +300,9 @@ function agirlikli(){
   return ARS[lo][0];
 }
 function kelimeSec(){
+  if(OZEL && OZEL.length){                       // rapordan gelen kelime listesi
+    const w = OZEL.shift(); kullanilan.add(w); return w;
+  }
   for(let t = 0; t < 500; t++){
     let w;
     if((Math.random() < 0.80 || !YEN.length) && ARS.length) w = agirlikli();
@@ -394,14 +450,14 @@ function kelimeOyna(){
       gecmisT.push({w: tah, r}); yardimCiz();
       if(tah === gizli){
         kapandi = true; sureGoster(false); dogru++; sira++; skorYaz();
-        gecmis.push({w: gizli, ok: true});
+        gecmis.push({w: gizli, ok: true}); defterYaz(gizli, sat + 1);
         return setTimeout(() => kutla(gizli, sat + 1), 560);
       }
     }
     sat++; giris = gizli[0];
     if(sat >= SATIR){
       kapandi = true; sureGoster(false); sira++; skorYaz();
-      gecmis.push({w: gizli, ok: false});
+      gecmis.push({w: gizli, ok: false}); defterYaz(gizli, 0);
       return setTimeout(() => degerlendir(gizli), 550);
     }
     ustYaz(); yaz(); tik();
@@ -548,8 +604,15 @@ function yardimDegis(){
   ydgYaz();
   if(cizYardim) cizYardim();
 }
-function basla(L){
+function basla(L, ozel){
   sira = 0; dogru = 0; kullanilan = new Set(); gecmis = []; blokIdx = -1;
+  OZEL = (ozel && ozel.length) ? ozel.slice() : null;
+  if(OZEL){
+    havuzKur(null); HARF = null; KARISIK = false;
+    HEDEF = OZEL.length; skorYaz();
+    bar.textContent = "TAKILDIKLARIN · 6 HARFLİ";
+    return sonraki();
+  }
   KARISIK = !L;
   if(L){
     havuzKur(L);
@@ -573,8 +636,9 @@ function ozet(){
     <div class="tutar">${dogru} / ${HEDEF}</div>
     <div class="wrap" style="justify-content:center;margin:14px 0">${sat}</div>
     <p class="kucuk">${dogru > en ? "En iyiniz bu!" : "En iyiniz: " + en}</p>
-    <button class="buton" onclick="basla(${KARISIK ? "null" : "'" + HARF + "'"})">
-      ${KARISIK ? "YENİ 9 KELİME" : "AYNI HARFTEN DEVAM"}</button>
+    <button class="buton" onclick="${OZEL!==null ? "location.href='rapor.html'"
+        : "basla(" + (KARISIK ? "null" : "'" + HARF + "'") + ")"}">
+      ${OZEL!==null ? "RAPORA DÖN" : (KARISIK ? "YENİ 9 KELİME" : "AYNI HARFTEN DEVAM")}</button>
     <button class="buton ikinci" onclick="giris()">BAŞKA HARF SEÇ</button>`);
 }
 function giris(){
@@ -592,6 +656,8 @@ function giris(){
   orta.className = "ust";
   orta.innerHTML = `<div class="sec">
     <h1>6 HARFLİ ALIŞTIRMA</h1>
+    <div class="kisi" onclick="kisiEkrani()">👤 <b>${KISI}</b> olarak çalışıyorsun
+      <u>değiştir</u></div>
     <p class="not">Hangi harfle çalışacaksınız?
        <b>445 bölümde en çok sorulandan en aza</b> sıralı — baştakiler karşınıza
        çıkma ihtimali en yüksek harfler.<br>
@@ -601,6 +667,8 @@ function giris(){
        <b>Renk</b> zorluğu gösterir: yeşil kolay, kırmızı zor.</p>
     <div class="lej3"><i class="z1">kolay</i><i class="z2">orta</i><i class="z3">zor</i></div>
     <div class="hgrid">${tus}</div>
+    <a class="buton ikinci" style="text-decoration:none;display:block"
+       href="rapor.html">📊 GELİŞİM RAPORUM</a>
     <button class="buton karis" onclick="basla(null)">
       <span class="em">🎲</span>
       <span class="tx">KARIŞIK OYNA<small>3 harf × 3 kelime · 9 soru</small></span></button>
@@ -622,7 +690,23 @@ function giris(){
 function yukle(){
   ekran(`<h1>6 HARFLİ ALIŞTIRMA</h1><p>Kelime havuzu yükleniyor…</p>`);
   fetch("oyun-veri.json").then(r => { if(!r.ok) throw 0; return r.json(); })
-    .then(d => { VERI = d; GECERLI = new Set(VERI.gecerli[N]); ydgYaz(); giris(); })
+    .then(d => { VERI = d; GECERLI = new Set(VERI.gecerli[N]); ydgYaz();
+                 if(!KISI) return kisiEkrani();
+                 const h = location.hash.replace("#","");
+                 if(h.indexOf("h=") === 0){
+                   const L = decodeURIComponent(h.slice(2));
+                   history.replaceState(null,"",location.pathname);
+                   if(DERS.harf[L]) return basla(L);
+                 }
+                 if(h === "tekrar"){
+                   history.replaceState(null,"",location.pathname);
+                   const say = {};
+                   for(const r of defterOku())
+                     if(r.n === N && r.k === 0) say[r.w] = (say[r.w]||0)+1;
+                   const lst = Object.keys(say).sort((a,b)=>say[b]-say[a]).slice(0,10);
+                   if(lst.length) return basla(null, lst);
+                 }
+                 giris(); })
     .catch(() => ekran(`<h2>Yüklenemedi</h2>
       <p>Bağlantınızı kontrol edip sayfayı yenileyin.</p>
       <button class="buton" onclick="location.reload()">YENİLE</button>`));
