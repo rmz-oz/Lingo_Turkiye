@@ -53,29 +53,49 @@ header .sar{padding-bottom:0}
 .yarkart{display:block;background:linear-gradient(135deg,#e0a92e,#f4c95d);color:#1a1200;
   border-radius:14px;padding:18px 16px;margin:20px 0 6px;text-decoration:none;
   text-align:center;box-shadow:0 6px 20px rgba(224,169,46,.3)}
-.yarkart b{display:block;font-size:19px;letter-spacing:-.2px}
+.yarkart > b{display:block;font-size:19px;letter-spacing:-.2px}
 .yarkart span{display:block;font-size:15px;margin-top:6px;font-weight:600}
 .plankart{display:block;background:linear-gradient(135deg,#6c5ce7,#8e6ce8);
   color:#fff;border-radius:14px;padding:16px;margin:10px 0 8px;text-decoration:none;
   box-shadow:0 5px 18px rgba(108,92,231,.28)}
-.plankart b{display:block;font-size:17px}
+.plankart > b{display:block;font-size:17px}
 .plankart span{display:block;font-size:14px;color:#e3ddfb;margin-top:5px;line-height:1.5}
+.serkart{display:block;background:var(--kart);border:1px solid var(--cizgi);
+  border-radius:14px;padding:16px;margin:10px 0 4px;text-decoration:none;
+  box-shadow:var(--golge)}
+.serkart > b{display:block;font-size:17px;color:var(--murekkep)}
+.serkart > span{display:block;font-size:14px;color:var(--soluk);margin-top:5px;
+  line-height:1.5}
+.serkart .kad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+.serkart .kad div{border-radius:11px;padding:11px 6px;text-align:center;
+  border:1px solid var(--cizgi);background:#fafafb}
+.serkart .kad i{font-style:normal;font-size:21px;line-height:1;display:block}
+.serkart .kad b{display:block;font-size:11px;letter-spacing:1.1px;margin-top:5px;
+  font-weight:800}
+.serkart .kad u{display:block;text-decoration:none;font-size:11px;color:var(--soluk);
+  margin-top:2px;font-variant-numeric:tabular-nums}
+.serkart .kad .br{border-color:#d9b38c;background:#fdf6ef}
+.serkart .kad .br b{color:#9c5f2b}
+.serkart .kad .gm{border-color:#c3ccd5;background:#f6f8fa}
+.serkart .kad .gm b{color:#5d6b78}
+.serkart .kad .al{border-color:#e4c96a;background:#fdf8e8}
+.serkart .kad .al b{color:#8a7326}
 .rapkart{display:block;background:var(--kart);border:1px solid var(--cizgi);
   border-radius:14px;padding:16px 16px;margin:10px 0 4px;text-decoration:none;
   box-shadow:var(--golge)}
-.rapkart b{display:block;font-size:17px;color:var(--murekkep)}
+.rapkart > b{display:block;font-size:17px;color:var(--murekkep)}
 .rapkart span{display:block;font-size:14px;color:var(--soluk);margin-top:5px;line-height:1.5}
 .yariskart{display:block;background:linear-gradient(135deg,#6c5ce7,#8e6ce8);
   color:#fff;border-radius:16px;padding:20px 18px;margin:22px 0 10px;
   text-decoration:none;box-shadow:0 6px 20px rgba(108,92,231,.3)}
-.yariskart b{display:block;font-size:24px;letter-spacing:-.4px;line-height:1.15}
+.yariskart > b{display:block;font-size:24px;letter-spacing:-.4px;line-height:1.15}
 .yariskart span{display:block;font-size:14.5px;color:#e3ddfb;margin:7px 0 12px;line-height:1.5}
 .yariskart u{display:inline-block;text-decoration:none;background:#fff;color:#3b2f8f;
   font-weight:800;font-size:15px;border-radius:9px;padding:9px 18px}
 .oyunkart{display:block;background:#0f1720;color:#fff;border-radius:16px;
   padding:20px 18px;margin:22px 0 6px;text-decoration:none;box-shadow:var(--golge);
   border:1px solid #0f1720}
-.oyunkart b{display:block;font-size:26px;letter-spacing:-.5px;line-height:1.1}
+.oyunkart > b{display:block;font-size:26px;letter-spacing:-.5px;line-height:1.1}
 .oyunkart span{display:block;font-size:14.5px;color:#9aa6b4;margin:7px 0 12px;
   line-height:1.5}
 .oyunkart u{display:inline-block;text-decoration:none;background:#f4c95d;color:#1a1200;
@@ -227,11 +247,15 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
   <b>🗓 4 GÜNLÜK ÇALIŞMA PLANI</b>
   <span>Günlük hedefler, görev listesi, ünvanlar ve rozetler. Yarışmaya kaç gün
   kaldığını sayar, her gün ne yapılacağını söyler.</span></a>
-<a class="rapkart" href="sertifika.html" style="border-color:#c9a227">
+<a class="serkart" href="sertifika.html">
   <b>🏅 SERTİFİKAM</b>
-  <span>250 kelimede <b>bronz</b>, 1.000'de <b>gümüş</b>, 2.000'de <b>altın</b>.
-  Adına, ünvanına ve rozetlerine göre hazırlanır; ekran görüntüsü alıp
-  paylaşabilirsin.</span></a>
+  <span>Adına, ünvanına ve rozetlerine göre hazırlanır.
+  Ekran görüntüsü alıp paylaşabilirsin.</span>
+  <div class="kad">
+    <div class="br"><i>🥉</i><b>BRONZ</b><u>250 kelime</u></div>
+    <div class="gm"><i>🥈</i><b>GÜMÜŞ</b><u>1.000 kelime</u></div>
+    <div class="al"><i>🥇</i><b>ALTIN</b><u>2.000 kelime</u></div>
+  </div></a>
 <a class="rapkart" href="rapor.html">
   <b>📊 GELİŞİM RAPORUM</b>
   <span>Kim hangi harflerde takılıyor, kaç tahminde biliyor — alıştırmalarda ve
