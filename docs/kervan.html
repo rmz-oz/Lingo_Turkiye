@@ -270,6 +270,7 @@ const SEVIYE = [
 ];
 const BASLANGIC = 100;   /* yola cikarken kesedeki akce */
 const TABAN = {4:500, 5:1000, 6:2000, 7:4000};
+const AKCE  = {4:40, 5:60, 6:90, 7:130};   /* uzunluk basina akce degeri */
 const SUPER = 250000;
 
 /* ================= saticilar ================= */
@@ -383,10 +384,10 @@ const URUN = [
       "yeniden başlar.", kilit:{r:"İkinci Şans"}},
  /* --- 2. han: yetenekler --- */
  {id:"cimrikese", ad:"Berna'nın Cimri Kesesi", em:"👝", tip:"yetenek", han:1, fiyat:140,
-  kisa:"Kullanılmayan her hak 60 akçe daha getirir",
-  tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 60 akçe getirir; bu "+
-      "yetenekle 120 akçe getirir. Kelimeyi ilk tahminde bulmak tek başına 480 akçe "+
-      "eder — handa iki ürün demektir.",
+  kisa:"Hız primini iki katına çıkarır",
+  tam:"Kesesi sıkı olanın parası artar: kullanmadığın her tahmin hakkının getirdiği "+
+      "hız primi ikiye katlanır. Yedi harfli bir kelimeyi ilk tahminde bilmek normalde "+
+      "520 akçe hız primi getirirken bu keseyle 1.040 akçe getirir.",
   kilit:null},
  {id:"tuccardili", ad:"Berna'nın Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
   kisa:"Bütün hanlarda %20 indirim",
@@ -832,10 +833,10 @@ function etapBasla(zorlaKelime){
     defterYaz(gizli, kazandi ? hak : 0);
     const kazanc = kazandi ? odul() : (sahipmi("muska") ? Math.round(odul()/2) : 0);
     const bosHak = satirSay - (kazandi ? hak : satirSay);
-    const hakBirim = sahipmi("cimrikese") ? 120 : 60;
-    const hizPrimi = bosHak * hakBirim;
+    const birim = AKCE[n];
+    const hizPrimi = bosHak * birim * (sahipmi("cimrikese") ? 2 : 1);
     const sureAkce = sureyok ? 0 : Math.max(0, kalanSn) * 2;
-    let akce = 40 + hizPrimi + sureAkce + (sahipmi("kervanbereketi") ? 30 : 0);
+    let akce = birim + hizPrimi + sureAkce + (sahipmi("kervanbereketi") ? 30 : 0);
     if(!kazandi) akce = Math.round(akce * 0.4);
     S.para += kazanc; S.akce += akce;
     if(kazandi){ S.seri++; S.dogru.push(gizli); }
@@ -876,7 +877,7 @@ function etapBasla(zorlaKelime){
           <div><b>${S.seri}</b><span>seri</span></div>
           <div><b>${S.kalp}</b><span>kalp</span></div>
         </div>
-        <p class="kucuk">Akçe dökümü: taban <b>40</b>${
+        <p class="kucuk">Akçe dökümü: ${n} harfli taban <b>${birim}</b>${
           hizPrimi ? ` · ${hak}. tahminde bildin, hız primi <b>+${TL(hizPrimi)}</b>` : ""}${
           sureAkce ? ` · kalan süre <b>+${TL(sureAkce)}</b>` : ""}${
           sahipmi("kervanbereketi") ? ` · bereket <b>+30</b>` : ""}${
@@ -1464,9 +1465,11 @@ function girisEkran(){
         Süre biterse yalnızca <b>o tahmin</b> yanar, kalan haklarınla devam edersin.
         Beş hakkın da bitmesi bir <b>kalp</b> götürür; ${S.maxKalp} kalp biterse
         yolculuk durur.</p>
-      <p class="kucuk"><b>Erken bilmek para demek:</b> kullanmadığın her tahmin hakkı
-        <b>60 akçe</b> hız primi getiriyor. İlk tahminde bilirsen <b>+240</b>, ikincide
-        <b>+180</b>, üçüncüde <b>+120</b>, dördüncüde <b>+60</b>; son hakta prim yok.</p>
+      <p class="kucuk"><b>Erken bilmek ve uzun kelime para demek:</b> kullanmadığın her
+        tahmin hakkı hız primi getiriyor ve prim kelime uzadıkça büyüyor —
+        4 harflide <b>40</b>, 5 harflide <b>60</b>, 6 harflide <b>90</b>,
+        7 harflide <b>130</b> akçe. İlk tahminde bilirsen bu primi dört kez alırsın:
+        yedi harfli bir kelime tek seferde <b>650 akçe</b> eder. Son hakta prim yok.</p>
       <p class="kucuk"><b>Her bölümden önce bir han var</b> — ilki hemen şimdi.
         Kesende <b>🪙 ${TL(S.akce)} akçe</b> ile yola çıkıyorsun, etaplarda kazandıkça
         artar; akçeyle joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
