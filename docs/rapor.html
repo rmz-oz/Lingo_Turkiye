@@ -108,7 +108,7 @@ tr.tik:active{background:var(--kart2)}
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
 const defter = LG_defter;
-const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
+const KISI_VAR = ["Serpil","Zeynep","Misafir"];
 let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false;
 try{
   const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
@@ -248,7 +248,7 @@ function ciz(){
 
     ${(function(){
       const ra = LG_acik(KISI), U = LG_unvan(d.length);
-      return `<h2>Ünvan ve rozetler · ${ra.length}/28</h2>
+      return `<h2>Ünvan ve rozetler · ${ra.length}/${LG_rozet(d,LG_plan(KISI)).length}</h2>
         <div class="unvk"><b>${U.simdi.ad}</b>
           <span>${U.sonraki ? U.sonraki.ad + " için " + U.kalan + " kelime daha"
                             : "en üst ünvan"}</span>
