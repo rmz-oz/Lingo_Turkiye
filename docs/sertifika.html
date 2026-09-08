@@ -19,9 +19,9 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .ser{background:linear-gradient(160deg,#fdf6e3 0%,#f6ecd2 100%);color:#2a2413;
   border-radius:16px;padding:26px 22px 22px;position:relative;
   box-shadow:0 10px 30px rgba(0,0,0,.45)}
-.ser:before{content:"";position:absolute;inset:9px;border:2px solid #c9a227;
+.ser:before{content:"";position:absolute;inset:9px;border:2px solid var(--kc1);
   border-radius:10px;pointer-events:none}
-.ser:after{content:"";position:absolute;inset:14px;border:1px solid #ddc47a;
+.ser:after{content:"";position:absolute;inset:14px;border:1px solid var(--kc2);
   border-radius:7px;pointer-events:none}
 .ser .ic{position:relative;text-align:center}
 .mhr{width:58px;height:58px;border-radius:50%;background:#c9a227;color:#fff;
@@ -33,18 +33,18 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
   font-weight:800;line-height:1.3}
 .ser .ad{font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1.1;
   margin:2px 0 4px;color:#1f1a0d}
-.ser .unv{display:inline-block;background:#c9a227;color:#fff;border-radius:999px;
+.ser .unv{display:inline-block;background:var(--kc1);color:#fff;border-radius:999px;
   padding:5px 16px;font-weight:800;font-size:14px;letter-spacing:.3px;margin-bottom:14px}
-.cizgi{height:1px;background:#d9c68a;margin:14px 0}
+.cizgi{height:1px;background:var(--kc2);margin:14px 0}
 .ist{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:2px 0 6px}
 .ist div b{display:block;font-size:20px;font-weight:800;color:#1f1a0d;line-height:1.1;
   font-variant-numeric:tabular-nums}
-.ist div span{font-size:9.5px;color:#8a7326;text-transform:uppercase;letter-spacing:.5px;
+.ist div span{font-size:9.5px;color:var(--kc4);text-transform:uppercase;letter-spacing:.5px;
   display:block;margin-top:3px;line-height:1.3}
 .roz{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:10px 0 4px;
   font-size:20px;line-height:1.4}
-.ser .alt{font-size:11.5px;color:#8a7326;margin-top:12px;line-height:1.6}
-.ser .imza{font-size:12.5px;color:#6b5a1e;margin-top:10px;font-weight:700}
+.ser .alt{font-size:11.5px;color:var(--kc4);margin-top:12px;line-height:1.6}
+.ser .imza{font-size:12.5px;color:var(--kc4);margin-top:10px;font-weight:700}
 .buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
   border-radius:13px;padding:14px;font-weight:800;font-size:16px;margin-top:11px;
   text-align:center;text-decoration:none}
@@ -78,10 +78,17 @@ function ciz(){
   const secErit = `<div class="kgrid">${KISILER.map(a=>
     `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">
       ${a}</button>`).join("")}</div>`;
+  const KADEME = [
+    {n:2000, ad:"ALTIN",  em:"🥇", c1:"#c9a227", c2:"#f0dfa0", c3:"#fdf6e3", c4:"#8a7326"},
+    {n:1000, ad:"GÜMÜŞ", em:"🥈", c1:"#8e9aa6", c2:"#d8dfe6", c3:"#f4f7fa", c4:"#5d6b78"},
+    {n:250,  ad:"BRONZ", em:"🥉", c1:"#a9662f", c2:"#e6c9a8", c3:"#fbf1e6", c4:"#7d4d22"}
+  ];
   if(d.length < 250){
     $("#alan").innerHTML = secErit + `<div class="bos">
       Sertifika için en az <b>250 kelime</b> gerekiyor.<br>
-      ${KISI} adına şu an <b>${d.length}</b> kayıt var — ${250-d.length} kelime kaldı.</div>
+      ${KISI} adına şu an <b>${d.length}</b> kayıt var — ${250-d.length} kelime kaldı.
+      <div style="margin-top:12px;font-size:13.5px;line-height:1.7">
+        🥉 250 kelime · bronz<br>🥈 1.000 kelime · gümüş<br>🥇 2.000 kelime · altın</div></div>
       <a class="buton" href="alistirma5.html">ALIŞTIRMAYA BAŞLA</a>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>`;
     return;
@@ -97,11 +104,15 @@ function ciz(){
   const vit = LG_vitrin(KISI);
   const gRoz = vit.length ? ra.filter(r=>vit.indexOf(r.a)>=0) : ra.slice(-12);
 
+  const K = KADEME.find(x => d.length >= x.n);
+  const sonrakiK = KADEME.slice().reverse().find(x => x.n > d.length);
   $("#alan").innerHTML = secErit + `
-  <div class="ser"><div class="ic">
-    <div class="mhr">🏅</div>
-    <div class="ust">Lingo Türkiye</div>
-    <h1>HAZIRLIK SERTİFİKASI</h1>
+  <div class="ser" style="background:linear-gradient(160deg,${K.c3} 0%,${K.c2} 100%);
+    --kc1:${K.c1};--kc2:${K.c2};--kc4:${K.c4}">
+  <div class="ic">
+    <div class="mhr" style="background:${K.c1}">${K.em}</div>
+    <div class="ust" style="color:${K.c4}">Lingo Türkiye</div>
+    <h1>${K.ad} HAZIRLIK SERTİFİKASI</h1>
     <div class="ad">${KISI}</div>
     <div class="unv">${U.simdi.ad}</div>
     <div class="cizgi"></div>
@@ -117,6 +128,8 @@ function ciz(){
       ${gunler} ayrı günde çalıştı, ${gorev}/16 hazırlık görevini tamamladı.<br>
       5–445. bölümün cevap arşivinden hazırlanan programı bitirdi.</div>
     <div class="imza">${tarih}</div>
+    ${sonrakiK ? `<div class="alt" style="margin-top:6px">${sonrakiK.em}
+      ${sonrakiK.ad} sertifika için ${sonrakiK.n - d.length} kelime daha</div>` : ""}
   </div></div>
   <p class="not">Ekran görüntüsü alıp aile grubuna gönderebilirsin.</p>
   <a class="buton" href="plan.html">🗓 ÇALIŞMA PLANI</a>

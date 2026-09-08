@@ -50,6 +50,11 @@ header .sar{padding-bottom:0}
 .serit b{font-weight:700}
 .serit em{font-style:normal;color:var(--soluk)}
 .serit u{margin-left:auto;text-decoration:none;color:var(--soluk);font-size:18px}
+.yarkart{display:block;background:linear-gradient(135deg,#e0a92e,#f4c95d);color:#1a1200;
+  border-radius:14px;padding:18px 16px;margin:20px 0 6px;text-decoration:none;
+  text-align:center;box-shadow:0 6px 20px rgba(224,169,46,.3)}
+.yarkart b{display:block;font-size:19px;letter-spacing:-.2px}
+.yarkart span{display:block;font-size:15px;margin-top:6px;font-weight:600}
 .plankart{display:block;background:linear-gradient(135deg,#6c5ce7,#8e6ce8);
   color:#fff;border-radius:14px;padding:16px;margin:10px 0 8px;text-decoration:none;
   box-shadow:0 5px 18px rgba(108,92,231,.28)}
@@ -224,8 +229,9 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
   kaldığını sayar, her gün ne yapılacağını söyler.</span></a>
 <a class="rapkart" href="sertifika.html" style="border-color:#c9a227">
   <b>🏅 SERTİFİKAM</b>
-  <span>20 kelimeyi geçtikten sonra adına, ünvanına ve rozetlerine göre hazırlanan
-  sertifika. Ekran görüntüsü alıp paylaşabilirsin.</span></a>
+  <span>250 kelimede <b>bronz</b>, 1.000'de <b>gümüş</b>, 2.000'de <b>altın</b>.
+  Adına, ünvanına ve rozetlerine göre hazırlanır; ekran görüntüsü alıp
+  paylaşabilirsin.</span></a>
 <a class="rapkart" href="rapor.html">
   <b>📊 GELİŞİM RAPORUM</b>
   <span>Kim hangi harflerde takılıyor, kaç tahminde biliyor — alıştırmalarda ve
@@ -290,6 +296,9 @@ edebilirsiniz.</p>
 cevap ve en yüksek tanınma oranı bu ikisinde. Bir sayfayı bitirmek şart değil —
 her gün birkaç harf yeter.</p>
 </div>
+<a class="yarkart" href="yarisma.html">
+  <b>🎬 YARIŞMA GÜNÜ</b>
+  <span>Bol şans Serpil, bol şans Zeynep! · Sizi seviyoruz 🏆</span></a>
 <div class="dip">Sorular 5–445. bölümlerin cevap arşivi ve TDK Güncel Türkçe
 Sözlük havuzu üzerinden hesaplandı. "Kalan aday" sayısı, o harfle başlayan
 bütün sözlük kelimeleri üzerinden, kelimelerin kullanım sıklığıyla
@@ -306,7 +315,8 @@ ağırlıklandırılarak bulundu.</div>
     e.style.display = "flex";
     e.innerHTML = '<span class="av">' + k[0].toLocaleUpperCase("tr") + '</span>' +
       '<span><b>' + k + '</b> <em>· ' + U.simdi.ad + '</em></span>' +
-      '<em style="margin-left:auto">' + ra.length + '/28 rozet</em><u>›</u>';
+      '<em style="margin-left:auto">' + ra.length + '/' +
+        LG_rozet(d, LG_plan(k)).length + ' rozet</em><u>›</u>';
     e.onclick = function(){ location.href = "plan.html"; };
     e.style.cursor = "pointer";
   }catch(e){}
