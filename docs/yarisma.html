@@ -1,0 +1,148 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="theme-color" content="#0f1720">
+<title>Yarışma günü — Lingo</title>
+<style>
+:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
+  --cizgi:#2c3947;--altin:#f4c95d;--yesil:#2e9e5b;--kirmizi:#d94a5a;--mor:#6c5ce7}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
+canvas#kf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+header{background:#0a1119;border-bottom:1px solid var(--cizgi);padding:11px 14px;
+  display:flex;align-items:center;gap:11px;position:relative;z-index:2}
+header a{color:var(--soluk);text-decoration:none;font-size:16px}
+header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:uppercase}
+.sar{max-width:600px;margin:0 auto;padding:20px 14px 46px;position:relative;z-index:2}
+.tepe{text-align:center;margin-bottom:20px}
+.tepe .em{font-size:52px;line-height:1}
+.tepe h1{font-size:31px;margin:8px 0 4px;letter-spacing:-.8px;line-height:1.15}
+.tepe .ad{display:inline-block;background:var(--altin);color:#1a1200;border-radius:999px;
+  padding:6px 18px;font-weight:800;font-size:16px;margin-top:8px}
+.tepe p{color:var(--soluk);font-size:15.5px;margin:12px 0 0}
+h2{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--soluk);
+  margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--cizgi);font-weight:800}
+.k{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:14px 16px;margin-bottom:10px}
+.k b{color:var(--altin)}
+.k p{margin:0;font-size:15px;line-height:1.55}
+.k p+p{margin-top:8px}
+.ist{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.ist div{background:var(--kart);border:1px solid var(--cizgi);border-radius:13px;
+  padding:13px 5px;text-align:center}
+.ist b{display:block;font-size:21px;font-weight:800;letter-spacing:-.5px;
+  font-variant-numeric:tabular-nums}
+.ist span{font-size:10px;color:var(--soluk);text-transform:uppercase;letter-spacing:.5px;
+  display:block;margin-top:4px;line-height:1.3}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+td,th{padding:8px 5px;border-bottom:1px solid var(--cizgi);text-align:left}
+th{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--soluk)}
+td.h{font-weight:800;font-size:18px;width:34px;color:var(--altin)}
+td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.4px;
+  font-size:13.5px}
+.uy{background:#3d1720;border:1px solid #5c2230;border-radius:13px;padding:13px 15px;
+  font-size:14.5px;line-height:1.6;color:#f2c0c7;margin-bottom:10px}
+.uy b{color:#fff}
+.iyi{background:#173d27;border:1px solid #235c39;color:#bfe9d0}
+.iyi b{color:#fff}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:13px;padding:15px;font-weight:800;font-size:16px;margin-top:10px;
+  text-align:center;text-decoration:none}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.son{text-align:center;font-size:17px;font-weight:700;color:var(--altin);
+  margin:26px 0 6px;line-height:1.5}
+.son span{display:block;font-size:14px;color:var(--soluk);font-weight:400;margin-top:6px}
+</style></head><body>
+<canvas id="kf"></canvas>
+<header><a href="index.html">‹</a><b>Yarışma günü</b></header>
+<div class="sar">
+<div class="tepe">
+  <div class="em">🎬</div>
+  <h1>BUGÜN YARIŞMA GÜNÜ</h1>
+  <div class="ad">👩 Serpil &nbsp;·&nbsp; 👧 Zeynep</div>
+  <p>445 bölümün hepsini taradık, 15.418 cevabı tek tek yazdık.
+     Bugün sadece oynamak kaldı.</p>
+</div>
+
+<h2>Bugün karşınıza ne çıkacak</h2>
+<div class="ist">
+  <div><b>28</b><span>soru</span></div>
+  <div><b>10</b><span>4 harfli</span></div>
+  <div><b>14</b><span>5 harfli</span></div>
+  <div><b>3</b><span>6 harfli</span></div>
+</div>
+<div class="k"><p>Bir bölümde ortalama <b>28 cevap</b> veriliyor.
+  Bunların <b>4,4'ü kolay</b>, 9,8'i orta, <b>13,8'i zor</b> harflerden geliyor —
+  yani yarısı zorlu. Bu normal, herkes için böyle.</p></div>
+
+<h2>Son bir bakış — açılış ikilileri</h2>
+<div class="k" style="padding:8px 14px 4px"><table id="tab">
+<tr><th>harf</th><th>4 harfli</th><th>5 harfli</th></tr></table></div>
+<div class="k"><p>Bu yedi harf tüm cevapların <b>%46'sı</b>. Aklınızda bunlar kalsın,
+  gerisi kendiliğinden gelir.</p></div>
+
+<h2>Aklınızda kalsın</h2>
+<div class="uy"><b>Panik yapılacak harf:</b> K. 1.539 kez çıktı, açık ara birinci —
+  ve açılışla elenmesi en zor harf. K görünce şaşırmayın, beklediğiniz şeydi.</div>
+<div class="uy iyi"><b>Rahatlatıcı gerçek:</b> Cevapların <b>%80'i</b> daha önce
+  ekrana çıkmış kelimeler. Yani bildiğiniz kelimeler geri geliyor —
+  hafızanız sandığınızdan iyi.</div>
+<div class="uy iyi"><b>Altın kural:</b> İlk iki tahminde kelimeyi bulmaya çalışmayın,
+  <b>harf toplayın</b>. Aynı harfi iki kez denemek boşa tahmindir.</div>
+<div class="uy"><b>7 harfliye takılmayın.</b> Bir bölümde ortalama yarım tane çıkıyor
+  ve tanınma oranı %23. Herkes orada zorlanıyor.</div>
+
+<h2>Son sözler</h2>
+<div class="k"><p>Kaybederseniz de bir şey olmaz — biz zaten 430 bölüm izleyip
+  12.034 kelime yazdık, o kadar emek gitmiyor. Ama kazanırsanız bu sayfayı
+  çerçeveletiriz.</p>
+<p style="color:var(--soluk);font-size:14px">Not: J harfi çıkarsa gülün.
+  Havuzda 10 kelime var, hepsini biliyorsunuz.</p></div>
+
+<div class="son">Bol şans Serpil, bol şans Zeynep!
+  <span>Sizi seviyoruz 🏆</span></div>
+
+<a class="buton" href="alistirma5.html">SON BİR ISINMA TURU</a>
+<a class="buton ikinci" href="masa.html">📺 AİLECÜK</a>
+<a class="buton ikinci" href="index.html">ANA SAYFA</a>
+</div>
+<script>
+/* konfeti */
+(function(){
+  const cv = document.getElementById("kf"), ctx = cv.getContext("2d");
+  const az = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W = cv.width = innerWidth, H = cv.height = innerHeight;
+  addEventListener("resize", ()=>{ W = cv.width = innerWidth; H = cv.height = innerHeight; });
+  const R = ["#f4c95d","#2e9e5b","#6c5ce7","#d94a5a","#e6b22e","#7fe0a6","#fff"];
+  const p = [];
+  for(let i=0;i<70;i++) p.push({x:Math.random()*W, y:-Math.random()*H,
+    v:1+Math.random()*2.2, s:4+Math.random()*5, a:Math.random()*6.3,
+    d:(Math.random()-.5)*.05, c:R[Math.floor(Math.random()*R.length)]});
+  function tur(){
+    ctx.clearRect(0,0,W,H);
+    for(const q of p){
+      q.y += q.v; q.a += q.d; q.x += Math.sin(q.a)*.7;
+      if(q.y > H+12){ q.y = -12; q.x = Math.random()*W; }
+      ctx.save(); ctx.translate(q.x,q.y); ctx.rotate(q.a);
+      ctx.globalAlpha = .75; ctx.fillStyle = q.c;
+      ctx.fillRect(-q.s/2, -q.s/4, q.s, q.s/2); ctx.restore();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(tur);
+  }
+  if(!az) tur();
+})();
+/* acilis ikilileri tablosu */
+fetch("yarisma.json").then(r=>r.json()).then(v=>{
+  const t = document.getElementById("tab");
+  for(const h in v){
+    const r = document.createElement("tr");
+    r.innerHTML = `<td class="h">${h}</td>
+      <td class="w">${v[h]["4"] ? v[h]["4"].join(" + ") : "—"}</td>
+      <td class="w">${v[h]["5"] ? v[h]["5"].join(" + ") : "—"}</td>`;
+    t.appendChild(r);
+  }
+}).catch(()=>{});
+</script></body></html>

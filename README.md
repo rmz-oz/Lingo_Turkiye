@@ -18,6 +18,10 @@
 
 <br>
 
+### 🎬 [YARIŞMA GÜNÜ](https://rmz-oz.github.io/Lingo_Turkiye/yarisma.html)
+
+<br>
+
 ### 🗓 [4 GÜNLÜK ÇALIŞMA PLANI](https://rmz-oz.github.io/Lingo_Turkiye/plan.html)
 
 <br>
