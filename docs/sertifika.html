@@ -25,6 +25,16 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .kgrid button{background:var(--kart);border:1.5px solid var(--cizgi);border-radius:12px;
   padding:12px 8px;color:var(--murekkep);font-weight:700;font-size:15px;font-family:inherit}
 .kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.kadsec{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 10px}
+.kadsec button{background:var(--kart);border:1.5px solid var(--cizgi);border-radius:12px;
+  padding:10px 6px;color:var(--murekkep);font-family:inherit;display:flex;
+  flex-direction:column;align-items:center;gap:3px;line-height:1.25}
+.kadsec button i{font-style:normal;font-size:21px;line-height:1}
+.kadsec button b{font-size:12.5px;letter-spacing:.06em}
+.kadsec button u{text-decoration:none;font-size:10.5px;color:var(--soluk);font-weight:600}
+.kadsec button.on{border-color:var(--altin);box-shadow:inset 0 0 0 1px var(--altin)}
+.kadsec button.on u{color:var(--altin)}
+.kadsec button:disabled{opacity:.4}
 .bos{background:var(--kart);border:1px dashed var(--cizgi);border-radius:12px;
   padding:20px;text-align:center;color:var(--soluk);font-size:15px;line-height:1.6}
 .ilerle{height:9px;background:#0a1119;border-radius:99px;overflow:hidden;margin:12px 0 6px}
@@ -116,7 +126,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 @media print{
   @page{size:A4 landscape;margin:0}
   html,body{background:#fff;margin:0}
-  header,.sar>*:not(.kadraj),.kgrid,.buton,.not{display:none!important}
+  header,.sar>*:not(.kadraj),.kgrid,.kadsec,.buton,.not{display:none!important}
   .sar{max-width:none;padding:0;margin:0}
   .kadraj{overflow:visible;border-radius:0;box-shadow:none;margin:0;height:auto!important}
   .sayfa{transform:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -133,7 +143,9 @@ let KISILER = LG_kisiler(KISI_VAR), KISI = null;
 KISI = LG_kisiDogrula(KISILER);
 if(!KISI || KISI === LG_KAYITSIZ)
   KISI = KISILER.find(a => LG_defter(a).length) || KISILER[0];
-function kisiSec(a){ KISI = a; ciz(); }
+let SEC = null;
+function kisiSec(a){ KISI = a; SEC = null; ciz(); }
+function kademeSec(t){ SEC = t; ciz(); }
 const AYLAR = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos",
   "Eylül","Ekim","Kasım","Aralık"];
 
@@ -294,7 +306,9 @@ function ciz(){
   const secErit = `<div class="kgrid">${KISILER.map(a =>
     `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">
       ${a}</button>`).join("")}</div>`;
-  const kad = KADEME.find(x => d.length >= x.n);
+  const kazanilan = KADEME.filter(x => d.length >= x.n);
+  if(SEC && !kazanilan.some(x => x.tip === SEC)) SEC = null;
+  const kad = kazanilan.find(x => x.tip === SEC) || kazanilan[0];
 
   if(!kad){
     const kalan = 250 - d.length, oran = Math.min(100, Math.round(100*d.length/250));
@@ -313,10 +327,19 @@ function ciz(){
     return;
   }
   const sonraki = KADEME.slice().reverse().find(x => x.n > d.length);
-  $("#alan").innerHTML = secErit + sertifika(kad, d, ra) +
+  const kadSec = `<div class="kadsec">${KADEME.slice().reverse().map(x => {
+    const acik = d.length >= x.n, sec = x === kad;
+    const kalan = (x.n - d.length).toLocaleString("tr-TR");
+    return `<button class="${sec?"on":""}" ${acik?"":"disabled"}
+      onclick="kademeSec('${x.tip}')"><i>${x.em}</i><b>${x.ad}</b>
+      <u>${acik ? (sec ? "seçili" : "bas") : kalan + " kelime daha"}</u></button>`;
+  }).join("")}</div>`;
+  $("#alan").innerHTML = secErit + kadSec + sertifika(kad, d, ra) +
     `<button class="buton" onclick="window.print()">🖨 PDF OLARAK KAYDET / YAZDIR</button>
      <p class="not">Yazdır ekranında <b>hedef: PDF olarak kaydet</b>, <b>yön: yatay</b>,
        <b>arka plan grafikleri: açık</b> seçin. Telefonda “Paylaş → Yazdır” da olur.</p>` +
+    `<p class="not">Kazandığın her kademeyi istediğin zaman, <b>o günkü güncel
+       rakamlarınla</b> yeniden bastırabilirsin.</p>` +
     (sonraki ? `<p class="not">${sonraki.em} <b>${sonraki.ad}</b> sertifika için
        ${(sonraki.n - d.length).toLocaleString("tr-TR")} kelime daha.</p>` :
       `<p class="not">🥇 En üst kademedesin. Tebrikler!</p>`) +
