@@ -9,14 +9,16 @@ function LG_plan(ad){
   try{ return JSON.parse(localStorage.getItem("lingo_plan_"+ad)||"{}"); }catch(e){ return {}; }
 }
 const LG_UNVAN = [
-  {n:0,    ad:"Çaylak"},              {n:10,   ad:"Acemi"},
-  {n:25,   ad:"Heveskâr"},            {n:45,   ad:"Kelime Meraklısı"},
-  {n:70,   ad:"Harf Toplayıcı"},      {n:100,  ad:"Kelime Avcısı"},
-  {n:140,  ad:"Harf Ustası"},         {n:190,  ad:"Sözlük Dostu"},
-  {n:250,  ad:"Kelime Cambazı"},      {n:320,  ad:"Lingo Kurdu"},
-  {n:400,  ad:"Alfabe Hâkimi"},       {n:500,  ad:"Lingo Ustası"},
-  {n:650,  ad:"Süper Lingo Adayı"},   {n:800,  ad:"Lingo Şampiyonu"},
-  {n:1000, ad:"Efsane"},              {n:1300, ad:"Ölümsüz"}
+  {n:0,    ad:"Çaylak"},              {n:5,    ad:"İlk Kıvılcım"},
+  {n:12,   ad:"Acemi"},               {n:25,   ad:"Heveskâr"},
+  {n:40,   ad:"Kelime Meraklısı"},    {n:60,   ad:"Harf Toplayıcı"},
+  {n:85,   ad:"Tahta Yoldaşı"},       {n:115,  ad:"Kelime Avcısı"},
+  {n:150,  ad:"Harf Ustası"},         {n:195,  ad:"Sözlük Dostu"},
+  {n:250,  ad:"Kelime Cambazı"},      {n:315,  ad:"Lingo Kurdu"},
+  {n:390,  ad:"Alfabe Hâkimi"},       {n:480,  ad:"Lingo Ustası"},
+  {n:590,  ad:"Süper Lingo Adayı"},   {n:720,  ad:"Lingo Şampiyonu"},
+  {n:880,  ad:"Efsane"},              {n:1080, ad:"Ölümsüz"},
+  {n:1350, ad:"Sözlük Ejderi"},       {n:1700, ad:"Alfabenin Efendisi"}
 ];
 function LG_unvan(say){
   const simdi = LG_UNVAN.slice().reverse().find(u => say >= u.n) || LG_UNVAN[0];
@@ -67,6 +69,39 @@ function LG_rozet(d, p){
     enArd = Math.max(enArd, ard);
   }
   /* yukselis: son 20 vs onceki 20 */
+  /* ust uste ilk tahmin serisi */
+  let ilkSeri=0, enIlkSeri=0;
+  for(const r of d){ if(r.k===1){ ilkSeri++; enIlkSeri=Math.max(enIlkSeri,ilkSeri);} else ilkSeri=0; }
+  /* geri donus: 5 hata sonrasi 5 dogru */
+  let hataSeri=0, geriDonus=false, hataOldu=false;
+  for(const r of d){
+    if(r.k===0){ hataSeri++; if(hataSeri>=5) hataOldu=true; seri=0; }
+    else { hataSeri=0; }
+  }
+  { let h=0,dg=0;
+    for(const r of d){ if(r.k===0){ h++; dg=0; } else { dg++; if(h>=5&&dg>=5) geriDonus=true; } } }
+  /* gun bazli uzunluk cesitliligi ve hata sayisi */
+  const gunUz = {}, gunHata = {};
+  for(const r of d){ const g=new Date(r.t).toDateString();
+    (gunUz[g]=gunUz[g]||new Set()).add(r.n);
+    if(r.k===0) gunHata[g]=(gunHata[g]||0)+1; }
+  const ucUzunluk = Object.values(gunUz).some(x=>x.size>=3);
+  const zorGun = Math.max(0,...Object.values(gunHata)) >= 10;
+  /* saat cesitliligi */
+  const sabahGun = new Set(), geceGun = new Set();
+  for(const r of d){ const t=new Date(r.t), h=t.getHours();
+    if(h>=5&&h<9) sabahGun.add(t.toDateString());
+    if(h>=22||h<4) geceGun.add(t.toDateString()); }
+  /* harf basari cesitliligi */
+  const hB={};
+  for(const r of d){ (hB[r.h]=hB[r.h]||{t:0,b:0}).t++; if(r.k>0) hB[r.h].b++; }
+  const iyiHarf = Object.values(hB).filter(x=>x.t>=5 && x.b/x.t>=0.7).length;
+  const tumAlfabe = Object.keys(hB).length >= 28;
+  const tumUzunlukIyi = [4,5,6,7].every(n=>{ const g=grup(r=>r.n===n);
+    return g.t>=10 && g.o>=70; });
+  /* takildiktan sonra bilinen kelime sayisi */
+  const dur2={}; let ikinciSay=0;
+  for(const r of d){ if(r.k===0) dur2[r.w]=true; else if(dur2[r.w]){ ikinciSay++; dur2[r.w]=false; } }
   let yukselis = false;
   if(d.length >= 40){
     const s20=d.slice(-20), o20=d.slice(-40,-20);
@@ -117,7 +152,24 @@ function LG_rozet(d, p){
    {e:"☕",a:"Öğle Arası",     s:"öğlen 12-14 arası",      v:saatVar(12,14)},
    {e:"📈",a:"Yükseliş",       s:"son 20, önceki 20'den iyi", v:yukselis},
    {e:"🧗",a:"İstikrar",       s:"3 gün üst üste",         v:enArd>=3},
-   {e:"🧪",a:"Çok Yönlü",      s:"bir günde 4 farklı harf", v:cokYonlu}
+   {e:"🧪",a:"Çok Yönlü",      s:"bir günde 4 farklı harf", v:cokYonlu},
+   {e:"🥁",a:"Kararlı",        s:"7 ayrı günde çalışma",   v:gunler>=7},
+   {e:"🗿",a:"Sarsılmaz",      s:"7 gün üst üste",         v:enArd>=7},
+   {e:"🎪",a:"Üçlü Gün",       s:"bir günde 3 farklı uzunluk", v:ucUzunluk},
+   {e:"🧯",a:"Zor Gün",        s:"bir günde 10 kez takılıp devam", v:zorGun},
+   {e:"🪄",a:"Sihirbaz",       s:"5 kelime üst üste ilk tahminde", v:enIlkSeri>=5},
+   {e:"🎢",a:"Geri Dönüş",     s:"5 hatadan sonra 5 doğru", v:geriDonus},
+   {e:"🧩",a:"Yapboz",         s:"6 ve 7 harflide 50 kelime", v:(g6.t+g7.t)>=50},
+   {e:"🐎",a:"Koşucu",         s:"bir günde 200 kelime",   v:enYogun>=200},
+   {e:"🕰",a:"Sabah Sporu",    s:"3 ayrı sabah çalışma",   v:sabahGun.size>=3},
+   {e:"🌛",a:"Gece Nöbeti",    s:"3 ayrı gece çalışma",    v:geceGun.size>=3},
+   {e:"🎓",a:"Mezun",          s:"tüm görevler + 400 kelime",
+     v:yapilan>=LG_GOREVSAY && d.length>=400},
+   {e:"🏅",a:"Dokuz Harf",     s:"9 harfte %70+ başarı",   v:iyiHarf>=9},
+   {e:"🧠",a:"Hafıza Ustası",  s:"takıldığın 10 kelimeyi bilmek", v:ikinciSay>=10},
+   {e:"🔮",a:"Kâhin",          s:"50 kelime ilk tahminde", v:ilk>=50},
+   {e:"🏆",a:"Kupa",           s:"dört uzunlukta da %70+", v:tumUzunlukIyi},
+   {e:"🌍",a:"Tam Alfabe",     s:"28 harfin hepsinden kelime", v:tumAlfabe}
   ];
 }
 function LG_acik(ad){ return LG_rozet(LG_defter(ad), LG_plan(ad)).filter(r=>r.v); }
