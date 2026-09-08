@@ -185,10 +185,35 @@ function LG_yeni(ad){
   const yeniAd = acik.filter(a => bilinen.indexOf(a) < 0);
   return LG_rozet(LG_defter(ad), LG_plan(ad)).filter(r => yeniAd.indexOf(r.a) >= 0);
 }
-/* kucuk rozet seridi html'i */
+/* --- rozet vitrini: en fazla 3 favori --- */
+function LG_vitrin(ad){
+  try{ const v = JSON.parse(localStorage.getItem("lingo_vitrin_"+ad)||"[]");
+       return Array.isArray(v) ? v : []; }catch(e){ return []; }
+}
+function LG_vitrinDegis(ad, rozAd){
+  let v = LG_vitrin(ad);
+  const i = v.indexOf(rozAd);
+  if(i >= 0) v.splice(i,1);
+  else { v.push(rozAd); if(v.length > 3) v.shift(); }
+  try{ localStorage.setItem("lingo_vitrin_"+ad, JSON.stringify(v)); }catch(e){}
+  return v;
+}
+/* kucuk rozet seridi: vitrin varsa onu, yoksa son kazanilanlari gosterir */
 function LG_serit(ad, max){
   const a = LG_acik(ad);
   if(!a.length) return "";
-  const g = max ? a.slice(-max) : a;
+  const v = LG_vitrin(ad);
+  let g = v.length ? a.filter(r => v.indexOf(r.a) >= 0) : [];
+  if(!g.length) g = max ? a.slice(-max) : a;
   return g.map(r=>`<span class="lgroz" title="${r.a}">${r.e}</span>`).join("");
+}
+/* --- unvan atlama --- */
+function LG_unvanYeni(ad){
+  if(!ad || ad === LG_KAYITSIZ) return null;
+  const u = LG_unvan(LG_defter(ad).length).simdi.ad;
+  let eski = null;
+  try{ eski = localStorage.getItem("lingo_unvan_"+ad); }catch(e){}
+  try{ localStorage.setItem("lingo_unvan_"+ad, u); }catch(e){}
+  if(eski === null) return null;
+  return (eski !== u) ? {eski: eski, yeni: u} : null;
 }

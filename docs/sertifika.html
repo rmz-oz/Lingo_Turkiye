@@ -1,0 +1,137 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="theme-color" content="#0f1720">
+<title>Sertifika — Lingo</title>
+<style>
+:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
+  --cizgi:#2c3947;--altin:#f4c95d;--yesil:#2e9e5b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
+header{background:#0a1119;border-bottom:1px solid var(--cizgi);padding:11px 14px;
+  display:flex;align-items:center;gap:11px}
+header a{color:var(--soluk);text-decoration:none;font-size:16px}
+header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:uppercase}
+.sar{max-width:560px;margin:0 auto;padding:16px 14px 44px}
+/* sertifika */
+.ser{background:linear-gradient(160deg,#fdf6e3 0%,#f6ecd2 100%);color:#2a2413;
+  border-radius:16px;padding:26px 22px 22px;position:relative;
+  box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.ser:before{content:"";position:absolute;inset:9px;border:2px solid #c9a227;
+  border-radius:10px;pointer-events:none}
+.ser:after{content:"";position:absolute;inset:14px;border:1px solid #ddc47a;
+  border-radius:7px;pointer-events:none}
+.ser .ic{position:relative;text-align:center}
+.mhr{width:58px;height:58px;border-radius:50%;background:#c9a227;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:27px;margin:0 auto 10px;
+  box-shadow:0 3px 10px rgba(201,162,39,.4)}
+.ser .ust{font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:#8a7326;
+  font-weight:800}
+.ser h1{font-size:20px;margin:6px 0 14px;letter-spacing:-.3px;color:#2a2413;
+  font-weight:800;line-height:1.3}
+.ser .ad{font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1.1;
+  margin:2px 0 4px;color:#1f1a0d}
+.ser .unv{display:inline-block;background:#c9a227;color:#fff;border-radius:999px;
+  padding:5px 16px;font-weight:800;font-size:14px;letter-spacing:.3px;margin-bottom:14px}
+.cizgi{height:1px;background:#d9c68a;margin:14px 0}
+.ist{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:2px 0 6px}
+.ist div b{display:block;font-size:20px;font-weight:800;color:#1f1a0d;line-height:1.1;
+  font-variant-numeric:tabular-nums}
+.ist div span{font-size:9.5px;color:#8a7326;text-transform:uppercase;letter-spacing:.5px;
+  display:block;margin-top:3px;line-height:1.3}
+.roz{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:10px 0 4px;
+  font-size:20px;line-height:1.4}
+.ser .alt{font-size:11.5px;color:#8a7326;margin-top:12px;line-height:1.6}
+.ser .imza{font-size:12.5px;color:#6b5a1e;margin-top:10px;font-weight:700}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:13px;padding:14px;font-weight:800;font-size:16px;margin-top:11px;
+  text-align:center;text-decoration:none}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.not{font-size:13px;color:var(--soluk);text-align:center;margin-top:14px;line-height:1.6}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;
+  margin:12px 0}
+.kgrid button{background:var(--kart);border:1.5px solid var(--cizgi);border-radius:12px;
+  padding:12px 8px;color:var(--murekkep);font-weight:700;font-size:15px}
+.kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.bos{background:var(--kart);border:1px dashed var(--cizgi);border-radius:12px;
+  padding:20px;text-align:center;color:var(--soluk);font-size:15px;line-height:1.6}
+</style></head><body>
+<header><a href="index.html">‹</a><b>Sertifika</b></header>
+<div class="sar" id="alan"></div>
+<script src="rozet.js"></script>
+<script>
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const $ = s => document.querySelector(s);
+const KISI_VAR = ["Serpil","Zeynep"];
+let KISILER = KISI_VAR.slice(), KISI = null, secim = false;
+try{
+  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
+  if(Array.isArray(k) && k.length) KISILER = k.slice();
+  for(let i=0;i<localStorage.length;i++){
+    const key = localStorage.key(i);
+    if(key && key.indexOf("lingo_defter_")===0){
+      const a = key.slice(13); if(a && KISILER.indexOf(a)<0) KISILER.push(a);
+    }
+  }
+  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
+  if(KISI === LG_KAYITSIZ || KISILER.indexOf(KISI) < 0)
+    KISI = KISILER.find(a=>LG_defter(a).length) || KISILER[0];
+}catch(e){ KISI = KISILER[0]; }
+function kisiSec(a){ KISI=a; secim=false; ciz(); }
+const AYLAR=["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos",
+  "Eylül","Ekim","Kasım","Aralık"];
+
+function ciz(){
+  const d = LG_defter(KISI);
+  const secErit = `<div class="kgrid">${KISILER.map(a=>
+    `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">
+      ${a}</button>`).join("")}</div>`;
+  if(d.length < 20){
+    $("#alan").innerHTML = secErit + `<div class="bos">
+      Sertifika için en az <b>20 kelime</b> gerekiyor.<br>
+      ${KISI} adına şu an ${d.length} kayıt var.</div>
+      <a class="buton" href="alistirma5.html">ALIŞTIRMAYA BAŞLA</a>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>`;
+    return;
+  }
+  const bil = d.filter(r=>r.k>0);
+  const basari = Math.round(100*bil.length/d.length);
+  const ort = bil.length ? (bil.reduce((t,r)=>t+r.k,0)/bil.length).toFixed(1) : "—";
+  const U = LG_unvan(d.length), ra = LG_acik(KISI), top = LG_rozet(d, LG_plan(KISI)).length;
+  const gunler = new Set(d.map(r=>new Date(r.t).toDateString())).size;
+  const t = new Date();
+  const tarih = t.getDate()+" "+AYLAR[t.getMonth()]+" "+t.getFullYear();
+  const p = LG_plan(KISI), gorev = Object.values(p).filter(Boolean).length;
+  const vit = LG_vitrin(KISI);
+  const gRoz = vit.length ? ra.filter(r=>vit.indexOf(r.a)>=0) : ra.slice(-12);
+
+  $("#alan").innerHTML = secErit + `
+  <div class="ser"><div class="ic">
+    <div class="mhr">🏅</div>
+    <div class="ust">Lingo Türkiye</div>
+    <h1>HAZIRLIK SERTİFİKASI</h1>
+    <div class="ad">${KISI}</div>
+    <div class="unv">${U.simdi.ad}</div>
+    <div class="cizgi"></div>
+    <div class="ist">
+      <div><b>${d.length}</b><span>kelime</span></div>
+      <div><b>%${basari}</b><span>başarı</span></div>
+      <div><b>${ort}</b><span>ort. tahmin</span></div>
+      <div><b>${ra.length}</b><span>rozet</span></div>
+    </div>
+    <div class="cizgi"></div>
+    ${gRoz.length ? `<div class="roz">${gRoz.map(r=>r.e).join("")}</div>` : ""}
+    <div class="alt">
+      ${gunler} ayrı günde çalıştı, ${gorev}/16 hazırlık görevini tamamladı.<br>
+      5–445. bölümün cevap arşivinden hazırlanan programı bitirdi.</div>
+    <div class="imza">${tarih}</div>
+  </div></div>
+  <p class="not">Ekran görüntüsü alıp aile grubuna gönderebilirsin.</p>
+  <a class="buton" href="plan.html">🗓 ÇALIŞMA PLANI</a>
+  <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORU</a>
+  <a class="buton ikinci" href="index.html">ANA SAYFA</a>`;
+}
+ciz();
+</script></body></html>
