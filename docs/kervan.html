@@ -176,6 +176,22 @@ button{font:inherit;cursor:pointer}
 .ozet b{display:block;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
 .ozet span{display:block;font-size:9.5px;color:var(--soluk);text-transform:uppercase;
   letter-spacing:.6px;margin-top:3px}
+.devir{display:grid;gap:7px;margin-top:8px;text-align:left}
+.devir div{display:flex;align-items:flex-start;gap:9px;background:#141d27;
+  border:1px solid var(--cizgi);border-radius:11px;padding:9px 11px}
+.devir i{font-style:normal;font-size:18px;line-height:1.2;flex:none;width:22px;
+  text-align:center}
+.devir b{font-size:14.5px;display:block}
+.devir span{display:block;font-size:12.5px;color:var(--soluk);line-height:1.45;
+  margin-top:1px}
+table.rek{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
+table.rek td{padding:7px 4px;border-bottom:1px solid var(--cizgi);vertical-align:middle;
+  color:var(--soluk)}
+table.rek td b{color:var(--murekkep);font-size:13.5px}
+table.rek td span{font-size:11.5px}
+table.rek td:first-child{width:18px;color:var(--altin);font-weight:800}
+table.rek td.tl{text-align:right;color:var(--yesil);font-weight:800;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
 .ozet1{border-left:3px solid var(--altin);background:rgba(244,201,93,.07);
   border-radius:0 10px 10px 0;padding:10px 12px;margin:10px 0 4px;font-size:14.5px;
   line-height:1.6;color:#dfe6ed}
@@ -222,11 +238,35 @@ const BOLUM = [
  {ad:"Sisli Orman", sure:18, carpan:2,
   giris:"Harfler ağaçların arkasına saklandı. Sisin içinde bir tek şey belli: "+
         "geri dönüş yolu kapandı."},
+ {ad:"Kayıp Vadi", sure:17, carpan:2.5,
+  giris:"Haritada olmayan bir vadi. Buradan geçen kervanların çoğu geri dönmemiş; "+
+        "dönenler de ne gördüklerini anlatacak kelimeyi bulamamış."},
  {ad:"Söz Kalesi", sure:16, carpan:3,
   giris:"Kale göründü. Dört etap sonra son kapının önünde olacaksın — ve o kapı "+
         "yalnız bir kelimeyle açılıyor."}
 ];
 const UZUN = [4,5,6,7];
+/* --- yollar: bitirdikce yenisi acilir --- */
+const YOL = {
+ normal:{ad:"Kervan Yolu", em:"🐪", bolumler:[0,1,2,3,5], kalp:3, sureFark:0, carpan:1,
+   kilit:null, ac:"Yirmi etap, beş bölüm, üç kalp. Ana yolculuk."},
+ uzun:{ad:"Uzun Yol", em:"🏔", bolumler:[0,1,2,3,4,5], kalp:3, sureFark:0, carpan:1.25,
+   kilit:"normal", ac:"Yirmi dört etap, altı bölüm, altı han. Kayıp Vadi'den geçer, "+
+   "bütün ödüller %25 fazla."},
+ tuzsuz:{ad:"Tuzsuz Yol", em:"🧂", bolumler:[0,1,2,3,5], kalp:2, sureFark:0, carpan:1.5,
+   kilit:"uzun", ac:"Yirmi etap ama yalnızca iki kalp. Ödüller %50 fazla."},
+ gece:{ad:"Gece Yolculuğu", em:"🌙", bolumler:[0,1,2,3,5], kalp:3, sureFark:-4, carpan:1.75,
+   kilit:"tuzsuz", ac:"Bütün süreler dört saniye kısa. Ödüller %75 fazla."}
+};
+const YOLSIRA = ["normal","uzun","tuzsuz","gece"];
+/* --- kervan seviyesi: kalici bonuslar --- */
+const SEVIYE = [
+ {p:10,  ad:"Kese Bağı",      ac:"Yola +25 akçe fazlasıyla çıkarsın"},
+ {p:30,  ad:"Yedek Yürek",    ac:"Yolculuğa bir kalp fazlasıyla başlarsın"},
+ {p:60,  ad:"Geniş Tezgâh",   ac:"Bütün hanlarda beşinci bir ürün görünür"},
+ {p:100, ad:"Kervan İtibarı", ac:"Bütün fiyatlar %5 daha ucuz"},
+ {p:150, ad:"Dolu Kese",      ac:"Yola +50 akçe daha fazlasıyla çıkarsın"}
+];
 const BASLANGIC = 100;   /* yola cikarken kesedeki akce */
 const TABAN = {4:500, 5:1000, 6:2000, 7:4000};
 const SUPER = 250000;
@@ -268,7 +308,13 @@ const SATICI = [
    {ad:"Sadi",   duk:"Sadi Baba'nın Son Dükkânı",
     rep:"Son dükkân benim. Buradan sonra yalnız sen ve kelime var."} ]
 ];
-const HANAD = ["Harf Hanı","Tuzlu Kervansaray","Geçit Sahafı","Sis Ocağı"];
+/* han sirasi -> satici grubu (0 jokerci, 1 kervansaraycı, 2 sahaf, 3 ocakçı) */
+const HANTIP = [0, 1, 2, 3, 0, 2];
+const HANAD  = ["Harf Hanı","Kervansaray","Sahaf","Ocak","Harf Hanı","Sahaf"];
+const HANTUR = ["Jokerci · tek kullanımlık ipuçları",
+                "Kervansaraycı · kalıcı yetenekler",
+                "Sahaf · koşullu tılsımlar",
+                "Ocakçı · kalp, kalkan, efsanevi"];
 
 /* ================= urunler =================
    tip: joker (tek kullanim) | yetenek | tilsim | efsane
@@ -276,165 +322,165 @@ const HANAD = ["Harf Hanı","Tuzlu Kervansaray","Geçit Sahafı","Sis Ocağı"];
    tek: dogruysa envanterde adet olarak durur, kullanilinca biter          */
 const URUN = [
  /* --- 1. han: jokerler --- */
- {id:"harfver", ad:"Harf Ver", em:"🔤", tip:"joker", han:0, fiyat:40, tek:1,
+ {id:"harfver", ad:"Elif'in Harfi", em:"🔤", tip:"joker", han:0, fiyat:40, tek:1,
   kisa:"Bir harfi doğru yerinde açar",
   tam:"Etap sırasında dokununca kelimenin bilinmeyen bir harfi doğru yerinde açılır ve "+
       "o kutu artık değişmez. Aynı etapta birkaç kez kullanabilirsin, her kullanım bir "+
       "adet harcar.", kilit:null},
- {id:"sonharf", ad:"Son Harf", em:"🔚", tip:"joker", han:0, fiyat:45, tek:1,
+ {id:"sonharf", ad:"Ömer'in Son Harfi", em:"🔚", tip:"joker", han:0, fiyat:45, tek:1,
   kisa:"Kelimenin son harfini açar",
   tam:"İlk harf zaten hediye veriliyor; bu joker son harfi de açar. Kelimenin iki ucunu "+
       "bilmek, ortayı tahmin etmeyi çok kolaylaştırır.", kilit:null},
- {id:"zamanuzat", ad:"Zaman Uzat", em:"⏱", tip:"joker", han:0, fiyat:50, tek:1,
+ {id:"zamanuzat", ad:"Çağrı'nın Kum Saati", em:"⏱", tip:"joker", han:0, fiyat:50, tek:1,
   kisa:"O etapta süreye 15 saniye ekler",
   tam:"Süre azalıp panik başladığında dokun: geri sayıma 15 saniye eklenir. Yalnızca "+
       "içinde bulunduğun etap için geçerlidir.", kilit:null},
- {id:"nefes", ad:"Nefes", em:"🫧", tip:"joker", han:0, fiyat:55, tek:1,
+ {id:"nefes", ad:"Ezgi'nin Nefesi", em:"🫧", tip:"joker", han:0, fiyat:55, tek:1,
   kisa:"Süreyi 10 saniye durdurur",
   tam:"Saat tamamen durur ve 10 saniye boyunca rahatça düşünürsün. Süre ekleme değil "+
       "durdurma olduğu için, kalan sürenin tamamı korunur.", kilit:{u:2}},
- {id:"eleme", ad:"Eleme", em:"🚫", tip:"joker", han:0, fiyat:60, tek:1,
+ {id:"eleme", ad:"Ramiz'in Elemesi", em:"🚫", tip:"joker", han:0, fiyat:60, tek:1,
   kisa:"Kelimede olmayan 3 harfi klavyede karartır",
   tam:"Kelimede bulunmayan üç harf klavyede grileşir. Yanlış harflere boşuna tahmin "+
       "harcamanı önler; özellikle 6 ve 7 harfli kelimelerde çok işe yarar.",
   kilit:{r:"Keskin Nişancı"}},
- {id:"sozluksayfasi", ad:"Sözlük Sayfası", em:"📖", tip:"joker", han:0, fiyat:65, tek:1,
+ {id:"sozluksayfasi", ad:"Elif'in Sözlük Sayfası", em:"📖", tip:"joker", han:0, fiyat:65, tek:1,
   kisa:"Kelimenin TDK tanımını gösterir",
   tam:"Kelimenin sözlük anlamı ekranda açılır — tıpkı puzzle ipucu gibi. Anlamı okuyunca "+
       "kelime çoğu zaman kendiliğinden gelir.", kilit:{u:5}},
- {id:"fazladanhak", ad:"Fazladan Hak", em:"➕", tip:"joker", han:0, fiyat:70, tek:1,
+ {id:"fazladanhak", ad:"Çağrı'nın Fazladan Hakkı", em:"➕", tip:"joker", han:0, fiyat:70, tek:1,
   kisa:"O etapta altıncı tahmin hakkı verir",
   tam:"Tahtaya bir satır daha eklenir. Beş hak bitmek üzereyken kullanırsan etabı "+
       "kurtarabilir. Yalnızca içinde bulunduğun etapta geçerli.",
   kilit:{r:"Sabırlı"}},
- {id:"yoldegistir", ad:"Yol Değiştir", em:"🔄", tip:"joker", han:0, fiyat:80, tek:1,
+ {id:"yoldegistir", ad:"Ömer'in Sapağı", em:"🔄", tip:"joker", han:0, fiyat:80, tek:1,
   kisa:"Kelimeyi değiştirir, aynı uzunlukta yenisi gelir",
   tam:"Hiç tutmadığın bir kelimeyle karşılaştıysan dokun: tahta sıfırlanır, aynı "+
       "uzunlukta yeni bir kelime gelir ve süre baştan başlar. Tahminlerin silinir.",
   kilit:{u:3}},
- {id:"unluavi", ad:"Ünlü Avı", em:"🅰", tip:"joker", han:0, fiyat:90, tek:1,
+ {id:"unluavi", ad:"Ezgi'nin Ünlü Avı", em:"🅰", tip:"joker", han:0, fiyat:90, tek:1,
   kisa:"Bütün sesli harflerin yerini gösterir",
   tam:"Kelimedeki a, e, ı, i, o, ö, u, ü harflerinin hepsi doğru yerlerinde açılır. "+
       "Türkçede sesli harfler iskeleti kurar; gerisi genellikle tahmin edilir.",
   kilit:{u:3}},
- {id:"ciftevurgu", ad:"Çifte Vurgu", em:"✖️", tip:"joker", han:0, fiyat:90, tek:1,
+ {id:"ciftevurgu", ad:"Ramiz'in Çifte Vurgusu", em:"✖️", tip:"joker", han:0, fiyat:90, tek:1,
   kisa:"Bilirsen o etabın ödülü iki katı",
   tam:"Riskli joker: etabı bilirsen ödül iki katına çıkar, bilemezsen harcadığın akçe "+
       "boşa gider. Kolay göründüğün bir kelimede kullan.", kilit:{r:"Seri"}},
- {id:"anagram", ad:"Anagram", em:"🔀", tip:"joker", han:0, fiyat:100, tek:1,
+ {id:"anagram", ad:"Çağrı'nın Anagramı", em:"🔀", tip:"joker", han:0, fiyat:100, tek:1,
   kisa:"Kelimenin harflerini karışık gösterir",
   tam:"Kelimedeki bütün harfler karışık sırayla ekranda listelenir. Hangi harflerin "+
       "olduğunu bilirsin, sıralamayı sen bulursun.", kilit:{r:"Yapboz"}},
- {id:"ikincisans", ad:"İkinci Şans", em:"♻️", tip:"joker", han:0, fiyat:120, tek:1,
+ {id:"ikincisans", ad:"Ramiz'in İkinci Şansı", em:"♻️", tip:"joker", han:0, fiyat:120, tek:1,
   kisa:"Kaybedilen etabı bir kez baştan oynatır",
   tam:"Etabı bilemeyip kalp kaybettiğinde ekranda 'İkinci Şans' düğmesi çıkar. "+
       "Kullanırsan kalbin geri gelir ve aynı uzunlukta yeni bir kelimeyle etap "+
       "yeniden başlar.", kilit:{r:"İkinci Şans"}},
  /* --- 2. han: yetenekler --- */
- {id:"cimrikese", ad:"Cimri Kese", em:"👝", tip:"yetenek", han:1, fiyat:140,
+ {id:"cimrikese", ad:"Berna'nın Cimri Kesesi", em:"👝", tip:"yetenek", han:1, fiyat:140,
   kisa:"Kullanılmayan her hak 10 akçe daha getirir",
   tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 10 akçe getirir; bu "+
       "yetenekle 20 akçe getirir. Kelimeyi erken bulmak doğrudan para demek.",
   kilit:null},
- {id:"tuccardili", ad:"Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
+ {id:"tuccardili", ad:"Berna'nın Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
   kisa:"Bütün hanlarda %20 indirim",
   tam:"Kalan üç handa gördüğün her fiyat %20 düşer. Yolun başında alırsan kendini "+
       "fazlasıyla amorti eder.", kilit:{r:"Hızlı"}},
- {id:"kervanbereketi", ad:"Kervan Bereketi", em:"🌾", tip:"yetenek", han:1, fiyat:160,
+ {id:"kervanbereketi", ad:"Nurdan'ın Bereketi", em:"🌾", tip:"yetenek", han:1, fiyat:160,
   kisa:"Her etap sonunda 15 akçe fazla",
   tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 15 akçe eklenir. "+
       "Yolun başında alınırsa 19 etap × 15 akçe eder.", kilit:{u:4}},
- {id:"saatustasi", ad:"Saat Ustası", em:"⌛", tip:"yetenek", han:1, fiyat:170,
+ {id:"saatustasi", ad:"Bülent'in Saati", em:"⌛", tip:"yetenek", han:1, fiyat:170,
   kisa:"Bütün etaplarda süre 5 saniye uzun",
   tam:"Kalan bütün etapların süresi 5 saniye artar. Son bölümlerde süre 16 saniyeye "+
       "kadar indiği için değeri yolun sonuna doğru artar.", kilit:{r:"Hız Rekoru"}},
- {id:"keskingoz", ad:"Keskin Göz", em:"👁", tip:"yetenek", han:1, fiyat:180,
+ {id:"keskingoz", ad:"Bilal'in Keskin Gözü", em:"👁", tip:"yetenek", han:1, fiyat:180,
   kisa:"İlk tahminden sonra bir yanlış harf kendiliğinden elenir",
   tam:"Her etapta ilk tahminini yaptıktan sonra, kelimede bulunmayan bir harf klavyede "+
       "otomatik grileşir. Her etapta yeniden çalışır, tükenmez.", kilit:{u:4}},
- {id:"hafizadefteri", ad:"Hafıza Defteri", em:"📓", tip:"yetenek", han:1, fiyat:190,
+ {id:"hafizadefteri", ad:"Nurdan'ın Hafıza Defteri", em:"📓", tip:"yetenek", han:1, fiyat:190,
   kisa:"Takıldığın kelimeler bir daha gelmez",
   tam:"Bu yolculukta bilemediğin kelimeler havuzdan çıkarılır; aynı kelimeyle ikinci "+
       "kez karşılaşmazsın. Uzun yolculuklarda kalp kurtarır.",
   kilit:{r:"Hafıza Ustası"}},
- {id:"seriatesi", ad:"Seri Ateşi", em:"🔥", tip:"yetenek", han:1, fiyat:220,
+ {id:"seriatesi", ad:"Bülent'in Seri Ateşi", em:"🔥", tip:"yetenek", han:1, fiyat:220,
   kisa:"Üst üste 3 doğrudan sonra ödüller %50 artar",
   tam:"Üç etabı üst üste bilirsen seri başlar ve o andan sonraki bütün ödüller %50 "+
       "fazla ödenir. Bir etabı kaçırırsan seri sıfırlanır, yeniden kurabilirsin.",
   kilit:{r:"Efsane Seri"}},
- {id:"alfabesezgisi", ad:"Alfabe Sezgisi", em:"🧠", tip:"yetenek", han:1, fiyat:250,
+ {id:"alfabesezgisi", ad:"Bilal'in Alfabe Sezgisi", em:"🧠", tip:"yetenek", han:1, fiyat:250,
   kisa:"7 harfli etaplarda ilk iki harf açık başlar",
   tam:"Yolculuğun en zor etapları 7 harflilerdir; yarısı sözlükten gelir. Bu yetenekle "+
       "o etaplarda iki harf hediye başlar. Beş 7 harfli etabın hepsinde çalışır.",
   kilit:{r:"Süper Lingo"}},
  /* --- 3. han: tilsimlar --- */
- {id:"ayyildizfener", ad:"Ay Yıldız Fener", em:"🌙", tip:"tilsim", han:2, fiyat:110,
+ {id:"ayyildizfener", ad:"Nazük'ün Ay Yıldız Feneri", em:"🌙", tip:"tilsim", han:2, fiyat:110,
   kisa:"Gece 22.00–04.00 arası bütün ödüller %20 fazla",
   tam:"Telefonun saati 22.00 ile 04.00 arasındaysa kazandığın her ödül %20 artar. "+
       "Gece çalışanların tılsımı.", kilit:{r:"Gece Kuşu"}},
- {id:"cobanasasi", ad:"Çoban Asası", em:"🪃", tip:"tilsim", han:2, fiyat:120,
+ {id:"cobanasasi", ad:"Figen'in Çoban Asası", em:"🪃", tip:"tilsim", han:2, fiyat:120,
   kisa:"4 harfli etaplarda ödül %30 fazla",
   tam:"Her bölümün ilk etabı 4 harflidir ve havuzu en tanıdık kelimelerden oluşur — "+
       "yani en garanti para. Bu tılsım o parayı %30 büyütür.",
   kilit:{r:"Dörtlü Ustası"}},
- {id:"ozansazi", ad:"Ozan Sazı", em:"🪕", tip:"tilsim", han:2, fiyat:130,
+ {id:"ozansazi", ad:"Sevilen'in Ozan Sazı", em:"🪕", tip:"tilsim", han:2, fiyat:130,
   kisa:"5 harfli etaplarda bir tahmin hakkı fazla",
   tam:"5 harfli etaplarda tahta 6 satır olur. Beş harfli havuz en kalabalık havuzdur, "+
       "fazladan hak burada en çok işe yarar.", kilit:{r:"Beşli Ustası"}},
- {id:"cingirak", ad:"Kervan Çıngırağı", em:"🔔", tip:"tilsim", han:2, fiyat:135,
+ {id:"cingirak", ad:"Belgin'in Çıngırağı", em:"🔔", tip:"tilsim", han:2, fiyat:135,
   kisa:"Her handa bir kez daha ürün yenileme hakkı",
   tam:"Normalde handa ürünleri bir kez yenileyebilirsin (20 akçe). Bu tılsımla iki kez "+
       "yenileyebilirsin — aradığın ürünü bulma şansın artar.", kilit:null},
- {id:"nazarboncugu", ad:"Nazar Boncuğu", em:"🧿", tip:"tilsim", han:2, fiyat:145,
+ {id:"nazarboncugu", ad:"Nazük'ün Nazar Boncuğu", em:"🧿", tip:"tilsim", han:2, fiyat:145,
   kisa:"Bir kez, kaybedilecek kalbi engeller",
   tam:"Bir etabı bilemediğinde kalp gitmez, boncuk kırılır ve tılsım tükenir. "+
       "Yolculukta bir kez çalışır ama o bir kez genellikle yolu kurtarır.",
   kilit:{u:2}},
- {id:"kadimuhru", ad:"Kadı Mührü", em:"🪶", tip:"tilsim", han:2, fiyat:160,
+ {id:"kadimuhru", ad:"Belgin'in Kadı Mührü", em:"🪶", tip:"tilsim", han:2, fiyat:160,
   kisa:"Sözlükte olmayan kelime yazmak hak yakmaz",
   tam:"Bu oyunda sözlükte olmayan bir kelime yazmak bir tahmin hakkına mal olur. "+
       "Mühür bu cezayı kaldırır: uydurma kelimeleri serbestçe deneyebilirsin.",
   kilit:{u:6}},
- {id:"sozlukcildi", ad:"Sözlük Cildi", em:"📚", tip:"tilsim", han:2, fiyat:155,
+ {id:"sozlukcildi", ad:"Sevilen'in Sözlük Cildi", em:"📚", tip:"tilsim", han:2, fiyat:155,
   kisa:"Hanlarda bir ürün daha görünür",
   tam:"Handa dört ürün yerine beş ürün çıkar. Seçenek arttıkça aradığın ürünü bulma "+
       "ihtimalin artar.", kilit:{u:7}},
- {id:"muska", ad:"Muska", em:"🧵", tip:"tilsim", han:2, fiyat:175,
+ {id:"muska", ad:"Figen'in Muskası", em:"🧵", tip:"tilsim", han:2, fiyat:175,
   kisa:"Bilinemeyen etabın ödülünün yarısı kesende kalır",
   tam:"Normalde bilemediğin etaptan hiç para almazsın. Muska ile o etabın ödülünün "+
       "yarısı yine de birikime eklenir. Kalp gitmesini engellemez.",
   kilit:{r:"Zor Gün"}},
- {id:"demiryurek", ad:"Demir Yürek", em:"🧱", tip:"tilsim", han:2, fiyat:185,
+ {id:"demiryurek", ad:"Sevilen'in Demir Yüreği", em:"🧱", tip:"tilsim", han:2, fiyat:185,
   kisa:"6 harfli etaplarda süre 25 saniyeye çıkar",
   tam:"6 harfli kelimeler yolculuğun en çok kalp götüren etaplarıdır. Bu tılsım o "+
       "etaplarda süreyi hangi bölümde olursan ol 25 saniyeye sabitler.",
   kilit:{r:"Duvar Ustası"}},
- {id:"pusula", ad:"Dört Yön Pusulası", em:"🧭", tip:"tilsim", han:2, fiyat:195,
+ {id:"pusula", ad:"Figen'in Pusulası", em:"🧭", tip:"tilsim", han:2, fiyat:195,
   kisa:"Her bölümün ilk etabında bir harf bedava açılır",
   tam:"Her bölümün 4 harfli ilk etabında, ilk harfin dışında bir harf daha hediye "+
       "açılır. Kalan bölüm sayısı kadar çalışır.", kilit:{r:"Dört Uzunluk"}},
  /* --- 4. han: kalp, kalkan, efsanevi --- */
- {id:"saglamyurek", ad:"Sağlam Yürek", em:"❤️", tip:"yetenek", han:3, fiyat:200,
+ {id:"saglamyurek", ad:"Yusuf'un Sağlam Yüreği", em:"❤️", tip:"yetenek", han:3, fiyat:200,
   kisa:"Kalp sayısı bir artar",
   tam:"Üç kalple yola çıkıyorsun; bu yetenek dördüncü kalbi verir ve kalbi hemen "+
       "doldurur. Yolun ortasında canın azaldıysa en değerli alışveriş budur.",
   kilit:{u:5}},
- {id:"kalkan", ad:"Kalkan", em:"🛡", tip:"yetenek", han:3, fiyat:210,
+ {id:"kalkan", ad:"Ali'nin Kalkanı", em:"🛡", tip:"yetenek", han:3, fiyat:210,
   kisa:"Kaybedilen ilk kalbi bir kez geri getirir",
   tam:"Bir kalp kaybettiğin ilk anda kalkan devreye girer, kalbini geri verir ve "+
       "kırılır. Nazar boncuğundan farkı: boncuk kalbin gitmesini engeller, kalkan "+
       "gideni geri getirir — ikisi birlikte iki kalp değerindedir.",
   kilit:{r:"S Fatihi"}},
- {id:"ejderpulu", ad:"Ejder Pulu", em:"🐉", tip:"efsane", han:3, fiyat:280,
+ {id:"ejderpulu", ad:"Çetin'in Ejder Pulu", em:"🐉", tip:"efsane", han:3, fiyat:280,
   kisa:"7 harfli etaplarda süre sınırı kalkar",
   tam:"Efsanevi eşya. 7 harfli beş etapta saat hiç çalışmaz; istediğin kadar "+
       "düşünürsün. Süper lingo kelimesi de dâhil.", kilit:{u:9}},
- {id:"kalem", ad:"Efendinin Kalemi", em:"🖋", tip:"efsane", han:3, fiyat:300, tek:1,
+ {id:"kalem", ad:"Sadi Baba'nın Kalemi", em:"🖋", tip:"efsane", han:3, fiyat:300, tek:1,
   kisa:"Bir etapta kelimeyi doğrudan yazar",
   tam:"Efsanevi eşya, tek kullanımlık. Dokunduğun anda içinde bulunduğun etabın "+
       "kelimesi kendiliğinden doğru yazılır ve etap kazanılmış sayılır. Son kapıda da "+
       "çalışır.", kilit:{u:10}},
- {id:"kupasuyu", ad:"Kupa Suyu", em:"🏆", tip:"efsane", han:3, fiyat:320,
+ {id:"kupasuyu", ad:"Yusuf'un Kupa Suyu", em:"🏆", tip:"efsane", han:3, fiyat:320,
   kisa:"Son kapıda bilemesen de biriken paranın tamamı kalır",
   tam:"Efsanevi eşya. 20. etabı bilemezsen normalde biriken tutar elinde kalır ama "+
       "iki kat ve süper lingo primini kaçırırsın; bu eşya kaybı tamamen kaldırır ve "+
@@ -449,17 +495,46 @@ let VERI = null, OYUN = null, TANIM = null, S = null, AKTIF = null, sayac = null
 let klvDurum = {}, klvTus = {};
 
 const anahtar = () => "lingo_kervan_" + KISI;
+const metaAnahtar = () => "lingo_kervan_meta_" + KISI;
+function bosMeta(){ return {devirAkce:0, emanet:null, kredi:[], bonusKalp:0, hediye:null,
+  kasa:0, rekor:[], puan:0, bitirilen:0, sonKapi:0, tekKalp:0, dortUrun:0, urunsuz:0,
+  yollar:{}}; }
+let M = bosMeta();
+function metaOku(){
+  try{ const v = JSON.parse(localStorage.getItem(metaAnahtar()) || "null");
+       M = Object.assign(bosMeta(), v && typeof v === "object" ? v : {}); }
+  catch(e){ M = bosMeta(); }
+  if(!M.yollar || typeof M.yollar !== "object") M.yollar = {};
+  if(!Array.isArray(M.kredi)) M.kredi = [];
+  if(!Array.isArray(M.rekor)) M.rekor = [];
+  return M;
+}
+function metaYaz(){ try{ localStorage.setItem(metaAnahtar(), JSON.stringify(M)); }catch(e){} }
+function seviye(){ return SEVIYE.filter(x => (M.puan||0) >= x.p).length; }
+function yolAcik(k){ const y = YOL[k]; return !y.kilit || !!M.yollar[y.kilit]; }
+const YY = () => YOL[(S && S.yol) || "normal"];
+const BL = b => BOLUM[YY().bolumler[Math.min(b, YY().bolumler.length - 1)]];
+const TOPETAP = () => YY().bolumler.length * 4;
 function kaydet(){ try{ localStorage.setItem(anahtar(), JSON.stringify(S)); }catch(e){} }
 function oku(){ try{ return JSON.parse(localStorage.getItem(anahtar()) || "null"); }
   catch(e){ return null; } }
 function sil(){ try{ localStorage.removeItem(anahtar()); }catch(e){} S = null; }
 
-function bosDurum(){
-  return {etap:0, kalp:3, maxKalp:3, akce:BASLANGIC, para:0, sahip:[], jok:{}, seri:0,
-          baslangic:1,
+function bosDurum(yolAd){
+  const y = YOL[yolAd || "normal"], sv = seviye();
+  const akce = BASLANGIC + (M.devirAkce || 0) + (sv >= 1 ? 25 : 0) + (sv >= 5 ? 50 : 0);
+  const kalp = y.kalp + (sv >= 2 ? 1 : 0) + (M.bonusKalp || 0);
+  const jok = {};
+  if(M.emanet) jok[M.emanet] = (jok[M.emanet] || 0) + 1;
+  if(M.hediye) jok[M.hediye] = (jok[M.hediye] || 0) + 1;
+  return {yol: yolAd || "normal", etap:0, kalp:kalp, maxKalp:kalp, akce:akce, para:0,
+          sahip:[], jok:jok, seri:0, baslangic:1, alinan:0, hanAlim:0,
           gorulen:[], takilan:[], sonuc:[], hanNo:0, bolumGirisi:0, satici:[], stok:null,
           yenileme:0, kalkanBitti:false, nazarBitti:false, bitti:null,
           dogru:[], hatali:[]};
+}
+function bonuslariTuket(){
+  M.devirAkce = 0; M.emanet = null; M.hediye = null; M.bonusKalp = 0; metaYaz();
 }
 const sahipmi = id => S.sahip.indexOf(id) >= 0;
 const jokAdet = id => S.jok[id] || 0;
@@ -470,7 +545,7 @@ function unvanSira(){
   return LG_UNVAN.findIndex(u => u.ad === ad) + 1;
 }
 function rozBilgi(ad){
-  const r = LG_rozet(LG_defter(KISI), LG_plan(KISI)).find(x => x.a === ad);
+  const r = LG_rozet(LG_defter(KISI), LG_plan(KISI), LG_kervanMeta(KISI)).find(x => x.a === ad);
   return r || {e:"🏅", a:ad, s:"", v:false};
 }
 function kilitDurum(u){
@@ -490,15 +565,21 @@ function kilitDurum(u){
            `nişanlar burada da sayılır.`};
 }
 function fiyat(u){
-  const f = u.fiyat * (sahipmi("tuccardili") ? 0.8 : 1);
+  let f = u.fiyat;
+  if(sahipmi("tuccardili")) f *= 0.8;
+  if(seviye() >= 4) f *= 0.95;
+  if(M.kredi.indexOf(u.id) >= 0) f *= 0.5;
   return Math.round(f / 5) * 5;
 }
 
 /* ---- ust bar ---- */
 function barYaz(){
-  const b = Math.min(4, Math.floor(S.etap / 4));
+  if(!S){ $("#yer").textContent = "Sözün Kervanı";
+    $("#kalp").textContent = ""; $("#akce").textContent = "";
+    $("#lira").textContent = ""; return; }
+  const b = Math.min(YY().bolumler.length - 1, Math.floor(S.etap / 4));
   $("#yer").textContent = S.bitti ? "Yolculuk bitti"
-    : `${b+1}. bölüm · ${BOLUM[b].ad}`;
+    : `${b+1}. bölüm · ${BL(b).ad}`;
   $("#kalp").textContent = "❤️".repeat(S.kalp) + "🖤".repeat(Math.max(0, S.maxKalp - S.kalp));
   $("#akce").textContent = "🪙 " + TL(S.akce);
   $("#lira").textContent = "₺" + TL(S.para);
@@ -880,88 +961,101 @@ function etapBasla(zorlaKelime){
 /* ================= akis ================= */
 function ilerle(){
   if(S.bitti) return sonEkran();
+  if(S.etap >= TOPETAP()) return sonEkran();
   const b = Math.floor(S.etap / 4);
-  if(S.etap % 4 === 0 && S.hanNo < S.etap / 4) return hanEkran(S.etap/4 - 1);
-  if(S.etap % 4 === 0 && S.bolumGirisi < b + 1) return bolumGiris(b);
+  if(S.etap % 4 === 0){
+    if(S.hanNo <= b) return hanEkran(b);          /* her bolumden ONCE bir han */
+    if(S.bolumGirisi < b + 1) return bolumGiris(b);
+  }
   etapBasla();
 }
 function yolCiz(){
-  return `<div class="yol">` + BOLUM.map((bl, b) => {
+  const yb = YY().bolumler.length;
+  return `<div class="yol">` + YY().bolumler.map((bi, b) => {
+    const bl = BOLUM[bi];
     const simdi = Math.floor(S.etap/4) === b && !S.bitti;
     const adimlar = UZUN.map((n, i) => {
       const no = b*4 + i;
-      let c = "bek", ic = n;
-      if(no < S.etap){ c = (S.sonuc && S.sonuc[no] === false) ? "hata" : "ok"; }
-      else if(no === S.etap && !S.bitti){ c = "simdi"; }
-      return `<div class="a ${c}">${ic}</div>`;
+      let c = "bek";
+      if(no < S.etap) c = (S.sonuc && S.sonuc[no] === false) ? "hata" : "ok";
+      else if(no === S.etap && !S.bitti) c = "simdi";
+      return `<div class="a ${c}">${n}</div>`;
     }).join("");
-    const han = b < 4 ? `<div class="a han ${S.hanNo > b ? "ok" : ""}">⌂</div>
-      <span class="kucuk">${HANAD[b]}${S.satici[b] !== undefined ?
-        " · " + SATICI[b][S.satici[b]].ad : ""}</span>` : "";
+    const carp = (bl.carpan * YY().carpan).toFixed(2)
+      .replace(/0+$/,"").replace(/\.$/,"").replace(".",",");
+    const sat = S.satici[b] !== undefined ? SATICI[HANTIP[b]][S.satici[b]] : null;
+    const han = `<div class="a han ${S.hanNo > b ? "ok" : ""}">⌂</div>
+      <span class="kucuk">${sat ? sat.duk : HANAD[b]}</span>`;
     return `<div class="yb ${simdi ? "simdi" : ""} ${S.etap >= (b+1)*4 ? "bitti" : ""}">
       <div class="ust2"><span class="ad">${bl.ad}</span>
-        <span class="no">${b+1}. bölüm · ${bl.carpan}× ödül · ${bl.sure} sn</span></div>
-      <div class="adim">${adimlar}${han}</div></div>`;
+        <span class="no">${b+1}. bölüm · ${carp}× ödül ·
+          ${bl.sure + YY().sureFark} sn</span></div>
+      <div class="adim">${han}${adimlar}</div></div>`;
   }).join("") + `</div>`;
 }
 function bolumGiris(b){
   S.bolumGirisi = b + 1; kaydet();
+  const bl = BL(b), carp = (bl.carpan * YY().carpan).toFixed(2)
+    .replace(/0+$/,"").replace(/\.$/,"").replace(".",",");
   ekran(`<div class="kutu">
-      <div class="eyebrow">${b+1}. bölüm</div>
-      <h1>${BOLUM[b].ad}</h1>
-      <p class="hikaye">${BOLUM[b].giris}</p>
+      <div class="eyebrow">${b+1}/${YY().bolumler.length}. bölüm · ${YY().em} ${YY().ad}</div>
+      <h1>${bl.ad}</h1>
+      <p class="hikaye">${bl.giris}</p>
       <p class="kucuk">Bu bölümde dört etap var: 4, 5, 6 ve 7 harfli birer kelime.
-        Her tahmin için <b>${BOLUM[b].sure} saniye</b>, ödüller <b>${BOLUM[b].carpan}×</b>
-        katsayıyla ödenir.</p>
+        Her tahmin için <b>${bl.sure + YY().sureFark} saniye</b>, ödüller
+        <b>${carp}×</b> katsayıyla ödenir.</p>
       <button class="buton" onclick="etapBasla()">YOLA ÇIK ▸</button>
     </div>` + yolCiz(), false);
 }
 function yolEkran(){
   ekran(`<div class="kutu">
-      <div class="eyebrow">Sözün Kervanı</div>
-      <h2>${KISI} · yolun ${S.etap}/20</h2>
+      <div class="eyebrow">${YY().em} ${YY().ad}</div>
+      <h2>${KISI} · yolun ${S.etap}/${TOPETAP()}</h2>
       <p class="kucuk">Kese <b>🪙 ${TL(S.akce)} akçe</b> · birikim <b>₺${TL(S.para)}</b> ·
-        kalp <b>${S.kalp}/${S.maxKalp}</b>${S.seri > 1 ?
-        ` · seri <b>${S.seri}</b>` : ""}</p>
+        kalp <b>${S.kalp}/${S.maxKalp}</b>${S.seri > 1 ? ` · seri <b>${S.seri}</b>` : ""}</p>
       <button class="buton" onclick="ilerle()">DEVAM ET ▸</button>
       <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
       <button class="buton ikinci" onclick="katalogEkran()">📜 TÜM ÜRÜNLER VE KİLİTLER</button>
+      <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI VE REKORLAR</button>
     </div>` + yolCiz(), false);
 }
 
 /* ================= han ================= */
 function stokKur(h){
-  const sat = SATICI[h][S.satici[h]];
-  const adet = 4 + (sahipmi("sozlukcildi") ? 1 : 0);
-  const uygun = URUN.filter(u => u.han === h && kilitDurum(u).acik &&
-    (u.tek || !sahipmi(u.id)) && (u.id !== "saglamyurek" || S.kalp < 6));
-  const havuz = uygun.slice();
-  const secilen = [];
+  const tip = HANTIP[h];
+  const adet = 4 + ((sahipmi("sozlukcildi") || seviye() >= 3) ? 1 : 0);
+  const uygun = URUN.filter(u => u.han === tip && kilitDurum(u).acik &&
+    (u.tek || !sahipmi(u.id)) && (u.id !== "saglamyurek" || S.kalp < S.maxKalp + 3));
+  const havuz = uygun.slice(), secilen = [];
   while(secilen.length < adet && havuz.length)
     secilen.push(havuz.splice(Math.floor(Math.random()*havuz.length), 1)[0].id);
-  const kilitli = URUN.filter(u => u.han === h && !kilitDurum(u).acik);
+  const kilitli = URUN.filter(u => u.han === tip && !kilitDurum(u).acik);
   S.stok = {h:h, urun:secilen,
     kilitli: kilitli.length ? kilitli[Math.floor(Math.random()*kilitli.length)].id : null};
   kaydet();
 }
 function hanEkran(h){
-  if(!S.stok || S.stok.h !== h){ S.yenileme = 0; stokKur(h); }
-  const sat = SATICI[h][S.satici[h]];
+  if(!S.stok || S.stok.h !== h){ S.yenileme = 0; S.hanAlim = 0; stokKur(h); }
+  const tip = HANTIP[h], sat = SATICI[tip][S.satici[h]];
+  const ilk = (h === 0), b = h;
   const kart = (id, kilitliMi) => {
     const u = URUNID[id], k = kilitDurum(u), f = fiyat(u);
     const alinmis = !u.tek && sahipmi(id);
+    const indirim = M.kredi.indexOf(id) >= 0;
     return `<div class="urun ${kilitliMi ? "kilitli" : ""} ${alinmis ? "alindi" : ""}"
         id="u_${id}">
       <button onclick="urunAc('${id}')">
         <span class="em">${u.em}</span>
         <span class="gv"><b>${u.ad}</b><span>${u.kisa}</span></span>
-        <span class="fy">${kilitliMi ? "🔒" : TL(f)}<em>${kilitliMi ? "kilitli" : "akçe"}</em></span>
+        <span class="fy">${kilitliMi ? "🔒" : TL(f)}<em>${
+          kilitliMi ? "kilitli" : (indirim ? "kredi" : "akçe")}</em></span>
       </button>
       <div class="ac gizli" id="a_${id}">
         <p><span class="etiket ${u.tip}">${
           u.tip === "joker" ? "Joker · tek kullanım" :
           u.tip === "yetenek" ? "Yetenek · kalıcı" :
-          u.tip === "tilsim" ? "Tılsım · kalıcı" : "Efsanevi"}</span></p>
+          u.tip === "tilsim" ? "Tılsım · kalıcı" : "Efsanevi"}</span>${
+          indirim ? `<span class="etiket yetenek">Han kredisi · %50</span>` : ""}</p>
         <p>${u.tam}</p>
         ${kilitliMi
           ? `<div class="kilitNot">🔒 <b>${k.metin}</b><br>${k.nasil}</div>`
@@ -975,26 +1069,27 @@ function hanEkran(h){
   };
   const yenHak = 1 + (sahipmi("cingirak") ? 1 : 0);
   ekran(`<div class="kutu">
-      <div class="eyebrow">${h+1}. han</div>
+      <div class="eyebrow">${ilk ? "Yola çıkmadan önce" :
+        `${h+1}. han · ${BL(b).ad}'ndan önce`}</div>
       <h1 style="font-size:23px">${sat.duk}</h1>
       <div class="satici" style="margin-top:12px">
         <div class="av">${TRU(sat.ad[0])}</div>
-        <div class="ki"><b>${sat.ad}</b><span>${
-          h === 0 ? "Jokerci · tek kullanımlık ipuçları" :
-          h === 1 ? "Kervansaraycı · kalıcı yetenekler" :
-          h === 2 ? "Sahaf · koşullu tılsımlar" :
-                    "Ocakçı · kalp, kalkan, efsanevi"}</span></div>
+        <div class="ki"><b>${sat.ad}</b><span>${HANTUR[tip]}</span></div>
       </div>
       <p class="hikaye" style="margin-top:10px">“${sat.rep}”</p>
-      <p class="kucuk">Kesende <b>🪙 ${TL(S.akce)} akçe</b> var. Ürüne dokunursan ne işe
-        yaradığını ve nasıl açıldığını okursun.</p>
+      ${ilk ? `<p class="ozet1">Kervan henüz yola çıkmadı. Kesende
+        <b>🪙 ${TL(S.akce)} akçe</b> var — <b>ilk alışverişini burada yap</b>, sonra
+        ilk bölüme geçilecek. Bir şey almadan da devam edebilirsin.</p>`
+        : `<p class="kucuk">Kesende <b>🪙 ${TL(S.akce)} akçe</b> var. Ürüne dokunursan
+        ne işe yaradığını ve nasıl açıldığını okursun.</p>`}
       ${S.stok.urun.map(id => kart(id, false)).join("")}
       ${S.stok.kilitli ? kart(S.stok.kilitli, true) : ""}
       <button class="buton ikinci" ${S.yenileme >= yenHak || S.akce < 20 ? "disabled" : ""}
         onclick="yenile(${h})">🔄 ÜRÜNLERİ YENİLE · 20 akçe
         (${yenHak - S.yenileme} hak)</button>
       <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
-      <button class="buton" onclick="handanCik(${h})">YOLA DEVAM ▸</button>
+      <button class="buton" onclick="handanCik(${h})">${
+        ilk ? "KERVANI YOLA ÇIKAR ▸" : "YOLA DEVAM ▸"}</button>
     </div>`, false);
 }
 window.urunAc = function(id){
@@ -1012,17 +1107,22 @@ window.satinAl = function(id){
     S.sahip.push(id);
     if(id === "saglamyurek"){ S.maxKalp++; S.kalp++; }
   }
+  S.alinan = (S.alinan || 0) + 1;
+  S.hanAlim = (S.hanAlim || 0) + 1;
+  if(S.hanAlim >= 4 && !M.dortUrun){ M.dortUrun = 1; metaYaz();
+    uyar("👝 Yeni nişan: Kesesi Delik"); }
+  M.kredi = M.kredi.filter(x => x !== id); metaYaz();
   S.stok.urun = S.stok.urun.filter(x => x !== id);
   LG_ses("rozet"); kaydet(); uyar(u.ad + " alındı");
   hanEkran(S.stok.h);
 };
 window.yenile = function(h){
   if(S.akce < 20) return uyar("Akçe yetmiyor");
-  S.akce -= 20; S.yenileme++; const y = S.yenileme; stokKur(h); S.yenileme = y;
+  S.akce -= 20; const y = S.yenileme + 1; stokKur(h); S.yenileme = y;
   kaydet(); hanEkran(h);
 };
 window.handanCik = function(h){
-  S.hanNo = h + 1; S.stok = null; S.yenileme = 0; kaydet(); ilerle();
+  S.hanNo = h + 1; S.stok = null; S.yenileme = 0; S.hanAlim = 0; kaydet(); ilerle();
 };
 
 /* ================= envanter ve katalog ================= */
@@ -1045,15 +1145,15 @@ function envanterEkran(){
       ${kl.length ? `<p class="eyebrow" style="margin-top:14px">Kalıcı olanlar</p>`
         + kl.map(id => sat(id, 0)).join("") : ""}
       ${(!jk.length && !kl.length) ? `<p class="kucuk" style="margin-top:10px">
-        Heybe boş. İlk handa satıcıya uğradığında dolmaya başlar.</p>` : ""}
+        Heybe boş. Handa satıcıya uğradığında dolmaya başlar.</p>` : ""}
       <button class="buton" onclick="ilerleGeri()">GERİ ▸</button>
     </div>`, false);
 }
 function katalogEkran(){
   const d = LG_defter(KISI);
-  const grup = [0,1,2,3].map(h => {
-    const lst = URUN.filter(u => u.han === h);
-    return `<p class="eyebrow" style="margin-top:15px">${h+1}. han · ${HANAD[h]}</p>` +
+  const grup = [0,1,2,3].map(t => {
+    const lst = URUN.filter(u => u.han === t);
+    return `<p class="eyebrow" style="margin-top:15px">${HANTUR[t]}</p>` +
       lst.map(u => { const k = kilitDurum(u);
         return `<div class="urun ${k.acik ? "" : "kilitli"}">
           <button onclick="urunAc('k${u.id}')">
@@ -1085,38 +1185,110 @@ function katalogEkran(){
       <button class="buton" onclick="ilerleGeri()">GERİ ▸</button>
     </div>`, false);
 }
+function kasaEkran(){
+  const sv = seviye(), sonraki = SEVIYE[sv];
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Kervan kasası</div>
+      <h2>₺${TL(M.kasa || 0)}</h2>
+      <p class="kucuk">${KISI} adına bugüne kadar bütün yolculuklarda kazanılan toplam.
+        Harcanmaz — biriken bir rekordur.</p>
+      <div class="ozet">
+        <div><b>${M.bitirilen || 0}</b><span>bitirilen yol</span></div>
+        <div><b>${M.sonKapi || 0}</b><span>açılan kapı</span></div>
+        <div><b>${TL(M.puan || 0)}</b><span>kervan puanı</span></div>
+        <div><b>${sv}/5</b><span>seviye</span></div>
+      </div>
+      <p class="eyebrow" style="margin-top:6px">Kalıcı bonuslar</p>
+      ${SEVIYE.map((x, i) => `<div class="urun ${i < sv ? "alindi" : "kilitli"}">
+        <button style="cursor:default"><span class="em">${i < sv ? "✓" : "🔒"}</span>
+        <span class="gv"><b>${x.ad}</b><span>${x.ac}</span></span>
+        <span class="fy">${TL(x.p)}<em>puan</em></span></button></div>`).join("")}
+      ${sonraki ? `<p class="kucuk" style="margin-top:8px">Sıradaki bonus
+        <b>${sonraki.ad}</b> için ${TL(sonraki.p - (M.puan||0))} puan daha.
+        Puan, yolculuk sonunda kazanılan her ₺20.000 için 1 puandır.</p>`
+        : `<p class="kucuk" style="margin-top:8px">Bütün kalıcı bonuslar açık.</p>`}
+      <p class="eyebrow" style="margin-top:14px">Açılan yollar</p>
+      ${YOLSIRA.map(k => { const y = YOL[k], a = yolAcik(k);
+        return `<div class="urun ${a ? "" : "kilitli"}">
+          <button style="cursor:default"><span class="em">${y.em}</span>
+          <span class="gv"><b>${y.ad}</b><span>${y.ac}</span></span>
+          <span class="fy">${M.yollar[k] ? "✓" : (a ? "açık" : "🔒")}<em>${
+            M.yollar[k] ? "bitirdin" : (a ? "" : YOL[y.kilit].ad + " bitmeli")
+          }</em></span></button></div>`; }).join("")}
+      ${(M.rekor || []).length ? `<p class="eyebrow" style="margin-top:14px">
+        En iyi beş yolculuk</p>
+        <table class="rek">${M.rekor.map((r, i) => `<tr><td>${i+1}</td>
+          <td><b>${r.yol}</b><br><span>${r.tarih}</span></td>
+          <td>${r.etap}/${r.top} etap${r.kapi ? " · 🏰" : ""}</td>
+          <td class="tl">₺${TL(r.tl)}</td></tr>`).join("")}</table>` : ""}
+      <button class="buton" onclick="ilerleGeri()">GERİ ▸</button>
+    </div>`, false);
+}
 window.ilerleGeri = function(){
   if(S.bitti) return sonEkran();
-  if(S.stok && S.etap % 4 === 0 && S.hanNo < S.etap/4) return hanEkran(S.stok.h);
+  if(S.stok && S.etap % 4 === 0 && S.hanNo <= Math.floor(S.etap/4))
+    return hanEkran(S.stok.h);
   yolEkran();
 };
 
 /* ================= son ================= */
+function yolculukIsle(){
+  if(S.metaIslendi) return S.sonTutar;
+  const kazandi = S.bitti === "kazandi";
+  let toplam;
+  if(!kazandi) toplam = Math.round(S.para / 2);
+  else if(S.sonKapi) toplam = S.para * 2 + SUPER;
+  else if(sahipmi("kupasuyu")) toplam = S.para * 2;
+  else toplam = S.para;
+
+  /* 1 · kese devri: kalan akcenin %10'u, basarili bitirdiyse %25 */
+  const oran = kazandi ? 0.25 : 0.10;
+  M.devirAkce = Math.round(S.akce * oran / 5) * 5;
+  /* 3 · han kredisi: yarida kalan yolculukta alinan kalici urunler sonrakinde yarim fiyat */
+  M.kredi = kazandi ? [] : S.sahip.slice(0, 6);
+  /* 4 · basari cani */
+  if(kazandi) M.bonusKalp = S.sonKapi ? 2 : 1;
+  /* 5 · hediye sandigi */
+  if(kazandi){
+    const hediyelik = URUN.filter(u => u.tek && u.han === 0 && kilitDurum(u).acik);
+    if(hediyelik.length)
+      M.hediye = hediyelik[Math.floor(Math.random()*hediyelik.length)].id;
+  }
+  /* 6 · nisanlar */
+  if(kazandi){
+    M.bitirilen = (M.bitirilen || 0) + 1;
+    M.yollar[S.yol] = 1;
+    if(S.sonKapi) M.sonKapi = (M.sonKapi || 0) + 1;
+    if(S.kalp === 1) M.tekKalp = 1;
+    if(!S.alinan) M.urunsuz = 1;
+  }
+  /* 7 · kervan kasasi  ·  9 · kervan puani */
+  M.kasa = (M.kasa || 0) + toplam;
+  M.puan = (M.puan || 0) + Math.round(toplam / 20000);
+  /* 8 · rekor tablosu */
+  const t = new Date();
+  M.rekor.push({yol:YY().ad, tl:toplam, etap:S.etap, top:TOPETAP(),
+    kapi:!!S.sonKapi, tarih:`${t.getDate()}.${String(t.getMonth()+1).padStart(2,"0")}.`+
+    t.getFullYear()});
+  M.rekor.sort((a, b) => b.tl - a.tl); M.rekor = M.rekor.slice(0, 5);
+  metaYaz();
+  S.metaIslendi = 1; S.sonTutar = toplam; kaydet();
+  return toplam;
+}
 function sonEkran(){
   const kazandi = S.bitti === "kazandi";
-  let toplam, notu;
-  if(!kazandi){
-    toplam = Math.round(S.para / 2);
-    notu = `Kalpler bitti, kervan ${S.etap}. etapta durdu. Biriken tutarın
+  const oncePuan = M.puan, onceSv = seviye();
+  const toplam = yolculukIsle();
+  const yeniSv = seviye();
+  let notu;
+  if(!kazandi) notu = `Kalpler bitti, kervan ${S.etap}. etapta durdu. Biriken tutarın
       <b>yarısı</b> elinde kaldı.`;
-  } else if(S.sonKapi){
-    toplam = S.para * 2 + SUPER;
-    notu = `Son kapıyı açtın! Birikim <b>iki katına</b> çıktı ve üstüne
+  else if(S.sonKapi) notu = `Son kapıyı açtın! Birikim <b>iki katına</b> çıktı ve üstüne
       <b>₺${TL(SUPER)}</b> süper lingo primi eklendi.`;
-  } else if(sahipmi("kupasuyu")){
-    toplam = S.para * 2;
-    notu = `Son kapı açılmadı ama <b>🏆 Kupa Suyu</b> devreye girdi: birikim yine
-      <b>iki katına</b> çıktı.`;
-  } else {
-    toplam = S.para;
-    notu = `Yirmi konağı tamamladın ama son kapı açılmadı. Biriken tutarın
+  else if(sahipmi("kupasuyu")) notu = `Son kapı açılmadı ama <b>🏆 Kupa Suyu</b> devreye
+      girdi: birikim yine <b>iki katına</b> çıktı.`;
+  else notu = `Yirmi konağı tamamladın ama son kapı açılmadı. Biriken tutarın
       <b>tamamı</b> elinde kaldı.`;
-  }
-  let en = 0;
-  try{ en = +(localStorage.getItem("lingo_kervan_en_" + KISI) || 0);
-    if(toplam > en){ en = toplam;
-      localStorage.setItem("lingo_kervan_en_" + KISI, String(toplam)); } }catch(e){}
-  LG_ses(kazandi ? "unvan" : "bitti");
   const hik = kazandi
     ? (S.sonKapi
       ? "Kapı açıldı. İçeride ne hazine vardı ne taht — sadece bir defter, ilk sayfası "+
@@ -1125,7 +1297,11 @@ function sonEkran(){
         "herkes bir daha gelir” dedi.")
     : "Kervan yolda kaldı. Ama çarşıdan buraya kadar kurtardığın kelimeler cebinde — "+
       "yarın yine yola çıkabilirsin.";
-  const roz = LG_acik(KISI).length;
+  const yeniRoz = LG_yeni(KISI);
+  const jk = Object.keys(S.jok).filter(k => S.jok[k] > 0);
+  const yeniYolAd = kazandi ? YOLSIRA.find(k => YOL[k].kilit === S.yol) : null;
+  const dv = (em, bas, alt) => `<div><i>${em}</i><div><b>${bas}</b>` +
+    `<span>${alt}</span></div></div>`;
   ekran(`<div class="kutu ort">
       <div class="eyebrow">${kazandi ? "Yolculuk tamamlandı" : "Yolculuk sona erdi"}</div>
       <h1 style="margin-top:6px">${kazandi ? (S.sonKapi ? "Söz Kalesi açıldı" :
@@ -1137,23 +1313,87 @@ function sonEkran(){
         <div><b>${S.etap}</b><span>etap</span></div>
         <div><b>${S.dogru.length}</b><span>bilinen</span></div>
         <div><b>${S.hatali.length}</b><span>kaçan</span></div>
-        <div><b>${roz}</b><span>nişan</span></div>
+        <div><b>${LG_acik(KISI).length}</b><span>nişan</span></div>
       </div>
       ${S.hatali.length ? `<p class="kucuk">Kaçan kelimeler:
         <b>${S.hatali.map(TRU).join(" · ")}</b></p>` : ""}
-      <p class="kucuk">En iyi yolculuğun: <b>₺${TL(en)}</b></p>
-      <button class="buton" onclick="yeniYolculuk()">YENİDEN YOLA ÇIK</button>
+      ${yeniRoz.length ? `<p class="kucuk" style="color:var(--altin)">Yeni nişan: ${
+        yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</p>` : ""}
+
+      <p class="eyebrow" style="margin-top:14px">Sonraki yolculuğa kalanlar</p>
+      <div class="devir">
+        ${dv("🪙", TL(M.devirAkce) + " akçe",
+          `kesende kalan ${TL(S.akce)} akçenin %${kazandi ? 25 : 10}'i`)}
+        ${M.bonusKalp ? dv("❤️", "+" + M.bonusKalp + " kalp",
+          "başarılı yolculuk ödülü — sonraki yolculuğa fazladan kalple başlarsın") : ""}
+        ${M.hediye ? dv(URUNID[M.hediye].em, URUNID[M.hediye].ad,
+          "hediye sandığından çıktı, sonraki yolculukta elinde olacak") : ""}
+        ${(M.kredi || []).length ? dv("🏷", "Han kredisi",
+          M.kredi.map(x => URUNID[x].ad).join(", ") +
+          " — sonraki yolculukta %50 indirimli") : ""}
+        ${dv("🏦", "₺" + TL(M.kasa), "kervan kasası · bu yolculuk +" +
+          TL(Math.round(toplam/20000)) + " kervan puanı kazandırdı")}
+        ${yeniSv > onceSv ? dv("⭐", SEVIYE[yeniSv-1].ad,
+          "yeni kalıcı bonus: " + SEVIYE[yeniSv-1].ac) : ""}
+        ${yeniYolAd ? dv(YOL[yeniYolAd].em, YOL[yeniYolAd].ad + " açıldı",
+          YOL[yeniYolAd].ac) : ""}
+      </div>
+      ${jk.length ? `<p class="kucuk" style="margin-top:10px">Elinde kalan jokerlerden
+        <b>birini</b> emanet bırakabilirsin — sonraki yolculuğa onunla başlarsın.</p>
+        <div class="kgrid">${jk.map(id => `<button class="${M.emanet === id ? "on" : ""}"
+          onclick="emanetSec('${id}')">${URUNID[id].em} ${URUNID[id].ad}</button>`)
+          .join("")}</div>` : ""}
+      <button class="buton" onclick="yolSecEkran()">YENİDEN YOLA ÇIK</button>
+      <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI VE REKORLAR</button>
       <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>
     </div>`);
 }
-window.yeniYolculuk = function(){
-  sil(); S = bosDurum();
-  S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
-  kaydet(); girisEkran();
+window.emanetSec = function(id){
+  M.emanet = (M.emanet === id) ? null : id; metaYaz();
+  uyar(M.emanet ? URUNID[id].ad + " emanet bırakıldı" : "Emanet kaldırıldı");
+  sonEkran();
 };
 
 /* ================= giris ekranlari ================= */
+function yolSecEkran(){
+  const sv = seviye();
+  const bas = BASLANGIC + (M.devirAkce || 0) + (sv >= 1 ? 25 : 0) + (sv >= 5 ? 50 : 0);
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Hangi yoldan?</div>
+      <h2>Yolunu seç</h2>
+      <p class="kucuk">Kesede <b>🪙 ${TL(bas)} akçe</b> ile yola çıkacaksın${
+        M.devirAkce ? ` (${TL(M.devirAkce)}'i geçen yolculuktan devretti)` : ""}.
+        ${M.bonusKalp ? `Başarı ödülü olarak <b>+${M.bonusKalp} kalp</b> ` : ""}${
+        M.hediye ? `${M.bonusKalp ? "ve " : ""}<b>${URUNID[M.hediye].ad}</b> hediyesi ` : ""}${
+        (M.bonusKalp || M.hediye) ? "seninle geliyor. " : ""}
+        Yola çıkmadan önce ilk hanı göreceksin, alışverişini orada yapabilirsin.</p>
+      ${YOLSIRA.map(k => { const y = YOL[k], a = yolAcik(k);
+        return `<div class="urun ${a ? "" : "kilitli"}">
+          <button onclick="${a ? `yolSec('${k}')` : `uyar('Önce ${YOL[y.kilit].ad}\\'nu bitir')`}">
+            <span class="em">${y.em}</span>
+            <span class="gv"><b>${y.ad}</b><span>${y.ac}</span></span>
+            <span class="fy">${a ? "▸" : "🔒"}<em>${
+              M.yollar[k] ? "bitirdin" : (a ? "seç" : "kilitli")}</em></span></button>
+        </div>`; }).join("")}
+      <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI VE REKORLAR</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+    </div>`, false);
+}
+window.yolSec = function(k){
+  sil(); S = bosDurum(k); saticiKur(); bonuslariTuket(); kaydet(); girisEkran();
+};
+function saticiKur(){
+  const kullanilan = {};
+  S.satici = HANTIP.map(t => {
+    const g = SATICI[t];
+    let aday = g.map((_, i) => i).filter(i => !(kullanilan[t] || []).includes(i));
+    if(!aday.length) aday = g.map((_, i) => i);
+    const s2 = aday[Math.floor(Math.random() * aday.length)];
+    kullanilan[t] = (kullanilan[t] || []).concat([s2]);
+    return s2;
+  });
+}
 function kisiEkran(){
   ekran(`<div class="kutu">
       <div class="eyebrow">Kim yola çıkıyor?</div>
@@ -1174,7 +1414,7 @@ window.kisiSec = function(a){
 function girisEkran(){
   const d = LG_defter(KISI), acik = URUN.filter(u => kilitDurum(u).acik).length;
   ekran(`<div class="kutu">
-      <div class="eyebrow">Sözün Kervanı</div>
+      <div class="eyebrow">Sözün Kervanı · ${YY().em} ${YY().ad}</div>
       <h1>Yirmi konak, bir kapı</h1>
       <p class="ozet1">Bu oyundaki 4, 5 ve 6 harfli kelimelerin hepsi
         <b>üç sezonda da çıkmış</b> kelimelerden geliyor — yani en çok tekrar edenler.
@@ -1182,33 +1422,37 @@ function girisEkran(){
       <p class="hikaye">Kelimeler eskiden herkesin ortak malıydı. Sonra bir gece Söz
         Kalesi'nin kapıları kapandı ve kelimeler tek tek unutulmaya başladı. Anneler
         masal anlatamadı, tüccarlar pazarda anlaşamadı, şairler kafiyeyi kaybetti.</p>
-      <p class="hikaye">Kalenin kapısını tek bir şey açar: yirmi konakta yirmi kelimeyi
-        bilen biri. Sen o kervanın başındasın.</p>
-      <p class="kucuk" style="margin-top:12px"><b>Nasıl oynanır?</b> Beş bölüm, her
-        bölümde 4, 5, 6 ve 7 harfli birer kelime. Her kelime için <b>5 tahmin</b> ve
-        bölüme göre <b>16–25 saniye</b>. Bilemediğin etap bir <b>kalp</b> götürür;
-        üç kalp biterse yolculuk durur.</p>
-      <p class="kucuk">Her bölüm sonunda bir <b>han</b> var. Kesende
-        <b>🪙 ${TL(BASLANGIC)} akçe</b> ile yola çıkarsın, etaplarda kazandıkça artar;
-        akçeyle joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
+      <p class="hikaye">Kalenin kapısını tek bir şey açar: ${TOPETAP()} konakta
+        ${TOPETAP()} kelimeyi bilen biri. Sen o kervanın başındasın.</p>
+      <p class="kucuk" style="margin-top:12px"><b>Nasıl oynanır?</b>
+        ${YY().bolumler.length} bölüm, her bölümde 4, 5, 6 ve 7 harfli birer kelime.
+        Her kelime için <b>5 tahmin</b> ve bölüme göre
+        <b>${BOLUM[5].sure + YY().sureFark}–${BOLUM[0].sure + YY().sureFark} saniye</b>.
+        Bilemediğin etap bir <b>kalp</b> götürür; ${S.maxKalp} kalp biterse yolculuk
+        durur.</p>
+      <p class="kucuk"><b>Her bölümden önce bir han var</b> — ilki hemen şimdi.
+        Kesende <b>🪙 ${TL(S.akce)} akçe</b> ile yola çıkıyorsun, etaplarda kazandıkça
+        artar; akçeyle joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
         son kapıda ödenir — açarsan <b>iki katı + ₺${TL(SUPER)}</b>.</p>
       <p class="kucuk">Şu an <b>${LG_unvan(d.length).simdi.ad}</b> ünvanındasın ve
         <b>${acik}/${URUN.length}</b> ürün açık. ${
         acik < URUN.length ? "Alıştırma yaptıkça yenileri açılır." : ""}</p>
-      <button class="buton" onclick="ilerle()">KERVANI YOLA ÇIKAR ▸</button>
+      <button class="buton" onclick="ilerle()">İLK HANA GİT ▸</button>
       <button class="buton ikinci" onclick="katalogEkran()">📜 TÜM ÜRÜNLER VE KİLİTLER</button>
+      <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI</button>
       <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
     </div>`);
 }
 function devamEkran(){
   ekran(`<div class="kutu">
-      <div class="eyebrow">Yarım kalan yolculuk</div>
+      <div class="eyebrow">Yarım kalan yolculuk · ${YY().em} ${YY().ad}</div>
       <h2>${KISI}, kervan yolda bekliyor</h2>
-      <p class="kucuk"><b>${S.etap}/20</b> etap tamamlandı · kalp
+      <p class="kucuk"><b>${S.etap}/${TOPETAP()}</b> etap tamamlandı · kalp
         <b>${S.kalp}/${S.maxKalp}</b> · kese <b>🪙 ${TL(S.akce)}</b> · birikim
         <b>₺${TL(S.para)}</b></p>
       <button class="buton" onclick="ilerle()">KALDIĞIN YERDEN DEVAM ET ▸</button>
       <button class="buton ikinci" onclick="yolEkran()">🗺 YOL HARİTASI</button>
+      <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI VE REKORLAR</button>
       <button class="buton ikinci" onclick="sifirla()">YENİ YOLCULUK — bunu sil</button>
       <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
     </div>`);
@@ -1218,8 +1462,8 @@ window.sifirla = function(){
       <h2>Emin misin?</h2>
       <p class="kucuk">Aynı anda tek yolculuk tutuluyor. Yenisine başlarsan
         ${S.etap}. etaptaki bu yolculuk, kesendeki <b>${TL(S.akce)} akçe</b> ve
-        <b>₺${TL(S.para)}</b> birikim silinir.</p>
-      <button class="buton" onclick="yeniYolculuk()">EVET, YENİ YOLCULUK</button>
+        <b>₺${TL(S.para)}</b> birikim silinir. Kervan kasası ve nişanlar kalır.</p>
+      <button class="buton" onclick="yolSecEkran()">EVET, YENİ YOLCULUK</button>
       <button class="buton ikinci" onclick="devamEkran()">VAZGEÇ</button>
     </div>`);
 };
@@ -1228,42 +1472,29 @@ window.yolEkran = yolEkran;
 window.etapBasla = etapBasla;
 window.envanterEkran = envanterEkran;
 window.katalogEkran = katalogEkran;
+window.kasaEkran = kasaEkran;
+window.yolSecEkran = yolSecEkran;
 window.devamEkran = devamEkran;
 window.kisiEkran = kisiEkran;
 window.sonEkran = sonEkran;
+window.uyar = uyar;
 
 function basla(){
   KISILER = LG_kisiler(KISI_VAR);
   if(!KISI || KISI === LG_KAYITSIZ || KISILER.indexOf(KISI) < 0) return kisiEkran();
+  metaOku();
   S = oku();
-  if(!S){ S = bosDurum();
-    S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
-    kaydet(); return girisEkran(); }
+  if(!S){ if(M.bitirilen || M.rekor.length) return yolSecEkran();
+    S = bosDurum("normal"); saticiKur(); bonuslariTuket(); kaydet();
+    return girisEkran(); }
   if(!S.sonuc) S.sonuc = [];
+  if(!S.yol || !YOL[S.yol]) S.yol = "normal";
+  if(!S.satici || S.satici.length < HANTIP.length) saticiKur();
   if(!S.baslangic){ S.baslangic = 1; S.akce += BASLANGIC; kaydet(); }
-  if(!S.satici || !S.satici.length)
-    S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
   if(S.bitti) return sonEkran();
-  if(S.etap === 0 && !S.bolumGirisi) return girisEkran();
+  if(S.etap === 0 && !S.bolumGirisi && !S.hanNo) return girisEkran();
   devamEkran();
 }
-
-/* ---- fiziksel klavye (bilgisayarda oynayanlar icin) ---- */
-document.addEventListener("keydown", e => {
-  if(klv.classList.contains("gizli")) return;
-  if(e.metaKey || e.ctrlKey || e.altKey) return;
-  const k = e.key;
-  if(k === "Enter"){
-    const b = [...klv.querySelectorAll("button")].find(x => x.textContent === "TAMAM");
-    if(b){ e.preventDefault(); b.click(); }
-  } else if(k === "Backspace"){
-    const b = [...klv.querySelectorAll("button")].find(x => x.textContent === "SİL");
-    if(b){ e.preventDefault(); b.click(); }
-  } else if(k.length === 1){
-    const c = k.toLocaleLowerCase("tr");
-    if(klvTus[c]){ e.preventDefault(); klvTus[c].click(); }
-  }
-});
 
 /* ================= yukleme ================= */
 const GECERLI = {};
