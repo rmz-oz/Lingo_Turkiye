@@ -112,25 +112,10 @@ const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
 const defter = LG_defter;
 const KISI_VAR = ["Serpil","Zeynep"];
-let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false;
-try{
-  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
-  if(Array.isArray(k) && k.length) KISILER = k.slice();
-  for(let i=0;i<localStorage.length;i++){
-    const key = localStorage.key(i);
-    if(key && key.indexOf("lingo_defter_") === 0){
-      const ad = key.slice(13);
-      if(ad && KISILER.indexOf(ad) < 0) KISILER.push(ad);
-    }
-  }
-  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
-  if(KISI === "__kayitsiz__") KISI = KISILER.find(a=>defter(a).length) || KISILER[0];
-  if(KISILER.indexOf(KISI) < 0) KISILER.unshift(KISI);
-  if(!defter(KISI).length){
-    const dolu = KISILER.find(a => defter(a).length);
-    if(dolu) KISI = dolu;
-  }
-}catch(e){ KISI = KISILER[0]; }
+let KISILER = LG_kisiler(KISI_VAR), KISI = null, secimAcik = false, acikGun = 0;
+KISI = LG_kisiDogrula(KISILER);
+if(!KISI || KISI === LG_KAYITSIZ)
+  KISI = KISILER.find(a => LG_defter(a).length) || KISILER[0];
 
 function vitrin(rozAd){ LG_vitrinDegis(KISI, rozAd); ciz(); }
 function kisiSec(a){ KISI=a; secimAcik=false;
@@ -266,7 +251,9 @@ function ciz(){
             <b>${r.a}</b></div>`).join("")}</div>`
           : `<div class="bos">Henüz rozet yok. Alıştırma yaptıkça açılacak.</div>`}
         <a class="buton ikinci" href="plan.html">🗓 TÜM ROZETLERİ GÖR</a>
-        <a class="buton ikinci" href="sertifika.html">🏅 SERTİFİKAM</a>`;})()}
+        ${d.length>=250 ? `<a class="buton ikinci" href="sertifika.html">🏅 SERTİFİKAM</a>`
+          : `<p style="font-size:12.5px;margin-top:8px">🏅 Sertifika için
+              ${250-d.length} kelime daha.</p>`}`;})()}
     ${uzTekrar.map(n=>`<a class="buton" href="alistirma${n}.html#tekrar">
       ${UZ(n).toUpperCase()} TAKILDIKLARINI TEKRAR ET</a>`).join("")}
     <a class="buton ikinci" href="index.html">ANA SAYFA</a>
