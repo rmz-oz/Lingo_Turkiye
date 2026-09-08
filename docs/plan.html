@@ -24,6 +24,9 @@ p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
 /* geri sayim */
 .sayim{background:linear-gradient(135deg,#6c5ce7,#8e6ce8);border-radius:16px;
   padding:18px;text-align:center;margin:0 0 16px;box-shadow:0 6px 20px rgba(108,92,231,.28)}
+.bugunbtn{display:block;background:linear-gradient(135deg,#e0a92e,#f4c95d);color:#1a1200;
+  border-radius:14px;padding:16px;text-align:center;font-weight:800;font-size:17px;
+  text-decoration:none;margin-bottom:12px;box-shadow:0 6px 20px rgba(244,201,93,.35)}
 .sayim b{display:block;font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1}
 .sayim span{display:block;font-size:13px;opacity:.9;margin-top:4px;letter-spacing:.5px}
 .sayim input{background:rgba(255,255,255,.15);border:0;border-radius:8px;color:#fff;
@@ -131,7 +134,7 @@ function kalanGun(){
 /* --- gun tarihleri: 1. gun = yarismadan 4 gun once --- */
 function gunTarihi(i){
   const t = new Date(tarihAl()+"T00:00:00");
-  t.setDate(t.getDate() - (4 - i));      /* i: 1..4 */
+  t.setDate(t.getDate() - (5 - i));      /* 1. gun = yarismadan 4 gun once */
   return t;
 }
 function ayniGun(a,b){ return a.toDateString() === b.toDateString(); }
@@ -246,6 +249,8 @@ function ciz(){
   const yapilan = Object.values(p).filter(Boolean).length;
 
   $("#alan").innerHTML = `
+    ${kalan === 0 ? `<a class="bugunbtn" href="yarisma.html">
+        🎬 BUGÜN YARIŞMA GÜNÜ — İYİ ŞANSLAR ▸</a>` : ""}
     <div class="sayim"><b>${kalan}</b><span>${kalan?"GÜN KALDI":"YARIŞMA GÜNÜ"}</span>
       <input type="date" value="${tarihAl()}" onchange="tarihYaz(this.value)"></div>
     <div class="kisi" onclick="secimAcik=!secimAcik;ciz()">
