@@ -172,6 +172,16 @@ function puzzleSec(nler){
 }
 
 /* ---------------- yardimcilar ---------------- */
+function defterYaz(w, hak){
+  try{
+    const ad = localStorage.getItem("lingo_kisi"); if(!ad) return;
+    const k = "lingo_defter_" + ad;
+    const d = JSON.parse(localStorage.getItem(k) || "[]");
+    d.push({w: w, n: w.length, h: w[0], k: hak, t: Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(k, JSON.stringify(d));
+  }catch(e){}
+}
 function paraYaz(){ paraEl.innerHTML = '<em>₺</em>' + TL(para); }
 function uyar(m){
   const d = document.createElement("div"); d.className = "uyari"; d.textContent = m;
@@ -321,6 +331,7 @@ function kelimeOyna(n, odul, opt, bitti){
       for(let i = 0; i < n; i++) h[i].className = "hucre " + r[i];
       klvBoya(tah, r);
       if(tah === gizli){
+        defterYaz(gizli, sat + 1);
         if(!opt.odulYok){ para += odul; paraYaz(); }
         if(!opt.sureyok) sureGoster(false);
         return setTimeout(() => bitti(true, gizli), 620);
@@ -328,6 +339,7 @@ function kelimeOyna(n, odul, opt, bitti){
     }
     sat++; giris = gizli[0];
     if(sat >= satirSay){
+      defterYaz(gizli, 0);
       if(!opt.sureyok) sureGoster(false);
       if(opt.sureyok) return cevabiGoster("Bilinemedi", () => bitti(false, gizli));
       return setTimeout(() => bitti(false, gizli), 500); }

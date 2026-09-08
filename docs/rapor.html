@@ -3,160 +3,239 @@
 <meta name="theme-color" content="#0f1720">
 <title>Gelişim raporu — Lingo</title>
 <style>
-:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
+:root{--kagit:#0f1720;--kart:#1a2430;--kart2:#141d27;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--kirmizi:#d94a5a;--altin:#f4c95d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:var(--kagit);color:var(--murekkep);
   font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
 button{font:inherit;cursor:pointer}
-header{background:#0a1119;border-bottom:1px solid var(--cizgi);padding:10px 12px;
-  display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
-header a{color:var(--soluk);text-decoration:none;font-size:15px}
-header b{font-size:13px;letter-spacing:1px;color:var(--altin);text-transform:uppercase}
-.sar{max-width:600px;margin:0 auto;padding:14px 12px 40px}
-h1{font-size:24px;margin:0 0 4px;letter-spacing:-.4px}
-h2{font-size:13px;letter-spacing:1.3px;text-transform:uppercase;color:var(--soluk);
-  margin:22px 0 8px}
-p{color:var(--soluk);font-size:15px;margin:0 0 10px;line-height:1.5}
-.kisi{display:flex;align-items:center;justify-content:center;gap:8px;
-  background:var(--kart);border:1px solid var(--cizgi);border-radius:999px;
-  padding:8px 14px;margin:0 0 14px;font-size:14px;color:var(--soluk);cursor:pointer}
-.kisi b{color:var(--murekkep);font-size:15px}
-.kisi u{text-decoration:none;color:var(--yesil);font-weight:700;font-size:13px}
-.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;
-  margin:10px 0 16px}
-.kgrid button{background:#22303d;border:1.5px solid var(--cizgi);border-radius:11px;
-  padding:13px 6px;color:var(--murekkep);font-weight:700;font-size:15px}
+header{background:#0a1119;border-bottom:1px solid var(--cizgi);padding:11px 14px;
+  display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:5}
+header a{color:var(--soluk);text-decoration:none;font-size:16px}
+header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:uppercase}
+.sar{max-width:620px;margin:0 auto;padding:18px 14px 48px}
+h1{font-size:27px;margin:0 0 3px;letter-spacing:-.6px}
+.alt1{color:var(--soluk);font-size:14px;margin:0 0 16px}
+h2{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--soluk);
+  margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--cizgi);font-weight:800}
+p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
+/* kisi */
+.kisi{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:12px 15px;margin:0 0 16px;cursor:pointer}
+.kisi .sol{display:flex;align-items:center;gap:10px}
+.kisi .av{width:34px;height:34px;border-radius:50%;background:var(--altin);color:#1a1200;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.kisi b{font-size:16.5px;display:block;line-height:1.2}
+.kisi i{font-style:normal;font-size:12.5px;color:var(--soluk)}
+.kisi u{text-decoration:none;color:var(--yesil);font-weight:700;font-size:13px;
+  white-space:nowrap}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;
+  margin:0 0 18px}
+.kgrid button{background:var(--kart2);border:1.5px solid var(--cizgi);border-radius:12px;
+  padding:12px 8px;color:var(--murekkep);font-weight:700;font-size:15px;text-align:left}
 .kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
-.ozet{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px}
-.ozet div{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;
-  padding:12px 8px;text-align:center}
-.ozet b{display:block;font-size:24px;font-weight:800;letter-spacing:-.5px;
+.kgrid button small{display:block;font-size:11px;font-weight:600;opacity:.75;margin-top:2px}
+/* ozet */
+.ozet{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ozet div{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:14px 6px;text-align:center}
+.ozet b{display:block;font-size:23px;font-weight:800;letter-spacing:-.6px;
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.ozet span{font-size:10px;color:var(--soluk);text-transform:uppercase;letter-spacing:.6px;
+  display:block;margin-top:5px;line-height:1.3}
+/* akis noktalari */
+.akis{display:flex;flex-wrap:wrap;gap:5px}
+.akis i{width:15px;height:15px;border-radius:5px;display:block}
+.akis i.d{background:var(--yesil)}.akis i.y{background:var(--kirmizi)}
+/* uzunluk kartlari */
+.uz{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:14px 15px;margin-bottom:9px}
+.uz .b1{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
+.uz .b1 b{font-size:17px;letter-spacing:-.2px}
+.uz .b1 u{text-decoration:none;font-size:19px;font-weight:800;
   font-variant-numeric:tabular-nums}
-.ozet span{font-size:11px;color:var(--soluk);text-transform:uppercase;letter-spacing:.5px}
-table{width:100%;border-collapse:collapse;font-size:15px}
-td,th{padding:8px 6px;border-bottom:1px solid var(--cizgi);text-align:left}
-th{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--soluk)}
-td.h{font-weight:800;font-size:17px;width:38px}
-td.o{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;width:64px}
-td.b{width:38%}
-.cub{height:7px;border-radius:4px;background:#22303d;overflow:hidden}
-.cub i{display:block;height:100%}
+.cub{height:8px;border-radius:5px;background:#22303d;overflow:hidden}
+.cub i{display:block;height:100%;border-radius:5px}
 .i1{background:var(--yesil)}.i2{background:var(--sari)}.i3{background:var(--kirmizi)}
+.uz .b2{display:flex;gap:14px;margin-top:9px;font-size:12.5px;color:var(--soluk);
+  flex-wrap:wrap}
+.uz .b2 em{font-style:normal;color:var(--murekkep);font-weight:700}
+/* harf tablosu */
+.hbas{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--altin);
+  font-weight:800;margin:16px 0 6px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td{padding:9px 6px;border-bottom:1px solid var(--cizgi);vertical-align:middle}
+td.h{font-weight:800;font-size:18px;width:42px}
+td.b{width:44%}
+td.s{color:var(--soluk);font-size:12.5px;width:62px}
+td.o{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;width:56px}
 tr.tik{cursor:pointer}
-.wrap{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+tr.tik:active{background:var(--kart2)}
+/* kelimeler */
+.wrap{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 2px}
 .wrap span{font-family:ui-monospace,Menlo,monospace;font-size:14px;font-weight:700;
-  padding:5px 9px;border-radius:7px;background:#3d1720;color:#f2a3ad;letter-spacing:1px}
-.wrap span i{font-style:normal;font-size:10px;opacity:.75;margin-left:4px}
+  padding:6px 10px;border-radius:8px;letter-spacing:1.2px}
+.wrap span.k{background:#3d1720;color:#f2a3ad;border:1px solid #5c2230}
+.wrap span.d{background:#173d27;color:#7fe0a6;border:1px solid #235c39}
+.wrap span i{font-style:normal;font-size:10px;opacity:.75;margin-left:5px}
 .buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
-  border-radius:12px;padding:14px;font-weight:800;font-size:16px;margin-top:10px;
+  border-radius:13px;padding:14px;font-weight:800;font-size:16px;margin-top:10px;
   text-align:center;text-decoration:none}
 .buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
-.bos{background:var(--kart);border:1px dashed var(--cizgi);border-radius:12px;
-  padding:22px 16px;text-align:center;color:var(--soluk);font-size:15px;line-height:1.55}
+.bos{background:var(--kart2);border:1px dashed var(--cizgi);border-radius:12px;
+  padding:16px;text-align:center;color:var(--soluk);font-size:14px;line-height:1.6}
+.dip{font-size:12px;color:#5f6b78;margin-top:20px;line-height:1.6}
+.dip s{text-decoration:none;color:var(--kirmizi);cursor:pointer}
 </style></head><body>
 <header><a href="index.html">‹</a><b>Gelişim raporu</b></header>
 <div class="sar" id="alan"></div>
 <script>
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
-const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
-let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false;
-try{
-  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
-  if(Array.isArray(k) && k.length) KISILER = k;
-  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
-}catch(e){ KISI = KISILER[0]; }
-
 function defter(ad){
   try{ const d = JSON.parse(localStorage.getItem("lingo_defter_"+ad)||"[]");
        return Array.isArray(d) ? d : []; }catch(e){ return []; }
 }
+const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
+let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false;
+try{
+  const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
+  if(Array.isArray(k) && k.length) KISILER = k.slice();
+  for(let i=0;i<localStorage.length;i++){
+    const key = localStorage.key(i);
+    if(key && key.indexOf("lingo_defter_") === 0){
+      const ad = key.slice(13);
+      if(ad && KISILER.indexOf(ad) < 0) KISILER.push(ad);
+    }
+  }
+  KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
+  if(KISILER.indexOf(KISI) < 0) KISILER.unshift(KISI);
+  if(!defter(KISI).length){
+    const dolu = KISILER.find(a => defter(a).length);
+    if(dolu) KISI = dolu;
+  }
+}catch(e){ KISI = KISILER[0]; }
+
 function kisiSec(a){ KISI=a; secimAcik=false;
   try{ localStorage.setItem("lingo_kisi",a); }catch(e){} ciz(); }
 function sinif(o){ return o>=75 ? "i1" : (o>=50 ? "i2" : "i3"); }
+function renk(o){ return o>=75 ? "var(--yesil)" : (o>=50 ? "var(--sari)" : "var(--kirmizi)"); }
+function UZ(n){ return n + " harfli"; }
 
 function ciz(){
   const d = defter(KISI);
-  const kisiSerit = `<div class="kisi" onclick="secimAcik=!secimAcik;ciz()">
-      👤 <b>${KISI}</b> raporu <u>${secimAcik?"kapat":"kişi değiştir"}</u></div>
-    ${secimAcik ? `<div class="kgrid">${KISILER.map(a =>
-      `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">
-        ${a}${defter(a).length?" · "+defter(a).length:""}</button>`).join("")}</div>` : ""}`;
+  const serit = `
+    <div class="kisi" onclick="secimAcik=!secimAcik;ciz()">
+      <span class="sol"><span class="av">${TRU(KISI[0]||"?")}</span>
+        <span><b>${KISI}</b><i>${d.length ? d.length + " kelime kayıtlı" : "henüz kayıt yok"}</i></span></span>
+      <u>${secimAcik ? "kapat" : "kişi değiştir"}</u></div>
+    ${secimAcik ? `<div class="kgrid">${KISILER.map(a => {
+        const n = defter(a).length;
+        return `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">
+          ${a}<small>${n ? n + " kelime" : "kayıt yok"}</small></button>`;}).join("")}</div>` : ""}`;
 
   if(!d.length){
-    $("#alan").innerHTML = `<h1>Gelişim raporu</h1>${kisiSerit}
-      <div class="bos">Henüz kayıt yok.<br>Alıştırma yaptıkça bilinen ve
-        takılınan kelimeler burada birikir.</div>
+    $("#alan").innerHTML = `<h1>Gelişim raporu</h1>
+      <p class="alt1">Alıştırmalarda ve oyunlarda çıkan sonuçlar burada birikir.</p>
+      ${serit}
+      <div class="bos">Bu kişi adına henüz kayıt yok.<br>
+        Bir alıştırma turu yapın, sonuçlar otomatik işlenecek.</div>
       <a class="buton" href="alistirma4.html">4 HARFLİ ALIŞTIRMAYA BAŞLA</a>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>`;
     return;
   }
-  const top = d.length, bil = d.filter(r=>r.k>0).length;
-  const ort = bil ? (d.filter(r=>r.k>0).reduce((t,r)=>t+r.k,0)/bil) : 0;
-  const son = d.slice(-50), sonBil = son.filter(r=>r.k>0).length;
 
-  /* uzunluga gore */
-  let uz = "";
+  const bil = d.filter(r=>r.k>0);
+  const basari = Math.round(100*bil.length/d.length);
+  const ort = bil.length ? (bil.reduce((t,r)=>t+r.k,0)/bil.length) : 0;
+  const son = d.slice(-20), sonO = Math.round(100*son.filter(r=>r.k>0).length/son.length);
+  const ilk = bil.filter(r=>r.k===1).length;
+
+  /* --- uzunluk kartlari --- */
+  let uzHtml = "";
   for(const n of [4,5,6,7]){
     const g = d.filter(r=>r.n===n); if(!g.length) continue;
-    const o = Math.round(100*g.filter(r=>r.k>0).length/g.length);
-    uz += `<tr><td class="h">${n}h</td><td class="b"><div class="cub">
-      <i class="${sinif(o)}" style="width:${o}%"></i></div></td>
-      <td style="color:var(--soluk);font-size:13px">${g.length} kelime</td>
-      <td class="o">%${o}</td></tr>`;
+    const gb = g.filter(r=>r.k>0);
+    const o = Math.round(100*gb.length/g.length);
+    const go = gb.length ? (gb.reduce((t,r)=>t+r.k,0)/gb.length).toFixed(1) : "—";
+    /* bu uzunlukta en zayif harf */
+    const hh = {};
+    for(const r of g){ (hh[r.h]=hh[r.h]||{t:0,b:0}).t++; if(r.k>0) hh[r.h].b++; }
+    const zl = Object.keys(hh).filter(h=>hh[h].t>=2)
+      .map(h=>({h,o:Math.round(100*hh[h].b/hh[h].t)})).sort((a,b)=>a.o-b.o)[0];
+    uzHtml += `<div class="uz">
+      <div class="b1"><b>${UZ(n)}</b><u style="color:${renk(o)}">%${o}</u></div>
+      <div class="cub"><i class="${sinif(o)}" style="width:${o}%"></i></div>
+      <div class="b2"><span><em>${g.length}</em> kelime</span>
+        <span>ortalama <em>${go}</em> tahmin</span>
+        ${zl ? `<span>en zayıf harf <em>${TRU(zl.h)}</em> (%${zl.o})</span>` : ""}</div>
+    </div>`;
   }
-  /* harflere gore (en zayiftan) */
-  const hs = {};
-  for(const r of d){
-    const k = r.h + "|" + r.n;                       // harf + uzunluk ayri ayri
-    (hs[k] = hs[k] || {t:0, b:0, h:r.h, n:r.n}).t++;
-    if(r.k>0) hs[k].b++;
-  }
-  const hl = Object.values(hs).filter(x=>x.t>=2)
-    .map(x=>({...x, o: Math.round(100*x.b/x.t)}))
-    .sort((a,b)=>a.o-b.o || b.t-a.t);
-  const hsat = hl.slice(0,12).map(x=>
-    `<tr class="tik" onclick="location.href='alistirma${x.n}.html#h=${encodeURIComponent(x.h)}'">
-      <td class="h">${TRU(x.h)}<em style="font-style:normal;font-size:11px;
-        color:var(--soluk);display:block;font-weight:600">${x.n}h</em></td>
-      <td class="b"><div class="cub"><i class="${sinif(x.o)}" style="width:${x.o}%"></i></div></td>
-      <td style="color:var(--soluk);font-size:13px">${x.b}/${x.t}</td>
-      <td class="o">%${x.o}</td></tr>`).join("");
 
-  /* takilinan kelimeler */
-  const tk = {};
-  for(const r of d) if(r.k===0) tk[r.w] = (tk[r.w]||0)+1;
+  /* --- harf harf, uzunluk basliklariyla --- */
+  let hbHtml = "", hbVar = false;
+  for(const n of [4,5,6,7]){
+    const g = d.filter(r=>r.n===n); if(!g.length) continue;
+    const hh = {};
+    for(const r of g){ (hh[r.h]=hh[r.h]||{t:0,b:0}).t++; if(r.k>0) hh[r.h].b++; }
+    const liste = Object.keys(hh).map(h=>({h,...hh[h],o:Math.round(100*hh[h].b/hh[h].t)}))
+      .sort((a,b)=>a.o-b.o || b.t-a.t);
+    if(!liste.length) continue;
+    hbVar = true;
+    hbHtml += `<div class="hbas">${UZ(n)}</div><table>` + liste.map(x =>
+      `<tr class="tik" onclick="location.href='alistirma${n}.html#h=${encodeURIComponent(x.h)}'">
+        <td class="h">${TRU(x.h)}</td>
+        <td class="b"><div class="cub"><i class="${sinif(x.o)}" style="width:${x.o}%"></i></div></td>
+        <td class="s">${x.b}/${x.t}</td>
+        <td class="o" style="color:${renk(x.o)}">%${x.o}</td></tr>`).join("") + `</table>`;
+  }
+
+  /* --- kelimeler --- */
+  const tk = {}, iy = {};
+  for(const r of d){ if(r.k===0) tk[r.w]=(tk[r.w]||0)+1; else if(r.k===1) iy[r.w]=1; }
   const tkl = Object.keys(tk).sort((a,b)=>tk[b]-tk[a]);
-  const tkHtml = tkl.length
-    ? `<div class="wrap">${tkl.slice(0,40).map(w=>
-        `<span>${TRU(w)}${tk[w]>1?`<i>${tk[w]}×</i>`:""}</span>`).join("")}</div>`
-    : `<p>Hiç takıldığın kelime yok — henüz.</p>`;
+  const iyl = Object.keys(iy);
   const uzTekrar = [4,5,6,7].filter(n => tkl.some(w=>w.length===n));
 
-  $("#alan").innerHTML = `<h1>Gelişim raporu</h1>${kisiSerit}
+  $("#alan").innerHTML = `<h1>Gelişim raporu</h1>
+    <p class="alt1">Alıştırmalarda ve oyunlarda çıkan sonuçlar burada birikir.</p>
+    ${serit}
     <div class="ozet">
-      <div><b>${top}</b><span>kelime</span></div>
-      <div><b style="color:${sinif(Math.round(100*bil/top))==="i1"?"var(--yesil)":
-        (sinif(Math.round(100*bil/top))==="i2"?"var(--sari)":"var(--kirmizi)")}"
-        >%${Math.round(100*bil/top)}</b><span>bilinen</span></div>
-      <div><b>${ort?ort.toFixed(1):"—"}</b><span>ort. tahmin</span></div>
-      <div><b>%${son.length?Math.round(100*sonBil/son.length):0}</b><span>son 50</span></div>
+      <div><b>${d.length}</b><span>kelime</span></div>
+      <div><b style="color:${renk(basari)}">%${basari}</b><span>bilinen</span></div>
+      <div><b>${ort ? ort.toFixed(1) : "—"}</b><span>ort. tahmin</span></div>
+      <div><b style="color:${renk(sonO)}">%${sonO}</b><span>son ${son.length}</span></div>
     </div>
+
+    <h2>Son ${son.length} kelime</h2>
+    <div class="akis">${son.map(r=>`<i class="${r.k>0?"d":"y"}"></i>`).join("")}</div>
+    <p style="margin-top:9px;font-size:13px">Yeşil bildiklerin, kırmızı takıldıkların.
+      İlk tahminde bildiğin kelime sayısı: <b style="color:var(--murekkep)">${ilk}</b>.</p>
+
     <h2>Uzunluğa göre</h2>
-    <table>${uz}</table>
-    <h2>En zayıf harflerin</h2>
-    <p style="font-size:13.5px">Harfin altında hangi uzunluk olduğu yazıyor. Satıra dokun, o harfle alıştırma başlasın.</p>
-    <table><tr><th>harf</th><th>başarı</th><th>bilinen</th><th></th></tr>${hsat}</table>
-    <h2>Takıldığın kelimeler${tkl.length?" · "+tkl.length:""}</h2>
-    ${tkHtml}
+    ${uzHtml}
+
+    <h2>Harf harf</h2>
+    ${hbVar
+      ? `<p>Satıra dokun, o harfle o uzunlukta alıştırma başlasın.</p>${hbHtml}`
+      : `<div class="bos">Harf dağılımı için biraz daha kelime gerekiyor.</div>`}
+
+    <h2>Takıldığın kelimeler${tkl.length ? " · " + tkl.length : ""}</h2>
+    ${tkl.length
+      ? `<div class="wrap">${tkl.map(w=>`<span class="k">${TRU(w)}${
+          tk[w]>1?`<i>${tk[w]}×</i>`:""}</span>`).join("")}</div>`
+      : `<div class="bos">Hiç takıldığın kelime yok. Devam et.</div>`}
+
+    ${iyl.length ? `<h2>İlk tahminde bildiklerin · ${iyl.length}</h2>
+      <div class="wrap">${iyl.slice(-30).map(w=>`<span class="d">${TRU(w)}</span>`).join("")}</div>` : ""}
+
     ${uzTekrar.map(n=>`<a class="buton" href="alistirma${n}.html#tekrar">
-      ${n} HARFLİ TAKILDIKLARINI TEKRAR ET</a>`).join("")}
+      ${UZ(n).toUpperCase()} TAKILDIKLARINI TEKRAR ET</a>`).join("")}
     <a class="buton ikinci" href="index.html">ANA SAYFA</a>
-    <p style="font-size:12.5px;margin-top:14px">Kayıtlar bu telefonda,
-      ${KISI} adına tutuluyor. <span style="color:var(--kirmizi);cursor:pointer"
-      onclick="if(confirm('${KISI} kayıtları silinsin mi?')){
-        localStorage.removeItem('lingo_defter_${KISI}');ciz();}">kayıtları sil</span></p>`;
+    <div class="dip">Kayıtlar bu telefonda, <b>${KISI}</b> adına tutuluyor.
+      <s onclick="if(confirm('${KISI} kayıtları silinsin mi?')){
+        localStorage.removeItem('lingo_defter_${KISI}');ciz();}">kayıtları sil</s></div>`;
 }
 ciz();
 </script></body></html>
