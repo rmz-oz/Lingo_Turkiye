@@ -331,13 +331,9 @@ function kisiEkrani(){
       <b>Gelişim raporu</b>, zayıf harflerin, ünvanın ve rozetlerin bu kayıttan
       hesaplanır.</p>
     <p class="kucuk" style="text-align:left">
-      <b>Aynı telefonu birkaç kişi kullanıyorsa</b> herkes kendi ismini seçsin —
-      yoksa istatistikler karışır. Kendi telefonunuzsa bir kez seçmeniz yeterli,
-      hatırlanır.</p>
-    <p class="kucuk" style="text-align:left">
-      Kayıtlar <b>sadece bu telefonda</b> durur, hiçbir yere gönderilmez.
-      Başka birinin kendi telefonundaki sonuçları burada görünmez;
-      buradakiler de oraya gitmez.</p>
+      <b>Hangi avatarla oynarsan</b> kayıtlar ona işlenir: Serpil'i seçtiysen
+      Serpil'in raporu, Zeynep'i seçtiysen Zeynep'in raporu büyür.
+      Bir kez seçmen yeterli, hatırlanır — istediğin zaman da değiştirebilirsin.</p>
     <div class="kgrid">${KISILER.map(a =>
       `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
       ).join("")}</div>
