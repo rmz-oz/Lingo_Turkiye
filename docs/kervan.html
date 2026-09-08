@@ -3,7 +3,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="theme-color" content="#0f1720">
-<title>Sözün Kervanı — Lingo</title>
+<title>Bir Harf Kalmıştı — Lingo</title>
 <style>
 :root{
   --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
@@ -201,7 +201,7 @@ table.rek td.tl{text-align:right;color:var(--yesil);font-weight:800;
 </style></head><body>
 
 <div id="bar">
-  <span class="yer" id="yer">Sözün Kervanı</span>
+  <span class="yer" id="yer">Bir Harf Kalmıştı</span>
   <span class="kalp" id="kalp"></span>
   <span class="sag">
     <span class="akce" id="akce"></span>
@@ -574,7 +574,7 @@ function fiyat(u){
 
 /* ---- ust bar ---- */
 function barYaz(){
-  if(!S){ $("#yer").textContent = "Sözün Kervanı";
+  if(!S){ $("#yer").textContent = "Bir Harf Kalmıştı";
     $("#kalp").textContent = ""; $("#akce").textContent = "";
     $("#lira").textContent = ""; return; }
   const b = Math.min(YY().bolumler.length - 1, Math.floor(S.etap / 4));
@@ -686,6 +686,7 @@ function etapBasla(zorlaKelime){
   }
   let sat = 0, giris = "", kalanSn = sure, bitti = false;
   let cifte = false, keskinKullandi = false, tanimAcik = false, anagramAcik = false;
+  let enIyi = 0;                                  /* en cok kac harf yerini buldu */
   klvDurum = {}; AKTIF = {};
 
   const yaziBasla = () => { giris = ""; for(let k = 0; k < n; k++)
@@ -791,6 +792,7 @@ function etapBasla(zorlaKelime){
       uyar("Süre doldu"); return bitir(false);
     }
     const r = renk(gizli, tah), h = satirlar[sat].children;
+    enIyi = Math.max(enIyi, r.filter(x => x === "tam").length);
     for(let k = 0; k < n; k++) h[k].className = "hucre " + r[k];
     klvBoya(tah, r);
     if(tah === gizli){ LG_ses("dogru"); return bitir(true, sat + 1); }
@@ -846,7 +848,7 @@ function etapBasla(zorlaKelime){
       `<div class="kutu ort">
         <div class="eyebrow">${S.etap}. etap ${kazandi ? "tamam" : "kaybedildi"}</div>
         <div class="sonuc ${kazandi ? "iyi" : "kotu"}" style="margin-top:8px">
-          ${kazandi ? "Doğru!" : "Doğru cevap"}
+          ${kazandi ? "Doğru!" : (enIyi === n - 1 ? "Bir harf kalmıştı…" : "Doğru cevap")}
           <span class="kw">${TRU(gizli)}</span></div>
         ${TANIM[gizli] ? `<p class="kucuk" style="margin-top:8px">${TANIM[gizli]}</p>` : ""}
         <div class="ozet">
@@ -1414,7 +1416,7 @@ window.kisiSec = function(a){
 function girisEkran(){
   const d = LG_defter(KISI), acik = URUN.filter(u => kilitDurum(u).acik).length;
   ekran(`<div class="kutu">
-      <div class="eyebrow">Sözün Kervanı · ${YY().em} ${YY().ad}</div>
+      <div class="eyebrow">Bir Harf Kalmıştı · ${YY().em} ${YY().ad}</div>
       <h1>Yirmi konak, bir kapı</h1>
       <p class="ozet1">Bu oyundaki 4, 5 ve 6 harfli kelimelerin hepsi
         <b>üç sezonda da çıkmış</b> kelimelerden geliyor — yani en çok tekrar edenler.

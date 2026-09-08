@@ -10,7 +10,7 @@
 
 <br>
 
-## 🐪 [SÖZÜN KERVANI](https://rmz-oz.github.io/Lingo_Turkiye/kervan.html)
+## 🐪 [BİR HARF KALMIŞTI](https://rmz-oz.github.io/Lingo_Turkiye/kervan.html)
 
 <br>
 

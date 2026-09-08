@@ -78,7 +78,7 @@ function LG_unvan(say){
   return {simdi, sonraki, oran, kalan: sonraki ? sonraki.n - say : 0};
 }
 const LG_GOREVSAY = 16;   /* plandaki toplam gorev */
-/* --- Sozun Kervani meta durumu (kalici ilerleme) --- */
+/* --- Bir Harf Kalmisti meta durumu (kalici ilerleme) --- */
 function LG_kervanMeta(ad){
   try{ const v = JSON.parse(localStorage.getItem("lingo_kervan_meta_"+ad) || "null");
        return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
@@ -226,7 +226,7 @@ function LG_rozet(d, p, kv){
    {e:"🔮",a:"Kahin",          s:"50 kelime ilk tahminde", v:ilk>=50},
    {e:"🏆",a:"Kupa",           s:"dört uzunlukta da %70+", v:tumUzunlukIyi},
    {e:"🌍",a:"Tam Alfabe",     s:"28 harfin hepsinden kelime", v:tumAlfabe},
-   /* --- Sozun Kervani --- */
+   /* --- Bir Harf Kalmisti --- */
    {e:"🐪",a:"Kervanbaşı",     s:"bir kervan yolculuğunu bitir", v:(K.bitirilen||0)>=1},
    {e:"🏰",a:"Söz Kalesi",     s:"kervanda son kapıyı aç",       v:(K.sonKapi||0)>=1},
    {e:"🫀",a:"Tek Kalp",       s:"kervanı tek kalple bitir",     v:!!K.tekKalp},
