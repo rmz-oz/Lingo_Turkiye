@@ -215,12 +215,13 @@ let KARISIK = false, BLOK = [], blokIdx = -1, OZEL = null;
 let YARDIM = false, HAVUZL = [], cizYardim = null;
 /* --- kim calisiyor --- */
 const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
+const KAYITSIZ = "__kayitsiz__";
 let KISILER = KISI_VAR.slice(), KISI = null;
 try{
   const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
   if(Array.isArray(k) && k.length) KISILER = k;
   KISI = localStorage.getItem("lingo_kisi") || null;
-  if(KISI && KISILER.indexOf(KISI) < 0) KISI = null;
+  if(KISI && KISI !== KAYITSIZ && KISILER.indexOf(KISI) < 0) KISI = null;
 }catch(e){}
 function kisiKaydet(){
   try{ localStorage.setItem("lingo_kisi", KISI);
@@ -236,7 +237,12 @@ function kisiEkrani(){
        değiştirebilirsiniz.</p>
     <div class="kgrid">${KISILER.map(a =>
       `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
-      ).join("")}</div></div>`;
+      ).join("")}</div>
+    <button class="buton ikinci" style="margin-top:6px"
+      onclick="kisiSec('${KAYITSIZ}')">
+      KAYIT TUTMA<small style="display:block;font-size:12px;font-weight:600;opacity:.7;
+        margin-top:2px">sonuçlar kaydedilmez, istatistik hesaplanmaz</small></button>
+    </div>`;
   orta.scrollTop = 0;
 }
 /* --- calisma defteri --- */
@@ -246,7 +252,7 @@ function defterOku(){
        return Array.isArray(d) ? d : []; }catch(e){ return []; }
 }
 function defterYaz(w, hak){
-  if(!KISI) return;
+  if(!KISI || KISI === KAYITSIZ) return;
   try{
     const d = defterOku();
     d.push({w: w, n: w.length, h: w[0], k: hak, t: Date.now()});
@@ -660,8 +666,9 @@ function giris(){
   orta.className = "ust";
   orta.innerHTML = `<div class="sec">
     <h1>5 HARFLİ ALIŞTIRMA</h1>
-    <div class="kisi" onclick="kisiEkrani()">👤 <b>${KISI}</b> olarak çalışıyorsun
-      <u>değiştir</u></div>
+    <div class="kisi" onclick="kisiEkrani()">${KISI===KAYITSIZ
+      ? "🔓 <b>Kayıt tutulmuyor</b>"
+      : "👤 <b>"+KISI+"</b> olarak çalışıyorsun"}<u>değiştir</u></div>
     <p class="not">Hangi harfle çalışacaksınız?
        <b>445 bölümde en çok sorulandan en aza</b> sıralı — baştakiler karşınıza
        çıkma ihtimali en yüksek harfler.<br>

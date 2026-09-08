@@ -680,6 +680,7 @@ let SON=null, kayitEdilen=null;
 /* calisma defteri: cevapladigin kelimeler masa adina yazilir */
 function defterYaz(ad, w, hak){
   if(!ad || !w) return;
+  try{ if(localStorage.getItem("lingo_kisi") === "__kayitsiz__") return; }catch(e){}
   try{
     const k = "lingo_defter_" + ad;
     const d = JSON.parse(localStorage.getItem(k) || "[]");

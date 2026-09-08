@@ -116,6 +116,7 @@ try{
     }
   }
   KISI = localStorage.getItem("lingo_kisi") || KISILER[0];
+  if(KISI === "__kayitsiz__") KISI = KISILER.find(a=>defter(a).length) || KISILER[0];
   if(KISILER.indexOf(KISI)<0) KISILER.unshift(KISI);
 }catch(e){ KISI = KISILER[0]; }
 
