@@ -383,18 +383,18 @@ const URUN = [
       "yeniden başlar.", kilit:{r:"İkinci Şans"}},
  /* --- 2. han: yetenekler --- */
  {id:"cimrikese", ad:"Berna'nın Cimri Kesesi", em:"👝", tip:"yetenek", han:1, fiyat:140,
-  kisa:"Kullanılmayan her hak 10 akçe daha getirir",
-  tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 10 akçe getirir; bu "+
-      "yetenekle 20 akçe getirir. Kelimeyi erken bulmak doğrudan para demek.",
+  kisa:"Kullanılmayan her hak 20 akçe daha getirir",
+  tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 20 akçe getirir; bu "+
+      "yetenekle 40 akçe getirir. Kelimeyi erken bulmak doğrudan para demek.",
   kilit:null},
  {id:"tuccardili", ad:"Berna'nın Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
   kisa:"Bütün hanlarda %20 indirim",
   tam:"Kalan üç handa gördüğün her fiyat %20 düşer. Yolun başında alırsan kendini "+
       "fazlasıyla amorti eder.", kilit:{r:"Hızlı"}},
  {id:"kervanbereketi", ad:"Nurdan'ın Bereketi", em:"🌾", tip:"yetenek", han:1, fiyat:160,
-  kisa:"Her etap sonunda 15 akçe fazla",
-  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 15 akçe eklenir. "+
-      "Yolun başında alınırsa 19 etap × 15 akçe eder.", kilit:{u:4}},
+  kisa:"Her etap sonunda 30 akçe fazla",
+  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 30 akçe eklenir. "+
+      "Yolun başında alınırsa kalan etap sayısı kadar tekrarlanır.", kilit:{u:4}},
  {id:"saatustasi", ad:"Bülent'in Saati", em:"⌛", tip:"yetenek", han:1, fiyat:170,
   kisa:"Bütün etaplarda süre 5 saniye uzun",
   tam:"Kalan bütün etapların süresi 5 saniye artar. Son bölümlerde süre 16 saniyeye "+
@@ -820,8 +820,9 @@ function etapBasla(zorlaKelime){
     S.gorulen.push(gizli);
     defterYaz(gizli, kazandi ? hak : 0);
     const kazanc = kazandi ? odul() : (sahipmi("muska") ? Math.round(odul()/2) : 0);
-    let akce = 20 + (satirSay - (kazandi ? hak : satirSay)) * (sahipmi("cimrikese") ? 20 : 10)
-             + (sureyok ? 0 : Math.max(0, kalanSn)) + (sahipmi("kervanbereketi") ? 15 : 0);
+    let akce = 40 + (satirSay - (kazandi ? hak : satirSay)) * (sahipmi("cimrikese") ? 40 : 20)
+             + (sureyok ? 0 : Math.max(0, kalanSn) * 2)
+             + (sahipmi("kervanbereketi") ? 30 : 0);
     if(!kazandi) akce = Math.round(akce * 0.4);
     S.para += kazanc; S.akce += akce;
     if(kazandi){ S.seri++; S.dogru.push(gizli); }
@@ -1502,6 +1503,23 @@ function basla(){
   if(S.etap === 0 && !S.bolumGirisi && !S.hanNo) return girisEkran();
   devamEkran();
 }
+
+/* ---- fiziksel klavye (bilgisayarda oynayanlar icin) ---- */
+document.addEventListener("keydown", e => {
+  if(klv.classList.contains("gizli")) return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if(k === "Enter"){
+    const b = [...klv.querySelectorAll("button")].find(x => x.textContent === "TAMAM");
+    if(b){ e.preventDefault(); b.click(); }
+  } else if(k === "Backspace"){
+    const b = [...klv.querySelectorAll("button")].find(x => x.textContent === "SİL");
+    if(b){ e.preventDefault(); b.click(); }
+  } else if(k.length === 1){
+    const c = k.toLocaleLowerCase("tr");
+    if(klvTus[c]){ e.preventDefault(); klvTus[c].click(); }
+  }
+});
 
 /* ================= yukleme ================= */
 const GECERLI = {};
