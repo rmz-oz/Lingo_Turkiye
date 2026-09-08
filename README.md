@@ -26,7 +26,7 @@
 
 <br>
 
-### 📊 [GELİŞİM RAPORU](https://rmz-oz.github.io/Lingo_Turkiye/rapor.html)
+### 📊 [GELİŞİM RAPORUM](https://rmz-oz.github.io/Lingo_Turkiye/rapor.html)
 
 <br>
 
