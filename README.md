@@ -10,6 +10,10 @@
 
 <br>
 
+## 🐪 [SÖZÜN KERVANI](https://rmz-oz.github.io/Lingo_Turkiye/kervan.html)
+
+<br>
+
 ## ▶ [OYNA](https://rmz-oz.github.io/Lingo_Turkiye/oyun.html)
 
 <br>

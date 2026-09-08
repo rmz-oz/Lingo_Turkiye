@@ -1,0 +1,1266 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="theme-color" content="#0f1720">
+<title>Sözün Kervanı — Lingo</title>
+<style>
+:root{
+  --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
+  --cizgi:#2c3947; --yesil:#2e9e5b; --sari:#e6b22e; --gri:#3a4756;
+  --kirmizi:#d94a5a; --altin:#f4c95d; --mor:#8e6ce8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;user-select:none}
+button{font:inherit;cursor:pointer}
+.gizli{display:none!important}
+/* ---- ust bar ---- */
+#bar{display:flex;align-items:center;gap:9px;padding:8px 11px;background:#0a1119;
+  border-bottom:1px solid var(--cizgi);flex:none;font-size:14px}
+#bar .yer{font-size:12px;letter-spacing:.9px;font-weight:700;color:var(--altin);
+  text-transform:uppercase;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+#bar .kalp{font-size:14px;letter-spacing:1px;flex:none}
+#bar .akce,#bar .lira{font-variant-numeric:tabular-nums;font-weight:800;flex:none;
+  font-size:14px}
+#bar .akce{color:var(--sari)} #bar .lira{color:var(--yesil)}
+#bar .sag{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}
+#bar #sesd{border:1px solid var(--cizgi);background:transparent;border-radius:99px;
+  width:32px;height:27px;padding:0;font-size:13px;line-height:1;color:#fff;flex:none}
+#bar #sesd.kapali{opacity:.45}
+#sure{width:100%;height:4px;background:#22303d;flex:none}
+#sure i{display:block;height:100%;background:var(--altin);width:100%;transition:width .1s linear}
+#sure.az i{background:var(--kirmizi)}
+/* ---- orta ---- */
+#orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
+  padding:12px 12px 18px;gap:11px;min-height:0;-webkit-overflow-scrolling:touch}
+#orta.ort{justify-content:center}
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:19px 17px;max-width:470px;width:100%}
+.kutu.ort{text-align:center}
+.kutu h1{font-size:27px;margin:0 0 5px;letter-spacing:-.4px;line-height:1.15}
+.kutu h2{font-size:19px;margin:0 0 8px}
+.kutu p{color:var(--soluk);margin:0 0 10px;font-size:15px;line-height:1.6}
+.kutu p b{color:var(--murekkep)}
+.kutu p:last-child{margin-bottom:0}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:12px;padding:14px;font-weight:800;font-size:16.5px;margin-top:9px;
+  text-align:center;text-decoration:none}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.buton.mor{background:var(--mor);color:#fff}
+.buton:disabled{opacity:.4}
+.kucuk{font-size:13px;color:var(--soluk);line-height:1.55}
+.eyebrow{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--altin);
+  font-weight:800}
+.hikaye{font-size:16px;line-height:1.72;color:#dfe6ed;font-style:italic}
+/* ---- yol haritasi ---- */
+.yol{display:flex;flex-direction:column;gap:7px;max-width:470px;width:100%}
+.yb{background:var(--kart);border:1px solid var(--cizgi);border-radius:13px;padding:11px 12px}
+.yb.simdi{border-color:var(--altin);box-shadow:inset 0 0 0 1px var(--altin)}
+.yb.bitti{opacity:.55}
+.yb .ust2{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.yb .ad{font-weight:800;font-size:15px}
+.yb .no{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--soluk);
+  margin-left:auto;font-weight:700}
+.adim{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.a{width:33px;height:33px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:14px;flex:none;
+  border:1.5px solid transparent;font-variant-numeric:tabular-nums}
+.a.bek{background:#141d27;border-color:var(--cizgi);color:var(--soluk)}
+.a.ok{background:var(--yesil);color:#fff}
+.a.hata{background:var(--kirmizi);color:#fff}
+.a.simdi{background:var(--altin);color:#1a1200;box-shadow:0 0 0 3px rgba(244,201,93,.25)}
+.a.han{border-radius:99px;border-color:var(--altin);color:var(--altin);background:#141d27;
+  font-size:15px}
+.a.han.ok{background:var(--altin);color:#1a1200}
+/* ---- dukkan ---- */
+.satici{display:flex;gap:11px;align-items:center;margin-bottom:3px}
+.satici .av{width:46px;height:46px;border-radius:50%;background:#0f1720;color:var(--altin);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;
+  flex:none;border:1.5px solid var(--altin)}
+.satici .ki b{display:block;font-size:16.5px;line-height:1.2}
+.satici .ki span{display:block;font-size:12.5px;color:var(--soluk);margin-top:2px}
+.urun{border:1px solid var(--cizgi);border-radius:13px;background:#141d27;margin-top:8px;
+  overflow:hidden}
+.urun>button{display:flex;align-items:center;gap:10px;width:100%;background:transparent;
+  border:0;padding:11px 12px;color:inherit;text-align:left}
+.urun .em{font-size:21px;line-height:1;flex:none;width:26px;text-align:center}
+.urun .gv{flex:1;min-width:0}
+.urun .gv b{display:block;font-size:15px;line-height:1.25}
+.urun .gv span{display:block;font-size:12.5px;color:var(--soluk);margin-top:2px;
+  line-height:1.4}
+.urun .fy{flex:none;font-weight:800;font-variant-numeric:tabular-nums;color:var(--sari);
+  font-size:14.5px;text-align:right}
+.urun .fy em{font-style:normal;display:block;font-size:10px;color:var(--soluk);
+  letter-spacing:.6px;font-weight:700}
+.urun .ac{padding:0 12px 12px;border-top:1px dashed var(--cizgi);margin-top:2px;
+  padding-top:10px}
+.urun .ac p{font-size:13.5px;line-height:1.6;color:#cfd8e0;margin:0 0 8px}
+.urun.kilitli{opacity:.72;border-style:dashed}
+.urun.kilitli .fy{color:var(--soluk)}
+.urun.alindi{border-color:var(--yesil)}
+.etiket{display:inline-block;font-size:9.5px;letter-spacing:1.1px;text-transform:uppercase;
+  font-weight:800;border-radius:99px;padding:2px 7px;margin-right:5px}
+.etiket.joker{background:#243a4d;color:#8fd3ff}
+.etiket.yetenek{background:#2a3a24;color:#b6e39a}
+.etiket.tilsim{background:#3a2a3d;color:#e0aef0}
+.etiket.efsane{background:#4a3a12;color:var(--altin)}
+.kilitNot{font-size:12.5px;color:var(--sari);line-height:1.5;
+  background:rgba(230,178,46,.09);border:1px solid rgba(230,178,46,.28);
+  border-radius:9px;padding:8px 10px;margin-top:2px}
+.kilitNot b{color:var(--sari)}
+/* ---- tahta ---- */
+#tahta{display:grid;gap:5px;justify-content:center}
+#tahta .satir{display:grid;gap:5px}
+.hucre{width:var(--hg);height:var(--hg);border:2px solid var(--cizgi);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:calc(var(--hg)*.52);
+  background:#141d27;transition:background .15s,border-color .15s}
+.hucre.ilk{border-color:#4a5a6b;color:var(--altin)}
+.hucre.dolu{border-color:#4a5a6b}
+.hucre.tam{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.hucre.var{background:var(--sari);border-color:var(--sari);color:#231a00}
+.hucre.yok{background:var(--gri);border-color:var(--gri);color:#8fa0b0}
+.satir.aktif .hucre{border-color:#5d6f82}
+.satir.sarsil{animation:sars .35s}
+@keyframes sars{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
+  75%{transform:translateX(7px)}}
+.baslik{font-size:12.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--soluk);
+  font-weight:700;text-align:center}
+.ipucu{background:var(--kart);border:1px solid var(--cizgi);border-radius:11px;
+  padding:10px 13px;max-width:440px;text-align:center;font-size:14.5px;line-height:1.5}
+.ipucu b{color:var(--altin);display:block;font-size:10.5px;letter-spacing:1.2px;
+  text-transform:uppercase;margin-bottom:4px}
+.sonuc{font-size:16px;font-weight:700;text-align:center}
+.sonuc.iyi{color:var(--yesil)} .sonuc.kotu{color:var(--kirmizi)}
+.sonuc .kw{font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;color:var(--altin);
+  display:block;font-size:21px;margin-top:3px}
+/* ---- joker seridi ---- */
+#jokbar{flex:none;display:flex;gap:6px;padding:6px 8px;background:#0a1119;
+  border-top:1px solid var(--cizgi);overflow-x:auto}
+#jokbar button{flex:none;background:#22303d;border:1px solid var(--cizgi);border-radius:10px;
+  padding:6px 9px;color:#fff;font-size:12.5px;font-weight:700;display:flex;
+  align-items:center;gap:5px;line-height:1.2}
+#jokbar button i{font-style:normal;font-size:15px}
+#jokbar button u{text-decoration:none;background:var(--sari);color:#231a00;border-radius:99px;
+  padding:0 5px;font-size:10.5px;font-weight:800}
+#jokbar button:disabled{opacity:.35}
+#jokbar .bos{color:var(--soluk);font-size:12px;padding:7px 4px}
+/* ---- klavye ---- */
+#klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  background:#0a1119;border-top:1px solid var(--cizgi)}
+#klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
+#klavye button{flex:1 1 0;min-width:0;height:44px;border:0;border-radius:7px;
+  background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
+#klavye button.gnis{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
+#klavye button.dar{flex:1.25 1 0;font-size:12.5px;letter-spacing:.5px}
+#klavye button.tam{background:var(--yesil)}
+#klavye button.var{background:var(--sari);color:#231a00}
+#klavye button.yok{background:#1e2933;color:#5d6b7a}
+#klavye button:active{opacity:.7}
+.uyari{position:fixed;left:50%;transform:translateX(-50%);bottom:110px;background:#f2f5f8;
+  color:#0f1720;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14px;
+  z-index:30;box-shadow:0 6px 22px rgba(0,0,0,.45);max-width:88%;text-align:center}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:8px;
+  margin:10px 0 0}
+.kgrid button{background:#141d27;border:1.5px solid var(--cizgi);border-radius:12px;
+  padding:12px 8px;color:var(--murekkep);font-weight:700;font-size:15px}
+.kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.ozet{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--cizgi);
+  border-bottom:1px solid var(--cizgi);margin:11px 0}
+.ozet div{padding:9px 2px;text-align:center;border-left:1px solid var(--cizgi)}
+.ozet div:first-child{border-left:0}
+.ozet b{display:block;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.ozet span{display:block;font-size:9.5px;color:var(--soluk);text-transform:uppercase;
+  letter-spacing:.6px;margin-top:3px}
+.tutar{font-size:36px;font-weight:800;color:var(--altin);letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;line-height:1.1}
+</style></head><body>
+
+<div id="bar">
+  <span class="yer" id="yer">Sözün Kervanı</span>
+  <span class="kalp" id="kalp"></span>
+  <span class="sag">
+    <span class="akce" id="akce"></span>
+    <span class="lira" id="lira"></span>
+    <button id="sesd">🔊</button>
+  </span>
+</div>
+<div id="sure" class="gizli"><i></i></div>
+<div id="orta" class="ort"></div>
+<div id="jokbar" class="gizli"></div>
+<div id="klavye" class="gizli"></div>
+
+<script src="rozet.js"></script>
+<script src="ses.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const TL  = n => n.toLocaleString("tr-TR");
+const DIZ = ["ertyuıopğü","asdfghjklşi","zcvbnmöç"];
+const orta = $("#orta"), klv = $("#klavye"), jokbar = $("#jokbar");
+const sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
+
+/* ================= bolumler ================= */
+const BOLUM = [
+ {ad:"Çarşı Kapısı", sure:25, carpan:1,
+  giris:"Kervan çarşıdan çıkarken kimse arkasından bakmadı. Bakanlar da ne "+
+        "diyeceklerini bulamadı — kelimeler çoktan azalmıştı."},
+ {ad:"Tuz Ovası", sure:22, carpan:1.25,
+  giris:"Ovada su yok, gölge yok. Söylenen her kelime ağızda kuruyor. Burada "+
+        "konuşmak değil, doğru konuşmak lazım."},
+ {ad:"Sarp Geçit", sure:20, carpan:1.5,
+  giris:"Geçitte rüzgâr o kadar sert ki söylenen kelimeler yarı yolda dağılıyor. "+
+        "Kelime bilmek yetmez, doğru zamanda söylemek gerekir."},
+ {ad:"Sisli Orman", sure:18, carpan:2,
+  giris:"Harfler ağaçların arkasına saklandı. Sisin içinde bir tek şey belli: "+
+        "geri dönüş yolu kapandı."},
+ {ad:"Söz Kalesi", sure:16, carpan:3,
+  giris:"Kale göründü. Dört etap sonra son kapının önünde olacaksın — ve o kapı "+
+        "yalnız bir kelimeyle açılıyor."}
+];
+const UZUN = [4,5,6,7];
+const TABAN = {4:500, 5:1000, 6:2000, 7:4000};
+const SUPER = 250000;
+
+/* ================= saticilar ================= */
+const SATICI = [
+ [ {ad:"Ramiz",  duk:"Ramiz'in Harf Hanı",
+    rep:"Kaydını tuttum: yolun yarısındasın, borcun yok. Şimdi gel, harflere bakalım."},
+   {ad:"Elif",   duk:"Elif Harf Kırtasiyesi",
+    rep:"İlk harf bedava, gerisi akçe. Ben de bir yerden başlamalıyım."},
+   {ad:"Ömer",   duk:"Ömer'in İpucu Çadırı",
+    rep:"Sana harf vereyim ama sırrını söylemem. Sır bu işin yarısı."},
+   {ad:"Ezgi",   duk:"Ezgi'nin Sesli Dükkânı",
+    rep:"Sesli harfleri ben toplarım. Sessizleri kimse istemiyor."},
+   {ad:"Çağrı",  duk:"Çağrı Hanı",
+    rep:"Çağırdım, geldin. Otur bakalım, kesene bir göz atalım."} ],
+ [ {ad:"Nurdan", duk:"Nurdan Kervansarayı",
+    rep:"Bir gecelik değil, bütün yol için satıyorum. Fiyatı da ona göre."},
+   {ad:"Bülent", duk:"Bülent'in Tuzlu Hanı",
+    rep:"Önünde uzun bir yol var. Bir şey almadan gitme, sonra beni ararsın."},
+   {ad:"Berna",  duk:"Berna Ticaret",
+    rep:"Pazarlık yok. Ama gözün tuttuysa bir kıyağım olur."},
+   {ad:"Bilal",  duk:"Bilal'in Yük Deposu",
+    rep:"Ağır malım var, hafif malım yok. Ağır mal uzağa gider."} ],
+ [ {ad:"Sevilen",duk:"Sevilen Sahaf",
+    rep:"Bu raflarda unutulmuş kelimeler var. Biri seni bekliyordur."},
+   {ad:"Nazük",  duk:"Nazük'ün Tılsım Rafı",
+    rep:"Nazar boncuğu al; kelimeyi bilmesen de gözden korur."},
+   {ad:"Figen",  duk:"Figen'in Eski Harfleri",
+    rep:"Az kullanılmış bir Ğ var, kimse almıyor. Sana ucuza veririm."},
+   {ad:"Belgin", duk:"Belgin Kitap ve Tılsım",
+    rep:"Kitabı okumadan tılsım satmam. Al, önce bir bak."} ],
+ [ {ad:"Yusuf",  duk:"Yusuf'un Ocağı",
+    rep:"Kalbini tamir ederim, kelimeni tamir etmem. Onu sen bileceksin."},
+   {ad:"Ali",    duk:"Ali'nin Örsü",
+    rep:"Örsümde kalkan döverim. Sözü dövemem, o kendi kendini döver."},
+   {ad:"Çetin",  duk:"Çetin'in Kale Cephanesi",
+    rep:"Adım gibi iş yaparım. Kalpten yana sıkıntın kalmaz."},
+   {ad:"Sadi",   duk:"Sadi Baba'nın Son Dükkânı",
+    rep:"Son dükkân benim. Buradan sonra yalnız sen ve kelime var."} ]
+];
+const HANAD = ["Harf Hanı","Tuzlu Kervansaray","Geçit Sahafı","Sis Ocağı"];
+
+/* ================= urunler =================
+   tip: joker (tek kullanim) | yetenek | tilsim | efsane
+   kilit: null | {u:sira}  (unvan sirasi 1-20) | {r:"Nisan adi"}
+   tek: dogruysa envanterde adet olarak durur, kullanilinca biter          */
+const URUN = [
+ /* --- 1. han: jokerler --- */
+ {id:"harfver", ad:"Harf Ver", em:"🔤", tip:"joker", han:0, fiyat:40, tek:1,
+  kisa:"Bir harfi doğru yerinde açar",
+  tam:"Etap sırasında dokununca kelimenin bilinmeyen bir harfi doğru yerinde açılır ve "+
+      "o kutu artık değişmez. Aynı etapta birkaç kez kullanabilirsin, her kullanım bir "+
+      "adet harcar.", kilit:null},
+ {id:"sonharf", ad:"Son Harf", em:"🔚", tip:"joker", han:0, fiyat:45, tek:1,
+  kisa:"Kelimenin son harfini açar",
+  tam:"İlk harf zaten hediye veriliyor; bu joker son harfi de açar. Kelimenin iki ucunu "+
+      "bilmek, ortayı tahmin etmeyi çok kolaylaştırır.", kilit:null},
+ {id:"zamanuzat", ad:"Zaman Uzat", em:"⏱", tip:"joker", han:0, fiyat:50, tek:1,
+  kisa:"O etapta süreye 15 saniye ekler",
+  tam:"Süre azalıp panik başladığında dokun: geri sayıma 15 saniye eklenir. Yalnızca "+
+      "içinde bulunduğun etap için geçerlidir.", kilit:null},
+ {id:"nefes", ad:"Nefes", em:"🫧", tip:"joker", han:0, fiyat:55, tek:1,
+  kisa:"Süreyi 10 saniye durdurur",
+  tam:"Saat tamamen durur ve 10 saniye boyunca rahatça düşünürsün. Süre ekleme değil "+
+      "durdurma olduğu için, kalan sürenin tamamı korunur.", kilit:{u:2}},
+ {id:"eleme", ad:"Eleme", em:"🚫", tip:"joker", han:0, fiyat:60, tek:1,
+  kisa:"Kelimede olmayan 3 harfi klavyede karartır",
+  tam:"Kelimede bulunmayan üç harf klavyede grileşir. Yanlış harflere boşuna tahmin "+
+      "harcamanı önler; özellikle 6 ve 7 harfli kelimelerde çok işe yarar.",
+  kilit:{r:"Keskin Nişancı"}},
+ {id:"sozluksayfasi", ad:"Sözlük Sayfası", em:"📖", tip:"joker", han:0, fiyat:65, tek:1,
+  kisa:"Kelimenin TDK tanımını gösterir",
+  tam:"Kelimenin sözlük anlamı ekranda açılır — tıpkı puzzle ipucu gibi. Anlamı okuyunca "+
+      "kelime çoğu zaman kendiliğinden gelir.", kilit:{u:5}},
+ {id:"fazladanhak", ad:"Fazladan Hak", em:"➕", tip:"joker", han:0, fiyat:70, tek:1,
+  kisa:"O etapta altıncı tahmin hakkı verir",
+  tam:"Tahtaya bir satır daha eklenir. Beş hak bitmek üzereyken kullanırsan etabı "+
+      "kurtarabilir. Yalnızca içinde bulunduğun etapta geçerli.",
+  kilit:{r:"Sabırlı"}},
+ {id:"yoldegistir", ad:"Yol Değiştir", em:"🔄", tip:"joker", han:0, fiyat:80, tek:1,
+  kisa:"Kelimeyi değiştirir, aynı uzunlukta yenisi gelir",
+  tam:"Hiç tutmadığın bir kelimeyle karşılaştıysan dokun: tahta sıfırlanır, aynı "+
+      "uzunlukta yeni bir kelime gelir ve süre baştan başlar. Tahminlerin silinir.",
+  kilit:{u:3}},
+ {id:"unluavi", ad:"Ünlü Avı", em:"🅰", tip:"joker", han:0, fiyat:90, tek:1,
+  kisa:"Bütün sesli harflerin yerini gösterir",
+  tam:"Kelimedeki a, e, ı, i, o, ö, u, ü harflerinin hepsi doğru yerlerinde açılır. "+
+      "Türkçede sesli harfler iskeleti kurar; gerisi genellikle tahmin edilir.",
+  kilit:{u:3}},
+ {id:"ciftevurgu", ad:"Çifte Vurgu", em:"✖️", tip:"joker", han:0, fiyat:90, tek:1,
+  kisa:"Bilirsen o etabın ödülü iki katı",
+  tam:"Riskli joker: etabı bilirsen ödül iki katına çıkar, bilemezsen harcadığın akçe "+
+      "boşa gider. Kolay göründüğün bir kelimede kullan.", kilit:{r:"Seri"}},
+ {id:"anagram", ad:"Anagram", em:"🔀", tip:"joker", han:0, fiyat:100, tek:1,
+  kisa:"Kelimenin harflerini karışık gösterir",
+  tam:"Kelimedeki bütün harfler karışık sırayla ekranda listelenir. Hangi harflerin "+
+      "olduğunu bilirsin, sıralamayı sen bulursun.", kilit:{r:"Yapboz"}},
+ {id:"ikincisans", ad:"İkinci Şans", em:"♻️", tip:"joker", han:0, fiyat:120, tek:1,
+  kisa:"Kaybedilen etabı bir kez baştan oynatır",
+  tam:"Etabı bilemeyip kalp kaybettiğinde ekranda 'İkinci Şans' düğmesi çıkar. "+
+      "Kullanırsan kalbin geri gelir ve aynı uzunlukta yeni bir kelimeyle etap "+
+      "yeniden başlar.", kilit:{r:"İkinci Şans"}},
+ /* --- 2. han: yetenekler --- */
+ {id:"cimrikese", ad:"Cimri Kese", em:"👝", tip:"yetenek", han:1, fiyat:140,
+  kisa:"Kullanılmayan her hak 10 akçe daha getirir",
+  tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 10 akçe getirir; bu "+
+      "yetenekle 20 akçe getirir. Kelimeyi erken bulmak doğrudan para demek.",
+  kilit:null},
+ {id:"tuccardili", ad:"Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
+  kisa:"Bütün hanlarda %20 indirim",
+  tam:"Kalan üç handa gördüğün her fiyat %20 düşer. Yolun başında alırsan kendini "+
+      "fazlasıyla amorti eder.", kilit:{r:"Hızlı"}},
+ {id:"kervanbereketi", ad:"Kervan Bereketi", em:"🌾", tip:"yetenek", han:1, fiyat:160,
+  kisa:"Her etap sonunda 15 akçe fazla",
+  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 15 akçe eklenir. "+
+      "Yolun başında alınırsa 19 etap × 15 akçe eder.", kilit:{u:4}},
+ {id:"saatustasi", ad:"Saat Ustası", em:"⌛", tip:"yetenek", han:1, fiyat:170,
+  kisa:"Bütün etaplarda süre 5 saniye uzun",
+  tam:"Kalan bütün etapların süresi 5 saniye artar. Son bölümlerde süre 16 saniyeye "+
+      "kadar indiği için değeri yolun sonuna doğru artar.", kilit:{r:"Hız Rekoru"}},
+ {id:"keskingoz", ad:"Keskin Göz", em:"👁", tip:"yetenek", han:1, fiyat:180,
+  kisa:"İlk tahminden sonra bir yanlış harf kendiliğinden elenir",
+  tam:"Her etapta ilk tahminini yaptıktan sonra, kelimede bulunmayan bir harf klavyede "+
+      "otomatik grileşir. Her etapta yeniden çalışır, tükenmez.", kilit:{u:4}},
+ {id:"hafizadefteri", ad:"Hafıza Defteri", em:"📓", tip:"yetenek", han:1, fiyat:190,
+  kisa:"Takıldığın kelimeler bir daha gelmez",
+  tam:"Bu yolculukta bilemediğin kelimeler havuzdan çıkarılır; aynı kelimeyle ikinci "+
+      "kez karşılaşmazsın. Uzun yolculuklarda kalp kurtarır.",
+  kilit:{r:"Hafıza Ustası"}},
+ {id:"seriatesi", ad:"Seri Ateşi", em:"🔥", tip:"yetenek", han:1, fiyat:220,
+  kisa:"Üst üste 3 doğrudan sonra ödüller %50 artar",
+  tam:"Üç etabı üst üste bilirsen seri başlar ve o andan sonraki bütün ödüller %50 "+
+      "fazla ödenir. Bir etabı kaçırırsan seri sıfırlanır, yeniden kurabilirsin.",
+  kilit:{r:"Efsane Seri"}},
+ {id:"alfabesezgisi", ad:"Alfabe Sezgisi", em:"🧠", tip:"yetenek", han:1, fiyat:250,
+  kisa:"7 harfli etaplarda ilk iki harf açık başlar",
+  tam:"Yolculuğun en zor etapları 7 harflilerdir; yarısı sözlükten gelir. Bu yetenekle "+
+      "o etaplarda iki harf hediye başlar. Beş 7 harfli etabın hepsinde çalışır.",
+  kilit:{r:"Süper Lingo"}},
+ /* --- 3. han: tilsimlar --- */
+ {id:"ayyildizfener", ad:"Ay Yıldız Fener", em:"🌙", tip:"tilsim", han:2, fiyat:110,
+  kisa:"Gece 22.00–04.00 arası bütün ödüller %20 fazla",
+  tam:"Telefonun saati 22.00 ile 04.00 arasındaysa kazandığın her ödül %20 artar. "+
+      "Gece çalışanların tılsımı.", kilit:{r:"Gece Kuşu"}},
+ {id:"cobanasasi", ad:"Çoban Asası", em:"🪃", tip:"tilsim", han:2, fiyat:120,
+  kisa:"4 harfli etaplarda ödül %30 fazla",
+  tam:"Her bölümün ilk etabı 4 harflidir ve havuzu en tanıdık kelimelerden oluşur — "+
+      "yani en garanti para. Bu tılsım o parayı %30 büyütür.",
+  kilit:{r:"Dörtlü Ustası"}},
+ {id:"ozansazi", ad:"Ozan Sazı", em:"🪕", tip:"tilsim", han:2, fiyat:130,
+  kisa:"5 harfli etaplarda bir tahmin hakkı fazla",
+  tam:"5 harfli etaplarda tahta 6 satır olur. Beş harfli havuz en kalabalık havuzdur, "+
+      "fazladan hak burada en çok işe yarar.", kilit:{r:"Beşli Ustası"}},
+ {id:"cingirak", ad:"Kervan Çıngırağı", em:"🔔", tip:"tilsim", han:2, fiyat:135,
+  kisa:"Her handa bir kez daha ürün yenileme hakkı",
+  tam:"Normalde handa ürünleri bir kez yenileyebilirsin (20 akçe). Bu tılsımla iki kez "+
+      "yenileyebilirsin — aradığın ürünü bulma şansın artar.", kilit:null},
+ {id:"nazarboncugu", ad:"Nazar Boncuğu", em:"🧿", tip:"tilsim", han:2, fiyat:145,
+  kisa:"Bir kez, kaybedilecek kalbi engeller",
+  tam:"Bir etabı bilemediğinde kalp gitmez, boncuk kırılır ve tılsım tükenir. "+
+      "Yolculukta bir kez çalışır ama o bir kez genellikle yolu kurtarır.",
+  kilit:{u:2}},
+ {id:"kadimuhru", ad:"Kadı Mührü", em:"🪶", tip:"tilsim", han:2, fiyat:160,
+  kisa:"Sözlükte olmayan kelime yazmak hak yakmaz",
+  tam:"Bu oyunda sözlükte olmayan bir kelime yazmak bir tahmin hakkına mal olur. "+
+      "Mühür bu cezayı kaldırır: uydurma kelimeleri serbestçe deneyebilirsin.",
+  kilit:{u:6}},
+ {id:"sozlukcildi", ad:"Sözlük Cildi", em:"📚", tip:"tilsim", han:2, fiyat:155,
+  kisa:"Hanlarda bir ürün daha görünür",
+  tam:"Handa dört ürün yerine beş ürün çıkar. Seçenek arttıkça aradığın ürünü bulma "+
+      "ihtimalin artar.", kilit:{u:7}},
+ {id:"muska", ad:"Muska", em:"🧵", tip:"tilsim", han:2, fiyat:175,
+  kisa:"Bilinemeyen etabın ödülünün yarısı kesende kalır",
+  tam:"Normalde bilemediğin etaptan hiç para almazsın. Muska ile o etabın ödülünün "+
+      "yarısı yine de birikime eklenir. Kalp gitmesini engellemez.",
+  kilit:{r:"Zor Gün"}},
+ {id:"demiryurek", ad:"Demir Yürek", em:"🧱", tip:"tilsim", han:2, fiyat:185,
+  kisa:"6 harfli etaplarda süre 25 saniyeye çıkar",
+  tam:"6 harfli kelimeler yolculuğun en çok kalp götüren etaplarıdır. Bu tılsım o "+
+      "etaplarda süreyi hangi bölümde olursan ol 25 saniyeye sabitler.",
+  kilit:{r:"Duvar Ustası"}},
+ {id:"pusula", ad:"Dört Yön Pusulası", em:"🧭", tip:"tilsim", han:2, fiyat:195,
+  kisa:"Her bölümün ilk etabında bir harf bedava açılır",
+  tam:"Her bölümün 4 harfli ilk etabında, ilk harfin dışında bir harf daha hediye "+
+      "açılır. Kalan bölüm sayısı kadar çalışır.", kilit:{r:"Dört Uzunluk"}},
+ /* --- 4. han: kalp, kalkan, efsanevi --- */
+ {id:"saglamyurek", ad:"Sağlam Yürek", em:"❤️", tip:"yetenek", han:3, fiyat:200,
+  kisa:"Kalp sayısı bir artar",
+  tam:"Üç kalple yola çıkıyorsun; bu yetenek dördüncü kalbi verir ve kalbi hemen "+
+      "doldurur. Yolun ortasında canın azaldıysa en değerli alışveriş budur.",
+  kilit:{u:5}},
+ {id:"kalkan", ad:"Kalkan", em:"🛡", tip:"yetenek", han:3, fiyat:210,
+  kisa:"Kaybedilen ilk kalbi bir kez geri getirir",
+  tam:"Bir kalp kaybettiğin ilk anda kalkan devreye girer, kalbini geri verir ve "+
+      "kırılır. Nazar boncuğundan farkı: boncuk kalbin gitmesini engeller, kalkan "+
+      "gideni geri getirir — ikisi birlikte iki kalp değerindedir.",
+  kilit:{r:"S Fatihi"}},
+ {id:"ejderpulu", ad:"Ejder Pulu", em:"🐉", tip:"efsane", han:3, fiyat:280,
+  kisa:"7 harfli etaplarda süre sınırı kalkar",
+  tam:"Efsanevi eşya. 7 harfli beş etapta saat hiç çalışmaz; istediğin kadar "+
+      "düşünürsün. Süper lingo kelimesi de dâhil.", kilit:{u:9}},
+ {id:"kalem", ad:"Efendinin Kalemi", em:"🖋", tip:"efsane", han:3, fiyat:300, tek:1,
+  kisa:"Bir etapta kelimeyi doğrudan yazar",
+  tam:"Efsanevi eşya, tek kullanımlık. Dokunduğun anda içinde bulunduğun etabın "+
+      "kelimesi kendiliğinden doğru yazılır ve etap kazanılmış sayılır. Son kapıda da "+
+      "çalışır.", kilit:{u:10}},
+ {id:"kupasuyu", ad:"Kupa Suyu", em:"🏆", tip:"efsane", han:3, fiyat:320,
+  kisa:"Son kapıda bilemesen de biriken paranın tamamı kalır",
+  tam:"Efsanevi eşya. 20. etabı bilemezsen normalde biriken tutar elinde kalır ama "+
+      "iki kat ve süper lingo primini kaçırırsın; bu eşya kaybı tamamen kaldırır ve "+
+      "biriken tutarın üstüne bir de tam ödeme garantisi verir.", kilit:{r:"Kupa"}}
+];
+const URUNID = {}; URUN.forEach(u => URUNID[u.id] = u);
+
+/* ================= durum ================= */
+const KISI_VAR = ["Serpil","Zeynep"];
+let KISILER = LG_kisiler(KISI_VAR), KISI = LG_kisiDogrula(KISILER) || KISILER[0];
+let VERI = null, OYUN = null, TANIM = null, S = null, AKTIF = null, sayac = null;
+let klvDurum = {}, klvTus = {};
+
+const anahtar = () => "lingo_kervan_" + KISI;
+function kaydet(){ try{ localStorage.setItem(anahtar(), JSON.stringify(S)); }catch(e){} }
+function oku(){ try{ return JSON.parse(localStorage.getItem(anahtar()) || "null"); }
+  catch(e){ return null; } }
+function sil(){ try{ localStorage.removeItem(anahtar()); }catch(e){} S = null; }
+
+function bosDurum(){
+  return {etap:0, kalp:3, maxKalp:3, akce:0, para:0, sahip:[], jok:{}, seri:0,
+          gorulen:[], takilan:[], sonuc:[], hanNo:0, bolumGirisi:0, satici:[], stok:null,
+          yenileme:0, kalkanBitti:false, nazarBitti:false, bitti:null,
+          dogru:[], hatali:[]};
+}
+const sahipmi = id => S.sahip.indexOf(id) >= 0;
+const jokAdet = id => S.jok[id] || 0;
+
+/* ---- kilitler ---- */
+function unvanSira(){
+  const d = LG_defter(KISI), ad = LG_unvan(d.length).simdi.ad;
+  return LG_UNVAN.findIndex(u => u.ad === ad) + 1;
+}
+function rozBilgi(ad){
+  const r = LG_rozet(LG_defter(KISI), LG_plan(KISI)).find(x => x.a === ad);
+  return r || {e:"🏅", a:ad, s:"", v:false};
+}
+function kilitDurum(u){
+  if(!u.kilit) return {acik:true, metin:"Baştan açık"};
+  if(u.kilit.u){
+    const s = unvanSira(), hedef = LG_UNVAN[u.kilit.u-1];
+    return {acik: s >= u.kilit.u,
+      metin: `${u.kilit.u}. ünvan · ${hedef.ad}`,
+      nasil: `Bu ürünü açmak için <b>${hedef.ad}</b> ünvanına ulaşman gerekiyor — `+
+             `toplam <b>${TL(hedef.n)} kelime</b> çözmek. Şu an ${TL(LG_defter(KISI).length)}`+
+             ` kelimen var.`};
+  }
+  const r = rozBilgi(u.kilit.r);
+  return {acik: !!r.v, metin: `${r.e} ${r.a} nişanı`,
+    nasil: `Bu ürünü açmak için <b>${r.e} ${r.a}</b> nişanı gerekiyor. `+
+           `Koşulu: <b>${r.s}</b>. Alıştırma, Lingo oyunu ve Ailecük'te kazandığın `+
+           `nişanlar burada da sayılır.`};
+}
+function fiyat(u){
+  const f = u.fiyat * (sahipmi("tuccardili") ? 0.8 : 1);
+  return Math.round(f / 5) * 5;
+}
+
+/* ---- ust bar ---- */
+function barYaz(){
+  const b = Math.min(4, Math.floor(S.etap / 4));
+  $("#yer").textContent = S.bitti ? "Yolculuk bitti"
+    : `${b+1}. bölüm · ${BOLUM[b].ad}`;
+  $("#kalp").textContent = "❤️".repeat(S.kalp) + "🖤".repeat(Math.max(0, S.maxKalp - S.kalp));
+  $("#akce").textContent = "🪙 " + TL(S.akce);
+  $("#lira").textContent = "₺" + TL(S.para);
+}
+function uyar(m){
+  const d = document.createElement("div"); d.className = "uyari"; d.textContent = m;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1500);
+}
+function ekran(html, ortala){
+  durdur(); sureGoster(false);
+  klv.classList.add("gizli"); jokbar.classList.add("gizli");
+  orta.classList.toggle("ort", ortala !== false);
+  orta.innerHTML = html; orta.scrollTop = 0;
+  barYaz();
+}
+function durdur(){ if(sayac){ clearInterval(sayac); sayac = null; } }
+function sureGoster(g){ sureKap.classList.toggle("gizli", !g); }
+function sureBasla(sn, bitince, tikla){
+  durdur(); sureGoster(true); sureKap.classList.remove("az");
+  const bas = Date.now(), top = sn*1000; let son = sn, durgun = 0;
+  AKTIF.duraklat = ms => { durgun += ms; };
+  sayac = setInterval(() => {
+    const kalan = Math.max(0, top + durgun - (Date.now() - bas));
+    sureBar.style.width = Math.min(100, 100*kalan/top) + "%";
+    sureKap.classList.toggle("az", kalan < top*0.31);
+    const s2 = Math.ceil(kalan/1000);
+    if(tikla && s2 !== son){ son = s2; tikla(s2); if(s2 <= 5 && s2 > 0) LG_ses("sure"); }
+    if(kalan <= 0){ durdur(); bitince(); }
+  }, 100);
+}
+
+/* ================= kelime secimi ================= */
+function kelimeSec(n, b){
+  let havuz;
+  if(n === 7) havuz = (Math.random() < 0.5) ? VERI["7a"][b] : OYUN.yeni["7"];
+  else havuz = VERI[String(n)][b];
+  const yasak = new Set(S.gorulen.concat(sahipmi("hafizadefteri") ? S.takilan : []));
+  let ad = havuz.filter(w => !yasak.has(w));
+  if(!ad.length) ad = havuz;
+  return ad[Math.floor(Math.random() * ad.length)];
+}
+function renk(gizli, tah){
+  const n = gizli.length, r = new Array(n).fill("yok"), kal = {};
+  for(let i = 0; i < n; i++)
+    if(tah[i] === gizli[i]) r[i] = "tam"; else kal[gizli[i]] = (kal[gizli[i]]||0)+1;
+  for(let i = 0; i < n; i++)
+    if(r[i] !== "tam" && kal[tah[i]] > 0){ r[i] = "var"; kal[tah[i]]--; }
+  return r;
+}
+function klavyeCiz(gir, sil2, gonder){
+  klv.innerHTML = ""; klvTus = {};
+  DIZ.forEach((sr, k) => {
+    const d = document.createElement("div"); d.className = "sr";
+    for(const c of sr){
+      const b = document.createElement("button"); b.textContent = TRU(c);
+      b.onclick = () => gir(c); klvTus[c] = b; d.appendChild(b);
+    }
+    if(k === 1){ const b = document.createElement("button");
+      b.className = "dar"; b.textContent = "SİL"; b.onclick = sil2; d.appendChild(b); }
+    if(k === 2){ const b = document.createElement("button");
+      b.className = "gnis"; b.textContent = "TAMAM"; b.onclick = gonder; d.appendChild(b); }
+    klv.appendChild(d);
+  });
+  klv.classList.remove("gizli");
+  for(const c in klvDurum) if(klvTus[c]) klvTus[c].className = klvDurum[c];
+}
+function klvBoya(tah, r){
+  const onc = {tam:3, var:2, yok:1};
+  for(let i = 0; i < tah.length; i++){
+    const c = tah[i];
+    if((onc[klvDurum[c]]||0) < onc[r[i]]){
+      klvDurum[c] = r[i]; if(klvTus[c]) klvTus[c].className = r[i];
+    }
+  }
+}
+function hucreBoy(n){
+  const g = Math.min(window.innerWidth - 26, 430);
+  return Math.max(28, Math.min(54, Math.floor((g - (n-1)*5) / n)));
+}
+function defterYaz(w, hak){
+  if(!KISI || KISI === LG_KAYITSIZ) return;
+  try{
+    const a = "lingo_defter_" + KISI;
+    const d = JSON.parse(localStorage.getItem(a) || "[]");
+    d.push({w:w, n:w.length, h:w[0], k:hak, t:Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(a, JSON.stringify(d));
+  }catch(e){}
+}
+
+/* ================= etap ================= */
+function etapBasla(zorlaKelime){
+  const no = S.etap, b = Math.floor(no/4), i = no % 4, n = UZUN[i];
+  const gizli = zorlaKelime || kelimeSec(n, b);
+  let satirSay = 5 + ((n === 5 && sahipmi("ozansazi")) ? 1 : 0);
+  let sure = BOLUM[b].sure + (sahipmi("saatustasi") ? 5 : 0);
+  if(n === 6 && sahipmi("demiryurek")) sure = Math.max(sure, 25);
+  const sureyok = (n === 7 && sahipmi("ejderpulu"));
+  const acik = new Set([0]);
+  if(n === 7 && sahipmi("alfabesezgisi")) acik.add(1);
+  if(i === 0 && sahipmi("pusula")){
+    const bos = [...Array(n).keys()].filter(x => !acik.has(x));
+    acik.add(bos[Math.floor(Math.random()*bos.length)]);
+  }
+  let sat = 0, giris = "", kalanSn = sure, bitti = false;
+  let cifte = false, keskinKullandi = false, tanimAcik = false, anagramAcik = false;
+  klvDurum = {}; AKTIF = {};
+
+  const yaziBasla = () => { giris = ""; for(let k = 0; k < n; k++)
+      giris += acik.has(k) ? gizli[k] : ""; };
+  /* acik harfleri iceren baslangic dizisi: pozisyon bazli tutalim */
+  let gir = new Array(n).fill(null);
+  acik.forEach(k => gir[k] = gizli[k]);
+  let imle = 0;
+  const ilkBos = () => { for(let k = 0; k < n; k++) if(gir[k] === null) return k; return -1; };
+
+  orta.classList.remove("ort");
+  orta.innerHTML =
+    `<div class="baslik" id="ust"></div>
+     <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
+     <div class="kucuk" id="alt"></div>`;
+  const tahta = $("#tahta"), satirlar = [];
+  for(let r = 0; r < satirSay + 1; r++) satirEkle(r);
+  function satirEkle(r){
+    const d = document.createElement("div"); d.className = "satir";
+    d.style.gridTemplateColumns = `repeat(${n}, var(--hg))`;
+    for(let k = 0; k < n; k++){
+      const h = document.createElement("div");
+      h.className = "hucre" + (acik.has(k) ? " ilk" : "");
+      if(acik.has(k)) h.textContent = TRU(gizli[k]);
+      d.appendChild(h);
+    }
+    if(r >= satirSay) d.classList.add("gizli");
+    tahta.appendChild(d); satirlar[r] = d;
+  }
+  function satirAc(){ satirSay++; if(satirlar[satirSay-1]) satirlar[satirSay-1]
+      .classList.remove("gizli"); else satirEkle(satirSay-1); ustYaz(); }
+
+  function odul(){
+    let o = TABAN[n] * BOLUM[b].carpan;
+    if(cifte) o *= 2;
+    if(n === 4 && sahipmi("cobanasasi")) o *= 1.3;
+    if(sahipmi("seriatesi") && S.seri >= 3) o *= 1.5;
+    if(sahipmi("ayyildizfener")){ const h = new Date().getHours();
+      if(h >= 22 || h < 4) o *= 1.2; }
+    return Math.round(o / 10) * 10;
+  }
+  function ustYaz(){
+    $("#ust").innerHTML =
+      `${n} HARFLİ · ${satirSay - sat} HAK` +
+      (sureyok ? " · SÜRE YOK" : ` · ${kalanSn} SN`) +
+      ` · ₺${TL(odul())}` + (cifte ? " ✖️2" : "");
+    satirlar.forEach((s2, k) => s2.classList.toggle("aktif", k === sat));
+  }
+  function yaz(){
+    const h = satirlar[sat].children;
+    for(let k = 0; k < n; k++){
+      h[k].textContent = gir[k] ? TRU(gir[k]) : "";
+      h[k].className = "hucre" + (acik.has(k) ? " ilk" : (gir[k] ? " dolu" : ""));
+    }
+  }
+  function girHarf(c){
+    let k = imle;
+    if(k >= n || gir[k] !== null || acik.has(k)) k = ilkBos();
+    if(k < 0) return;
+    gir[k] = c; imle = k + 1;
+    while(imle < n && (gir[imle] !== null || acik.has(imle))) imle++;
+    yaz();
+  }
+  function silHarf(){
+    let k = imle - 1;
+    while(k >= 0 && (acik.has(k) || gir[k] === null)) k--;
+    if(k < 0){ for(let j = n-1; j >= 0; j--) if(!acik.has(j) && gir[j] !== null){ k = j; break; } }
+    if(k < 0) return;
+    gir[k] = null; imle = k; yaz();
+  }
+  function tik(){
+    if(sureyok){ sureGoster(false); return; }
+    kalanSn = sure; ustYaz();
+    sureBasla(sure, () => sonuclandir(null), s2 => { kalanSn = s2; ustYaz(); });
+  }
+  function gonder(){
+    const tah = gir.join("");
+    if(gir.some(x => x === null)){ uyar("Harfler eksik"); sarsil(); return; }
+    if(!GECERLI[n].has(tah)){
+      LG_ses("gecersiz");
+      if(sahipmi("kadimuhru")){ uyar("Sözlükte yok — mühür hakkını korudu"); sarsil(); return; }
+      uyar("Sözlükte yok — bir hak gitti"); sarsil(); sonrakiSatir(null, true); return;
+    }
+    sonuclandir(tah);
+  }
+  function sarsil(){
+    satirlar[sat].classList.add("sarsil");
+    setTimeout(() => satirlar[sat].classList.remove("sarsil"), 360);
+  }
+  function sonrakiSatir(tah, gecersiz){
+    sat++;
+    gir = new Array(n).fill(null); acik.forEach(k => gir[k] = gizli[k]); imle = ilkBos();
+    if(sat >= satirSay) return bitir(false);
+    ustYaz(); yaz(); jokCiz(); tik();
+  }
+  function sonuclandir(tah){
+    if(bitti) return;
+    durdur();
+    if(tah === null){
+      const h = satirlar[sat].children;
+      for(let k = 0; k < n; k++) if(!acik.has(k)){ h[k].textContent = "·";
+        h[k].className = "hucre yok"; }
+      uyar("Süre doldu"); return bitir(false);
+    }
+    const r = renk(gizli, tah), h = satirlar[sat].children;
+    for(let k = 0; k < n; k++) h[k].className = "hucre " + r[k];
+    klvBoya(tah, r);
+    if(tah === gizli){ LG_ses("dogru"); return bitir(true, sat + 1); }
+    LG_ses("yanlis");
+    if(sahipmi("keskingoz") && !keskinKullandi){ keskinKullandi = true; keskinGoz(); }
+    sonrakiSatir(tah);
+  }
+  function keskinGoz(){
+    const icinde = new Set(gizli.split(""));
+    const aday = "abcçdefgğhıijklmnoöprsştuüvyz".split("")
+      .filter(c => !icinde.has(c) && !klvDurum[c]);
+    if(!aday.length) return;
+    const c = aday[Math.floor(Math.random()*aday.length)];
+    klvDurum[c] = "yok"; if(klvTus[c]) klvTus[c].className = "yok";
+    uyar("Keskin Göz: " + TRU(c) + " harfi elendi");
+  }
+  function bitir(kazandi, hak){
+    bitti = true; durdur(); sureGoster(false);
+    klv.classList.add("gizli"); jokbar.classList.add("gizli");
+    S.gorulen.push(gizli);
+    defterYaz(gizli, kazandi ? hak : 0);
+    const kazanc = kazandi ? odul() : (sahipmi("muska") ? Math.round(odul()/2) : 0);
+    let akce = 20 + (satirSay - (kazandi ? hak : satirSay)) * (sahipmi("cimrikese") ? 20 : 10)
+             + (sureyok ? 0 : Math.max(0, kalanSn)) + (sahipmi("kervanbereketi") ? 15 : 0);
+    if(!kazandi) akce = Math.round(akce * 0.4);
+    S.para += kazanc; S.akce += akce;
+    if(kazandi){ S.seri++; S.dogru.push(gizli); }
+    else { S.seri = 0; S.takilan.push(gizli); S.hatali.push(gizli); }
+    S.sonuc[S.etap] = kazandi;
+    let kalpNotu = "";
+    if(!kazandi){
+      if(sahipmi("nazarboncugu") && !S.nazarBitti){
+        S.nazarBitti = true; S.sahip = S.sahip.filter(x => x !== "nazarboncugu");
+        kalpNotu = "🧿 Nazar boncuğu kırıldı — kalbin gitmedi.";
+      } else {
+        S.kalp--;
+        if(S.kalp <= 0 && sahipmi("kalkan") && !S.kalkanBitti){
+          S.kalkanBitti = true; S.kalp = 1;
+          S.sahip = S.sahip.filter(x => x !== "kalkan");
+          kalpNotu = "🛡 Kalkan kırıldı ve son kalbini geri verdi.";
+        } else kalpNotu = "Bir kalp kaybettin.";
+      }
+    }
+    S.etap++;
+    if(S.etap === 20) S.sonKapi = kazandi;
+    if(S.kalp <= 0) S.bitti = "kaybetti";
+    else if(S.etap >= 20) S.bitti = "kazandi";
+    kaydet();
+    const yeniRoz = LG_yeni(KISI);
+    if(yeniRoz.length) LG_ses("rozet");
+    const ikinci = (!kazandi && S.bitti !== "kazandi" && jokAdet("ikincisans") > 0);
+    ekran(
+      `<div class="kutu ort">
+        <div class="eyebrow">${S.etap}. etap ${kazandi ? "tamam" : "kaybedildi"}</div>
+        <div class="sonuc ${kazandi ? "iyi" : "kotu"}" style="margin-top:8px">
+          ${kazandi ? "Doğru!" : "Doğru cevap"}
+          <span class="kw">${TRU(gizli)}</span></div>
+        ${TANIM[gizli] ? `<p class="kucuk" style="margin-top:8px">${TANIM[gizli]}</p>` : ""}
+        <div class="ozet">
+          <div><b>₺${TL(kazanc)}</b><span>ödül</span></div>
+          <div><b>${TL(akce)}</b><span>akçe</span></div>
+          <div><b>${S.seri}</b><span>seri</span></div>
+          <div><b>${S.kalp}</b><span>kalp</span></div>
+        </div>
+        ${kalpNotu ? `<p class="kucuk">${kalpNotu}</p>` : ""}
+        ${yeniRoz.length ? `<p class="kucuk" style="color:var(--altin)">Yeni nişan: ${
+          yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</p>` : ""}
+        ${ikinci ? `<button class="buton mor" onclick="ikinciSans()">
+          ♻️ İKİNCİ ŞANS KULLAN (${jokAdet("ikincisans")})</button>
+          <p class="kucuk">Kalbin geri gelir, aynı uzunlukta yeni bir kelime gelir.</p>` : ""}
+        <button class="buton" onclick="ilerle()">DEVAM ▸</button>
+      </div>`);
+  }
+  window.ikinciSans = function(){
+    S.jok.ikincisans--; if(!S.jok.ikincisans) delete S.jok.ikincisans;
+    S.kalp = Math.min(S.maxKalp, S.kalp + 1); S.etap--; S.bitti = null;
+    S.takilan.pop(); S.hatali.pop(); S.sonuc.length = S.etap; kaydet();
+    uyar("İkinci şans: yeni kelime geliyor"); etapBasla();
+  };
+
+  /* ---- joker kullanimi ---- */
+  AKTIF.kullan = function(id){
+    if(jokAdet(id) < 1 || bitti) return;
+    let oldu = true;
+    if(id === "harfver"){
+      const bos = [...Array(n).keys()].filter(k => !acik.has(k));
+      if(!bos.length) oldu = false;
+      else { const k = bos[Math.floor(Math.random()*bos.length)];
+        acik.add(k); gir[k] = gizli[k]; imle = ilkBos();
+        satirlar.forEach(sr => { sr.children[k].textContent = TRU(gizli[k]);
+          sr.children[k].className = "hucre ilk"; });
+        yaz(); uyar(TRU(gizli[k]) + " harfi açıldı"); }
+    } else if(id === "sonharf"){
+      if(acik.has(n-1)) oldu = false;
+      else { acik.add(n-1); gir[n-1] = gizli[n-1]; imle = ilkBos();
+        satirlar.forEach(sr => { sr.children[n-1].textContent = TRU(gizli[n-1]);
+          sr.children[n-1].className = "hucre ilk"; });
+        yaz(); uyar("Son harf açıldı"); }
+    } else if(id === "unluavi"){
+      const U = "aeıioöuü"; let c = 0;
+      for(let k = 0; k < n; k++) if(U.indexOf(gizli[k]) >= 0 && !acik.has(k)){
+        acik.add(k); gir[k] = gizli[k]; c++;
+        satirlar.forEach(sr => { sr.children[k].textContent = TRU(gizli[k]);
+          sr.children[k].className = "hucre ilk"; });
+      }
+      imle = ilkBos(); yaz();
+      if(c) uyar(c + " sesli harf açıldı"); else oldu = false;
+    } else if(id === "zamanuzat"){
+      if(sureyok) oldu = false; else { AKTIF.duraklat(15000); uyar("+15 saniye"); }
+    } else if(id === "nefes"){
+      if(sureyok) oldu = false;
+      else { durdur(); uyar("Nefes: saat 10 saniye durdu");
+        setTimeout(() => { if(!bitti) sureBasla(Math.max(1, kalanSn),
+          () => sonuclandir(null), s2 => { kalanSn = s2; ustYaz(); }); }, 10000); }
+    } else if(id === "eleme"){
+      const icinde = new Set(gizli.split(""));
+      const aday = "abcçdefgğhıijklmnoöprsştuüvyz".split("")
+        .filter(c => !icinde.has(c) && !klvDurum[c]);
+      if(!aday.length) oldu = false;
+      else { const secilen = [];
+        for(let k = 0; k < 3 && aday.length; k++)
+          secilen.push(aday.splice(Math.floor(Math.random()*aday.length), 1)[0]);
+        secilen.forEach(c => { klvDurum[c] = "yok";
+          if(klvTus[c]) klvTus[c].className = "yok"; });
+        uyar("Elendi: " + secilen.map(TRU).join(" ")); }
+    } else if(id === "sozluksayfasi"){
+      if(!TANIM[gizli]){ uyar("Bu kelimenin sözlük kaydı yok"); oldu = false; }
+      else if(tanimAcik) oldu = false;
+      else { tanimAcik = true;
+        $("#alt").innerHTML = `<div class="ipucu" style="margin-top:9px">
+          <b>Sözlük sayfası</b>${TANIM[gizli]}</div>`; }
+    } else if(id === "anagram"){
+      if(anagramAcik) oldu = false;
+      else { anagramAcik = true;
+        const kar = gizli.split("").sort(() => Math.random()-0.5).map(TRU).join(" ");
+        $("#alt").innerHTML += `<div class="ipucu" style="margin-top:9px">
+          <b>Anagram · harfler karışık</b>${kar}</div>`; }
+    } else if(id === "fazladanhak"){
+      satirAc(); uyar("Bir hak daha eklendi");
+    } else if(id === "ciftevurgu"){
+      if(cifte) oldu = false; else { cifte = true; ustYaz(); uyar("Ödül iki katı!"); }
+    } else if(id === "yoldegistir"){
+      S.jok[id]--; if(!S.jok[id]) delete S.jok[id]; kaydet();
+      uyar("Yeni kelime geliyor"); return etapBasla();
+    } else if(id === "kalem"){
+      S.jok[id]--; if(!S.jok[id]) delete S.jok[id]; kaydet();
+      gir = gizli.split(""); yaz(); return sonuclandir(gizli);
+    } else if(id === "ikincisans"){
+      uyar("İkinci Şans etabı kaybedince kullanılır"); oldu = false;
+    }
+    if(!oldu){ uyar("Şu an işe yaramaz"); return; }
+    S.jok[id]--; if(!S.jok[id]) delete S.jok[id];
+    kaydet(); jokCiz(); barYaz();
+  };
+  function jokCiz(){
+    const ids = Object.keys(S.jok).filter(k => S.jok[k] > 0);
+    jokbar.classList.remove("gizli");
+    if(!ids.length){ jokbar.innerHTML =
+      `<span class="bos">Elinde joker yok — bir sonraki handa alabilirsin</span>`; return; }
+    jokbar.innerHTML = ids.map(id => { const u = URUNID[id];
+      return `<button onclick="AKTIF.kullan('${id}')" title="${u.kisa}">
+        <i>${u.em}</i>${u.ad}<u>${S.jok[id]}</u></button>`; }).join("");
+  }
+
+  ustYaz(); yaz(); jokCiz(); klavyeCiz(girHarf, silHarf, gonder); tik(); barYaz();
+}
+
+/* ================= akis ================= */
+function ilerle(){
+  if(S.bitti) return sonEkran();
+  const b = Math.floor(S.etap / 4);
+  if(S.etap % 4 === 0 && S.hanNo < S.etap / 4) return hanEkran(S.etap/4 - 1);
+  if(S.etap % 4 === 0 && S.bolumGirisi < b + 1) return bolumGiris(b);
+  etapBasla();
+}
+function yolCiz(){
+  return `<div class="yol">` + BOLUM.map((bl, b) => {
+    const simdi = Math.floor(S.etap/4) === b && !S.bitti;
+    const adimlar = UZUN.map((n, i) => {
+      const no = b*4 + i;
+      let c = "bek", ic = n;
+      if(no < S.etap){ c = (S.sonuc && S.sonuc[no] === false) ? "hata" : "ok"; }
+      else if(no === S.etap && !S.bitti){ c = "simdi"; }
+      return `<div class="a ${c}">${ic}</div>`;
+    }).join("");
+    const han = b < 4 ? `<div class="a han ${S.hanNo > b ? "ok" : ""}">⌂</div>
+      <span class="kucuk">${HANAD[b]}${S.satici[b] !== undefined ?
+        " · " + SATICI[b][S.satici[b]].ad : ""}</span>` : "";
+    return `<div class="yb ${simdi ? "simdi" : ""} ${S.etap >= (b+1)*4 ? "bitti" : ""}">
+      <div class="ust2"><span class="ad">${bl.ad}</span>
+        <span class="no">${b+1}. bölüm · ${bl.carpan}× ödül · ${bl.sure} sn</span></div>
+      <div class="adim">${adimlar}${han}</div></div>`;
+  }).join("") + `</div>`;
+}
+function bolumGiris(b){
+  S.bolumGirisi = b + 1; kaydet();
+  ekran(`<div class="kutu">
+      <div class="eyebrow">${b+1}. bölüm</div>
+      <h1>${BOLUM[b].ad}</h1>
+      <p class="hikaye">${BOLUM[b].giris}</p>
+      <p class="kucuk">Bu bölümde dört etap var: 4, 5, 6 ve 7 harfli birer kelime.
+        Her tahmin için <b>${BOLUM[b].sure} saniye</b>, ödüller <b>${BOLUM[b].carpan}×</b>
+        katsayıyla ödenir.</p>
+      <button class="buton" onclick="etapBasla()">YOLA ÇIK ▸</button>
+    </div>` + yolCiz(), false);
+}
+function yolEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Sözün Kervanı</div>
+      <h2>${KISI} · yolun ${S.etap}/20</h2>
+      <p class="kucuk">Kese <b>🪙 ${TL(S.akce)} akçe</b> · birikim <b>₺${TL(S.para)}</b> ·
+        kalp <b>${S.kalp}/${S.maxKalp}</b>${S.seri > 1 ?
+        ` · seri <b>${S.seri}</b>` : ""}</p>
+      <button class="buton" onclick="ilerle()">DEVAM ET ▸</button>
+      <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
+      <button class="buton ikinci" onclick="katalogEkran()">📜 TÜM ÜRÜNLER VE KİLİTLER</button>
+    </div>` + yolCiz(), false);
+}
+
+/* ================= han ================= */
+function stokKur(h){
+  const sat = SATICI[h][S.satici[h]];
+  const adet = 4 + (sahipmi("sozlukcildi") ? 1 : 0);
+  const uygun = URUN.filter(u => u.han === h && kilitDurum(u).acik &&
+    (u.tek || !sahipmi(u.id)) && (u.id !== "saglamyurek" || S.kalp < 6));
+  const havuz = uygun.slice();
+  const secilen = [];
+  while(secilen.length < adet && havuz.length)
+    secilen.push(havuz.splice(Math.floor(Math.random()*havuz.length), 1)[0].id);
+  const kilitli = URUN.filter(u => u.han === h && !kilitDurum(u).acik);
+  S.stok = {h:h, urun:secilen,
+    kilitli: kilitli.length ? kilitli[Math.floor(Math.random()*kilitli.length)].id : null};
+  kaydet();
+}
+function hanEkran(h){
+  if(!S.stok || S.stok.h !== h){ S.yenileme = 0; stokKur(h); }
+  const sat = SATICI[h][S.satici[h]];
+  const kart = (id, kilitliMi) => {
+    const u = URUNID[id], k = kilitDurum(u), f = fiyat(u);
+    const alinmis = !u.tek && sahipmi(id);
+    return `<div class="urun ${kilitliMi ? "kilitli" : ""} ${alinmis ? "alindi" : ""}"
+        id="u_${id}">
+      <button onclick="urunAc('${id}')">
+        <span class="em">${u.em}</span>
+        <span class="gv"><b>${u.ad}</b><span>${u.kisa}</span></span>
+        <span class="fy">${kilitliMi ? "🔒" : TL(f)}<em>${kilitliMi ? "kilitli" : "akçe"}</em></span>
+      </button>
+      <div class="ac gizli" id="a_${id}">
+        <p><span class="etiket ${u.tip}">${
+          u.tip === "joker" ? "Joker · tek kullanım" :
+          u.tip === "yetenek" ? "Yetenek · kalıcı" :
+          u.tip === "tilsim" ? "Tılsım · kalıcı" : "Efsanevi"}</span></p>
+        <p>${u.tam}</p>
+        ${kilitliMi
+          ? `<div class="kilitNot">🔒 <b>${k.metin}</b><br>${k.nasil}</div>`
+          : (alinmis
+            ? `<p class="kucuk" style="color:var(--yesil)">Bu ürün sende zaten var.</p>`
+            : `<button class="buton" ${S.akce < f ? "disabled" : ""}
+                onclick="satinAl('${id}')">${S.akce < f
+                  ? `${TL(f)} akçe gerekiyor — kesende ${TL(S.akce)} var`
+                  : `SATIN AL · ${TL(f)} akçe`}</button>`)}
+      </div></div>`;
+  };
+  const yenHak = 1 + (sahipmi("cingirak") ? 1 : 0);
+  ekran(`<div class="kutu">
+      <div class="eyebrow">${h+1}. han</div>
+      <h1 style="font-size:23px">${sat.duk}</h1>
+      <div class="satici" style="margin-top:12px">
+        <div class="av">${TRU(sat.ad[0])}</div>
+        <div class="ki"><b>${sat.ad}</b><span>${
+          h === 0 ? "Jokerci · tek kullanımlık ipuçları" :
+          h === 1 ? "Kervansaraycı · kalıcı yetenekler" :
+          h === 2 ? "Sahaf · koşullu tılsımlar" :
+                    "Ocakçı · kalp, kalkan, efsanevi"}</span></div>
+      </div>
+      <p class="hikaye" style="margin-top:10px">“${sat.rep}”</p>
+      <p class="kucuk">Kesende <b>🪙 ${TL(S.akce)} akçe</b> var. Ürüne dokunursan ne işe
+        yaradığını ve nasıl açıldığını okursun.</p>
+      ${S.stok.urun.map(id => kart(id, false)).join("")}
+      ${S.stok.kilitli ? kart(S.stok.kilitli, true) : ""}
+      <button class="buton ikinci" ${S.yenileme >= yenHak || S.akce < 20 ? "disabled" : ""}
+        onclick="yenile(${h})">🔄 ÜRÜNLERİ YENİLE · 20 akçe
+        (${yenHak - S.yenileme} hak)</button>
+      <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
+      <button class="buton" onclick="handanCik(${h})">YOLA DEVAM ▸</button>
+    </div>`, false);
+}
+window.urunAc = function(id){
+  const e = $("#a_" + id); if(!e) return;
+  document.querySelectorAll(".ac").forEach(x => { if(x !== e) x.classList.add("gizli"); });
+  e.classList.toggle("gizli");
+  if(!e.classList.contains("gizli")) $("#u_" + id).scrollIntoView({block:"nearest"});
+};
+window.satinAl = function(id){
+  const u = URUNID[id], f = fiyat(u);
+  if(S.akce < f) return uyar("Akçe yetmiyor");
+  S.akce -= f;
+  if(u.tek) S.jok[id] = (S.jok[id] || 0) + 1;
+  else {
+    S.sahip.push(id);
+    if(id === "saglamyurek"){ S.maxKalp++; S.kalp++; }
+  }
+  S.stok.urun = S.stok.urun.filter(x => x !== id);
+  LG_ses("rozet"); kaydet(); uyar(u.ad + " alındı");
+  hanEkran(S.stok.h);
+};
+window.yenile = function(h){
+  if(S.akce < 20) return uyar("Akçe yetmiyor");
+  S.akce -= 20; S.yenileme++; const y = S.yenileme; stokKur(h); S.yenileme = y;
+  kaydet(); hanEkran(h);
+};
+window.handanCik = function(h){
+  S.hanNo = h + 1; S.stok = null; S.yenileme = 0; kaydet(); ilerle();
+};
+
+/* ================= envanter ve katalog ================= */
+function envanterEkran(){
+  const jk = Object.keys(S.jok).filter(k => S.jok[k] > 0);
+  const kl = S.sahip.slice();
+  const sat = (id, adet) => { const u = URUNID[id];
+    return `<div class="urun"><button onclick="urunAc('e${id}')">
+      <span class="em">${u.em}</span>
+      <span class="gv"><b>${u.ad}</b><span>${u.kisa}</span></span>
+      <span class="fy">${adet ? "×" + adet : "✓"}<em>${adet ? "adet" : "kalıcı"}</em></span>
+      </button><div class="ac gizli" id="a_e${id}"><p>${u.tam}</p></div></div>`; };
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Envanter</div>
+      <h2>${KISI}'in heybesi</h2>
+      <p class="kucuk">Kese <b>🪙 ${TL(S.akce)}</b> · birikim <b>₺${TL(S.para)}</b> ·
+        kalp <b>${S.kalp}/${S.maxKalp}</b></p>
+      ${jk.length ? `<p class="eyebrow" style="margin-top:12px">Jokerler · tek kullanım</p>`
+        + jk.map(id => sat(id, S.jok[id])).join("") : ""}
+      ${kl.length ? `<p class="eyebrow" style="margin-top:14px">Kalıcı olanlar</p>`
+        + kl.map(id => sat(id, 0)).join("") : ""}
+      ${(!jk.length && !kl.length) ? `<p class="kucuk" style="margin-top:10px">
+        Heybe boş. İlk handa satıcıya uğradığında dolmaya başlar.</p>` : ""}
+      <button class="buton" onclick="ilerleGeri()">GERİ ▸</button>
+    </div>`, false);
+}
+function katalogEkran(){
+  const d = LG_defter(KISI);
+  const grup = [0,1,2,3].map(h => {
+    const lst = URUN.filter(u => u.han === h);
+    return `<p class="eyebrow" style="margin-top:15px">${h+1}. han · ${HANAD[h]}</p>` +
+      lst.map(u => { const k = kilitDurum(u);
+        return `<div class="urun ${k.acik ? "" : "kilitli"}">
+          <button onclick="urunAc('k${u.id}')">
+            <span class="em">${u.em}</span>
+            <span class="gv"><b>${u.ad}</b><span>${u.kisa}</span></span>
+            <span class="fy">${k.acik ? TL(fiyat(u)) : "🔒"}<em>${
+              k.acik ? "akçe" : "kilitli"}</em></span></button>
+          <div class="ac gizli" id="a_k${u.id}">
+            <p><span class="etiket ${u.tip}">${
+              u.tip === "joker" ? "Joker · tek kullanım" :
+              u.tip === "yetenek" ? "Yetenek · kalıcı" :
+              u.tip === "tilsim" ? "Tılsım · kalıcı" : "Efsanevi"}</span></p>
+            <p>${u.tam}</p>
+            ${k.acik ? `<p class="kucuk" style="color:var(--yesil)">✓ Açık —
+              ${u.kilit ? k.metin + " şartını karşıladın" : "baştan açık"}</p>`
+              : `<div class="kilitNot">🔒 <b>${k.metin}</b><br>${k.nasil}</div>`}
+          </div></div>`; }).join("");
+  }).join("");
+  const acik = URUN.filter(u => kilitDurum(u).acik).length;
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Ürün kataloğu</div>
+      <h2>${acik}/${URUN.length} ürün açık</h2>
+      <p class="kucuk">Ürünler ünvanın ve nişanlarınla açılır — alıştırmada, Lingo
+        oyununda ve Ailecük'te kazandığın her şey buraya işler. Şu an
+        <b>${TL(d.length)} kelime</b> ve <b>${LG_acik(KISI).length} nişan</b> ile
+        <b>${LG_unvan(d.length).simdi.ad}</b> ünvanındasın.
+        Kilitli bir ürüne dokunursan tam olarak ne gerektiğini yazar.</p>
+      ${grup}
+      <button class="buton" onclick="ilerleGeri()">GERİ ▸</button>
+    </div>`, false);
+}
+window.ilerleGeri = function(){
+  if(S.bitti) return sonEkran();
+  if(S.stok && S.etap % 4 === 0 && S.hanNo < S.etap/4) return hanEkran(S.stok.h);
+  yolEkran();
+};
+
+/* ================= son ================= */
+function sonEkran(){
+  const kazandi = S.bitti === "kazandi";
+  let toplam, notu;
+  if(!kazandi){
+    toplam = Math.round(S.para / 2);
+    notu = `Kalpler bitti, kervan ${S.etap}. etapta durdu. Biriken tutarın
+      <b>yarısı</b> elinde kaldı.`;
+  } else if(S.sonKapi){
+    toplam = S.para * 2 + SUPER;
+    notu = `Son kapıyı açtın! Birikim <b>iki katına</b> çıktı ve üstüne
+      <b>₺${TL(SUPER)}</b> süper lingo primi eklendi.`;
+  } else if(sahipmi("kupasuyu")){
+    toplam = S.para * 2;
+    notu = `Son kapı açılmadı ama <b>🏆 Kupa Suyu</b> devreye girdi: birikim yine
+      <b>iki katına</b> çıktı.`;
+  } else {
+    toplam = S.para;
+    notu = `Yirmi konağı tamamladın ama son kapı açılmadı. Biriken tutarın
+      <b>tamamı</b> elinde kaldı.`;
+  }
+  let en = 0;
+  try{ en = +(localStorage.getItem("lingo_kervan_en_" + KISI) || 0);
+    if(toplam > en){ en = toplam;
+      localStorage.setItem("lingo_kervan_en_" + KISI, String(toplam)); } }catch(e){}
+  LG_ses(kazandi ? "unvan" : "bitti");
+  const hik = kazandi
+    ? (S.sonKapi
+      ? "Kapı açıldı. İçeride ne hazine vardı ne taht — sadece bir defter, ilk sayfası "+
+        "boş. Kervan boyunca kurtardığın kelimeler o sayfaya kendiliğinden yazıldı."
+      : "Kaleye vardın. Kapı bu sefer açılmadı ama nöbetçi seni tanıdı: “Yolu yürüyen "+
+        "herkes bir daha gelir” dedi.")
+    : "Kervan yolda kaldı. Ama çarşıdan buraya kadar kurtardığın kelimeler cebinde — "+
+      "yarın yine yola çıkabilirsin.";
+  const roz = LG_acik(KISI).length;
+  ekran(`<div class="kutu ort">
+      <div class="eyebrow">${kazandi ? "Yolculuk tamamlandı" : "Yolculuk sona erdi"}</div>
+      <h1 style="margin-top:6px">${kazandi ? (S.sonKapi ? "Söz Kalesi açıldı" :
+        "Kaleye vardın") : "Kervan durdu"}</h1>
+      <p class="hikaye">${hik}</p>
+      <div class="tutar" style="margin:14px 0 2px">₺${TL(toplam)}</div>
+      <p class="kucuk">${notu}</p>
+      <div class="ozet">
+        <div><b>${S.etap}</b><span>etap</span></div>
+        <div><b>${S.dogru.length}</b><span>bilinen</span></div>
+        <div><b>${S.hatali.length}</b><span>kaçan</span></div>
+        <div><b>${roz}</b><span>nişan</span></div>
+      </div>
+      ${S.hatali.length ? `<p class="kucuk">Kaçan kelimeler:
+        <b>${S.hatali.map(TRU).join(" · ")}</b></p>` : ""}
+      <p class="kucuk">En iyi yolculuğun: <b>₺${TL(en)}</b></p>
+      <button class="buton" onclick="yeniYolculuk()">YENİDEN YOLA ÇIK</button>
+      <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+    </div>`);
+}
+window.yeniYolculuk = function(){
+  sil(); S = bosDurum();
+  S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
+  kaydet(); girisEkran();
+};
+
+/* ================= giris ekranlari ================= */
+function kisiEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Kim yola çıkıyor?</div>
+      <h2>Kervanın başındaki kim?</h2>
+      <p class="kucuk">Ünvanın ve nişanların dükkânlarda hangi ürünlerin açık olduğunu
+        belirliyor. Çözdüğün kelimeler senin defterine yazılır.</p>
+      <div class="kgrid">${KISILER.map(a =>
+        `<button onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`).join("")}</div>
+      <p class="kucuk">Yeni bir ad eklemek istersen alıştırma sayfalarındaki
+        “kim çalışıyor” ekranından ekleyebilirsin.</p>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+    </div>`);
+}
+window.kisiSec = function(a){
+  KISI = a; try{ localStorage.setItem("lingo_kisi", a); }catch(e){}
+  basla();
+};
+function girisEkran(){
+  const d = LG_defter(KISI), acik = URUN.filter(u => kilitDurum(u).acik).length;
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Sözün Kervanı</div>
+      <h1>Yirmi konak, bir kapı</h1>
+      <p class="hikaye">Kelimeler eskiden herkesin ortak malıydı. Sonra bir gece Söz
+        Kalesi'nin kapıları kapandı ve kelimeler tek tek unutulmaya başladı. Anneler
+        masal anlatamadı, tüccarlar pazarda anlaşamadı, şairler kafiyeyi kaybetti.</p>
+      <p class="hikaye">Kalenin kapısını tek bir şey açar: yirmi konakta yirmi kelimeyi
+        bilen biri. Sen o kervanın başındasın.</p>
+      <p class="kucuk" style="margin-top:12px"><b>Nasıl oynanır?</b> Beş bölüm, her
+        bölümde 4, 5, 6 ve 7 harfli birer kelime. Her kelime için <b>5 tahmin</b> ve
+        bölüme göre <b>16–25 saniye</b>. Bilemediğin etap bir <b>kalp</b> götürür;
+        üç kalp biterse yolculuk durur.</p>
+      <p class="kucuk">Her bölüm sonunda bir <b>han</b> var. Etaplarda kazandığın
+        <b>akçe</b> ile joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
+        son kapıda ödenir — açarsan <b>iki katı + ₺${TL(SUPER)}</b>.</p>
+      <p class="kucuk">Şu an <b>${LG_unvan(d.length).simdi.ad}</b> ünvanındasın ve
+        <b>${acik}/${URUN.length}</b> ürün açık. ${
+        acik < URUN.length ? "Alıştırma yaptıkça yenileri açılır." : ""}</p>
+      <button class="buton" onclick="ilerle()">KERVANI YOLA ÇIKAR ▸</button>
+      <button class="buton ikinci" onclick="katalogEkran()">📜 TÜM ÜRÜNLER VE KİLİTLER</button>
+      <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
+    </div>`);
+}
+function devamEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Yarım kalan yolculuk</div>
+      <h2>${KISI}, kervan yolda bekliyor</h2>
+      <p class="kucuk"><b>${S.etap}/20</b> etap tamamlandı · kalp
+        <b>${S.kalp}/${S.maxKalp}</b> · kese <b>🪙 ${TL(S.akce)}</b> · birikim
+        <b>₺${TL(S.para)}</b></p>
+      <button class="buton" onclick="ilerle()">KALDIĞIN YERDEN DEVAM ET ▸</button>
+      <button class="buton ikinci" onclick="yolEkran()">🗺 YOL HARİTASI</button>
+      <button class="buton ikinci" onclick="sifirla()">YENİ YOLCULUK — bunu sil</button>
+      <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
+    </div>`);
+}
+window.sifirla = function(){
+  ekran(`<div class="kutu ort">
+      <h2>Emin misin?</h2>
+      <p class="kucuk">Aynı anda tek yolculuk tutuluyor. Yenisine başlarsan
+        ${S.etap}. etaptaki bu yolculuk, kesendeki <b>${TL(S.akce)} akçe</b> ve
+        <b>₺${TL(S.para)}</b> birikim silinir.</p>
+      <button class="buton" onclick="yeniYolculuk()">EVET, YENİ YOLCULUK</button>
+      <button class="buton ikinci" onclick="devamEkran()">VAZGEÇ</button>
+    </div>`);
+};
+window.ilerle = ilerle;
+window.yolEkran = yolEkran;
+window.etapBasla = etapBasla;
+window.envanterEkran = envanterEkran;
+window.katalogEkran = katalogEkran;
+window.devamEkran = devamEkran;
+window.kisiEkran = kisiEkran;
+window.sonEkran = sonEkran;
+
+function basla(){
+  KISILER = LG_kisiler(KISI_VAR);
+  if(!KISI || KISI === LG_KAYITSIZ || KISILER.indexOf(KISI) < 0) return kisiEkran();
+  S = oku();
+  if(!S){ S = bosDurum();
+    S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
+    kaydet(); return girisEkran(); }
+  if(!S.sonuc) S.sonuc = [];
+  if(!S.satici || !S.satici.length)
+    S.satici = SATICI.map(g => Math.floor(Math.random() * g.length));
+  if(S.bitti) return sonEkran();
+  if(S.etap === 0 && !S.bolumGirisi) return girisEkran();
+  devamEkran();
+}
+
+/* ================= yukleme ================= */
+const GECERLI = {};
+function yukle(){
+  LG_sesDugme($("#sesd"));
+  orta.innerHTML = `<div class="kutu ort"><h2>Kervan hazırlanıyor…</h2>
+    <p class="kucuk">Kelime havuzları yükleniyor.</p></div>`;
+  Promise.all([
+    fetch("kervan-veri.json").then(r => r.json()),
+    fetch("oyun-veri.json").then(r => r.json()),
+    fetch("oyun-tanim.json").then(r => r.json())
+  ]).then(([kv, ov, tn]) => {
+    VERI = kv; OYUN = ov; TANIM = tn;
+    for(const n of [4,5,6,7]) GECERLI[n] = new Set(ov.gecerli[n]);
+    basla();
+  }).catch(e => {
+    orta.innerHTML = `<div class="kutu ort"><h2>Veri yüklenemedi</h2>
+      <p class="kucuk">Bağlantını kontrol edip sayfayı yenile.</p>
+      <button class="buton" onclick="location.reload()">YENİLE</button></div>`;
+  });
+}
+addEventListener("resize", () => {
+  const t = $("#tahta"); if(!t) return;
+  const n = t.querySelector(".satir") ? t.querySelector(".satir").children.length : 5;
+  t.style.setProperty("--hg", hucreBoy(n) + "px");
+});
+yukle();
+</script></body></html>
