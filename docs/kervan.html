@@ -36,7 +36,8 @@ button{font:inherit;cursor:pointer}
 #sure.az i{background:var(--kirmizi)}
 /* ---- orta ---- */
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
-  padding:12px 12px 18px;gap:11px;min-height:0;-webkit-overflow-scrolling:touch}
+  padding:18px 12px 22px;gap:11px;min-height:0;-webkit-overflow-scrolling:touch}
+@media (min-width:640px){ #orta{padding-top:30px} }
 #orta.ort{justify-content:center}
 .kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
   padding:19px 17px;max-width:470px;width:100%}
@@ -192,9 +193,8 @@ table.rek td span{font-size:11.5px}
 table.rek td:first-child{width:18px;color:var(--altin);font-weight:800}
 table.rek td.tl{text-align:right;color:var(--yesil);font-weight:800;
   font-variant-numeric:tabular-nums;white-space:nowrap}
-.ozet1{border-left:3px solid var(--altin);background:rgba(244,201,93,.07);
-  border-radius:0 10px 10px 0;padding:10px 12px;margin:10px 0 4px;font-size:14.5px;
-  line-height:1.6;color:#dfe6ed}
+.ozet1{background:#141d27;border:1px solid var(--cizgi);border-radius:12px;
+  padding:11px 13px;margin:11px 0 4px;font-size:14.5px;line-height:1.6;color:#dfe6ed}
 .ozet1 b{color:var(--altin)}
 .tutar{font-size:36px;font-weight:800;color:var(--altin);letter-spacing:-1px;
   font-variant-numeric:tabular-nums;line-height:1.1}
@@ -299,7 +299,9 @@ const SATICI = [
    {ad:"Figen",  duk:"Figen'in Eski Harfleri",
     rep:"Az kullanılmış bir Ğ var, kimse almıyor. Sana ucuza veririm."},
    {ad:"Belgin", duk:"Belgin Kitap ve Tılsım",
-    rep:"Kitabı okumadan tılsım satmam. Al, önce bir bak."} ],
+    rep:"Kitabı okumadan tılsım satmam. Al, önce bir bak."},
+   {ad:"Hatice", duk:"Hatice'nin Kitap Sandığı",
+    rep:"Sandıkta ne var bilmiyorum ama her açtığımda bir kelime çıkıyor."} ],
  [ {ad:"Yusuf",  duk:"Yusuf'un Ocağı",
     rep:"Kalbini tamir ederim, kelimeni tamir etmem. Onu sen bileceksin."},
    {ad:"Ali",    duk:"Ali'nin Örsü",
@@ -307,7 +309,9 @@ const SATICI = [
    {ad:"Çetin",  duk:"Çetin'in Kale Cephanesi",
     rep:"Adım gibi iş yaparım. Kalpten yana sıkıntın kalmaz."},
    {ad:"Sadi",   duk:"Sadi Baba'nın Son Dükkânı",
-    rep:"Son dükkân benim. Buradan sonra yalnız sen ve kelime var."} ]
+    rep:"Son dükkân benim. Buradan sonra yalnız sen ve kelime var."},
+   {ad:"Mehmet", duk:"Mehmet'in Körüğü",
+    rep:"Körüğü ben çekerim, ateşi sen harlarsın. Kelime de öyle olur."} ]
 ];
 /* han sirasi -> satici grubu (0 jokerci, 1 kervansaraycı, 2 sahaf, 3 ocakçı) */
 const HANTIP = [0, 1, 2, 3, 0, 2];
@@ -451,7 +455,7 @@ const URUN = [
   tam:"Normalde bilemediğin etaptan hiç para almazsın. Muska ile o etabın ödülünün "+
       "yarısı yine de birikime eklenir. Kalp gitmesini engellemez.",
   kilit:{r:"Zor Gün"}},
- {id:"demiryurek", ad:"Sevilen'in Demir Yüreği", em:"🧱", tip:"tilsim", han:2, fiyat:185,
+ {id:"demiryurek", ad:"Hatice'nin Demir Yüreği", em:"🧱", tip:"tilsim", han:2, fiyat:185,
   kisa:"6 harfli etaplarda süre 25 saniyeye çıkar",
   tam:"6 harfli kelimeler yolculuğun en çok kalp götüren etaplarıdır. Bu tılsım o "+
       "etaplarda süreyi hangi bölümde olursan ol 25 saniyeye sabitler.",
@@ -481,7 +485,7 @@ const URUN = [
   tam:"Efsanevi eşya, tek kullanımlık. Dokunduğun anda içinde bulunduğun etabın "+
       "kelimesi kendiliğinden doğru yazılır ve etap kazanılmış sayılır. Son kapıda da "+
       "çalışır.", kilit:{u:10}},
- {id:"kupasuyu", ad:"Yusuf'un Kupa Suyu", em:"🏆", tip:"efsane", han:3, fiyat:320,
+ {id:"kupasuyu", ad:"Mehmet'in Kupa Suyu", em:"🏆", tip:"efsane", han:3, fiyat:320,
   kisa:"Son kapıda bilemesen de biriken paranın tamamı kalır",
   tam:"Efsanevi eşya. 20. etabı bilemezsen normalde biriken tutar elinde kalır ama "+
       "iki kat ve süper lingo primini kaçırırsın; bu eşya kaybı tamamen kaldırır ve "+
@@ -1420,8 +1424,8 @@ function girisEkran(){
       <div class="eyebrow">Bir Harf Kalmıştı · ${YY().em} ${YY().ad}</div>
       <h1>Yirmi konak, bir kapı</h1>
       <p class="ozet1">Bu oyundaki 4, 5 ve 6 harfli kelimelerin hepsi
-        <b>üç sezonda da çıkmış</b> kelimelerden geliyor — yani en çok tekrar edenler.
-        7 harflilerin yarısı arşivden, yarısı sözlükten.</p>
+        <b>üç sezonda da çıkmış</b> kelimelerden geliyor — bu sezon da sorulabilir,
+        neden olmasın? 7 harflilerin yarısı arşivden, yarısı sözlükten.</p>
       <p class="hikaye">Kelimeler eskiden herkesin ortak malıydı. Sonra bir gece Söz
         Kalesi'nin kapıları kapandı ve kelimeler tek tek unutulmaya başladı. Anneler
         masal anlatamadı, tüccarlar pazarda anlaşamadı, şairler kafiyeyi kaybetti.</p>
