@@ -108,7 +108,7 @@ tr.tik:active{background:var(--kart2)}
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
 const defter = LG_defter;
-const KISI_VAR = ["Serpil","Zeynep","Misafir"];
+const KISI_VAR = ["Serpil","Zeynep"];
 let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false;
 try{
   const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
