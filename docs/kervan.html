@@ -270,7 +270,7 @@ const SEVIYE = [
 ];
 const BASLANGIC = 100;   /* yola cikarken kesedeki akce */
 const TABAN = {4:500, 5:1000, 6:2000, 7:4000};
-const AKCE  = {4:40, 5:60, 6:90, 7:130};   /* uzunluk basina akce degeri */
+const AKCE  = {4:30, 5:40, 6:65, 7:90};    /* uzunluk basina akce degeri */
 const SUPER = 250000;
 
 /* ================= saticilar ================= */
@@ -387,7 +387,7 @@ const URUN = [
   kisa:"Hız primini iki katına çıkarır",
   tam:"Bonkör kese, erken bilene cömert davranır: kullanmadığın her tahmin hakkının getirdiği "+
       "hız primi ikiye katlanır. Yedi harfli bir kelimeyi ilk tahminde bilmek normalde "+
-      "520 akçe hız primi getirirken bu keseyle 1.040 akçe getirir.",
+      "360 akçe hız primi getirirken bu keseyle 720 akçe getirir.",
   kilit:null},
  {id:"tuccardili", ad:"Berna'nın Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
   kisa:"Bütün hanlarda %20 indirim",
@@ -895,7 +895,7 @@ function etapBasla(zorlaKelime){
     const bosHak = satirSay - (kazandi ? hak : satirSay);
     const birim = AKCE[n];
     const hizPrimi = bosHak * birim * (sahipmi("cimrikese") ? 2 : 1);
-    const sureAkce = sureyok ? 0 : Math.max(0, kalanSn) * 2;
+    const sureAkce = sureyok ? 0 : Math.round(Math.max(0, kalanSn) * 1.5);
     let akce = birim + hizPrimi + sureAkce + (sahipmi("kervanbereketi") ? 30 : 0);
     if(akceCift) akce *= 2;
     if(!kazandi) akce = Math.round(akce * 0.4);
@@ -1574,9 +1574,9 @@ function girisEkran(){
         yolculuk durur.</p>
       <p class="kucuk"><b>Erken bilmek ve uzun kelime para demek:</b> kullanmadığın her
         tahmin hakkı hız primi getiriyor ve prim kelime uzadıkça büyüyor —
-        4 harflide <b>40</b>, 5 harflide <b>60</b>, 6 harflide <b>90</b>,
-        7 harflide <b>130</b> akçe. İlk tahminde bilirsen bu primi dört kez alırsın:
-        yedi harfli bir kelime tek seferde <b>650 akçe</b> eder. Son hakta prim yok.</p>
+        4 harflide <b>30</b>, 5 harflide <b>40</b>, 6 harflide <b>65</b>,
+        7 harflide <b>90</b> akçe. İlk tahminde bilirsen bu primi dört kez alırsın:
+        yedi harfli bir kelime tek seferde <b>450 akçe</b> eder. Son hakta prim yok.</p>
       <p class="kucuk"><b>Her bölümden önce bir han var</b> — ilki hemen şimdi.
         Kesende <b>🪙 ${TL(S.akce)} akçe</b> ile yola çıkıyorsun, etaplarda kazandıkça
         artar; akçeyle joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
