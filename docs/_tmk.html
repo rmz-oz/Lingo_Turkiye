@@ -1,6 +1,4 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0f1720">
 <title>Lingo Masa Yarışması</title>
@@ -110,7 +108,6 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 <div id="skor" class="gizli"></div>
 <div id="orta"></div>
 <div id="klavye" class="gizli"></div>
-<script src="rozet.js"></script>
 <script>
 /* ================= sabitler ================= */
 const ETAPLAR = [
@@ -683,7 +680,6 @@ let SON=null, kayitEdilen=null;
 /* calisma defteri: cevapladigin kelimeler masa adina yazilir */
 function defterYaz(ad, w, hak){
   if(!ad || !w) return;
-  try{ if(localStorage.getItem("lingo_kisi") === "__kayitsiz__") return; }catch(e){}
   try{
     const k = "lingo_defter_" + ad;
     const d = JSON.parse(localStorage.getItem(k) || "[]");
@@ -766,12 +762,9 @@ function skorCiz(S){
     const dur = el ? "izleyici" : (i===S.cevaplayan ? "cevapta"
       : (S.faz==="duello"&&S.duSira[1]===i ? "bekliyor"
       : (i===S.sira&&S.etap<2 ? "sırada" : "&nbsp;")));
-    const unv = (i===NET.benim && typeof LG_unvan==="function")
-      ? LG_unvan(LG_defter(m.ad).length).simdi.ad : null;
     return `<div class="m ${i===S.sira&&!el?"on":""} ${i===NET.benim?"ben":""}"
        style="${el?"opacity:.5":""}">
-       <b>${m.ad}</b><i>₺${TL(m.para)}</i>
-       <u>${unv ? unv : dur}</u></div>`;}).join("");
+       <b>${m.ad}</b><i>₺${TL(m.para)}</i><u>${dur}</u></div>`;}).join("");
 }
 function ciz(S){
   SON=S;
@@ -792,16 +785,6 @@ function ciz(S){
         ${S.elenen===m.i?"opacity:.45":""}">
         ${i+1}. <b>${m.ad}</b> — ₺${TL(m.para)}
         ${S.elenen===m.i?" <span style='font-size:13px'>(2. etapta elendi)</span>":""}</p>`).join("")}
-      ${(function(){
-        const ad = (NET.benim>=0 && S.masalar[NET.benim]) ? S.masalar[NET.benim].ad : null;
-        if(!ad) return "";
-        const U = LG_unvan(LG_defter(ad).length), ra = LG_acik(ad);
-        return `<div class="msj bek" style="text-align:left;margin-top:10px">
-          <b style="color:var(--altin)">${U.simdi.ad}</b> · ${ad}
-          ${U.sonraki ? `<div style="font-size:12.5px;color:var(--soluk);margin-top:3px">
-            ${U.sonraki.ad} için ${U.kalan} kelime daha</div>` : ""}
-          ${ra.length ? `<div style="margin-top:7px;font-size:19px">
-            ${ra.map(r=>r.e).join(" ")}</div>` : ""}</div>`;})()}
       <a class="buton ikinci" style="text-decoration:none" href="rapor.html">
         📊 GELİŞİM RAPORU</a>
       ${NET.host?'<button class="buton" onclick="yeniden()">YENİ OYUN</button>':''}`);
@@ -895,17 +878,11 @@ function ciz(S){
   const satirSay = puz ? 1 : Math.max(taban, S.satirlar.length + (S.acik ? 0 : 1));
   /* kelime bitti: cevaplayan masanin telefonunda deftere islenir */
   if(!puz && S.acik && S.acik !== kayitEdilen && NET.benim >= 0 &&
-     S.acik.length >= 4 && S.acik.length <= 7){
+     NET.benim === S.cevaplayan && S.acik.length >= 4 && S.acik.length <= 7){
     const sonS = S.satirlar[S.satirlar.length-1];
     const cozdu = sonS && sonS.r.every(x => x === "tam");
-    if(NET.benim === S.cevaplayan){
-      defterYaz(S.masalar[NET.benim].ad, S.acik, cozdu ? S.satirlar.length : 0);
-      kayitEdilen = S.acik;
-    } else if(NET.benim === S.sira){
-      /* sira bendeydi ama bilemedim, kelimeyi rakip aldi: bu da bir hata */
-      defterYaz(S.masalar[NET.benim].ad, S.acik, 0);
-      kayitEdilen = S.acik;
-    }
+    defterYaz(S.masalar[NET.benim].ad, S.acik, cozdu ? S.satirlar.length : 0);
+    kayitEdilen = S.acik;
   }
   for(let r=0;r<satirSay;r++){
     const d=document.createElement("div");
@@ -1074,4 +1051,29 @@ function yukle(){
       <button class="buton" onclick="location.reload()">YENİLE</button>`));
 }
 yukle();
+</script><script>window.onerror=function(e){document.body.setAttribute("data-hata",String(e))};
+function bekle(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function yaz(w){ for(var i=1;i<w.length;i++) M.harf(w[i]); M.gonderTahmin(); }
+setTimeout(async function(){
+  var log=[];
+  try{
+    localStorage.clear();
+    NET.host=true; NET.baglar=[]; NET.benim=2;      // ben Ramiz masasiyim
+    M.kur(["Serpil & Zeynep","Yusuf","Ramiz"]); M.kul=new Set();
+    M.S.faz="oyun"; M.S.etap=1; M.S.sira=2; M.S.ki=0; M.S.dogru=0;
+    M.kelimeAc(); await bekle(150);
+    log.push("cevaplayan:"+M.S.masalar[M.S.cevaplayan].ad+" n:"+M.S.n);
+    yaz(M.GIZLI); await bekle(300);                 // dogru
+    var w1=M.S.acik;
+    await bekle(1900);
+    var w2=M.GIZLI, ad=[...GECERLI[5]].filter(x=>x[0]===w2[0]&&x!==w2);
+    for(var i=0;i<5;i++){ yaz(ad[i]); await bekle(90); }   // bilinemedi -> buzz
+    await bekle(400);
+    log.push("faz:"+M.S.faz);
+    var d=JSON.parse(localStorage.getItem("lingo_defter_Ramiz")||"[]");
+    log.push("Ramiz defteri:"+JSON.stringify(d.map(r=>r.w+"/"+r.k)));
+    log.push("anahtarlar:"+Object.keys(localStorage).join(", "));
+  }catch(e){ log.push("HATA:"+e.message); }
+  document.body.setAttribute("data-test", log.join(" ~ "));
+},2500);
 </script></body></html>

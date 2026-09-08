@@ -1,4 +1,6 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0f1720">
 <title>5 harfli alıştırma — Lingo</title>
@@ -252,15 +254,26 @@ function kisiEkrani(){
   orta.className = "";
   orta.innerHTML = `<div class="kutu">
     <h1>Kim çalışıyor?</h1>
-    <p class="kucuk">Sonuçlar kişiye özel tutulur; sonra istediğiniz zaman
-       değiştirebilirsiniz.</p>
+    <p class="kucuk" style="text-align:left">
+      Bildiğin ve takıldığın her kelime seçtiğin isim altında kaydedilir.
+      <b>Gelişim raporu</b>, zayıf harflerin, ünvanın ve rozetlerin bu kayıttan
+      hesaplanır.</p>
+    <p class="kucuk" style="text-align:left">
+      <b>Aynı telefonu birkaç kişi kullanıyorsa</b> herkes kendi ismini seçsin —
+      yoksa istatistikler karışır. Kendi telefonunuzsa bir kez seçmeniz yeterli,
+      hatırlanır.</p>
+    <p class="kucuk" style="text-align:left">
+      Kayıtlar <b>sadece bu telefonda</b> durur, hiçbir yere gönderilmez.
+      Başka birinin kendi telefonundaki sonuçları burada görünmez;
+      buradakiler de oraya gitmez.</p>
     <div class="kgrid">${KISILER.map(a =>
       `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
       ).join("")}</div>
     <button class="buton ikinci" style="margin-top:6px"
       onclick="kisiSec('${KAYITSIZ}')">
       KAYIT TUTMA<small style="display:block;font-size:12px;font-weight:600;opacity:.7;
-        margin-top:2px">sonuçlar kaydedilmez, istatistik hesaplanmaz</small></button>
+        margin-top:2px">misafir oynuyorsa ya da denemek için · hiçbir şey
+        kaydedilmez, rapor ve rozetler etkilenmez</small></button>
     </div>`;
   orta.scrollTop = 0;
 }
