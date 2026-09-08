@@ -76,6 +76,16 @@ p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
 .hedef{background:var(--kart2);border:1px dashed var(--cizgi);border-radius:10px;
   padding:10px 12px;margin-top:11px;font-size:13.5px;color:var(--soluk)}
 .hedef b{color:var(--murekkep)}
+.hsat{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;
+  margin-top:9px}
+.hk .hb{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;
+  margin-bottom:4px}
+.hk .hb b{font-weight:700}
+.hk .hb u{text-decoration:none;font-variant-numeric:tabular-nums;font-weight:800;
+  color:var(--altin)}
+.cub2{height:6px;border-radius:4px;background:#22303d;overflow:hidden}
+.cub2 i{display:block;height:100%;background:var(--altin);border-radius:4px}
+.cub2 i.tam{background:var(--yesil)}
 /* rozetler */
 .roz{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:8px}
 .roz div{background:var(--kart2);border:1px solid var(--cizgi);border-radius:13px;
@@ -128,6 +138,19 @@ function kalanGun(){
   const b = new Date(); b.setHours(0,0,0,0);
   return Math.max(0, Math.round((t-b)/86400000));
 }
+/* --- gun tarihleri: 1. gun = yarismadan 4 gun once --- */
+function gunTarihi(i){
+  const t = new Date(tarihAl()+"T00:00:00");
+  t.setDate(t.getDate() - (4 - i));      /* i: 1..4 */
+  return t;
+}
+function ayniGun(a,b){ return a.toDateString() === b.toDateString(); }
+function gunKayit(d, i){
+  const t = gunTarihi(i);
+  return d.filter(r => ayniGun(new Date(r.t), t));
+}
+const AYLAR=["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+function tarihYazi(t){ return t.getDate()+" "+AYLAR[t.getMonth()]; }
 /* --- gorev durumu --- */
 function planAl(){
   try{ return JSON.parse(localStorage.getItem("lingo_plan_"+KISI)||"{}"); }catch(e){ return {}; }
@@ -151,7 +174,7 @@ const GUNLER = [
      'Ders notu: <a href="5harf.html">5 harfli</a> sayfasında aynı 10 harfin ikililerini oku',
      '<a href="alistirma4.html#h=k">4 harfli K</a> ile bir tur · sonra S ve B',
      'Açılış quizi: <a href="4harf.html">4 harfli sayfanın Quiz sekmesi</a>, 1. bölüm'],
-   hedef:"30 kelime çöz · başarı %60'ın üstünde"},
+   hedef:{4:20, 5:10, 6:0, 7:0}},
   {ad:"Kalabalık harfler", sure:"50 dakika",
    nicin:"5 harfliler bölüm başına en çok soru gelen grup (13,6 soru) ve K S B D T "+
          "tek başına tüm cevapların <b>%35'i</b>. Bugün bu beş harfin kelimelerini görüyorsun.",
@@ -160,7 +183,7 @@ const GUNLER = [
      '<a href="alistirma5.html#h=d">5 harfli D</a> ve <a href="alistirma5.html#h=t">T</a> — birer tur',
      'Yardımlı modu aç, kelimelerin nasıl elendiğini izle',
      '<a href="alistirma4.html">4 harfli karışık</a> — 2 tur'],
-   hedef:"50 kelime çöz · 5 harflide başarı %60'ın üstünde"},
+   hedef:{4:10, 5:30, 6:0, 7:0}},
   {ad:"Uzun kelimeler ve puzzle", sure:"45 dakika",
    nicin:"6 harflide tanınma %70'e düşüyor, puzzle ise cevapların %22'si ve ayrı "+
          "bir beceri: tanımdan kelime bulmak. Bugün ikisini çalışıyorsun.",
@@ -169,7 +192,7 @@ const GUNLER = [
      '<a href="oyun.html">Tek kişilik oyunu</a> baştan sona oyna — üç puzzle çıkacak',
      '<a href="7harf.html">7 harfli ders notuna</a> göz at (23 soru, sadece tanışmak için)',
      'Puzzle\'da takıldığın tanımları not et'],
-   hedef:"40 kelime çöz · en az 2 puzzle çöz"},
+   hedef:{4:0, 5:10, 6:20, 7:5}},
   {ad:"Prova günü", sure:"40 dakika",
    nicin:"Bugün yeni şey öğrenilmez, eksikler kapatılır ve yarışma temposuna alışılır. "+
          "Süre baskısı altında oynamak, bilmekten farklı bir beceri.",
@@ -178,55 +201,98 @@ const GUNLER = [
      'O üç harften birer tur alıştırma yap',
      '<a href="masa.html">Ailecük</a>\'te tam bir yarışma oyna — etaplar, düello, final',
      'Duvar sayfasındaki açılış ikililerine son bir bakış'],
-   hedef:"Ailecük\'te bir tam tur · rapordaki kırmızı harf sayısı azalsın"}
+   hedef:{4:10, 5:15, 6:10, 7:5}}
 ];
 
 /* --- unvanlar --- */
 const UNVAN = [
-  {n:0,   ad:"Çaylak"},        {n:25,  ad:"Heveskâr"},
-  {n:75,  ad:"Kelime Avcısı"}, {n:150, ad:"Harf Ustası"},
-  {n:300, ad:"Lingo Şampiyonu"}
+  {n:0,   ad:"Çaylak"},          {n:15,  ad:"Acemi"},
+  {n:30,  ad:"Heveskâr"},        {n:60,  ad:"Kelime Meraklısı"},
+  {n:100, ad:"Kelime Avcısı"},   {n:150, ad:"Harf Ustası"},
+  {n:220, ad:"Sözlük Dostu"},    {n:300, ad:"Lingo Kurdu"},
+  {n:420, ad:"Lingo Ustası"},    {n:600, ad:"Lingo Şampiyonu"},
+  {n:850, ad:"Efsane"}
 ];
 /* --- rozetler --- */
-function rozetler(d){
+function rozetler(d, p){
   const bil = d.filter(r=>r.k>0), ilk = bil.filter(r=>r.k===1).length;
+  const sonhak = bil.filter(r=>r.k>=5).length;
   let seri = 0, enSeri = 0;
   for(const r of d){ if(r.k>0){ seri++; enSeri = Math.max(enSeri, seri); } else seri = 0; }
-  const gunler = new Set(d.map(r=>new Date(r.t).toDateString())).size;
+  const son10 = d.slice(-10);
+  const kusursuz = son10.length===10 && son10.every(r=>r.k>0);
+  /* gunluk yogunluk */
+  const gun = {};
+  for(const r of d){ const g = new Date(r.t).toDateString(); gun[g] = (gun[g]||0)+1; }
+  const enYogun = Math.max(0, ...Object.values(gun));
+  const gunler = Object.keys(gun).length;
+  /* saat rozetleri */
+  const saatVar = (a,b)=>d.some(r=>{const h=new Date(r.t).getHours();
+    return a<=b ? (h>=a&&h<b) : (h>=a||h<b);});
+  /* ikinci sans: once takilip sonra bilinen kelime */
+  const durum = {}; let ikinci = false;
+  for(const r of d){
+    if(r.k===0) durum[r.w] = true;
+    else if(durum[r.w]) ikinci = true;
+  }
   const grup = (f)=>{ const g=d.filter(f); const b=g.filter(r=>r.k>0).length;
     return {t:g.length, o:g.length?Math.round(100*b/g.length):0}; };
-  const g4=grup(r=>r.n===4), g5=grup(r=>r.n===5), g6=grup(r=>r.n===6);
-  const gk=grup(r=>r.h==="k");
+  const g4=grup(r=>r.n===4), g5=grup(r=>r.n===5), g6=grup(r=>r.n===6), g7=grup(r=>r.n===7);
+  const gk=grup(r=>r.h==="k"), gs=grup(r=>r.h==="s"), ga=grup(r=>r.h==="a");
+  const ZOR = "aeikmsty".split("");
+  const zorSay = d.filter(r=>ZOR.indexOf(r.h)>=0).length;
   const ort = bil.length ? bil.reduce((t,r)=>t+r.k,0)/bil.length : 9;
+  const tumGorev = GUNLER.reduce((t,g)=>t+g.gorev.length,0);
+  const yapilan = Object.values(p||{}).filter(Boolean).length;
   return [
-   {e:"🌱",a:"İlk Adım",   s:"10 kelime",            v:d.length>=10},
-   {e:"🔟",a:"Elli",       s:"50 kelime",            v:d.length>=50},
-   {e:"💯",a:"Yüzler",     s:"100 kelime",           v:d.length>=100},
-   {e:"🎯",a:"Keskin Nişancı",s:"10 kelime ilk tahminde",v:ilk>=10},
-   {e:"🔥",a:"Seri",       s:"5 kelime üst üste",    v:enSeri>=5},
-   {e:"⚡",a:"Uzun Seri",  s:"10 kelime üst üste",   v:enSeri>=10},
-   {e:"👑",a:"K Fatihi",   s:"K'de 8 kelime, %70+",  v:gk.t>=8 && gk.o>=70},
-   {e:"4️⃣",a:"Dörtlü Ustası",s:"4 harflide 30 kelime, %80+",v:g4.t>=30&&g4.o>=80},
-   {e:"5️⃣",a:"Beşli Ustası", s:"5 harflide 30 kelime, %70+",v:g5.t>=30&&g5.o>=70},
-   {e:"6️⃣",a:"Altılı Cesareti",s:"6 harflide 15 kelime",v:g6.t>=15},
-   {e:"🚀",a:"Hızlı",      s:"ortalama 2 tahmin altı",v:d.length>=20 && ort<=2},
-   {e:"📅",a:"Azimli",     s:"4 ayrı günde çalışma", v:gunler>=4}
+   {e:"🌱",a:"İlk Adım",       s:"10 kelime",              v:d.length>=10},
+   {e:"🔟",a:"Elli",           s:"50 kelime",              v:d.length>=50},
+   {e:"💯",a:"Yüzler",         s:"100 kelime",             v:d.length>=100},
+   {e:"🥇",a:"Üç Yüz",         s:"300 kelime",             v:d.length>=300},
+   {e:"🎯",a:"Keskin Nişancı", s:"10 kelime ilk tahminde", v:ilk>=10},
+   {e:"🏹",a:"Usta Nişancı",   s:"30 kelime ilk tahminde", v:ilk>=30},
+   {e:"🔥",a:"Seri",           s:"5 kelime üst üste",      v:enSeri>=5},
+   {e:"⚡",a:"Uzun Seri",      s:"10 kelime üst üste",     v:enSeri>=10},
+   {e:"🌟",a:"Efsane Seri",    s:"20 kelime üst üste",     v:enSeri>=20},
+   {e:"💎",a:"Kusursuz",       s:"son 10 kelimenin hepsi", v:kusursuz},
+   {e:"👑",a:"K Fatihi",       s:"K'de 8 kelime, %70+",    v:gk.t>=8 && gk.o>=70},
+   {e:"🛡",a:"S Fatihi",       s:"S'de 8 kelime, %70+",    v:gs.t>=8 && gs.o>=70},
+   {e:"🗝",a:"A Fatihi",       s:"A'da 8 kelime, %70+",    v:ga.t>=8 && ga.o>=70},
+   {e:"4️⃣",a:"Dörtlü Ustası",  s:"4 harflide 30, %80+",    v:g4.t>=30&&g4.o>=80},
+   {e:"5️⃣",a:"Beşli Ustası",   s:"5 harflide 30, %70+",    v:g5.t>=30&&g5.o>=70},
+   {e:"6️⃣",a:"Altılı Cesareti",s:"6 harflide 15 kelime",   v:g6.t>=15},
+   {e:"7️⃣",a:"Süper Lingo",    s:"7 harflide 5 kelime",    v:g7.t>=5},
+   {e:"📚",a:"Dört Uzunluk",   s:"her uzunluktan 5 kelime",
+     v:g4.t>=5&&g5.t>=5&&g6.t>=5&&g7.t>=5},
+   {e:"🎖",a:"Zor Harfler",    s:"A E İ K M S T Y'den 40", v:zorSay>=40},
+   {e:"🚀",a:"Hızlı",          s:"ortalama 2 tahmin altı", v:d.length>=20 && ort<=2},
+   {e:"⏳",a:"Sabırlı",        s:"son hakta 5 kelime",     v:sonhak>=5},
+   {e:"♻️",a:"İkinci Şans",    s:"takıldığın kelimeyi bilmek", v:ikinci},
+   {e:"🎓",a:"Tam Ders",       s:"bir günde 30 kelime",    v:enYogun>=30},
+   {e:"🏃",a:"Maraton",        s:"bir günde 50 kelime",    v:enYogun>=50},
+   {e:"🌙",a:"Gece Kuşu",      s:"gece 22-04 arası",       v:saatVar(22,4)},
+   {e:"🌅",a:"Sabahçı",        s:"sabah 05-09 arası",      v:saatVar(5,9)},
+   {e:"📅",a:"Azimli",         s:"4 ayrı günde çalışma",   v:gunler>=4},
+   {e:"🗓",a:"Programlı",      s:"planın tüm görevleri",   v:tumGorev>0 && yapilan>=tumGorev}
   ];
 }
-
 function ciz(){
   const d = defter(KISI), p = planAl();
   const kalan = kalanGun();
   const unv = UNVAN.slice().reverse().find(u=>d.length>=u.n) || UNVAN[0];
   const sonraki = UNVAN.find(u=>u.n>d.length);
-  const roz = rozetler(d), acikRoz = roz.filter(r=>r.v).length;
+  const roz = rozetler(d, p), acikRoz = roz.filter(r=>r.v).length;
 
   /* bugun hangi gun: tamamlanmamis ilk gun */
-  let bugun = GUNLER.findIndex((g,i)=>
-    g.gorev.some((_,j)=>!p[(i+1)+"-"+j]));
-  if(bugun < 0) bugun = GUNLER.length-1;
+  let bugun = GUNLER.findIndex((g,i)=>ayniGun(gunTarihi(i+1), new Date()));
+  if(bugun < 0){
+    bugun = GUNLER.findIndex((g,i)=>g.gorev.some((_,j)=>!p[(i+1)+"-"+j]));
+    if(bugun < 0) bugun = GUNLER.length-1;
+  }
 
   const gunHtml = GUNLER.map((g,i)=>{
+    const kg = gunKayit(d, i+1), kgb = kg.filter(r=>r.k>0);
+    const gt = gunTarihi(i+1), bugunMu = ayniGun(gt, new Date());
     const say = g.gorev.filter((_,j)=>p[(i+1)+"-"+j]).length;
     const oran = Math.round(100*say/g.gorev.length);
     const tam = say === g.gorev.length;
@@ -235,7 +301,8 @@ function ciz(){
       <div class="bas" onclick="acikGun=${acikGun===i+1?0:i+1};ciz()">
         <div class="no">${tam?"✓":(i+1)}</div>
         <div class="bilgi"><b>${i+1}. gün — ${g.ad}</b>
-          <span>${g.sure} · ${say}/${g.gorev.length} görev</span></div>
+          <span>${tarihYazi(gt)}${bugunMu?" · bugün":""} · ${g.sure} ·
+            ${say}/${g.gorev.length} görev</span></div>
         <div class="oran">%${oran}</div></div>
       <div class="cub"><i style="width:${oran}%"></i></div>
       <div class="ic">
@@ -243,7 +310,17 @@ function ciz(){
         ${g.gorev.map((t,j)=>`<div class="gorev ${p[(i+1)+"-"+j]?"ok":""}">
           <span class="kut" onclick="gorevDegis('${(i+1)}-${j}')"></span>
           <span class="met">${t}</span></div>`).join("")}
-        <div class="hedef">🎯 <b>Günün hedefi:</b> ${g.hedef}</div>
+        <div class="hedef"><b>🎯 Günün hedefi</b>
+          <div class="hsat">${[4,5,6,7].filter(n=>g.hedef[n]).map(n=>{
+            const c = kg.filter(r=>r.n===n).length, h = g.hedef[n];
+            const o = Math.min(100, Math.round(100*c/h));
+            return `<div class="hk">
+              <div class="hb"><b>${n} harfli</b><u>${c}/${h}</u></div>
+              <div class="cub2"><i class="${c>=h?"tam":""}" style="width:${o}%"></i></div>
+            </div>`;}).join("")}</div>
+          <div style="margin-top:8px;font-size:12.5px">${kg.length} kelime çözüldü
+            ${kgb.length?`· başarı %${Math.round(100*kgb.length/kg.length)}`:""}</div>
+        </div>
       </div></div>`;
   }).join("");
 
