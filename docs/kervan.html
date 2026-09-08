@@ -227,22 +227,22 @@ const sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
 
 /* ================= bolumler ================= */
 const BOLUM = [
- {ad:"Çarşı Kapısı", sure:25, carpan:1,
+ {ad:"Çarşı Kapısı", ek:"'ndan", sure:25, carpan:1,
   giris:"Kervan çarşıdan çıkarken kimse arkasından bakmadı. Bakanlar da ne "+
         "diyeceklerini bulamadı — kelimeler çoktan azalmıştı."},
- {ad:"Tuz Ovası", sure:22, carpan:1.25,
+ {ad:"Tuz Ovası", ek:"'ndan", sure:22, carpan:1.25,
   giris:"Ovada su yok, gölge yok. Söylenen her kelime ağızda kuruyor. Burada "+
         "konuşmak değil, doğru konuşmak lazım."},
- {ad:"Sarp Geçit", sure:20, carpan:1.5,
+ {ad:"Sarp Geçit", ek:"'ten", sure:20, carpan:1.5,
   giris:"Geçitte rüzgâr o kadar sert ki söylenen kelimeler yarı yolda dağılıyor. "+
         "Kelime bilmek yetmez, doğru zamanda söylemek gerekir."},
- {ad:"Sisli Orman", sure:18, carpan:2,
+ {ad:"Sisli Orman", ek:"'dan", sure:18, carpan:2,
   giris:"Harfler ağaçların arkasına saklandı. Sisin içinde bir tek şey belli: "+
         "geri dönüş yolu kapandı."},
- {ad:"Kayıp Vadi", sure:17, carpan:2.5,
+ {ad:"Kayıp Vadi", ek:"'den", sure:17, carpan:2.5,
   giris:"Haritada olmayan bir vadi. Buradan geçen kervanların çoğu geri dönmemiş; "+
         "dönenler de ne gördüklerini anlatacak kelimeyi bulamamış."},
- {ad:"Söz Kalesi", sure:16, carpan:3,
+ {ad:"Söz Kalesi", ek:"'nden", sure:16, carpan:3,
   giris:"Kale göründü. Dört etap sonra son kapının önünde olacaksın — ve o kapı "+
         "yalnız bir kelimeyle açılıyor."}
 ];
@@ -276,29 +276,29 @@ const SUPER = 250000;
 const SATICI = [
  [ {ad:"Ramiz",  duk:"Ramiz'in Harf Hanı",
     rep:"Kaydını tuttum: yolun yarısındasın, borcun yok. Şimdi gel, harflere bakalım."},
-   {ad:"Elif",   duk:"Elif Harf Kırtasiyesi",
+   {ad:"Elif",   duk:"Elif'in Harf Kırtasiyesi",
     rep:"İlk harf bedava, gerisi akçe. Ben de bir yerden başlamalıyım."},
    {ad:"Ömer",   duk:"Ömer'in İpucu Çadırı",
     rep:"Sana harf vereyim ama sırrını söylemem. Sır bu işin yarısı."},
    {ad:"Ezgi",   duk:"Ezgi'nin Sesli Dükkânı",
     rep:"Sesli harfleri ben toplarım. Sessizleri kimse istemiyor."},
-   {ad:"Çağrı",  duk:"Çağrı Hanı",
+   {ad:"Çağrı",  duk:"Çağrı'nın Hanı",
     rep:"Çağırdım, geldin. Otur bakalım, kesene bir göz atalım."} ],
- [ {ad:"Nurdan", duk:"Nurdan Kervansarayı",
+ [ {ad:"Nurdan", duk:"Nurdan'ın Kervansarayı",
     rep:"Bir gecelik değil, bütün yol için satıyorum. Fiyatı da ona göre."},
    {ad:"Bülent", duk:"Bülent'in Tuzlu Hanı",
     rep:"Önünde uzun bir yol var. Bir şey almadan gitme, sonra beni ararsın."},
-   {ad:"Berna",  duk:"Berna Ticaret",
+   {ad:"Berna",  duk:"Berna'nın Ticarethanesi",
     rep:"Pazarlık yok. Ama gözün tuttuysa bir kıyağım olur."},
    {ad:"Bilal",  duk:"Bilal'in Yük Deposu",
     rep:"Ağır malım var, hafif malım yok. Ağır mal uzağa gider."} ],
- [ {ad:"Sevilen",duk:"Sevilen Sahaf",
+ [ {ad:"Sevilen",duk:"Sevilen'in Sahaf Dükkânı",
     rep:"Bu raflarda unutulmuş kelimeler var. Biri seni bekliyordur."},
    {ad:"Nazük",  duk:"Nazük'ün Tılsım Rafı",
     rep:"Nazar boncuğu al; kelimeyi bilmesen de gözden korur."},
    {ad:"Figen",  duk:"Figen'in Eski Harfleri",
     rep:"Az kullanılmış bir Ğ var, kimse almıyor. Sana ucuza veririm."},
-   {ad:"Belgin", duk:"Belgin Kitap ve Tılsım",
+   {ad:"Belgin", duk:"Belgin'in Tılsım Kitabevi",
     rep:"Kitabı okumadan tılsım satmam. Al, önce bir bak."},
    {ad:"Hatice", duk:"Hatice'nin Kitap Sandığı",
     rep:"Sandıkta ne var bilmiyorum ama her açtığımda bir kelime çıkıyor."} ],
@@ -1077,7 +1077,7 @@ function hanEkran(h){
   const yenHak = 1 + (sahipmi("cingirak") ? 1 : 0);
   ekran(`<div class="kutu">
       <div class="eyebrow">${ilk ? "Yola çıkmadan önce" :
-        `${h+1}. han · ${BL(b).ad}'ndan önce`}</div>
+        `${h+1}. han · ${BL(b).ad}${BL(b).ek} önce`}</div>
       <h1 style="font-size:23px">${sat.duk}</h1>
       <div class="satici" style="margin-top:12px">
         <div class="av">${TRU(sat.ad[0])}</div>
