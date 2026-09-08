@@ -174,7 +174,8 @@ function puzzleSec(nler){
 /* ---------------- yardimcilar ---------------- */
 function defterYaz(w, hak){
   try{
-    const ad = localStorage.getItem("lingo_kisi"); if(!ad) return;
+    const ad = localStorage.getItem("lingo_kisi");
+    if(!ad || ad === "__kayitsiz__") return;
     const k = "lingo_defter_" + ad;
     const d = JSON.parse(localStorage.getItem(k) || "[]");
     d.push({w: w, n: w.length, h: w[0], k: hak, t: Date.now()});
