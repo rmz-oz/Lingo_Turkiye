@@ -594,6 +594,13 @@ function uyar(m){
   const d = document.createElement("div"); d.className = "uyari"; d.textContent = m;
   document.body.appendChild(d); setTimeout(() => d.remove(), 1500);
 }
+const SURUM = () => {
+  try{ return new Date(document.lastModified).toLocaleString("tr-TR",
+    {day:"numeric", month:"long", hour:"2-digit", minute:"2-digit"}); }
+  catch(e){ return "?"; }
+};
+const SURUMSAT = () => `<p class="kucuk" style="opacity:.45;margin-top:10px;
+  text-align:center">Yüklü sürüm: ${SURUM()}</p>`;
 function ekran(html, ortala){
   durdur(); sureGoster(false);
   klv.classList.add("gizli"); jokbar.classList.add("gizli");
@@ -1472,6 +1479,7 @@ function girisEkran(){
       <button class="buton ikinci" onclick="kasaEkran()">🏦 KERVAN KASASI</button>
       <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+      ${SURUMSAT()}
     </div>`);
 }
 function devamEkran(){
@@ -1487,6 +1495,7 @@ function devamEkran(){
       <button class="buton ikinci" onclick="sifirla()">YENİ YOLCULUK — bunu sil</button>
       <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+      ${SURUMSAT()}
     </div>`);
 }
 window.sifirla = function(){
