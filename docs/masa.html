@@ -676,7 +676,18 @@ function agYaz(){
 }
 
 /* ================= arayuz ================= */
-let SON=null;
+let SON=null, kayitEdilen=null;
+/* calisma defteri: cevapladigin kelimeler masa adina yazilir */
+function defterYaz(ad, w, hak){
+  if(!ad || !w) return;
+  try{
+    const k = "lingo_defter_" + ad;
+    const d = JSON.parse(localStorage.getItem(k) || "[]");
+    d.push({w: w, n: w.length, h: w[0], k: hak, t: Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(k, JSON.stringify(d));
+  }catch(e){}
+}
 function ekran(html){
   klv.classList.add("gizli"); sureKap.classList.add("gizli");
   orta.className=""; orta.innerHTML=`<div class="kutu">${html}</div>`;
@@ -774,6 +785,8 @@ function ciz(S){
         ${S.elenen===m.i?"opacity:.45":""}">
         ${i+1}. <b>${m.ad}</b> — ₺${TL(m.para)}
         ${S.elenen===m.i?" <span style='font-size:13px'>(2. etapta elendi)</span>":""}</p>`).join("")}
+      <a class="buton ikinci" style="text-decoration:none" href="rapor.html">
+        📊 GELİŞİM RAPORU</a>
       ${NET.host?'<button class="buton" onclick="yeniden()">YENİ OYUN</button>':''}`);
     skorEl.classList.add("gizli"); return;
   }
@@ -863,6 +876,20 @@ function ciz(S){
   const taban = S.faz==="duello" ? DUELLO.hak : (S.faz==="final" ? FINAL.satir : SATIR);
   /* tahta gerektigi kadar uzar: calmada 6., 7. satir asagi eklenir */
   const satirSay = puz ? 1 : Math.max(taban, S.satirlar.length + (S.acik ? 0 : 1));
+  /* kelime bitti: cevaplayan masanin telefonunda deftere islenir */
+  if(!puz && S.acik && S.acik !== kayitEdilen && NET.benim >= 0 &&
+     S.acik.length >= 4 && S.acik.length <= 7){
+    const sonS = S.satirlar[S.satirlar.length-1];
+    const cozdu = sonS && sonS.r.every(x => x === "tam");
+    if(NET.benim === S.cevaplayan){
+      defterYaz(S.masalar[NET.benim].ad, S.acik, cozdu ? S.satirlar.length : 0);
+      kayitEdilen = S.acik;
+    } else if(NET.benim === S.sira){
+      /* sira bendeydi ama bilemedim, kelimeyi rakip aldi: bu da bir hata */
+      defterYaz(S.masalar[NET.benim].ad, S.acik, 0);
+      kayitEdilen = S.acik;
+    }
+  }
   for(let r=0;r<satirSay;r++){
     const d=document.createElement("div");
     d.className="satir"+((r===S.satirlar.length&&!puz)||puz?" aktif":"");

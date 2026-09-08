@@ -18,6 +18,10 @@
 
 <br>
 
+### 📊 [GELİŞİM RAPORU](https://rmz-oz.github.io/Lingo_Turkiye/rapor.html)
+
+<br>
+
 ### 🎯 [Alıştırma — 4 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma4.html)
 
 ### 🎯 [Alıştırma — 5 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma5.html)
