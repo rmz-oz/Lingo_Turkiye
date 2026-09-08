@@ -129,6 +129,16 @@ button{font:inherit;cursor:pointer}
 .karis small{display:block;font-size:12.5px;font-weight:600;opacity:.85;
   letter-spacing:.2px;margin-top:1px}
 .karis .tx{text-align:left}
+.rapb{display:flex;align-items:center;gap:12px;margin-top:14px;padding:13px 14px;
+  background:#182430;border:1px solid var(--cizgi);border-radius:13px;
+  text-decoration:none;color:var(--murekkep)}
+.rapb .ik{width:38px;height:38px;border-radius:10px;background:#22303d;flex:none;
+  display:flex;align-items:center;justify-content:center;font-size:19px}
+.rapb .tx{flex:1;min-width:0;text-align:left}
+.rapb .tx b{display:block;font-size:15px;letter-spacing:.2px;line-height:1.25}
+.rapb .tx span{display:block;font-size:12.5px;color:var(--soluk);margin-top:3px;
+  line-height:1.45}
+.rapb .ok{color:var(--soluk);font-size:20px;line-height:1;flex:none}
 .lej3{display:flex;gap:5px;justify-content:center;align-items:center;
   margin:10px 0 2px;font-size:12px;color:var(--soluk);flex-wrap:wrap}
 .lej3 i{font-style:normal;padding:2px 9px;border-radius:5px;font-weight:700;font-size:11.5px}
@@ -834,8 +844,11 @@ function giris(){
        <b>Renk</b> zorluğu gösterir: yeşil kolay, kırmızı zor.</p>
     <div class="lej3"><i class="z1">kolay</i><i class="z2">orta</i><i class="z3">zor</i></div>
     <div class="hgrid">${tus}</div>
-    <a class="buton ikinci" style="text-decoration:none;display:block"
-       href="rapor.html">📊 GELİŞİM RAPORUM</a>
+<a class="rapb" href="rapor.html">
+      <span class="ik">📊</span>
+      <span class="tx"><b>Gelişim Raporum</b>
+        <span>Hangi harflerde takıldığın, kaç tahminde bildiğin</span></span>
+      <span class="ok">›</span></a>
     <button class="buton karis" onclick="basla(null)">
       <span class="em">🎲</span>
       <span class="tx">KARIŞIK OYNA<small>3 harf × 3 kelime · 9 soru</small></span></button>
