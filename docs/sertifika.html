@@ -74,7 +74,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .ayrac b{width:5px;height:5px;background:var(--metal);transform:rotate(45deg)}
 .sayfa h1{font-size:22pt;font-weight:400;letter-spacing:.055em;margin-top:5mm;
   font-variant:small-caps;line-height:1.2}
-.ad{font-size:46pt;line-height:1.02;letter-spacing:.04em;font-weight:400}
+.ad{font-size:46pt;line-height:1.06;letter-spacing:.04em;font-weight:400;max-width:230mm}
 .unvan{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:10pt;
   letter-spacing:.3em;text-transform:uppercase;color:var(--metalK);margin-top:3.5mm;
   text-indent:.3em;font-weight:600}
@@ -92,7 +92,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .defne{width:17mm;height:34mm;flex:none}
 .defne.ters{transform:scaleX(-1)}
 .adSar{display:flex;flex-direction:column;align-items:center}
-.defneAd{font-size:52pt;letter-spacing:.03em;line-height:1}
+.defneAd{font-size:52pt;letter-spacing:.03em;line-height:1.06;max-width:190mm}
 .nisanBas{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:7.4pt;
   letter-spacing:.3em;text-transform:uppercase;color:var(--metalK);margin-top:6.5mm;
   text-indent:.3em;font-weight:600}
@@ -110,7 +110,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
   letter-spacing:.2em;text-transform:uppercase;color:var(--soluk2);text-indent:.2em}
 .dipnot{font-size:9.4pt;font-style:italic;color:var(--soluk2);margin-top:4.5mm;
   max-width:176mm;line-height:1.6}
-.taban{position:absolute;left:24mm;right:24mm;bottom:13mm;display:flex;
+.taban{position:absolute;left:24mm;right:24mm;bottom:12mm;display:flex;
   align-items:flex-end;justify-content:space-between;z-index:2}
 .imzaBlok{width:62mm;text-align:center}
 .sigwrap{height:17mm;display:flex;align-items:flex-end;justify-content:center}
@@ -120,8 +120,11 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
   letter-spacing:.18em;text-transform:uppercase;color:var(--soluk2);margin-top:2.4mm;
   text-indent:.18em}
 .tarihBuyuk{font-size:12.5pt;margin-bottom:8mm;font-variant-numeric:tabular-nums}
-.tarihK{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:8.6pt;
-  letter-spacing:.18em;text-transform:uppercase;color:var(--soluk2);text-indent:.18em}
+.tarihK{font-size:11.5pt;letter-spacing:.02em;color:var(--ink);
+  font-variant-numeric:tabular-nums;text-align:center;width:62mm}
+.tarihK em{font-style:normal;display:block;font-family:Optima,"Gill Sans",Candara,sans-serif;
+  font-size:7.6pt;letter-spacing:.2em;text-transform:uppercase;color:var(--soluk2);
+  text-indent:.2em;margin-top:1.6mm}
 
 @media print{
   @page{size:A4 landscape;margin:0}
@@ -208,6 +211,11 @@ const MUHUR = K => `<svg viewBox="0 0 120 120">
  <text x="60" y="70" text-anchor="middle" font-family="Hoefler Text, serif"
    font-size="25" fill="#fff" letter-spacing="1">LT</text></svg>`;
 
+function adPunto(ad, tip){
+  const u = ad.length;
+  if(tip === "gumus") return u<=8?52:(u<=12?42:(u<=18?33:(u<=25?26:22)));
+  return u<=8?46:(u<=14?38:(u<=20?31:(u<=27?25:21)));
+}
 /* ad: kisa tek kelime -> harf kutulari, uzun/cok kelimeli -> bas harf + yazi */
 function adBlok(ad){
   const kel = ad.split(" ").filter(Boolean), n = ad.replace(/ /g,"").length;
@@ -244,7 +252,8 @@ function sertifika(K, d, ra){
   const gunler = new Set(d.map(r=>new Date(r.t).toDateString())).size;
   const p = LG_plan(KISI), gorev = Object.values(p).filter(Boolean).length;
   const t = new Date();
-  const tarih = t.getDate()+" "+AYLAR[t.getMonth()]+" "+t.getFullYear();
+  const gun = String(t.getDate()).padStart(2,"0");
+  const tarih = gun+" "+AYLAR[t.getMonth()]+" "+t.getFullYear();
   const nis = ra.slice(0,7).map(r=>`<span>${r.a}</span>`).join("");
   const stil = `--kagit:${K.kagit};--kagit2:${K.kagit2};--ink:${K.ink};--metal:${K.metal};
     --metalK:${K.metalK};--metalA:${K.metalA};--soluk2:${K.soluk};--yumusak:${K.metal}22;
@@ -267,7 +276,8 @@ function sertifika(K, d, ra){
       <h1>Altın Hazırlık Sertifikası</h1>
       <p class="giris">Bu sertifika, şu ana kadar yayınlanmış bölümlerin cevap arşivinden
         hazırlanan çalışma programını eksiksiz tamamlayan</p>
-      <div class="ad" style="margin-top:4.5mm">${TRU(KISI)}</div>
+      <div class="ad" style="margin-top:4.5mm;font-size:${adPunto(KISI,"altin")}pt">
+        ${TRU(KISI)}</div>
       <div class="unvan">${U.simdi.ad}</div>
       ${ist}
       <p class="giris kucukAlt">adına, ${gunler} ayrı günde sürdürdüğü çalışma ve tamamladığı
@@ -280,7 +290,8 @@ function sertifika(K, d, ra){
     const L = LAKAP[K.tip];
     const adH = K.tip === "gumus"
       ? `<div class="defneSar">${DAL("")}
-          <div class="adSar"><div class="ad defneAd">${TRU(KISI)}</div>
+          <div class="adSar"><div class="ad defneAd"
+             style="font-size:${adPunto(KISI,"gumus")}pt">${TRU(KISI)}</div>
            <div class="unvan">${U.simdi.ad}</div></div>${DAL("ters")}</div>`
       : `${adBlok(KISI)}<div class="unvan" style="margin-top:6mm">${U.simdi.ad}</div>`;
     sus = K.tip === "gumus" ? `<div class="cerceve ince"></div>`
@@ -294,7 +305,7 @@ function sertifika(K, d, ra){
       <div class="nisan">${nis}</div>
       ${ist}
       <p class="dipnot">${L[2]}</p>`;
-    taban = `<span class="tarihK">${tarih}</span>${imza}`;
+    taban = `<span class="tarihK">${tarih}<em>Düzenleme tarihi</em></span>${imza}`;
   }
   return `<div class="kadraj" id="kadraj"><div class="sayfa" style="${stil}">
     ${sus}<div class="filigran">${MUHUR(K.ad)}</div>

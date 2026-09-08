@@ -22,7 +22,7 @@
 
 <br>
 
-### 🏅 [SERTİFİKAM](https://rmz-oz.github.io/Lingo_Turkiye/sertifika.html)
+### 🏅 [SERTİFİKALARIM](https://rmz-oz.github.io/Lingo_Turkiye/sertifika.html)
 
 <br>
 
