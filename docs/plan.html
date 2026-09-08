@@ -114,7 +114,7 @@ p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
 const defter = LG_defter;
-const KISI_VAR = ["Serpil","Zeynep","Yusuf","Ramiz","Misafir"];
+const KISI_VAR = ["Serpil","Zeynep","Misafir"];
 let KISILER = KISI_VAR.slice(), KISI = null, secimAcik = false, acikGun = 0;
 try{
   const k = JSON.parse(localStorage.getItem("lingo_kisiler")||"null");
