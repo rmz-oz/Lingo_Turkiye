@@ -18,6 +18,10 @@
 
 <br>
 
+### 🗓 [4 GÜNLÜK ÇALIŞMA PLANI](https://rmz-oz.github.io/Lingo_Turkiye/plan.html)
+
+<br>
+
 ### 📊 [GELİŞİM RAPORU](https://rmz-oz.github.io/Lingo_Turkiye/rapor.html)
 
 <br>
