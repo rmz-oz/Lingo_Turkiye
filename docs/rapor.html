@@ -237,7 +237,7 @@ function ciz(){
 
     ${(function(){
       const ra = LG_acik(KISI), U = LG_unvan(d.length);
-      return `<h2>Ünvan ve rozetler · ${ra.length}/${LG_rozet(d,LG_plan(KISI)).length}</h2>
+      return `<h2>Ünvan ve rozetler · ${ra.length}/${LG_rozet(d,LG_plan(KISI),LG_kervanMeta(KISI)).length}</h2>
         <div class="unvk"><b>${U.simdi.ad}</b>
           <span>${U.sonraki ? U.sonraki.ad + " için " + U.kalan + " kelime daha"
                             : "en üst ünvan"}</span>

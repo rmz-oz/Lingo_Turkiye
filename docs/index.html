@@ -389,7 +389,7 @@ ağırlıklandırılarak bulundu.</div>
     e.innerHTML = '<span class="av">' + k[0].toLocaleUpperCase("tr") + '</span>' +
       '<span><b>' + k + '</b> <em>· ' + U.simdi.ad + '</em></span>' +
       '<em style="margin-left:auto">' + ra.length + '/' +
-        LG_rozet(d, LG_plan(k)).length + ' rozet</em><u>›</u>';
+        LG_rozet(d, LG_plan(k), LG_kervanMeta(k)).length + ' rozet</em><u>›</u>';
     e.onclick = function(){ location.href = "plan.html"; };
     e.style.cursor = "pointer";
   }catch(e){}
@@ -411,7 +411,7 @@ ağırlıklandırılarak bulundu.</div>
     var bil = d.filter(function(r){ return r.k>0; });
     var basari = Math.round(100*bil.length/d.length);
     var ort = bil.length ? (bil.reduce(function(t,r){return t+r.k;},0)/bil.length).toFixed(1) : "—";
-    var U = LG_unvan(d.length), ra = LG_acik(k), top = LG_rozet(d, LG_plan(k)).length;
+    var U = LG_unvan(d.length), ra = LG_acik(k), top = LG_rozet(d, LG_plan(k), LG_kervanMeta(k)).length;
     var vit = LG_vitrin(k);
     var gos = vit.length ? ra.filter(function(r){ return vit.indexOf(r.a)>=0; })
                          : ra.slice(-4);

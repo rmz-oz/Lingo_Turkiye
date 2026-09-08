@@ -78,8 +78,13 @@ function LG_unvan(say){
   return {simdi, sonraki, oran, kalan: sonraki ? sonraki.n - say : 0};
 }
 const LG_GOREVSAY = 16;   /* plandaki toplam gorev */
-function LG_rozet(d, p){
-  p = p || {};
+/* --- Sozun Kervani meta durumu (kalici ilerleme) --- */
+function LG_kervanMeta(ad){
+  try{ const v = JSON.parse(localStorage.getItem("lingo_kervan_meta_"+ad) || "null");
+       return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
+}
+function LG_rozet(d, p, kv){
+  p = p || {}; const K = kv || {};
   const bil = d.filter(r=>r.k>0), ilk = bil.filter(r=>r.k===1).length;
   const sonhak = bil.filter(r=>r.k>=5).length;
   let seri = 0, enSeri = 0;
@@ -220,10 +225,17 @@ function LG_rozet(d, p){
    {e:"🧠",a:"Hafıza Ustası",  s:"takıldığın 10 kelimeyi bilmek", v:ikinciSay>=10},
    {e:"🔮",a:"Kahin",          s:"50 kelime ilk tahminde", v:ilk>=50},
    {e:"🏆",a:"Kupa",           s:"dört uzunlukta da %70+", v:tumUzunlukIyi},
-   {e:"🌍",a:"Tam Alfabe",     s:"28 harfin hepsinden kelime", v:tumAlfabe}
+   {e:"🌍",a:"Tam Alfabe",     s:"28 harfin hepsinden kelime", v:tumAlfabe},
+   /* --- Sozun Kervani --- */
+   {e:"🐪",a:"Kervanbaşı",     s:"bir kervan yolculuğunu bitir", v:(K.bitirilen||0)>=1},
+   {e:"🏰",a:"Söz Kalesi",     s:"kervanda son kapıyı aç",       v:(K.sonKapi||0)>=1},
+   {e:"🫀",a:"Tek Kalp",       s:"kervanı tek kalple bitir",     v:!!K.tekKalp},
+   {e:"👝",a:"Kesesi Delik",   s:"bir handa 4 ürün al",          v:!!K.dortUrun},
+   {e:"🥷",a:"Yalın Yolcu",    s:"kervanı hiç ürün almadan bitir", v:!!K.urunsuz}
   ];
 }
-function LG_acik(ad){ return LG_rozet(LG_defter(ad), LG_plan(ad)).filter(r=>r.v); }
+function LG_acik(ad){
+  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad)).filter(r=>r.v); }
 /* yeni acilan rozetleri dondur; ilk cagrida sessizce isaretler */
 function LG_yeni(ad){
   if(!ad || ad === LG_KAYITSIZ) return [];
@@ -234,7 +246,8 @@ function LG_yeni(ad){
   try{ localStorage.setItem("lingo_rozet_"+ad, JSON.stringify(acik)); }catch(e){}
   if(bilinen === null) return [];                     /* ilk kurulum: duyurma */
   const yeniAd = acik.filter(a => bilinen.indexOf(a) < 0);
-  return LG_rozet(LG_defter(ad), LG_plan(ad)).filter(r => yeniAd.indexOf(r.a) >= 0);
+  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad))
+    .filter(r => yeniAd.indexOf(r.a) >= 0);
 }
 /* --- rozet vitrini: en fazla 3 favori --- */
 function LG_vitrin(ad){
