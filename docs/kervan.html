@@ -383,9 +383,10 @@ const URUN = [
       "yeniden başlar.", kilit:{r:"İkinci Şans"}},
  /* --- 2. han: yetenekler --- */
  {id:"cimrikese", ad:"Berna'nın Cimri Kesesi", em:"👝", tip:"yetenek", han:1, fiyat:140,
-  kisa:"Kullanılmayan her hak 20 akçe daha getirir",
-  tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 20 akçe getirir; bu "+
-      "yetenekle 40 akçe getirir. Kelimeyi erken bulmak doğrudan para demek.",
+  kisa:"Kullanılmayan her hak 60 akçe daha getirir",
+  tam:"Etap sonunda kullanmadığın her tahmin hakkı normalde 60 akçe getirir; bu "+
+      "yetenekle 120 akçe getirir. Kelimeyi ilk tahminde bulmak tek başına 480 akçe "+
+      "eder — handa iki ürün demektir.",
   kilit:null},
  {id:"tuccardili", ad:"Berna'nın Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
   kisa:"Bütün hanlarda %20 indirim",
@@ -794,7 +795,10 @@ function etapBasla(zorlaKelime){
       const h = satirlar[sat].children;
       for(let k = 0; k < n; k++) if(!acik.has(k)){ h[k].textContent = "·";
         h[k].className = "hucre yok"; }
-      uyar("Süre doldu"); return bitir(false);
+      LG_ses("yanlis");
+      uyar(sat + 1 >= satirSay ? "Süre doldu — hakların bitti"
+                               : "Süre doldu — yalnızca bu hak yandı");
+      return sonrakiSatir(null);
     }
     const r = renk(gizli, tah), h = satirlar[sat].children;
     enIyi = Math.max(enIyi, r.filter(x => x === "tam").length);
@@ -820,9 +824,11 @@ function etapBasla(zorlaKelime){
     S.gorulen.push(gizli);
     defterYaz(gizli, kazandi ? hak : 0);
     const kazanc = kazandi ? odul() : (sahipmi("muska") ? Math.round(odul()/2) : 0);
-    let akce = 40 + (satirSay - (kazandi ? hak : satirSay)) * (sahipmi("cimrikese") ? 40 : 20)
-             + (sureyok ? 0 : Math.max(0, kalanSn) * 2)
-             + (sahipmi("kervanbereketi") ? 30 : 0);
+    const bosHak = satirSay - (kazandi ? hak : satirSay);
+    const hakBirim = sahipmi("cimrikese") ? 120 : 60;
+    const hizPrimi = bosHak * hakBirim;
+    const sureAkce = sureyok ? 0 : Math.max(0, kalanSn) * 2;
+    let akce = 40 + hizPrimi + sureAkce + (sahipmi("kervanbereketi") ? 30 : 0);
     if(!kazandi) akce = Math.round(akce * 0.4);
     S.para += kazanc; S.akce += akce;
     if(kazandi){ S.seri++; S.dogru.push(gizli); }
@@ -863,6 +869,11 @@ function etapBasla(zorlaKelime){
           <div><b>${S.seri}</b><span>seri</span></div>
           <div><b>${S.kalp}</b><span>kalp</span></div>
         </div>
+        <p class="kucuk">Akçe dökümü: taban <b>40</b>${
+          hizPrimi ? ` · ${hak}. tahminde bildin, hız primi <b>+${TL(hizPrimi)}</b>` : ""}${
+          sureAkce ? ` · kalan süre <b>+${TL(sureAkce)}</b>` : ""}${
+          sahipmi("kervanbereketi") ? ` · bereket <b>+30</b>` : ""}${
+          !kazandi ? ` · bilinemedi, toplamın <b>%40</b>'ı` : ""}</p>
         ${kalpNotu ? `<p class="kucuk">${kalpNotu}</p>` : ""}
         ${yeniRoz.length ? `<p class="kucuk" style="color:var(--altin)">Yeni nişan: ${
           yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</p>` : ""}
@@ -1441,10 +1452,14 @@ function girisEkran(){
         ${TOPETAP()} kelimeyi bilen biri. Sen o kervanın başındasın.</p>
       <p class="kucuk" style="margin-top:12px"><b>Nasıl oynanır?</b>
         ${YY().bolumler.length} bölüm, her bölümde 4, 5, 6 ve 7 harfli birer kelime.
-        Her kelime için <b>5 tahmin</b> ve bölüme göre
+        Her kelime için <b>5 tahmin</b>, her tahmin için bölüme göre
         <b>${BOLUM[5].sure + YY().sureFark}–${BOLUM[0].sure + YY().sureFark} saniye</b>.
-        Bilemediğin etap bir <b>kalp</b> götürür; ${S.maxKalp} kalp biterse yolculuk
-        durur.</p>
+        Süre biterse yalnızca <b>o tahmin</b> yanar, kalan haklarınla devam edersin.
+        Beş hakkın da bitmesi bir <b>kalp</b> götürür; ${S.maxKalp} kalp biterse
+        yolculuk durur.</p>
+      <p class="kucuk"><b>Erken bilmek para demek:</b> kullanmadığın her tahmin hakkı
+        <b>60 akçe</b> hız primi getiriyor. İlk tahminde bilirsen <b>+240</b>, ikincide
+        <b>+180</b>, üçüncüde <b>+120</b>, dördüncüde <b>+60</b>; son hakta prim yok.</p>
       <p class="kucuk"><b>Her bölümden önce bir han var</b> — ilki hemen şimdi.
         Kesende <b>🪙 ${TL(S.akce)} akçe</b> ile yola çıkıyorsun, etaplarda kazandıkça
         artar; akçeyle joker, yetenek ve tılsım alırsın. <b>₺ ödül</b> ayrı birikir ve
