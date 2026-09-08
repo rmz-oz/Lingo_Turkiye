@@ -95,7 +95,10 @@ tr.tik:active{background:var(--kart2)}
 .rozg{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;
   margin-top:9px}
 .rozg div{background:var(--kart);border:1px solid var(--altin);border-radius:12px;
-  padding:10px 6px;text-align:center}
+  padding:10px 6px;text-align:center;cursor:pointer;position:relative}
+.rozg div.vit{background:#3a2f0c;box-shadow:0 0 0 2px var(--altin) inset}
+.rozg div.vit:after{content:"★";position:absolute;top:3px;right:6px;color:var(--altin);
+  font-size:12px}
 .rozg span{font-size:22px;line-height:1;display:block}
 .rozg b{display:block;font-size:11.5px;margin-top:4px}
 .dip{font-size:12px;color:#5f6b78;margin-top:20px;line-height:1.6}
@@ -129,6 +132,7 @@ try{
   }
 }catch(e){ KISI = KISILER[0]; }
 
+function vitrin(rozAd){ LG_vitrinDegis(KISI, rozAd); ciz(); }
 function kisiSec(a){ KISI=a; secimAcik=false;
   try{ localStorage.setItem("lingo_kisi",a); }catch(e){} ciz(); }
 function sinif(o){ return o>=75 ? "i1" : (o>=50 ? "i2" : "i3"); }
@@ -254,10 +258,15 @@ function ciz(){
                             : "en üst ünvan"}</span>
           <div class="cub" style="margin-top:8px"><i class="i1" style="width:${U.oran}%"></i></div>
         </div>
-        ${ra.length ? `<div class="rozg">${ra.map(r=>`<div><span>${r.e}</span>
+        ${ra.length ? `<p style="margin:8px 0 4px">Vitrinde göstermek istediğin
+            <b>en fazla 3</b> rozete dokun — kişi şeridinde onlar görünür.</p>
+          <div class="rozg">${ra.map(r=>`<div class="${
+            LG_vitrin(KISI).indexOf(r.a)>=0 ? "vit" : ""}"
+            onclick="vitrin('${r.a.replace(/'/g,"")}')"><span>${r.e}</span>
             <b>${r.a}</b></div>`).join("")}</div>`
           : `<div class="bos">Henüz rozet yok. Alıştırma yaptıkça açılacak.</div>`}
-        <a class="buton ikinci" href="plan.html">🗓 TÜM ROZETLERİ GÖR</a>`;})()}
+        <a class="buton ikinci" href="plan.html">🗓 TÜM ROZETLERİ GÖR</a>
+        <a class="buton ikinci" href="sertifika.html">🏅 SERTİFİKAM</a>`;})()}
     ${uzTekrar.map(n=>`<a class="buton" href="alistirma${n}.html#tekrar">
       ${UZ(n).toUpperCase()} TAKILDIKLARINI TEKRAR ET</a>`).join("")}
     <a class="buton ikinci" href="index.html">ANA SAYFA</a>
