@@ -61,12 +61,12 @@ function LG_hepsiniSil(){
 }
 const LG_UNVAN = [
   {n:0,    ad:"Çaylak"},              {n:5,    ad:"İlk Kıvılcım"},
-  {n:12,   ad:"Acemi"},               {n:25,   ad:"Heveskâr"},
+  {n:12,   ad:"Acemi"},               {n:25,   ad:"Heveskar"},
   {n:40,   ad:"Kelime Meraklısı"},    {n:60,   ad:"Harf Toplayıcı"},
   {n:85,   ad:"Tahta Yoldaşı"},       {n:115,  ad:"Kelime Avcısı"},
   {n:150,  ad:"Harf Ustası"},         {n:195,  ad:"Sözlük Dostu"},
   {n:250,  ad:"Kelime Cambazı"},      {n:315,  ad:"Lingo Kurdu"},
-  {n:390,  ad:"Alfabe Hâkimi"},       {n:480,  ad:"Lingo Ustası"},
+  {n:390,  ad:"Alfabe Hakimi"},       {n:480,  ad:"Lingo Ustası"},
   {n:590,  ad:"Süper Lingo Adayı"},   {n:720,  ad:"Lingo Şampiyonu"},
   {n:880,  ad:"Efsane"},              {n:1080, ad:"Ölümsüz"},
   {n:1350, ad:"Sözlük Ejderi"},       {n:1700, ad:"Alfabenin Efendisi"}
@@ -218,7 +218,7 @@ function LG_rozet(d, p){
      v:yapilan>=LG_GOREVSAY && d.length>=400},
    {e:"🏅",a:"Dokuz Harf",     s:"9 harfte %70+ başarı",   v:iyiHarf>=9},
    {e:"🧠",a:"Hafıza Ustası",  s:"takıldığın 10 kelimeyi bilmek", v:ikinciSay>=10},
-   {e:"🔮",a:"Kâhin",          s:"50 kelime ilk tahminde", v:ilk>=50},
+   {e:"🔮",a:"Kahin",          s:"50 kelime ilk tahminde", v:ilk>=50},
    {e:"🏆",a:"Kupa",           s:"dört uzunlukta da %70+", v:tumUzunlukIyi},
    {e:"🌍",a:"Tam Alfabe",     s:"28 harfin hepsinden kelime", v:tumAlfabe}
   ];
