@@ -109,6 +109,7 @@ table.merd tr:last-child td b{color:var(--altin)}
 <div id="klavye" class="gizli"></div>
 
 <script src="rozet.js"></script>
+<script src="ses.js"></script>
 <script>
 let VERI = null, TANIM = {};
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -209,7 +210,7 @@ function sureBasla(sn, bitince, tikla){
     sureBar.style.width = (100*kalan/top) + "%";
     sureKap.classList.toggle("az", kalan < top*0.31);
     const s2 = Math.ceil(kalan/1000);
-    if(tikla && s2 !== son){ son = s2; tikla(s2); }
+    if(tikla && s2 !== son){ son = s2; tikla(s2); if(s2 <= 5 && s2 > 0) LG_ses("sure"); }
     if(kalan <= 0){ durdur(); bitince(); }
   }, 100);
 }
@@ -317,7 +318,7 @@ function kelimeOyna(n, odul, opt, bitti){
   function sil(){ if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } }
   function gonder(){
     if(giris.length < n){ uyar("Harfler eksik"); sarsil(); return; }
-    if(!GECERLI[n].has(giris)){ uyar("Sözlükte yok"); sarsil(); return; }
+    if(!GECERLI[n].has(giris)){ LG_ses("gecersiz"); uyar("Sözlükte yok"); sarsil(); return; }
     sonuclandir(giris);
   }
   function sarsil(){
@@ -334,8 +335,9 @@ function kelimeOyna(n, odul, opt, bitti){
       const r = renk(gizli, tah), h = satirlar[sat].children;
       for(let i = 0; i < n; i++) h[i].className = "hucre " + r[i];
       klvBoya(tah, r);
+      if(tah !== gizli) LG_ses("yanlis");
       if(tah === gizli){
-        defterYaz(gizli, sat + 1);
+        LG_ses("dogru"); defterYaz(gizli, sat + 1);
         if(!opt.odulYok){ para += odul; paraYaz(); }
         if(!opt.sureyok) sureGoster(false);
         return setTimeout(() => bitti(true, gizli), 620);
@@ -343,7 +345,7 @@ function kelimeOyna(n, odul, opt, bitti){
     }
     sat++; giris = gizli[0];
     if(sat >= satirSay){
-      defterYaz(gizli, 0);
+      defterYaz(gizli, 0); LG_ses("bitti");
       if(!opt.sureyok) sureGoster(false);
       if(opt.sureyok) return cevabiGoster("Bilinemedi", () => bitti(false, gizli));
       return setTimeout(() => bitti(false, gizli), 500); }

@@ -21,6 +21,9 @@ button{font:inherit;cursor:pointer}
   font-weight:800;letter-spacing:1.5px}
 #bar .et{color:var(--altin);font-weight:800;letter-spacing:.8px;text-transform:uppercase}
 #bar .ag{margin-left:auto;color:var(--soluk)}
+#bar #sesd{border:1px solid var(--cizgi);background:transparent;border-radius:99px;
+  width:30px;height:26px;padding:0;font-size:13px;line-height:1;color:#fff}
+#bar #sesd.kapali{opacity:.45}
 #bar .ag b{color:var(--yesil)}
 #sure{width:100%;height:4px;background:#22303d;flex:none}
 #sure i{display:block;height:100%;background:var(--altin);width:100%}
@@ -105,12 +108,14 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 </style></head><body>
 <div id="bar"><a href="index.html" style="color:var(--soluk);text-decoration:none">‹</a>
   <span class="kod gizli" id="kod"></span><span class="et" id="et"></span>
+  <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button>
   <span class="ag" id="ag"></span></div>
 <div id="sure" class="gizli"><i></i></div>
 <div id="skor" class="gizli"></div>
 <div id="orta"></div>
 <div id="klavye" class="gizli"></div>
 <script src="rozet.js"></script>
+<script src="ses.js"></script>
 <script>
 /* ================= sabitler ================= */
 const ETAPLAR = [
@@ -679,7 +684,7 @@ function agYaz(){
 }
 
 /* ================= arayuz ================= */
-let SON=null, kayitEdilen=null;
+let SON=null, kayitEdilen=null, sonSatir=-1, sonSn=-1;
 /* calisma defteri: cevapladigin kelimeler masa adina yazilir */
 function defterYaz(ad, w, hak){
   if(!ad || !w) return;
@@ -893,6 +898,17 @@ function ciz(S){
   const taban = S.faz==="duello" ? DUELLO.hak : (S.faz==="final" ? FINAL.satir : SATIR);
   /* tahta gerektigi kadar uzar: calmada 6., 7. satir asagi eklenir */
   const satirSay = puz ? 1 : Math.max(taban, S.satirlar.length + (S.acik ? 0 : 1));
+  /* ses: yeni satir olustuysa dogru/yanlis, son saniyeler tik */
+  if(!puz){
+    if(S.satirlar.length !== sonSatir){
+      if(S.satirlar.length > sonSatir && S.satirlar.length){
+        const ss = S.satirlar[S.satirlar.length-1];
+        LG_ses(ss.r.every(x=>x==="tam") ? "dogru" : "yanlis");
+      }
+      sonSatir = S.satirlar.length;
+    }
+    if(S.sn !== sonSn){ if(S.sn <= 5 && S.sn > 0) LG_ses("sure"); sonSn = S.sn; }
+  }
   /* kelime bitti: cevaplayan masanin telefonunda deftere islenir */
   if(!puz && S.acik && S.acik !== kayitEdilen && NET.benim >= 0 &&
      S.acik.length >= 4 && S.acik.length <= 7){
@@ -1065,6 +1081,7 @@ document.addEventListener("keydown", e=>{
 });
 window.addEventListener("resize", ()=>{ if(SON) ciz(SON); });
 function yukle(){
+  LG_sesDugme(document.getElementById("sesd"));
   ekran(`<h1>LİNGO MASA</h1><p>Kelime havuzu yükleniyor…</p>`);
   fetch("oyun-veri.json").then(r=>{ if(!r.ok) throw 0; return r.json(); })
     .then(d=>{ VERI=d; GECERLI={};
