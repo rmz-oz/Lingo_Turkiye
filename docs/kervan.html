@@ -176,22 +176,10 @@ button{font:inherit;cursor:pointer}
 .ozet b{display:block;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
 .ozet span{display:block;font-size:9.5px;color:var(--soluk);text-transform:uppercase;
   letter-spacing:.6px;margin-top:3px}
-.neden{background:#141d27;border:1px solid rgba(244,201,93,.38);border-radius:13px;
-  padding:13px 14px;margin:12px 0 4px}
-.neden .bs{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--altin);font-weight:800;margin-bottom:7px}
-.neden p{font-size:14px;line-height:1.6;color:#cfd8e0;margin:0 0 9px}
-.neden p b{color:#fff}
-.neden table{width:100%;border-collapse:collapse;font-size:13.5px}
-.neden td{padding:7px 0;border-top:1px solid var(--cizgi);vertical-align:top;
-  line-height:1.45}
-.neden tr:first-child td{border-top:0}
-.neden td.uz{width:62px;font-weight:800;color:var(--altin);white-space:nowrap}
-.neden td.hv{color:var(--soluk);font-size:12.5px}
-.neden td.or{width:46px;text-align:right;font-weight:800;
-  font-variant-numeric:tabular-nums;color:var(--yesil)}
-.neden .son{font-size:13px;color:var(--soluk);line-height:1.6;margin-top:10px}
-.neden .son b{color:var(--murekkep)}
+.ozet1{border-left:3px solid var(--altin);background:rgba(244,201,93,.07);
+  border-radius:0 10px 10px 0;padding:10px 12px;margin:10px 0 4px;font-size:14.5px;
+  line-height:1.6;color:#dfe6ed}
+.ozet1 b{color:var(--altin)}
 .tutar{font-size:36px;font-weight:800;color:var(--altin);letter-spacing:-1px;
   font-variant-numeric:tabular-nums;line-height:1.1}
 </style></head><body>
@@ -1188,42 +1176,14 @@ function girisEkran(){
   ekran(`<div class="kutu">
       <div class="eyebrow">Sözün Kervanı</div>
       <h1>Yirmi konak, bir kapı</h1>
+      <p class="ozet1">Bu oyundaki 4, 5 ve 6 harfli kelimelerin hepsi
+        <b>üç sezonda da çıkmış</b> kelimelerden geliyor — yani en çok tekrar edenler.
+        7 harflilerin yarısı arşivden, yarısı sözlükten.</p>
       <p class="hikaye">Kelimeler eskiden herkesin ortak malıydı. Sonra bir gece Söz
         Kalesi'nin kapıları kapandı ve kelimeler tek tek unutulmaya başladı. Anneler
         masal anlatamadı, tüccarlar pazarda anlaşamadı, şairler kafiyeyi kaybetti.</p>
       <p class="hikaye">Kalenin kapısını tek bir şey açar: yirmi konakta yirmi kelimeyi
         bilen biri. Sen o kervanın başındasın.</p>
-      <div class="neden">
-        <div class="bs">Neden bu oyun yarışmaya hazırlık?</div>
-        <p>Buradaki kelimeler rastgele değil. <b>445 bölümün cevap arşivi</b> tarandı ve
-          <b>üç sezonun tamamında</b> sorulmuş kelimeler ayrıldı — yani programın
-          vazgeçmediği, dönüp dolaşıp yeniden sorduğu kelimeler.</p>
-        <table>
-          <tr><td class="uz">4 harf</td>
-            <td class="hv"><b style="color:#fff">539 kelime</b><br>üç sezonda da çıkmış</td>
-            <td class="or">%75</td></tr>
-          <tr><td class="uz">5 harf</td>
-            <td class="hv"><b style="color:#fff">824 kelime</b><br>üç sezonda da çıkmış</td>
-            <td class="or">%71</td></tr>
-          <tr><td class="uz">6 harf</td>
-            <td class="hv"><b style="color:#fff">319 kelime</b><br>en az iki sezonda çıkmış</td>
-            <td class="or">%69</td></tr>
-          <tr><td class="uz">7 harf</td>
-            <td class="hv"><b style="color:#fff">yarısı arşivden, yarısı sözlükten</b><br>
-              arşivde yalnızca 159 farklı kelime var</td>
-            <td class="or">%16</td></tr>
-        </table>
-        <p class="son">Sağdaki oran, <b>yayında sorulan bütün cevapların</b> yüzde kaçının
-          o havuzun içinden geldiğini gösteriyor. Yani burada öğrendiğin her 4, 5 ve
-          6 harfli kelime, ekranda karşına çıkma ihtimali <b>en yüksek</b> kelimelerden
-          biri: dört harflilerin dörtte üçü bu 539 kelimeden geliyor.</p>
-        <p class="son">7 harfliler farklı. 445 bölümde yalnızca <b>159 farklı</b> yedi
-          harfli kelime soruldu ve bir yedi harflinin daha önce çıkmış olma ihtimali
-          sadece <b>%16</b> — neredeyse hepsi ilk kez geliyor. O yüzden burada da yarısı
-          arşivden, yarısı sözlükten seçiliyor. <b>Hiç duymadığın bir kelimeyle
-          karşılaşmaya alışmak</b> da hazırlığın parçası; süper lingo tam olarak böyle
-          bir andır.</p>
-      </div>
       <p class="kucuk" style="margin-top:12px"><b>Nasıl oynanır?</b> Beş bölüm, her
         bölümde 4, 5, 6 ve 7 harfli birer kelime. Her kelime için <b>5 tahmin</b> ve
         bölüme göre <b>16–25 saniye</b>. Bilemediğin etap bir <b>kalp</b> götürür;
