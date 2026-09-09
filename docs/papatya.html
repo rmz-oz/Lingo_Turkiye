@@ -1,0 +1,614 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="theme-color" content="#0f1720">
+<title>Papatya Çayı — Lingo</title>
+<style>
+:root{
+  --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
+  --cizgi:#2c3947; --yesil:#2e9e5b; --sari:#e6b22e; --gri:#3a4756;
+  --kirmizi:#d94a5a; --altin:#f4c95d; --sap:#5aa66a;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;user-select:none}
+button{font:inherit;cursor:pointer}
+.gizli{display:none!important}
+#bar{display:flex;align-items:center;gap:9px;padding:8px 11px;background:#0a1119;
+  border-bottom:1px solid var(--cizgi);flex:none;font-size:14px}
+#bar .yer{font-size:12px;letter-spacing:.9px;font-weight:700;color:var(--altin);
+  text-transform:uppercase;min-width:0;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap}
+#bar .sag{margin-left:auto;display:flex;align-items:center;gap:9px;flex:none}
+#bar .sk{font-variant-numeric:tabular-nums;font-weight:800;color:var(--sap)}
+#bar .pn{font-variant-numeric:tabular-nums;font-weight:800;color:var(--altin)}
+#bar #sesd{border:1px solid var(--cizgi);background:transparent;border-radius:99px;
+  width:32px;height:27px;padding:0;font-size:13px;line-height:1;color:#fff;flex:none}
+#bar #sesd.kapali{opacity:.45}
+#orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
+  padding:16px 12px 24px;gap:11px;min-height:0;-webkit-overflow-scrolling:touch}
+#orta.ort{justify-content:flex-start}
+#orta.ort > :first-child{margin-top:auto}
+#orta.ort > :last-child{margin-bottom:auto}
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:18px 16px;max-width:470px;width:100%}
+.kutu.ort{text-align:center}
+.kutu h1{font-size:26px;margin:0 0 5px;letter-spacing:-.4px;line-height:1.16}
+.kutu h2{font-size:19px;margin:0 0 8px}
+.kutu p{color:var(--soluk);margin:0 0 10px;font-size:14.5px;line-height:1.6}
+.kutu p b{color:var(--murekkep)}
+.kutu p:last-child{margin-bottom:0}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:12px;padding:14px;font-weight:800;font-size:16.5px;margin-top:9px;
+  text-align:center;text-decoration:none}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.buton.yesil{background:var(--sap);color:#06210d}
+.buton:disabled{opacity:.4}
+.kucuk{font-size:13px;color:var(--soluk);line-height:1.55}
+.eyebrow{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--altin);
+  font-weight:800}
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kgrid button{background:#141d27;border:1.5px solid var(--cizgi);color:var(--murekkep);
+  border-radius:11px;padding:12px 8px;font-weight:700;font-size:15px}
+.kgrid button.on{border-color:var(--altin);color:var(--altin)}
+/* ---- papatya ---- */
+.pap{width:238px;height:238px;position:relative;flex:none;margin:2px auto 0}
+.pap .yp,.pap .gb{position:absolute;display:flex;align-items:center;justify-content:center;
+  padding:0;border:0;background:transparent}
+.pap .yp{width:62px;height:88px;left:88px;top:6px;transform-origin:50% 113px;
+  background:#eef3f7;border:1.6px solid #cfd9e2;
+  border-radius:52% 52% 44% 44%/66% 66% 34% 34%;
+  font-weight:800;font-size:24px;color:#16202b;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.pap .yp.bon{background:var(--sari);border-color:#c9971f;color:#2a1e00;
+  box-shadow:0 0 0 2px rgba(230,178,46,.35)}
+.pap .yp:active{filter:brightness(.9)}
+.pap .gb{width:74px;height:74px;left:82px;top:82px;border-radius:50%;
+  background:var(--altin);color:#2a1e00;font-size:30px;font-weight:800;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;
+  box-shadow:0 0 0 6px rgba(244,201,93,.16)}
+.pap .gb:active{filter:brightness(.9)}
+.pap .sp{position:absolute;left:117px;top:150px;width:4px;height:78px;
+  background:linear-gradient(#3f7d4d,#2c5c38);border-radius:2px}
+/* ---- giris ---- */
+#giris{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:26px;
+  letter-spacing:.2em;text-transform:uppercase;min-height:40px;text-align:center;
+  border-bottom:2px solid var(--cizgi);width:238px;margin:6px auto 0;padding-bottom:4px;
+  color:var(--murekkep)}
+.dgm{display:flex;gap:7px;justify-content:center;margin-top:11px;width:100%;
+  max-width:340px;margin-left:auto;margin-right:auto}
+.dgm button{flex:1;border:1.5px solid var(--cizgi);background:#141d27;
+  color:var(--murekkep);border-radius:11px;padding:11px 6px;font-weight:800;
+  font-size:14px}
+.dgm button.ana{background:var(--sap);border-color:var(--sap);color:#06210d;flex:1.3}
+/* ---- saksilar ---- */
+.saksilar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+  max-width:470px;width:100%}
+.sk{border:1.5px dashed var(--cizgi);border-radius:10px;min-height:46px;
+  padding:6px 3px;text-align:center;background:#141d27;font-size:13px;line-height:1.3;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:800;
+  display:flex;flex-direction:column;justify-content:center;gap:2px;
+  overflow:hidden;text-overflow:ellipsis}
+.sk i{font-style:normal;font-family:-apple-system,system-ui,sans-serif;font-size:9px;
+  letter-spacing:.1em;color:var(--soluk);text-transform:uppercase;font-weight:700}
+.sk.dolu{border-style:solid;border-color:var(--sap);color:#cdeed6;background:#13291a}
+.sk.tam{border-color:var(--altin)}
+.sk.tam.dolu{border-color:var(--altin);background:#2a2208;color:var(--altin)}
+.sk.ipucu{border-color:var(--sari)}
+.yard{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:470px;width:100%}
+.yard button{flex:1 1 auto;background:transparent;border:1px solid var(--cizgi);
+  color:var(--soluk);border-radius:99px;padding:8px 11px;font-size:12.5px;font-weight:700}
+.yard button:disabled{opacity:.35}
+#not{max-width:470px;width:100%;font-size:14px;line-height:1.55;color:var(--soluk);
+  min-height:42px;text-align:center}
+#not b{color:var(--murekkep)}
+#not .iyi{color:var(--sap);font-weight:800}
+#not .kotu{color:var(--kirmizi);font-weight:800}
+#not .ars{color:var(--altin);font-weight:800}
+.bahce{max-width:470px;width:100%;border:1px solid var(--cizgi);border-radius:12px;
+  background:#141d27;padding:10px 12px}
+.bahce b{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--soluk);display:block;margin-bottom:5px}
+.bahce span{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#b9c6d2;
+  word-spacing:.3em;text-transform:uppercase;letter-spacing:.06em}
+.uyari{position:fixed;left:50%;transform:translateX(-50%);bottom:34px;background:#f2f5f8;
+  color:#0f1720;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14.5px;
+  z-index:20;box-shadow:0 6px 22px rgba(0,0,0,.45);max-width:88vw;text-align:center}
+.ozet{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:12px 0 4px}
+.ozet div{background:#141d27;border:1px solid var(--cizgi);border-radius:10px;padding:8px 4px}
+.ozet b{display:block;font-size:19px;font-variant-numeric:tabular-nums;color:var(--altin)}
+.ozet span{display:block;font-size:9.5px;color:var(--soluk);text-transform:uppercase;
+  letter-spacing:.4px;margin-top:2px}
+.tutar{font-size:40px;font-weight:800;color:var(--altin);letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;line-height:1.1}
+table.rk{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+table.rk td{padding:6px 3px;border-bottom:1px solid var(--cizgi);color:var(--soluk)}
+table.rk td:last-child{text-align:right;color:var(--murekkep);font-weight:700;
+  font-variant-numeric:tabular-nums}
+table.rk tr:last-child td{border-bottom:0}
+</style></head><body>
+
+<div id="bar">
+  <span class="yer" id="yer">Papatya Çayı</span>
+  <span class="sag">
+    <span class="sk" id="bsaksi"></span>
+    <span class="pn" id="bpuan"></span>
+    <button id="sesd">🔊</button>
+  </span>
+</div>
+<div id="orta" class="ort"></div>
+
+<script src="rozet.js?v=5"></script>
+<script>if(typeof LG_papatyaMeta !== "function") window.LG_papatyaMeta = function(){ return {}; };</script>
+<script src="ses.js?v=3"></script>
+<script>
+const $ = s => document.querySelector(s);
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const TL  = n => n.toLocaleString("tr-TR");
+const orta = $("#orta");
+
+const SAKSI = [4,4,4,4,4, 5,5,5,5, 6,6, "T"];
+const PUAN  = {4:2, 5:4, 6:6, 7:12};
+const TAMBONUS = 15;
+const ZORAD = ["kolay","orta","zor"];
+
+let PAP = null, GECERLI = {}, KAC = {}, TANIM = null;
+const KISI_VAR = ["Serpil","Zeynep"];
+let KISILER = LG_kisiler(KISI_VAR), KISI = LG_kisiDogrula(KISILER) || KISILER[0];
+let S = null, M = null, ADAY = null, giris = "", sira = [];
+
+const anahtar = () => "lingo_papatya_" + KISI;
+const metaAnahtar = () => "lingo_papatya_meta_" + KISI;
+function bosMeta(){ return {tam:0, demlik:0, yardimsiz:0, kelime:0, oynanan:0,
+  enPuan:0, enSeri:0, gunSeri:0, sonGun:"", rekor:[]}; }
+function metaOku(){
+  try{ const v = JSON.parse(localStorage.getItem(metaAnahtar()) || "null");
+       M = Object.assign(bosMeta(), v && typeof v === "object" ? v : {}); }
+  catch(e){ M = bosMeta(); }
+  if(!Array.isArray(M.rekor)) M.rekor = [];
+  return M;
+}
+function metaYaz(){ try{ localStorage.setItem(metaAnahtar(), JSON.stringify(M)); }catch(e){} }
+function kaydet(){ try{ localStorage.setItem(anahtar(), JSON.stringify(S)); }catch(e){} }
+function oku(){ try{ return JSON.parse(localStorage.getItem(anahtar()) || "null"); }
+  catch(e){ return null; } }
+function sil(){ try{ localStorage.removeItem(anahtar()); }catch(e){} S = null; }
+
+/* ---- gun ---- */
+function bugun(){ const t = new Date();
+  return t.getFullYear() + "-" + String(t.getMonth()+1).padStart(2,"0") + "-" +
+         String(t.getDate()).padStart(2,"0"); }
+function karma(s){ let h = 2166136261;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return Math.abs(h); }
+function gunPapatyasi(){ return karma("papatya" + bugun()) % PAP.length; }
+function gunYapragi(i, tohum){ const p = PAP[i][0].slice(1);
+  return p[karma(tohum + p) % p.length]; }
+
+/* ---- kelime havuzu ---- */
+function adaylariKur(i){
+  const harf = PAP[i][0], gobek = PAP[i][1], kume = new Set(harf.split(""));
+  const out = {4:[], 5:[], 6:[], 7:[], tam:[]};
+  for(const n of [4,5,6,7]){
+    for(const w of GECERLI[n]){
+      if(w.indexOf(gobek) < 0) continue;
+      let ok = true;
+      for(let k = 0; k < w.length; k++) if(!kume.has(w[k])){ ok = false; break; }
+      if(!ok) continue;
+      out[n].push(w);
+      if(n === 7 && new Set(w).size === 7) out.tam.push(w);
+    }
+  }
+  out.harf = harf; out.gobek = gobek; out.kume = kume;
+  out.ars = {4:[], 5:[], 6:[], 7:[]};
+  for(const n of [4,5,6,7]) out.ars[n] = out[n].filter(w => KAC[w] > 0);
+  return out;
+}
+const arsivmi = w => (KAC[w] || 0) > 0;
+const tammi = w => w.length === 7 && new Set(w).size === 7;
+
+/* ---- durum ---- */
+function bosDurum(i, gun){
+  return {i:i, gun:gun || null, saksi:SAKSI.map(() => null), bahce:[], puan:0,
+          yardim:{filiz:0, su:0, tanim:0}, ipucu:{}, bitti:false,
+          yaprak: gunYapragi(i, gun || ("s" + Date.now()))};
+}
+
+/* ---- ust bar ---- */
+function barYaz(){
+  if(!S){ $("#yer").textContent = "Papatya Çayı";
+    $("#bsaksi").textContent = ""; $("#bpuan").textContent = ""; return; }
+  const z = ZORAD[PAP[S.i][2]];
+  $("#yer").textContent = (S.gun ? "Günün papatyası" : "Serbest papatya") + " · " + z;
+  $("#bsaksi").textContent = "🫖 " + S.saksi.filter(Boolean).length + "/12";
+  $("#bpuan").textContent = "🌼 " + TL(S.puan);
+}
+function uyar(m){
+  const d = document.createElement("div"); d.className = "uyari"; d.textContent = m;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1600);
+}
+function ekran(html, ortala){
+  orta.classList.toggle("ort", ortala !== false);
+  orta.innerHTML = html; orta.scrollTop = 0; barYaz();
+}
+const SURUM = () => {
+  try{ return new Date(document.lastModified).toLocaleString("tr-TR",
+    {day:"numeric", month:"long", hour:"2-digit", minute:"2-digit"}); }
+  catch(e){ return "?"; }
+};
+const SURUMSAT = () => `<p class="kucuk" style="opacity:.45;margin-top:10px;
+  text-align:center">Yüklü sürüm: ${SURUM()}</p>`;
+
+/* ---- papatya cizimi ---- */
+function papHtml(){
+  const yp = sira.map((c, k) =>
+    `<button type="button" class="yp${c === S.yaprak ? " bon" : ""}"
+      style="transform:rotate(${k*60}deg)" onclick="bas('${c}')"
+      aria-label="${TRU(c)} harfi"><span
+      style="display:block;transform:rotate(${-k*60}deg)">${TRU(c)}</span></button>`).join("");
+  return `<div class="pap"><div class="sp"></div>${yp}
+    <button type="button" class="gb" onclick="bas('${ADAY.gobek}')"
+      aria-label="Göbek harfi ${TRU(ADAY.gobek)}">${TRU(ADAY.gobek)}</button></div>`;
+}
+function saksiHtml(){
+  return `<div class="saksilar">` + SAKSI.map((t, k) => {
+    const w = S.saksi[k], tam = t === "T";
+    const ip = S.ipucu[k];
+    return `<div class="sk${w ? " dolu" : ""}${tam ? " tam" : ""}${
+      !w && ip ? " ipucu" : ""}">
+      <i>${tam ? "tam papatya" : t + " harf"}</i>
+      ${w ? TRU(w) : (ip ? TRU(ip) + "···" : "&nbsp;")}</div>`;
+  }).join("") + `</div>`;
+}
+function oyunCiz(mesaj){
+  const bos = S.saksi.filter(x => !x).length;
+  ekran(papHtml() +
+    `<div id="giris">${TRU(giris) || "&nbsp;"}</div>
+     <div class="dgm">
+       <button type="button" onclick="karistir()">🔀 ÇEVİR</button>
+       <button type="button" onclick="geriSil()">← SİL</button>
+       <button type="button" class="ana" onclick="gonder()">EKLE</button>
+     </div>` + saksiHtml() +
+    `<div class="yard">
+       <button type="button" onclick="filiz()" ${S.yardim.filiz >= 2 || !bos ? "disabled" : ""}
+         >🌱 filiz (${2 - S.yardim.filiz})</button>
+       <button type="button" onclick="su()" ${S.yardim.su >= 1 || !bos ? "disabled" : ""}
+         >💧 su</button>
+       <button type="button" onclick="sozluk()" ${S.yardim.tanim >= 1 || !bos ? "disabled" : ""}
+         >📖 sözlük</button>
+       <button type="button" onclick="durEkran()">☰ menü</button>
+     </div>
+     <div id="not">${mesaj || `Göbek harfi <b>${TRU(ADAY.gobek)}</b> her kelimede
+       olmak zorunda. Sarı yaprak <b>${TRU(S.yaprak)}</b> — onu kullanan kelime iki katı.`}</div>` +
+    (S.bahce.length ? `<div class="bahce"><b>Bahçe · ${S.bahce.length} kelime</b>
+       <span>${S.bahce.map(TRU).join(" ")}</span></div>` : ""), false);
+}
+
+/* ---- giris ---- */
+window.bas = function(c){ if(giris.length < 9){ giris += c; girisYaz(); LG_ses("tus"); } };
+window.geriSil = function(){ giris = giris.slice(0, -1); girisYaz(); };
+function girisYaz(){ const e = $("#giris"); if(e) e.innerHTML = TRU(giris) || "&nbsp;"; }
+window.karistir = function(){
+  for(let i = sira.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [sira[i], sira[j]] = [sira[j], sira[i]];
+  }
+  oyunCiz();
+};
+function not(h){ const e = $("#not"); if(e) e.innerHTML = h; }
+
+window.gonder = function(){
+  const w = giris; giris = ""; girisYaz();
+  if(!w) return;
+  if(w.length < 4) return yanlis("En az <b>dört harf</b> gerekiyor.");
+  if(w.length > 7) return yanlis("En çok <b>yedi harf</b>.");
+  if(w.indexOf(ADAY.gobek) < 0)
+    return yanlis(`Göbek harfi yok — her kelime <b>${TRU(ADAY.gobek)}</b> içermeli.`);
+  for(let i = 0; i < w.length; i++) if(!ADAY.kume.has(w[i]))
+    return yanlis(`<b>${TRU(w[i])}</b> bu papatyada yok.`);
+  if(S.saksi.indexOf(w) >= 0 || S.bahce.indexOf(w) >= 0)
+    return yanlis(`<b>${TRU(w)}</b> zaten yazıldı.`);
+  if(ADAY[w.length].indexOf(w) < 0)
+    return yanlis(`<b>${TRU(w)}</b> — sözlükte yok.`);
+
+  const ars = KAC[w] || 0, tam = tammi(w);
+  let p = PUAN[w.length] * (ars ? 2 : 1) * (w.indexOf(S.yaprak) >= 0 ? 2 : 1);
+  if(tam) p += TAMBONUS;
+  let yer = -1;
+  if(tam && !S.saksi[11]) yer = 11;
+  else if(ars) for(let k = 0; k < SAKSI.length; k++)
+    if(SAKSI[k] === w.length && !S.saksi[k]){ yer = k; break; }
+  S.puan += p;
+  if(yer >= 0){ S.saksi[yer] = w; delete S.ipucu[yer]; LG_ses("dogru"); }
+  else { S.bahce.push(w); LG_ses("rozet"); }
+  defterYaz(w);
+  M.kelime = (M.kelime || 0) + 1;
+  if(tam) M.tam = (M.tam || 0) + 1;
+  metaYaz();
+
+  let m = `<span class="iyi">${TRU(w)}</span> · +${p} puan`;
+  if(tam) m += ` · <span class="ars">🌼 TAM PAPATYA +${TAMBONUS}</span>`;
+  if(ars) m += ` · <span class="ars">yayında ${ars} kez soruldu</span>`;
+  else m += ` · sözlükten geldi, <b>bahçeye</b> girdi`;
+  if(w.indexOf(S.yaprak) >= 0) m += ` · sarı yaprak ×2`;
+  if(S.saksi.filter(Boolean).length === 12) return bitir();
+  kaydet(); oyunCiz(m);
+};
+function yanlis(m){ LG_ses("gecersiz"); not(`<span class="kotu">${m}</span>`); barYaz(); }
+
+function defterYaz(w){
+  if(!KISI || KISI === LG_KAYITSIZ) return;
+  try{
+    const a = "lingo_defter_" + KISI;
+    const d = JSON.parse(localStorage.getItem(a) || "[]");
+    d.push({w:w, n:w.length, h:w[0], k:2, t:Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(a, JSON.stringify(d));
+  }catch(e){}
+}
+
+/* ---- yardimlar ---- */
+function bosSaksilar(){
+  return SAKSI.map((t, k) => k).filter(k => !S.saksi[k]);
+}
+function saksiAdaylari(k){
+  const t = SAKSI[k];
+  const kullanilan = new Set(S.saksi.filter(Boolean).concat(S.bahce));
+  if(t === "T") return ADAY.tam.filter(w => !kullanilan.has(w));
+  return ADAY.ars[t].filter(w => !kullanilan.has(w));
+}
+window.filiz = function(){
+  const bos = bosSaksilar().filter(k => !S.ipucu[k]);
+  if(!bos.length) return uyar("Açacak saksı kalmadı");
+  const k = bos[Math.floor(Math.random() * bos.length)];
+  const ad = saksiAdaylari(k);
+  if(!ad.length) return uyar("Bu saksı için aday kalmadı");
+  S.ipucu[k] = ad[Math.floor(Math.random() * ad.length)][0];
+  S.yardim.filiz++; kaydet();
+  oyunCiz(`🌱 Bir filiz açtı: o saksının kelimesi <b>${TRU(S.ipucu[k])}</b> ile başlıyor.`);
+};
+window.su = function(){
+  S.yardim.su++; kaydet();
+  const say = {};
+  bosSaksilar().forEach(k => { const t = SAKSI[k] === "T" ? "tam papatya" : SAKSI[k] + " harf";
+    say[t] = (say[t] === undefined ? saksiAdaylari(k).length : say[t]); });
+  const m = Object.keys(say).map(t => `${t}: <b>${say[t]}</b> aday`).join(" · ");
+  oyunCiz("💧 Boş saksılarda kaç kelime kaldı — " + m);
+};
+window.sozluk = function(){
+  const bos = bosSaksilar();
+  if(!bos.length) return uyar("Boş saksı yok");
+  const sec = [];
+  bos.forEach(k => saksiAdaylari(k).forEach(w => { if(TANIM && TANIM[w]) sec.push([k, w]); }));
+  if(!sec.length) return uyar("Sözlük kaydı bulunamadı");
+  const [k, w] = sec[Math.floor(Math.random() * sec.length)];
+  S.yardim.tanim++; kaydet();
+  const t = SAKSI[k] === "T" ? "tam papatya" : SAKSI[k] + " harfli";
+  oyunCiz(`📖 Bir ${t} saksının kelimesinin anlamı: <b>${TANIM[w]}</b>`);
+};
+
+/* ---- bitis ---- */
+function bitir(){
+  S.bitti = true;
+  const yardimsiz = !S.yardim.filiz && !S.yardim.su && !S.yardim.tanim;
+  M.demlik = (M.demlik || 0) + 1;
+  M.oynanan = (M.oynanan || 0) + 1;
+  if(yardimsiz) M.yardimsiz = 1;
+  M.enPuan = Math.max(M.enPuan || 0, S.puan);
+  if(S.gun){
+    const d = new Date(S.gun + "T12:00:00");
+    const onceki = M.sonGun ? new Date(M.sonGun + "T12:00:00") : null;
+    const fark = onceki ? Math.round((d - onceki) / 86400000) : 99;
+    M.gunSeri = (fark === 1) ? (M.gunSeri || 0) + 1 : 1;
+    M.sonGun = S.gun;
+    M.enSeri = Math.max(M.enSeri || 0, M.gunSeri);
+  }
+  M.rekor.push({p:S.puan, z:ZORAD[PAP[S.i][2]], h:PAP[S.i][0],
+    t:new Date().toLocaleDateString("tr-TR")});
+  M.rekor.sort((a, b) => b.p - a.p); M.rekor = M.rekor.slice(0, 5);
+  metaYaz(); kaydet();
+  LG_ses("rozet");
+  sonEkran();
+}
+function sonEkran(){
+  const yeniRoz = LG_yeni(KISI);
+  const tamW = S.saksi[11];
+  ekran(`<div class="kutu ort">
+      <div class="eyebrow">Demlik doldu</div>
+      <h1 style="margin-top:5px">🫖 On iki saksı tamam</h1>
+      <div class="tutar" style="margin:12px 0 2px">${TL(S.puan)}</div>
+      <p class="kucuk">puan · ${ZORAD[PAP[S.i][2]]} papatya · göbek
+        <b>${TRU(PAP[S.i][1])}</b></p>
+      <div class="ozet">
+        <div><b>12</b><span>saksı</span></div>
+        <div><b>${S.bahce.length}</b><span>bahçe</span></div>
+        <div><b>${S.saksi.filter(w => arsivmi(w)).length}</b><span>yayından</span></div>
+        <div><b>${LG_acik(KISI).length}</b><span>nişan</span></div>
+      </div>
+      ${tamW ? `<p class="kucuk">Tam papatya: <b>${TRU(tamW)}</b></p>` : ""}
+      <p class="kucuk">Saksılardaki kelimeler: <b>${S.saksi.filter(Boolean).map(TRU).join(" · ")}</b></p>
+      ${S.bahce.length ? `<p class="kucuk">Bahçe: ${S.bahce.map(TRU).join(" · ")}</p>` : ""}
+      ${yeniRoz.length ? `<p class="kucuk" style="color:var(--altin)">Yeni nişan: ${
+        yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</p>` : ""}
+      <p class="kucuk">Bütün kelimeler <b>${KISI}</b>'in defterine yazıldı — ünvan ve
+        Likya Yolu'ndaki ürünler buradan da açılır.</p>
+      <button class="buton" onclick="yeniOyun(null)">🌼 YENİ PAPATYA</button>
+      <button class="buton ikinci" onclick="kasaEkran()">📓 REKORLAR</button>
+      <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+    </div>`);
+}
+function kasaEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Papatya defteri</div>
+      <h2>${KISI}</h2>
+      <div class="ozet">
+        <div><b>${TL(M.oynanan || 0)}</b><span>dolan demlik</span></div>
+        <div><b>${TL(M.enPuan || 0)}</b><span>en iyi puan</span></div>
+        <div><b>${TL(M.kelime || 0)}</b><span>toplam kelime</span></div>
+        <div><b>${M.gunSeri || 0}</b><span>gün serisi</span></div>
+      </div>
+      ${(M.rekor || []).length ? `<p class="eyebrow" style="margin-top:14px">En iyi beş</p>
+        <table class="rk">${M.rekor.map((r, i) => `<tr><td>${i+1}. ${TRU(r.h)}
+          <br><span style="font-size:11.5px">${r.z} · ${r.t}</span></td>
+          <td>${TL(r.p)}</td></tr>`).join("")}</table>` : ""}
+      <p class="kucuk" style="margin-top:12px">Toplam <b>${TL(PAP.length)}</b> papatya var —
+        ${TL(PAP.filter(x => x[2] === 0).length)} kolay,
+        ${TL(PAP.filter(x => x[2] === 1).length)} orta,
+        ${TL(PAP.filter(x => x[2] === 2).length)} zor.</p>
+      <button class="buton" onclick="geri()">GERİ ▸</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+    </div>`);
+}
+function durEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">${S.gun ? "Günün papatyası" : "Serbest papatya"}</div>
+      <h2>${TRU(PAP[S.i][0])}</h2>
+      <p class="kucuk">Göbek <b>${TRU(PAP[S.i][1])}</b> · sarı yaprak
+        <b>${TRU(S.yaprak)}</b> · zorluk <b>${ZORAD[PAP[S.i][2]]}</b> ·
+        <b>${S.saksi.filter(Boolean).length}/12</b> saksı · <b>${TL(S.puan)}</b> puan</p>
+      <button class="buton" onclick="geri()">DEVAM ET ▸</button>
+      <button class="buton ikinci" onclick="kasaEkran()">📓 REKORLAR</button>
+      <button class="buton ikinci" onclick="yeniOyun(null)">🌼 BAŞKA PAPATYA</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+      ${SURUMSAT()}
+    </div>`);
+}
+window.geri = function(){ if(S.bitti) return sonEkran(); oyunCiz(); };
+window.kasaEkran = kasaEkran;
+window.durEkran = durEkran;
+
+/* ---- baslatma ---- */
+window.yeniOyun = function(gun){
+  let i;
+  if(gun){ i = gunPapatyasi(); }
+  else {
+    const oynanan = new Set((M.rekor || []).map(r => r.h));
+    let dene = 0;
+    do { i = Math.floor(Math.random() * PAP.length); dene++; }
+    while(oynanan.has(PAP[i][0]) && dene < 40);
+  }
+  S = bosDurum(i, gun || null);
+  ADAY = adaylariKur(i);
+  sira = PAP[i][0].slice(1).split("");
+  giris = ""; kaydet(); oyunCiz();
+};
+function girisEkran(){
+  const gi = gunPapatyasi(), g = PAP[gi];
+  const bugunBitti = M.sonGun === bugun();
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Papatya Çayı</div>
+      <h1>Yedi harf, on iki saksı</h1>
+      <div style="display:flex;justify-content:center;margin:6px 0 2px">
+        <div class="pap" style="width:200px;height:200px">
+          <div class="sp" style="left:98px;top:126px;height:66px"></div>
+          ${g[0].slice(1).split("").map((c, k) =>
+            `<div class="yp" style="width:52px;height:74px;left:74px;top:5px;
+              transform-origin:50% 95px;transform:rotate(${k*60}deg);font-size:20px">
+              <span style="display:block;transform:rotate(${-k*60}deg)">${TRU(c)}</span></div>`).join("")}
+          <div class="gb" style="width:62px;height:62px;left:69px;top:69px;font-size:25px"
+            >${TRU(g[1])}</div>
+        </div>
+      </div>
+      <p class="kucuk" style="text-align:center">Ortadaki harf her kelimede zorunlu.
+        Harfler tekrar kullanılabilir. Saksılardaki kelimelerin hepsi
+        <b>yayında en az bir kez sorulmuş</b> kelimelerden.</p>
+      <table class="rk">
+        <tr><td>5 saksı</td><td>4 harfli</td></tr>
+        <tr><td>4 saksı</td><td>5 harfli</td></tr>
+        <tr><td>2 saksı</td><td>6 harfli</td></tr>
+        <tr><td>1 saksı</td><td>🌼 yedi harfin hepsi</td></tr>
+      </table>
+      <button class="buton yesil" onclick="yeniOyun('${bugun()}')">${
+        bugunBitti ? "GÜNÜN PAPATYASI — tekrar" : "GÜNÜN PAPATYASINI ÇÖZ ▸"}</button>
+      <button class="buton ikinci" onclick="yeniOyun(null)">🌼 SERBEST PAPATYA</button>
+      ${(M.oynanan || 0) ? `<button class="buton ikinci" onclick="kasaEkran()">
+        📓 REKORLAR</button>` : ""}
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+      ${SURUMSAT()}
+    </div>`);
+}
+function kisiEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Kim demliyor?</div>
+      <h2>Papatya çayı kimin?</h2>
+      <p class="kucuk">Bulduğun kelimeler senin defterine yazılır.</p>
+      <div class="kgrid">${KISILER.map(a =>
+        `<button onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`).join("")}</div>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+    </div>`);
+}
+window.kisiSec = function(a){
+  KISI = a; try{ localStorage.setItem("lingo_kisi", a); }catch(e){}
+  basla();
+};
+function devamEkran(){
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Yarım kalan papatya</div>
+      <h2>${KISI}, çayın demleniyor</h2>
+      <p class="kucuk"><b>${S.saksi.filter(Boolean).length}/12</b> saksı doldu ·
+        <b>${TL(S.puan)}</b> puan · göbek <b>${TRU(PAP[S.i][1])}</b></p>
+      <button class="buton" onclick="geri()">KALDIĞIN YERDEN DEVAM ▸</button>
+      <button class="buton ikinci" onclick="yeniOyun('${bugun()}')">GÜNÜN PAPATYASI</button>
+      <button class="buton ikinci" onclick="kasaEkran()">📓 REKORLAR</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+      ${SURUMSAT()}
+    </div>`);
+}
+function basla(){
+  KISILER = LG_kisiler(KISI_VAR);
+  if(!KISI || KISI === LG_KAYITSIZ || KISILER.indexOf(KISI) < 0) return kisiEkran();
+  metaOku();
+  S = oku();
+  if(S && (!PAP[S.i] || !Array.isArray(S.saksi) || S.saksi.length !== 12)) S = null;
+  if(!S) return girisEkran();
+  ADAY = adaylariKur(S.i);
+  sira = PAP[S.i][0].slice(1).split("");
+  if(!S.yaprak) S.yaprak = gunYapragi(S.i, S.gun || "s");
+  if(!S.ipucu) S.ipucu = {};
+  if(S.bitti) return sonEkran();
+  if(!S.saksi.filter(Boolean).length && !S.bahce.length) return oyunCiz();
+  devamEkran();
+}
+
+document.addEventListener("keydown", e => {
+  if(!S || S.bitti || !ADAY) return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  if(!$("#giris")) return;
+  const k = e.key;
+  if(k === "Enter"){ e.preventDefault(); gonder(); }
+  else if(k === "Backspace"){ e.preventDefault(); geriSil(); }
+  else if(k.length === 1){
+    const c = k.toLocaleLowerCase("tr");
+    if(ADAY.kume.has(c)){ e.preventDefault(); bas(c); }
+  }
+});
+
+function yukle(){
+  LG_sesDugme($("#sesd"));
+  orta.innerHTML = `<div class="kutu ort"><h2>Papatya demleniyor…</h2>
+    <p class="kucuk">Kelime havuzları yükleniyor.</p></div>`;
+  Promise.all([
+    fetch("papatya-veri.json").then(r => r.json()),
+    fetch("oyun-veri.json").then(r => r.json())
+  ]).then(([pv, ov]) => {
+    PAP = pv.p; KAC = ov.kac || {};
+    for(const n of [4,5,6,7]) GECERLI[n] = ov.gecerli[n];
+    fetch("oyun-tanim.json").then(r => r.json()).then(t => { TANIM = t; }).catch(() => {});
+    basla();
+  }).catch(e => {
+    orta.classList.add("ort");
+    orta.innerHTML = `<div class="kutu ort"><h2>Açılamadı</h2>
+      <p class="kucuk">Sayfa güncellendiği için tarayıcıda eski bir dosya kalmış
+      olabilir. Aşağıdaki düğme sayfayı temiz yükler.</p>
+      <p class="kucuk" style="opacity:.6">${(e && (e.message || e)) + ""}</p>
+      <button class="buton" onclick="location.reload(true)">TEMİZ YÜKLE</button>
+      <a class="buton ikinci" href="index.html">ANA SAYFA</a></div>`;
+  });
+}
+yukle();
+</script>
+</body></html>

@@ -106,8 +106,9 @@ tr.tik:active{background:var(--kart2)}
 </style></head><body>
 <header><a href="index.html">‹</a><b>Gelişim raporu</b></header>
 <div class="sar" id="alan"></div>
-<script src="rozet.js?v=4"></script>
+<script src="rozet.js?v=5"></script>
 <script>if(typeof LG_kervanMeta !== "function") window.LG_kervanMeta = function(){ return {}; };</script>
+<script>if(typeof LG_papatyaMeta !== "function") window.LG_papatyaMeta = function(){ return {}; };</script>
 <script>
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
@@ -238,7 +239,7 @@ function ciz(){
 
     ${(function(){
       const ra = LG_acik(KISI), U = LG_unvan(d.length);
-      return `<h2>Ünvan ve rozetler · ${ra.length}/${LG_rozet(d,LG_plan(KISI),LG_kervanMeta(KISI)).length}</h2>
+      return `<h2>Ünvan ve rozetler · ${ra.length}/${LG_rozet(d,LG_plan(KISI),LG_kervanMeta(KISI), LG_papatyaMeta(KISI)).length}</h2>
         <div class="unvk"><b>${U.simdi.ad}</b>
           <span>${U.sonraki ? U.sonraki.ad + " için " + U.kalan + " kelime daha"
                             : "en üst ünvan"}</span>

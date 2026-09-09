@@ -83,8 +83,13 @@ function LG_kervanMeta(ad){
   try{ const v = JSON.parse(localStorage.getItem("lingo_kervan_meta_"+ad) || "null");
        return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
 }
-function LG_rozet(d, p, kv){
-  p = p || {}; const K = kv || {};
+/* --- Papatya Cayi meta durumu (kalici ilerleme) --- */
+function LG_papatyaMeta(ad){
+  try{ const v = JSON.parse(localStorage.getItem("lingo_papatya_meta_"+ad) || "null");
+       return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
+}
+function LG_rozet(d, p, kv, pv){
+  p = p || {}; const K = kv || {}, P = pv || {};
   const bil = d.filter(r=>r.k>0), ilk = bil.filter(r=>r.k===1).length;
   const sonhak = bil.filter(r=>r.k>=5).length;
   let seri = 0, enSeri = 0;
@@ -231,11 +236,18 @@ function LG_rozet(d, p, kv){
    {e:"🗿",a:"Yazıtı Okuyan",  s:"son yazıtı çöz",               v:(K.sonKapi||0)>=1},
    {e:"💧",a:"Son Damla",      s:"yolu tek matarayla bitir",     v:!!K.tekKalp},
    {e:"🎒",a:"Ağır Çanta",     s:"bir konakta 4 ürün al",        v:!!K.dortUrun},
-   {e:"👣",a:"Yalın Ayak",     s:"yolu hiç ürün almadan bitir",  v:!!K.urunsuz}
+   {e:"👣",a:"Yalın Ayak",     s:"yolu hiç ürün almadan bitir",  v:!!K.urunsuz},
+   /* --- Papatya Cayi --- */
+   {e:"🌼",a:"Tam Papatya",    s:"yedi harfin hepsini kullan",    v:(P.tam||0)>=1},
+   {e:"🫖",a:"Demlik",         s:"bir papatyanın 12 saksısını doldur", v:(P.demlik||0)>=1},
+   {e:"🌱",a:"Filizsiz",       s:"hiç yardım almadan 12/12",      v:!!P.yardimsiz},
+   {e:"📅",a:"Yedi Gün",       s:"yedi gün üst üste günün papatyası", v:(P.enSeri||0)>=7},
+   {e:"🌾",a:"Bahçıvan",       s:"papatyalarda 500 kelime",       v:(P.kelime||0)>=500}
   ];
 }
 function LG_acik(ad){
-  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad)).filter(r=>r.v); }
+  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad),
+                  LG_papatyaMeta(ad)).filter(r=>r.v); }
 /* yeni acilan rozetleri dondur; ilk cagrida sessizce isaretler */
 function LG_yeni(ad){
   if(!ad || ad === LG_KAYITSIZ) return [];
@@ -246,7 +258,7 @@ function LG_yeni(ad){
   try{ localStorage.setItem("lingo_rozet_"+ad, JSON.stringify(acik)); }catch(e){}
   if(bilinen === null) return [];                     /* ilk kurulum: duyurma */
   const yeniAd = acik.filter(a => bilinen.indexOf(a) < 0);
-  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad))
+  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad), LG_papatyaMeta(ad))
     .filter(r => yeniAd.indexOf(r.a) >= 0);
 }
 /* --- rozet vitrini: en fazla 3 favori --- */
