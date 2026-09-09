@@ -50,6 +50,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .kadraj{width:100%;overflow:hidden;border-radius:10px;
   box-shadow:0 8px 26px rgba(0,0,0,.45);margin-top:4px}
 .sayfa{width:297mm;height:210mm;position:relative;overflow:hidden;
+  font-variant-numeric:lining-nums;
   transform-origin:top left;background:var(--kagit2);color:var(--ink);
   font:16px/1.5 "Hoefler Text",Baskerville,Georgia,serif}
 .sayfa *{box-sizing:border-box;margin:0}
@@ -64,16 +65,17 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .filigran{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);
   width:132mm;height:132mm;opacity:.055;z-index:0}
 .filigran svg{width:132mm;height:132mm}
-.ic{position:absolute;left:22mm;right:22mm;top:18mm;bottom:40mm;display:flex;
+.ic{position:absolute;left:22mm;right:22mm;top:18mm;bottom:46mm;display:flex;
   flex-direction:column;align-items:center;text-align:center;z-index:2}
 .eyebrow{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:9pt;
   letter-spacing:.4em;text-transform:uppercase;color:var(--metalK);font-weight:600;
   text-indent:.4em}
 .ayrac{display:flex;align-items:center;gap:8px;width:78mm;margin-top:4mm}
-.ayrac i{flex:1;height:.6pt;background:linear-gradient(90deg,transparent,var(--metal),transparent)}
+.ayrac i{flex:1;height:1px;min-height:1px;
+  background:linear-gradient(90deg,transparent,var(--metal),transparent)}
 .ayrac b{width:5px;height:5px;background:var(--metal);transform:rotate(45deg)}
-.sayfa h1{font-size:22pt;font-weight:400;letter-spacing:.055em;margin-top:5mm;
-  font-variant:small-caps;line-height:1.2}
+.sayfa h1{font-size:19.5pt;font-weight:400;letter-spacing:.13em;margin-top:5mm;
+  line-height:1.24;text-indent:.13em}
 .ad{font-size:46pt;line-height:1.06;letter-spacing:.04em;font-weight:400;max-width:230mm}
 .unvan{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:10pt;
   letter-spacing:.3em;text-transform:uppercase;color:var(--metalK);margin-top:3.5mm;
@@ -81,8 +83,8 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .giris{font-size:11pt;font-style:italic;color:var(--soluk2);margin-top:4mm;
   max-width:170mm;line-height:1.7}
 .kucukAlt{font-size:10pt;margin-top:4mm}
-.lakap{font-size:13.5pt;font-variant:small-caps;letter-spacing:.07em;color:var(--metalK);
-  margin-top:3.5mm}
+.lakap{font-size:12.5pt;letter-spacing:.14em;color:var(--metalK);
+  margin-top:3.5mm;text-indent:.14em}
 .tahta{display:flex;gap:2.4mm;margin-top:7mm;flex-wrap:nowrap}
 .hk{border-radius:2.2mm;display:flex;align-items:center;justify-content:center;
   font-family:Optima,"Gill Sans",sans-serif;font-weight:700;color:#fff;flex:none;line-height:1}
@@ -105,23 +107,29 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 .ist div{padding:5mm 0;display:flex;flex-direction:column;gap:2mm;align-items:center;
   border-left:.5pt solid var(--metalA)}
 .ist div:first-child{border-left:0}
-.ist b{font-size:21pt;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
+.ist b{font-size:21pt;font-weight:400;line-height:1;
+  font-family:Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+  font-variant-numeric:lining-nums tabular-nums}
 .ist span{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:7.4pt;
   letter-spacing:.2em;text-transform:uppercase;color:var(--soluk2);text-indent:.2em}
 .dipnot{font-size:9.4pt;font-style:italic;color:var(--soluk2);margin-top:4.5mm;
   max-width:176mm;line-height:1.6}
-.taban{position:absolute;left:24mm;right:24mm;bottom:12mm;display:flex;
+.taban{position:absolute;left:24mm;right:24mm;bottom:13mm;display:flex;
   align-items:flex-end;justify-content:space-between;z-index:2}
 .imzaBlok{width:62mm;text-align:center}
-.sigwrap{height:17mm;display:flex;align-items:flex-end;justify-content:center}
-.sig{width:48mm;height:auto;display:block;margin-bottom:.6mm}
-.cizgiA{height:.6pt;background:var(--metal);opacity:.65;margin-top:1.4mm}
+.sigwrap{height:21mm;display:flex;align-items:flex-end;justify-content:center;
+  overflow:hidden}
+.sig{height:20mm;width:auto;max-width:58mm;display:block;margin-bottom:1.6mm}
+.cizgiA{height:1px;min-height:1px;background:var(--metal);opacity:.65;margin-top:2.6mm}
 .kim{font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:8pt;
-  letter-spacing:.18em;text-transform:uppercase;color:var(--soluk2);margin-top:2.4mm;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--soluk2);margin-top:3.4mm;
   text-indent:.18em}
-.tarihBuyuk{font-size:12.5pt;margin-bottom:8mm;font-variant-numeric:tabular-nums}
+.tarihBuyuk{font-size:12.5pt;margin-bottom:12.4mm;
+  font-family:Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+  font-variant-numeric:lining-nums tabular-nums}
 .tarihK{font-size:11.5pt;letter-spacing:.02em;color:var(--ink);
-  font-variant-numeric:tabular-nums;text-align:center;width:62mm}
+  font-family:Palatino,"Palatino Linotype","Book Antiqua",Georgia,serif;
+  font-variant-numeric:lining-nums tabular-nums;text-align:center;width:62mm}
 .tarihK em{font-style:normal;display:block;font-family:Optima,"Gill Sans",Candara,sans-serif;
   font-size:7.6pt;letter-spacing:.2em;text-transform:uppercase;color:var(--soluk2);
   text-indent:.2em;margin-top:1.6mm}
@@ -137,6 +145,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
 </style></head><body>
 <header><a href="index.html">‹</a><b>Sertifika</b></header>
 <div class="sar" id="alan"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="rozet.js?v=5"></script>
 <script>
 const $ = s => document.querySelector(s);
@@ -235,6 +244,65 @@ function adBlok(ad){
     <div class="ad adYazi" style="font-size:${fs}pt">${ad}</div>`;
 }
 
+/* --- sertifikayi yuksek cozunurluklu resme cevir --- */
+const PNGEN = 2400;                     /* uzun kenar · A4 yatayda ~205 dpi */
+async function pngYap(mod){
+  const btn = document.getElementById("pngbtn");
+  const sy = document.querySelector(".sayfa");
+  const kadraj = document.getElementById("kadraj");
+  if(!sy) return;
+  if(typeof html2canvas !== "function"){
+    return uyar("Resim aracı yüklenemedi — internet bağlantısını kontrol et,\n" +
+                "ya da PDF olarak yazdır.");
+  }
+  const eskiMetin = btn ? btn.textContent : "";
+  if(btn){ btn.disabled = true; btn.textContent = "Resim hazırlanıyor…"; }
+  /* olcek sifirlanir, gercek boyutta cizilir, sonra geri alinir */
+  const eskiTr = sy.style.transform, eskiH = kadraj ? kadraj.style.height : "";
+  const eskiOv = kadraj ? kadraj.style.overflow : "";
+  sy.style.transform = "none";
+  if(kadraj){ kadraj.style.height = "auto"; kadraj.style.overflow = "visible"; }
+  try{
+    const gen = sy.offsetWidth || 1122;
+    const cvs = await html2canvas(sy, {
+      scale: PNGEN / gen,
+      backgroundColor: null,
+      useCORS: false,
+      logging: false,
+      windowWidth: gen,
+      windowHeight: sy.offsetHeight
+    });
+    const ad = (KISI || "Sertifika").replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü]+/g, "_");
+    const kadAd = (document.querySelector(".kadsec button.on b") || {}).textContent || "";
+    const dosya = `Lingo_${kadAd.replace(/\s+/g,"_")}_${ad}.png`;
+    const blob = await new Promise(r => cvs.toBlob(r, "image/png"));
+    if(!blob) throw new Error("resim üretilemedi");
+    const f = new File([blob], dosya, {type:"image/png"});
+    if(mod === "paylas" && navigator.canShare && navigator.canShare({files:[f]})){
+      await navigator.share({files:[f], title:"Lingo sertifikası"});
+    } else {
+      const u = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = u; a.download = dosya; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(u), 4000);
+    }
+  }catch(e){
+    if(!(e && e.name === "AbortError")) uyar("Resim yapılamadı: " + ((e&&e.message)||e));
+  }finally{
+    sy.style.transform = eskiTr;
+    if(kadraj){ kadraj.style.height = eskiH; kadraj.style.overflow = eskiOv; }
+    if(btn){ btn.disabled = false; btn.textContent = eskiMetin; }
+    olcekle();
+  }
+}
+function uyar(m){
+  const d=document.createElement("div");
+  d.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:26px;"+
+    "background:#f2f5f8;color:#0f1720;padding:11px 16px;border-radius:12px;"+
+    "font-weight:700;z-index:60;max-width:88vw;text-align:center;white-space:pre-line";
+  d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),3200);
+}
+window.pngYap = pngYap;
 function olcekle(){
   const k = $("#kadraj"); if(!k) return;
   const s = k.clientWidth / (297 * 96 / 25.4);
@@ -259,55 +327,55 @@ function sertifika(K, d, ra){
     --metalK:${K.metalK};--metalA:${K.metalA};--soluk2:${K.soluk};--yumusak:${K.metal}22;
     background:${K.kagit}`;
   const ist = `<div class="ist">
-    <div><b>${d.length.toLocaleString("tr-TR")}</b><span>Çözülen kelime</span></div>
-    <div><b>%${basari}</b><span>Başarı oranı</span></div>
-    <div><b>${ort}</b><span>Ortalama tahmin</span></div>
-    <div><b>${ra.length}</b><span>Kazanılan rozet</span></div></div>`;
+    <div><b>${d.length.toLocaleString("tr-TR")}</b><span>${TRU("Çözülen kelime")}</span></div>
+    <div><b>%${basari}</b><span>${TRU("Başarı oranı")}</span></div>
+    <div><b>${ort}</b><span>${TRU("Ortalama tahmin")}</span></div>
+    <div><b>${ra.length}</b><span>${TRU("Kazanılan rozet")}</span></div></div>`;
   const imza = `<div class="imzaBlok"><div class="sigwrap">
       <img class="sig" src="assets/imza.png" alt="imza"></div>
-    <div class="cizgiA"></div><div class="kim">Aile Yarışma Komitesi</div></div>`;
+    <div class="cizgiA"></div><div class="kim">${TRU("Aile Yarışma Komitesi")}</div></div>`;
 
   let ic, sus, taban;
   if(K.tip === "altin"){
     sus = `<div class="cerceve"></div><div class="cerceve2"></div>
       ${KOSE("tl")}${KOSE("tr")}${KOSE("bl")}${KOSE("br")}`;
-    ic = `<div class="eyebrow">Lingo Türkiye · Hazırlık Programı</div>
+    ic = `<div class="eyebrow">${TRU("Lingo Türkiye · Hazırlık Programı")}</div>
       <div class="ayrac"><i></i><b></b><i></i></div>
-      <h1>Altın Hazırlık Sertifikası</h1>
+      <h1>${TRU("Altın Hazırlık Sertifikası")}</h1>
       <p class="giris">Bu sertifika, şu ana kadar yayınlanmış bölümlerin cevap arşivinden
         hazırlanan çalışma programını eksiksiz tamamlayan</p>
       <div class="ad" style="margin-top:4.5mm;font-size:${adPunto(KISI,"altin")}pt">
         ${TRU(KISI)}</div>
-      <div class="unvan">${U.simdi.ad}</div>
+      <div class="unvan">${TRU(U.simdi.ad)}</div>
       ${ist}
       <p class="giris kucukAlt">adına, ${d.length.toLocaleString("tr-TR")} kelime çözmüş
         olmasına rağmen hala “ben pek bilmiyorum” dediği için düzenlenmiştir.</p>
-      <div class="nisanBas" style="margin-top:auto">Başlıca Nişanlar</div>
+      <div class="nisanBas" style="margin-top:auto">${TRU("Başlıca Nişanlar")}</div>
       <div class="nisan">${nis}</div>`;
     taban = `<div class="imzaBlok"><div class="tarihBuyuk">${tarih}</div>
-      <div class="cizgiA"></div><div class="kim">Düzenleme tarihi</div></div>${imza}`;
+      <div class="cizgiA"></div><div class="kim">${TRU("Düzenleme tarihi")}</div></div>${imza}`;
   } else {
     const L = LAKAP[K.tip];
     const adH = K.tip === "gumus"
       ? `<div class="defneSar">${DAL("")}
           <div class="adSar"><div class="ad defneAd"
              style="font-size:${adPunto(KISI,"gumus")}pt">${TRU(KISI)}</div>
-           <div class="unvan">${U.simdi.ad}</div></div>${DAL("ters")}</div>`
-      : `${adBlok(KISI)}<div class="unvan" style="margin-top:6mm">${U.simdi.ad}</div>`;
+           <div class="unvan">${TRU(U.simdi.ad)}</div></div>${DAL("ters")}</div>`
+      : `${adBlok(KISI)}<div class="unvan" style="margin-top:6mm">${TRU(U.simdi.ad)}</div>`;
     sus = K.tip === "gumus" ? `<div class="cerceve ince"></div>`
                             : `<div class="cerceve"></div><div class="cerceve2"></div>`;
-    ic = `<div class="eyebrow">Lingo Türkiye · Hazırlık Programı</div>
-      <h1>${K.ad} Hazırlık Sertifikası</h1>
+    ic = `<div class="eyebrow">${TRU("Lingo Türkiye · Hazırlık Programı")}</div>
+      <h1>${TRU(K.ad + " Hazırlık Sertifikası")}</h1>
       ${adH}
-      <div class="lakap">${L[0]}</div>
+      <div class="lakap">${TRU(L[0])}</div>
       <p class="giris">${L[1]}</p>
-      <div class="nisanBas">Kazanılan Nişanlar · ${ra.length}</div>
+      <div class="nisanBas">${TRU("Kazanılan Nişanlar")} · ${ra.length}</div>
       <div class="nisan">${nis}</div>
       ${ist}
       <p class="dipnot">${L[2]}</p>`;
-    taban = `<span class="tarihK">${tarih}<em>Düzenleme tarihi</em></span>${imza}`;
+    taban = `<span class="tarihK">${tarih}<em>${TRU("Düzenleme tarihi")}</em></span>${imza}`;
   }
-  return `<div class="kadraj" id="kadraj"><div class="sayfa" style="${stil}">
+  return `<div class="kadraj" id="kadraj"><div class="sayfa" lang="tr" style="${stil}">
     ${sus}<div class="filigran">${MUHUR(K.ad)}</div>
     <div class="ic">${ic}</div><div class="taban">${taban}</div></div></div>`;
 }
@@ -346,9 +414,13 @@ function ciz(){
       <u>${acik ? (sec ? "seçili" : "bas") : kalan + " kelime daha"}</u></button>`;
   }).join("")}</div>`;
   $("#alan").innerHTML = secErit + kadSec + sertifika(kad, d, ra) +
-    `<button class="buton" onclick="window.print()">🖨 PDF OLARAK KAYDET / YAZDIR</button>
+    `<button class="buton" id="pngbtn" onclick="pngYap('paylas')">
+       📷 RESİM OLARAK KAYDET / PAYLAŞ</button>
+     <p class="not">WhatsApp'ta en iyi görünen budur: yüksek çözünürlüklü tek bir
+       resim. Telefonda paylaşma menüsü açılır, bilgisayarda dosya olarak iner.</p>
+     <button class="buton ikinci" onclick="window.print()">🖨 PDF olarak yazdır</button>
      <p class="not">Yazdır ekranında <b>hedef: PDF olarak kaydet</b>, <b>yön: yatay</b>,
-       <b>arka plan grafikleri: açık</b> seçin. Telefonda “Paylaş → Yazdır” da olur.</p>` +
+       <b>arka plan grafikleri: açık</b> seçin.</p>` +
     `<p class="not">Kazandığın her kademeyi istediğin zaman, <b>o günkü güncel
        rakamlarınla</b> yeniden bastırabilirsin.</p>` +
     (sonraki ? `<p class="not">${sonraki.em} <b>${sonraki.ad}</b> sertifika için
