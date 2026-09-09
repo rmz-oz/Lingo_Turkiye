@@ -3,7 +3,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0f1720">
-<title>Gelişim raporu — Lingo</title>
+<title>Gelişim raporu: Lingo</title>
 <style>
 :root{--kagit:#0f1720;--kart:#1a2430;--kart2:#141d27;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--kirmizi:#d94a5a;--altin:#f4c95d}
@@ -163,7 +163,7 @@ function ciz(){
     const g = d.filter(r=>r.n===n); if(!g.length) continue;
     const gb = g.filter(r=>r.k>0);
     const o = Math.round(100*gb.length/g.length);
-    const go = gb.length ? (gb.reduce((t,r)=>t+r.k,0)/gb.length).toFixed(1) : "—";
+    const go = gb.length ? (gb.reduce((t,r)=>t+r.k,0)/gb.length).toFixed(1) : ", ";
     /* bu uzunlukta en zayif harf */
     const hh = {};
     for(const r of g){ (hh[r.h]=hh[r.h]||{t:0,b:0}).t++; if(r.k>0) hh[r.h].b++; }
@@ -209,7 +209,7 @@ function ciz(){
     <div class="ozet">
       <div><b>${d.length}</b><span>kelime</span></div>
       <div><b style="color:${renk(basari)}">%${basari}</b><span>bilinen</span></div>
-      <div><b>${ort ? ort.toFixed(1) : "—"}</b><span>ort. tahmin</span></div>
+      <div><b>${ort ? ort.toFixed(1) : ", "}</b><span>ort. tahmin</span></div>
       <div><b style="color:${renk(sonO)}">%${sonO}</b><span>son ${son.length}</span></div>
     </div>
 
@@ -233,7 +233,7 @@ function ciz(){
       : `<div class="bos">Hiç takıldığın kelime yok. Devam et.</div>`}
 
     ${shl.length ? `<h2>Son hakkında bildiklerin · ${shl.length}</h2>
-      <p>Kıl payı kurtardıkların. Bir dahakine daha erken çıkması gerekenler —
+      <p>Kıl payı kurtardıkların. Bir dahakine daha erken çıkması gerekenler, 
          bunları tekrar et.</p>
       <div class="wrap">${shl.slice(-40).map(w=>`<span class="s">${TRU(w)}</span>`).join("")}</div>` : ""}
 
@@ -246,7 +246,7 @@ function ciz(){
           <div class="cub" style="margin-top:8px"><i class="i1" style="width:${U.oran}%"></i></div>
         </div>
         ${ra.length ? `<p style="margin:8px 0 4px">Vitrinde göstermek istediğin
-            <b>en fazla 3</b> rozete dokun — kişi şeridinde onlar görünür.</p>
+            <b>en fazla 3</b> rozete dokun, kişi şeridinde onlar görünür.</p>
           <div class="rozg">${ra.map(r=>`<div class="${
             LG_vitrin(KISI).indexOf(r.a)>=0 ? "vit" : ""}"
             onclick="vitrin('${r.a.replace(/'/g,"")}')"><span>${r.e}</span>

@@ -1,4 +1,4 @@
-/* Lingo — ortak ünvan ve rozet motoru. Tüm sayfalar bunu kullanır. */
+/* Lingo, ortak ünvan ve rozet motoru. Tüm sayfalar bunu kullanır. */
 const LG_KAYITSIZ = "__kayitsiz__";
 function LG_kisi(){ try{ return localStorage.getItem("lingo_kisi"); }catch(e){ return null; } }
 function LG_defter(ad){

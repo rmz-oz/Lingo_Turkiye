@@ -3,7 +3,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="theme-color" content="#0f1720">
-<title>Yarışma günü — Lingo</title>
+<title>Yarışma günü: Lingo</title>
 <style>
 :root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--altin:#f4c95d;--yesil:#2e9e5b;--kirmizi:#d94a5a;--mor:#6c5ce7}
@@ -68,20 +68,20 @@ td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.4p
 
 <h2>Bugün karşınıza ne çıkacak</h2>
 <div class="k"><p>Bir bölümde ortalama <b>28 cevap</b> veriliyor.
-  Bunların <b>4,4'ü kolay</b>, 9,8'i orta, <b>13,8'i zor</b> harflerden geliyor —
+  Bunların <b>4,4'ü kolay</b>, 9,8'i orta, <b>13,8'i zor</b> harflerden geliyor, 
   yani yarısı zorlu. Bu normal, herkes için böyle.</p></div>
 
-<h2>Son bir bakış — açılış ikilileri</h2>
+<h2>Son bir bakış, açılış ikilileri</h2>
 <div class="k" style="padding:8px 14px 4px"><table id="tab">
 <tr><th>harf</th><th>4 harfli</th><th>5 harfli</th></tr></table></div>
 <div class="k"><p>Bu yedi harf tüm cevapların <b>%46'sı</b>. Aklınızda bunlar kalsın,
   gerisi kendiliğinden gelir.</p></div>
 
 <h2>Aklınızda kalsın</h2>
-<div class="uy"><b>Panik yapılacak harf:</b> K. 1.539 kez çıktı, açık ara birinci —
+<div class="uy"><b>Panik yapılacak harf:</b> K. 1.539 kez çıktı, açık ara birinci, 
   ve açılışla elenmesi en zor harf. K görünce şaşırmayın, beklediğiniz şeydi.</div>
 <div class="uy iyi"><b>Rahatlatıcı gerçek:</b> Cevapların <b>%80'i</b> daha önce
-  ekrana çıkmış kelimeler. Yani bildiğiniz kelimeler geri geliyor —
+  ekrana çıkmış kelimeler. Yani bildiğiniz kelimeler geri geliyor, 
   hafızanız sandığınızdan iyi.</div>
 <div class="uy iyi"><b>Altın kural:</b> İlk iki tahminde kelimeyi bulmaya çalışmayın,
   <b>harf toplayın</b>. Aynı harfi iki kez denemek boşa tahmindir.</div>
@@ -125,8 +125,8 @@ fetch("yarisma.json").then(r=>r.json()).then(v=>{
   for(const h in v){
     const r = document.createElement("tr");
     r.innerHTML = `<td class="h">${h}</td>
-      <td class="w">${v[h]["4"] ? v[h]["4"].join(" + ") : "—"}</td>
-      <td class="w">${v[h]["5"] ? v[h]["5"].join(" + ") : "—"}</td>`;
+      <td class="w">${v[h]["4"] ? v[h]["4"].join(" + ") : ", "}</td>
+      <td class="w">${v[h]["5"] ? v[h]["5"].join(" + ") : ", "}</td>`;
     t.appendChild(r);
   }
 }).catch(()=>{});

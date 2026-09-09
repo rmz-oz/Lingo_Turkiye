@@ -3,7 +3,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="theme-color" content="#0f1720">
-<title>Likya Yolu — Lingo</title>
+<title>Likya Yolu: Lingo</title>
 <style>
 :root{
   --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
@@ -249,7 +249,7 @@ const BOLUM = [
   giris:"Faralya'dan sonra patika keçi izine dönüyor. İniş dik, çıkış dik; burada "+
         "kelime de nefes gibi, boşa harcanmıyor."},
  {ad:"Xanthos", ek:"'tan", sure:20, carpan:1.5,
-  giris:"Likya'nın başkenti. Meydanda dört yüzü de yazılı bir sütun var — Yazıtlı "+
+  giris:"Likya'nın başkenti. Meydanda dört yüzü de yazılı bir sütun var: Yazıtlı "+
         "Sütun. Harfler okunuyor, anlamları hala bilinmiyor."},
  {ad:"Kekova", ek:"'dan", sure:18, carpan:2,
   giris:"Suyun altında bir sokak, bir merdiven, bir de kapı. Batık şehir kelimelerini "+
@@ -259,7 +259,7 @@ const BOLUM = [
         "hiçbiri tam okunamıyor."},
  {ad:"Yanartaş", ek:"'tan", sure:16, carpan:3,
   giris:"Taşın arasından binlerce yıldır sönmeyen bir alev çıkıyor. Dört etap sonra "+
-        "o alevin başında olacaksın — yazıt yalnız orada okunuyor."}
+        "o alevin başında olacaksın, yazıt yalnız orada okunuyor."}
 ];
 const UZUN = [4,5,6,7];
 /* --- yollar: bitirdikce yenisi acilir --- */
@@ -331,7 +331,7 @@ const SATICI = [
    {ad:"Mehmet", duk:"Mehmet'in Körüğü",
     rep:"Körüğü ben çekerim, ateşi sen harlarsın. Kelime de öyle olur."},
    {ad:"Melek Hatun", duk:"Melek Hatun'un Bohçası",
-    rep:"Bohçamda ne ararsan var. Su da var, sabır da — ikisi de bedava değil."} ]
+    rep:"Bohçamda ne ararsan var. Su da var, sabır da, ikisi de bedava değil."} ]
 ];
 /* konak sirasi -> satici grubu (0 yol isaretcisi, 1 pansiyoncu, 2 sahaf, 3 sarnic basi) */
 const HANTIP = [0, 1, 2, 3, 0, 2];
@@ -375,7 +375,7 @@ const URUN = [
  {id:"sozluksayfasi", ad:"Elif'in Sözlük Sayfası", em:"📖", tip:"joker", han:0, fiyat:65, tek:1,
   agirlik:2,
   kisa:"Kelimenin TDK tanımını gösterir",
-  tam:"Kelimenin sözlük anlamı ekranda açılır — tıpkı puzzle ipucu gibi. Anlamı okuyunca "+
+  tam:"Kelimenin sözlük anlamı ekranda açılır, tıpkı puzzle ipucu gibi. Anlamı okuyunca "+
       "kelime çoğu zaman kendiliğinden gelir.", kilit:{u:5}},
  {id:"fazladanhak", ad:"Çağrı'nın Fazladan Hakkı", em:"➕", tip:"joker", han:0, fiyat:70, tek:1,
   kisa:"O etapta altıncı tahmin hakkı verir",
@@ -451,12 +451,12 @@ const URUN = [
   kilit:{r:"Süper Lingo"}},
  /* --- 3. konak: tilsimlar --- */
  {id:"ayyildizfener", ad:"Nazük'ün Gelidonya Feneri", em:"🌙", tip:"tilsim", han:2, fiyat:110,
-  kisa:"Gece 22.00–04.00 arası bütün ödüller %20 fazla",
+  kisa:"Gece 22.00-04.00 arası bütün ödüller %20 fazla",
   tam:"Telefonun saati 22.00 ile 04.00 arasındaysa kazandığın her ödül %20 artar. "+
       "Gece çalışanların tılsımı.", kilit:{r:"Gece Kuşu"}},
  {id:"cobanasasi", ad:"Figen'in Çoban Asası", em:"🪃", tip:"tilsim", han:2, fiyat:120,
   kisa:"4 harfli etaplarda ödül %30 fazla",
-  tam:"Her bölümün ilk etabı 4 harflidir ve havuzu en tanıdık kelimelerden oluşur — "+
+  tam:"Her bölümün ilk etabı 4 harflidir ve havuzu en tanıdık kelimelerden oluşur, "+
       "yani en garanti para. Bu tılsım o parayı %30 büyütür.",
   kilit:{r:"Dörtlü Ustası"}},
  {id:"ozansazi", ad:"Sevilen'in Kavalı", em:"🪕", tip:"tilsim", han:2, fiyat:130,
@@ -467,7 +467,7 @@ const URUN = [
  {id:"cingirak", ad:"Belgin'in Çıngırağı", em:"🔔", tip:"tilsim", han:1, fiyat:135,
   kisa:"Her konakta bir kez daha ürün yenileme hakkı",
   tam:"Normalde konakta ürünleri bir kez yenileyebilirsin (20 stater). Bu tılsımla iki kez "+
-      "yenileyebilirsin — aradığın ürünü bulma şansın artar.", kilit:null},
+      "yenileyebilirsin, aradığın ürünü bulma şansın artar.", kilit:null},
  {id:"nazarboncugu", ad:"Nazük'ün Nazar Boncuğu", em:"🧿", tip:"tilsim", han:2, fiyat:145,
   kisa:"Bir kez, matara kaybını engeller",
   tam:"Bir etabı bilemediğinde matara gitmez, boncuk kırılır ve tılsım tükenir. "+
@@ -508,7 +508,7 @@ const URUN = [
   kisa:"Kaybedilen ilk matarayı bir kez geri getirir",
   tam:"Bir matara kaybettiğin ilk anda şapka devreye girer, mataranı geri verir ve "+
       "uçup gider. Nazar boncuğundan farkı: boncuk mataranın gitmesini engeller, şapka "+
-      "gideni geri getirir — ikisi birlikte iki matara değerindedir.",
+      "gideni geri getirir, ikisi birlikte iki matara değerindedir.",
   kilit:{r:"S Fatihi"}},
  {id:"ejderpulu", ad:"Çetin'in Khimaira Alevi", em:"🐉", tip:"efsane", han:3, fiyat:280,
   kisa:"7 harfli etaplarda süre sınırı kalkar",
@@ -529,7 +529,7 @@ const URUN = [
  {id:"varharf", ad:"Ömer'in Kulağı", em:"🦻", tip:"joker", han:0, fiyat:60, tek:1,
   agirlik:2,
   kisa:"Kelimede olan bir harfi klavyede sarıya boyar",
-  tam:"Kelimede kesinlikle bulunan bir harfi klavyede sarı yapar — yerini söylemez, "+
+  tam:"Kelimede kesinlikle bulunan bir harfi klavyede sarı yapar, yerini söylemez, "+
       "sadece var olduğunu. Eleme jokerinin tersi: o olmayanı, bu olanı gösterir.",
   kilit:null},
  {id:"geridon", ad:"Çağrı'nın Geri Dönüşü", em:"↩️", tip:"joker", han:0, fiyat:75, tek:1,
@@ -538,7 +538,7 @@ const URUN = [
       "Acele edip yanlış tuşa bastığın anlar için.", kilit:{u:4}},
  {id:"bereket", ad:"Figen'in Bereket Tohumu", em:"🌱", tip:"joker", han:0, fiyat:70, tek:1,
   kisa:"Bu etaptan kazanacağın stater iki katı",
-  tam:"O etabın sonunda kesene girecek stater ikiye katlanır — taban, hız primi ve kalan "+
+  tam:"O etabın sonunda kesene girecek stater ikiye katlanır, taban, hız primi ve kalan "+
       "süre dahil. Yedi harfli bir etapta kullanmak en karlısıdır.",
   kilit:{r:"Yüzler"}},
  {id:"kestirme", ad:"Sadi Baba'nın Kestirmesi", em:"➡️", tip:"joker", han:0, fiyat:110, tek:1,
@@ -573,7 +573,7 @@ const URUN = [
   yigin:1,
   kisa:"Her bölüm başında 120 stater",
   tam:"Her bölüme girerken kesene 120 stater eklenir. Yolun başında alınırsa kalan bölüm "+
-      "sayısı kadar tekrarlanır — konaklarda alışverişi rahatlatır.", kilit:{u:7}},
+      "sayısı kadar tekrarlanır, konaklarda alışverişi rahatlatır.", kilit:{u:7}},
  /* --- ek efsanevi --- */
  {id:"ciftyurek", ad:"Mehmet'in Çifte Matarası", em:"💗", tip:"efsane", han:3, fiyat:320,
   yigin:1,
@@ -619,13 +619,13 @@ const URUN = [
  /* --- ikinci dalga tilsimlar --- */
  {id:"lamba", ad:"Belgin'in Gece Lambası", em:"🕯", tip:"tilsim", han:2, fiyat:155,
   yigin:1,
-  kisa:"Gece 22.00–04.00 arası süreler 5 saniye uzun",
+  kisa:"Gece 22.00-04.00 arası süreler 5 saniye uzun",
   tam:"Geç saatte oynayanların tılsımı: o saatlerde bütün etaplarda her tahmin için "+
       "5 saniye daha verilir.", kilit:{r:"Gece Nöbeti"}},
  {id:"ip", ad:"Figen'in İpi", em:"🧶", tip:"tilsim", han:2, fiyat:170,
   kisa:"Seri bozulunca sıfırlanmaz, bir azalır",
   tam:"Bir etabı kaçırdığında seri normalde sıfırlanır. Bu tılsımla yalnızca bir "+
-      "azalır — Bülent'in Seri Ateşi ile birlikte kullanıldığında primi korur.",
+      "azalır: Bülent'in Seri Ateşi ile birlikte kullanıldığında primi korur.",
   kilit:{r:"Uzun Seri"}},
  {id:"boncukdizi", ad:"Nazük'ün Boncuk Dizisi", em:"📿", tip:"tilsim", han:2, fiyat:180,
   yigin:1,
@@ -721,7 +721,7 @@ const URUN = [
  {id:"katalog", ad:"Ramiz'in Kataloğu", em:"🗂", tip:"yetenek", han:1, fiyat:220, yigin:1,
   kisa:"Konaklarda iki ürün daha görünür",
   tam:"Ramiz her yol işaretini bilir: tezgahta iki ürün daha açılır. Sevilen'in "+
-      "Sözlük Cildi ve Melek Hatun'un Yüzüğü ile birlikte çalışır, yığılabilir — "+
+      "Sözlük Cildi ve Melek Hatun'un Yüzüğü ile birlikte çalışır, yığılabilir, "+
       "iki tane alırsan dört ürün daha görürsün.", kilit:null}
 ,
  /* --- Derya'nin mallari --- */
@@ -742,7 +742,7 @@ const URUN = [
   tam:"İskeleye yaklaşan her tekne bir mal getirir: tezgahta bir ürün daha açılır. "+
       "Ramiz'in Kataloğu ile birlikte çalışır, yığılabilir.", kilit:null},
  {id:"dFener", ad:"Derya'nın Feneri", em:"🔆", tip:"tilsim", han:2, fiyat:170,
-  kisa:"Gece 22.00–04.00 arası ödüller %25 fazla",
+  kisa:"Gece 22.00-04.00 arası ödüller %25 fazla",
   tam:"Gelidonya feneri gibi: karanlıkta çalışanı ödüllendirir. O saatlerde kazandığın "+
       "her ödül %25 artar.", kilit:{r:"Gece Kuşu"}},
  {id:"dInci", ad:"Derya'nın İncisi", em:"🦪", tip:"tilsim", han:2, fiyat:205,
@@ -827,7 +827,7 @@ function kilitDurum(u){
     const s = unvanSira(), hedef = LG_UNVAN[u.kilit.u-1];
     return {acik: s >= u.kilit.u,
       metin: `${u.kilit.u}. ünvan · ${hedef.ad}`,
-      nasil: `Bu ürünü açmak için <b>${hedef.ad}</b> ünvanına ulaşman gerekiyor — `+
+      nasil: `Bu ürünü açmak için <b>${hedef.ad}</b> ünvanına ulaşman gerekiyor, `+
              `toplam <b>${TL(hedef.n)} kelime</b> çözmek. Şu an ${TL(LG_defter(KISI).length)}`+
              ` kelimen var.`};
   }
@@ -1073,8 +1073,8 @@ function etapBasla(zorlaKelime){
     if(gir.some(x => x === null)){ uyar("Harfler eksik"); sarsil(); return; }
     if(!GECERLI[n].has(tah)){
       LG_ses("gecersiz");
-      if(sahipmi("kadimuhru")){ uyar("Sözlükte yok — mühür hakkını korudu"); sarsil(); return; }
-      uyar("Sözlükte yok — bir hak gitti"); sarsil(); sonrakiSatir(null, true); return;
+      if(sahipmi("kadimuhru")){ uyar("Sözlükte yok, mühür hakkını korudu"); sarsil(); return; }
+      uyar("Sözlükte yok, bir hak gitti"); sarsil(); sonrakiSatir(null, true); return;
     }
     sonuclandir(tah);
   }
@@ -1096,8 +1096,8 @@ function etapBasla(zorlaKelime){
       for(let k = 0; k < n; k++) if(!acik.has(k)){ h[k].textContent = "·";
         h[k].className = "hucre yok"; }
       LG_ses("yanlis");
-      uyar(sat + 1 >= satirSay ? "Süre doldu — hakların bitti"
-                               : "Süre doldu — yalnızca bu hak yandı");
+      uyar(sat + 1 >= satirSay ? "Süre doldu, hakların bitti"
+                               : "Süre doldu, yalnızca bu hak yandı");
       return sonrakiSatir(null);
     }
     const r = renk(gizli, tah), h = satirlar[sat].children;
@@ -1144,10 +1144,10 @@ function etapBasla(zorlaKelime){
     if(!kazandi){
       if(sahipmi("mKanat")){
         S.sahip.splice(S.sahip.indexOf("mKanat"), 1);
-        mataraNotu = "🪽 Melek Hatun'un kanadı kırıldı — mataran gitmedi.";
+        mataraNotu = "🪽 Melek Hatun'un kanadı kırıldı, mataran gitmedi.";
       } else if(sahipmi("nazarboncugu") && !S.nazarBitti){
         S.nazarBitti = true; S.sahip = S.sahip.filter(x => x !== "nazarboncugu");
-        mataraNotu = "🧿 Nazar boncuğu kırıldı — mataran gitmedi.";
+        mataraNotu = "🧿 Nazar boncuğu kırıldı, mataran gitmedi.";
       } else {
         S.kalp--;
         if(S.kalp <= 0 && sahipmi("mKalkan")){
@@ -1348,7 +1348,7 @@ function etapBasla(zorlaKelime){
     } else if(id === "dondur"){
       if(sureyok || saatDurdu) oldu = false;
       else { saatDurdu = true; durdur(); sureGoster(false); ustYaz();
-        uyar("Saat durdu — bu etapta süre yok"); }
+        uyar("Saat durdu, bu etapta süre yok"); }
     } else if(id === "varharf"){
       const icinde = [...new Set(gizli.split(""))].filter(c => !klvDurum[c]);
       if(!icinde.length) oldu = false;
@@ -1396,7 +1396,7 @@ function etapBasla(zorlaKelime){
     const ids = Object.keys(S.jok).filter(k => S.jok[k] > 0);
     jokbar.classList.remove("gizli");
     if(!ids.length){ jokbar.innerHTML =
-      `<span class="bos">Elinde joker yok — bir sonraki konakta alabilirsin</span>`; return; }
+      `<span class="bos">Elinde joker yok, bir sonraki konakta alabilirsin</span>`; return; }
     jokbar.innerHTML = ids.map(id => { const u = URUNID[id];
       return `<button onclick="AKTIF.kullan('${id}')" title="${u.kisa}">
         <i>${u.em}</i>${u.ad}<u>${S.jok[id]}</u></button>`; }).join("");
@@ -1726,7 +1726,7 @@ function hanEkran(h){
             ? `<p class="kucuk" style="color:var(--yesil)">Bu ürün sende zaten var.</p>`
             : `<button class="buton" ${S.akce < f ? "disabled" : ""}
                 onclick="satinAl('${id}')">${S.akce < f
-                  ? `${TL(f)} stater gerekiyor — kesende ${TL(S.akce)} var`
+                  ? `${TL(f)} stater gerekiyor, kesende ${TL(S.akce)} var`
                   : `SATIN AL · ${TL(f)} stater`}</button>`)}
       </div></div>`;
   };
@@ -1741,7 +1741,7 @@ function hanEkran(h){
       </div>
       <p class="hikaye" style="margin-top:10px">“${sat.rep}”</p>
       ${ilk ? `<p class="ozet1">Yol henüz başlamadı. Kesende
-        <b>🪙 ${TL(S.akce)} stater</b> var — <b>ilk alışverişini burada yap</b>, sonra
+        <b>🪙 ${TL(S.akce)} stater</b> var: <b>ilk alışverişini burada yap</b>, sonra
         ilk bölüme geçilecek. Bir şey almadan da devam edebilirsin.</p>`
         : `<p class="kucuk">Kesende <b>🪙 ${TL(S.akce)} stater</b> var. Ürüne dokunursan
         ne işe yaradığını ve nasıl açıldığını okursun.${h > 0 ?
@@ -1835,7 +1835,7 @@ function katalogEkran(){
               u.tip === "yetenek" ? "Yetenek · kalıcı" :
               u.tip === "tilsim" ? "Tılsım · kalıcı" : "Efsanevi"}</span></p>
             <p>${u.tam}</p>
-            ${k.acik ? `<p class="kucuk" style="color:var(--yesil)">✓ Açık —
+            ${k.acik ? `<p class="kucuk" style="color:var(--yesil)">✓ Açık, 
               ${u.kilit ? k.metin + " şartını karşıladın" : "baştan açık"}</p>`
               : `<div class="kilitNot">🔒 <b>${k.metin}</b><br>${k.nasil}</div>`}
           </div></div>`; }).join("");
@@ -1844,7 +1844,7 @@ function katalogEkran(){
   ekran(`<div class="kutu">
       <div class="eyebrow">Ürün kataloğu</div>
       <h2>${acik}/${URUN.length} ürün açık</h2>
-      <p class="kucuk">Ürünler ünvanın ve nişanlarınla açılır — alıştırmada, Lingo
+      <p class="kucuk">Ürünler ünvanın ve nişanlarınla açılır, alıştırmada, Lingo
         oyununda ve Ailecük'te kazandığın her şey buraya işler. Şu an
         <b>${TL(d.length)} kelime</b> ve <b>${LG_acik(KISI).length} nişan</b> ile
         <b>${LG_unvan(d.length).simdi.ad}</b> ünvanındasın.
@@ -1859,7 +1859,7 @@ function kasaEkran(){
       <div class="eyebrow">Yol defteri</div>
       <h2>₺${TL(M.kasa || 0)}</h2>
       <p class="kucuk">${KISI} adına bugüne kadar bütün yolculuklarda kazanılan toplam.
-        Harcanmaz — biriken bir rekordur.</p>
+        Harcanmaz, biriken bir rekordur.</p>
       <div class="ozet">
         <div><b>${M.bitirilen || 0}</b><span>bitirilen yol</span></div>
         <div><b>${M.sonKapi || 0}</b><span>okunan yazıt</span></div>
@@ -1960,11 +1960,11 @@ function sonEkran(){
       <b>tamamı</b> elinde kaldı.`;
   const hik = kazandi
     ? (S.sonKapi
-      ? "Alevin ışığında yazıt okundu. Taşta ne hazine yazıyordu ne buyruk — yalnızca "+
+      ? "Alevin ışığında yazıt okundu. Taşta ne hazine yazıyordu ne buyruk, yalnızca "+
         "bir liste: yol boyunca kurtardığın kelimeler, sırasıyla."
       : "Yanartaş'a vardın. Alev yandı ama son satır bu sefer okunmadı. Yolda bir çoban "+
         "seni tanıdı: “Bu yolu bir kez yürüyen bir daha gelir” dedi.")
-    : "Yolda kaldın. Ama Ölüdeniz'den buraya kadar deftere yazdığın kelimeler yanında — "+
+    : "Yolda kaldın. Ama Ölüdeniz'den buraya kadar deftere yazdığın kelimeler yanında, "+
       "yarın yine yola çıkabilirsin.";
   const yeniRoz = LG_yeni(KISI);
   const jk = Object.keys(S.jok).filter(k => S.jok[k] > 0);
@@ -1994,12 +1994,12 @@ function sonEkran(){
         ${dv("🪙", TL(M.devirAkce) + " stater",
           `kesende kalan ${TL(S.akce)} staterin %${kazandi ? 25 : 10}'i`)}
         ${M.bonusKalp ? dv("💧", "+" + M.bonusKalp + " matara",
-          "başarılı yolculuk ödülü — sonraki yola fazladan matarayla çıkarsın") : ""}
+          "başarılı yolculuk ödülü, sonraki yola fazladan matarayla çıkarsın") : ""}
         ${M.hediye ? dv(URUNID[M.hediye].em, URUNID[M.hediye].ad,
           "hediye sandığından çıktı, sonraki yolculukta elinde olacak") : ""}
         ${(M.kredi || []).length ? dv("🏷", "Konak kredisi",
           M.kredi.map(x => URUNID[x].ad).join(", ") +
-          " — sonraki yolculukta %50 indirimli") : ""}
+          ", sonraki yolculukta %50 indirimli") : ""}
         ${dv("📓", "₺" + TL(M.kasa), "yol defteri · bu yolculuk +" +
           TL(Math.round(toplam/10000)) + " kilometre kazandırdı")}
         ${yeniSv > onceSv ? dv("⭐", SEVIYE[yeniSv-1].ad,
@@ -2008,7 +2008,7 @@ function sonEkran(){
           YOL[yeniYolAd].ac) : ""}
       </div>
       ${jk.length ? `<p class="kucuk" style="margin-top:10px">Elinde kalan jokerlerden
-        <b>birini</b> emanet bırakabilirsin — sonraki yolculuğa onunla başlarsın.</p>
+        <b>birini</b> emanet bırakabilirsin, sonraki yolculuğa onunla başlarsın.</p>
         <div class="kgrid">${jk.map(id => `<button class="${M.emanet === id ? "on" : ""}"
           onclick="emanetSec('${id}')">${URUNID[id].em} ${URUNID[id].ad}</button>`)
           .join("")}</div>` : ""}
@@ -2100,7 +2100,7 @@ function girisEkran(){
           <span>son taşı çözersen ödül iki katı + ₺${TL(SUPER)}</span></div>
       </div>
       <p class="kucuk" style="margin-top:11px">Süre her tahmin için
-        <b>${az}–${en} saniye</b>; yol ilerledikçe kısalıyor.
+        <b>${az}-${en} saniye</b>; yol ilerledikçe kısalıyor.
         Sorulan 4 ve 5 harflilerin hepsi <b>her üç sezonda da en az bir kez sorulmuş</b>,
         6 harflilerin hepsi en az iki sezonda sorulmuş kelimelerden.</p>
       <p class="kucuk">Şu an <b>${LG_unvan(d.length).simdi.ad}</b> ünvanındasın,
@@ -2123,7 +2123,7 @@ function devamEkran(){
       <button class="buton" onclick="ilerle()">KALDIĞIN YERDEN DEVAM ET ▸</button>
       <button class="buton ikinci" onclick="haritaEkran('oyun')">🗺 YOL HARİTASI</button>
       <button class="buton ikinci" onclick="kasaEkran()">📓 YOL DEFTERİ VE REKORLAR</button>
-      <button class="buton ikinci" onclick="sifirla()">YENİ YOLCULUK — bunu sil</button>
+      <button class="buton ikinci" onclick="sifirla()">YENİ YOLCULUK, bunu sil</button>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>
       ${SURUMSAT()}
     </div>`);

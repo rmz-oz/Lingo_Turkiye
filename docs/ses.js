@@ -1,4 +1,4 @@
-/* Lingo — ses ve titreşim. Dosya yok, tonlar kodla üretilir. */
+/* Lingo, ses ve titreşim. Dosya yok, tonlar kodla üretilir. */
 let LG_AC = null, LG_ACILDI = false;
 function LG_sesAcik(){
   try{ return localStorage.getItem("lingo_ses") !== "0"; }catch(e){ return true; }

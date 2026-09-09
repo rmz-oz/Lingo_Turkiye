@@ -303,7 +303,7 @@ function kelimeOyna(n, odul, opt, bitti){
   function pasYaz(){
     const pb = $("#pasb");
     if(pb){ pb.disabled = sat < 1;
-      pb.textContent = sat < 1 ? "PAS — önce bir tahmin yapın" : "PAS — başka kelime ▸"; }
+      pb.textContent = sat < 1 ? "PAS, önce bir tahmin yapın" : "PAS, başka kelime ▸"; }
   }
   let kalanSn = SURE;
   const azalanOdul = () => opt.azalan
@@ -448,7 +448,7 @@ function puzzleOyna(nler, tamOdul, bitti){
   function dene(t){
     if(kapandi) return;
     if(t === kelime) return bitirPuzzle(true);
-    uyar("Olmadı — bir harf açılıyor");
+    uyar("Olmadı, bir harf açılıyor");
     sonAcma = Date.now() - bas;          // sayaci sifirla
     if(!harfAc()) return bitirPuzzle(false);
     yaz();
@@ -481,7 +481,7 @@ function giris(){
   bar.textContent = "LİNGO TÜRKİYE"; para = 0; kullanilan = new Set(); paraYaz();
   const en = +(localStorage.getItem("lingo_oyun_rekor") || 0);
   ekran(`<h1>LİNGO</h1>
-    <p>Kelimeler <b>5–445. bölümün cevap arşivinden</b> geliyor: yayında kaç kez
+    <p>Kelimeler <b>5-445. bölümün cevap arşivinden</b> geliyor: yayında kaç kez
        çıktıysa gelme ihtimali o kadar yüksek. Her beş kelimeden dördü daha önce
        ekrana çıkmış bir cevap, biri sözlükten yeni.</p>
     <div class="ornekler"><span style="background:var(--yesil);color:#fff">A</span>
@@ -495,12 +495,12 @@ function giris(){
       <li>Her tahmin için <b>20 saniye</b>. Süre biterse hak yanar.</li>
       <li>Puzzle'da ipucu kelimenin TDK tanımıdır. <b>60 saniye</b> vardır; süre
           azaldıkça harfler kendiliğinden açılır, yanlış tahmin de bir harf açar.
-          <b>Her açılan harf ödülü düşürür</b> — erken bilen çok kazanır.</li>
+          <b>Her açılan harf ödülü düşürür</b>, erken bilen çok kazanır.</li>
       <li>1. ve 2. etapta <b>üç kelimeyi de</b> bilirseniz <b>+₺1.000</b> prim.</li>
       <li>3. etapta ödül <b>her tahminde düşer</b>: ₺2.000'den ₺400'e iner.</li>
       <li>Final <b>200 saniye</b>: 4, 5, 6 ve 7 harfli birer kelime, her biri için
           5 hak. Ne kadar yukarı çıkarsanız üç etapta biriktirdiğinizin o kadar
-          büyük katını alırsınız — 7 harfliyi bilirseniz <b>iki katı + ₺250.000</b>,
+          büyük katını alırsınız: 7 harfliyi bilirseniz <b>iki katı + ₺250.000</b>,
           bilemezseniz <b>sıfır</b>.</li>
     </ul>
     ${en ? `<p class="kucuk" style="margin-top:12px">En iyi kazancınız: <b>₺${TL(en)}</b></p>` : ""}
@@ -531,7 +531,7 @@ function etapBasla(e){
   bar.textContent = E.ad;
   ekran(`<h2>${E.ad}</h2>
     <p>${E.kelime.length} tane <b>${E.kelime[0]} harfli</b> kelime ve ardından
-       ${E.puz.join("–")} harfli bir puzzle.</p>
+       ${E.puz.join("-")} harfli bir puzzle.</p>
     <p class="kucuk">Her kelime <b>₺${TL(E.pk)}</b> · puzzle <b>₺${TL(E.pp)}</b><br>
        ${E.kelime.length} kelimenin hepsini bilirseniz <b>+₺${TL(TAMBONUS)}</b> prim<br>
        puzzle ödülü açılan her harfle azalır</p>
@@ -546,7 +546,7 @@ function etapSira(e, k, dogruSay){
       ekran(`<div class="sonuc iyi">${E.kelime.length}'te ${E.kelime.length}!
         <span class="kw">+₺${TL(TAMBONUS)}</span></div>
         <p class="kucuk" style="margin-top:10px">${E.kelime[0]} harflilerin hepsini
-        bildiniz — tam isabet primi hesabınıza eklendi.</p>
+        bildiniz, tam isabet primi hesabınıza eklendi.</p>
         <button class="buton" id="dv">PUZZLE'A GEÇ</button>`);
       $("#dv").onclick = () => etapPuzzle(e);
       return;
@@ -579,7 +579,7 @@ function tanimBul(w){
 }
 function kacKez(w){
   const k = VERI.kac[w] || 0;
-  if(!k) return `<p class="kucuk" style="color:var(--soluk)">Bu kelime yayında hiç çıkmadı — sözlükten geldi.</p>`;
+  if(!k) return `<p class="kucuk" style="color:var(--soluk)">Bu kelime yayında hiç çıkmadı, sözlükten geldi.</p>`;
   return `<p class="kucuk">Yayında <b style="color:var(--altin)">${k} kez</b> cevap oldu.</p>`;
 }
 
@@ -594,7 +594,7 @@ function ucBasla(){
     <p class="kucuk">Bu etapta ödül <b>her tahminde düşer</b>: ilk tahminde
        ₺2.000, sonra ₺1.600 · ₺1.200 · ₺800 · son hakta ₺400.
        Erken bulmak para demek.<br>
-       Puzzle'lar 10–11 harfli, her biri <b>₺${TL(AZALAN.puzOdul)}</b>.</p>
+       Puzzle'lar 10-11 harfli, her biri <b>₺${TL(AZALAN.puzOdul)}</b>.</p>
     <button class="buton" onclick="ucKelime()">BAŞLA</button>`);
 }
 function ucKelime(){
@@ -637,7 +637,7 @@ function finalGiris(){
     <p class="kucuk"><b>200 saniye</b> · dört kelime: 4, 5, 6 ve 7 harfli ·
        her kelime için <b>5 hak</b>. Bir kelimeyi bilemezseniz final biter,
        o ana kadar çıktığınız basamağı kazanırsınız.<br>
-       Takılırsanız <b>PAS</b> ile aynı uzunlukta başka bir kelime alabilirsiniz —
+       Takılırsanız <b>PAS</b> ile aynı uzunlukta başka bir kelime alabilirsiniz, 
        ama önce <b>en az bir tahmin</b> yapmanız gerekir, süre işlemeye devam eder.</p>
     <table class="merd">${sat}</table>
     <p class="kucuk" style="color:var(--kirmizi)"><b>Dikkat:</b> 7 harfliye gelip
@@ -680,10 +680,10 @@ function finalKarar(){
     <p class="kucuk">Devam ederseniz 7 harfli <b>süper lingo</b>:
        bilirseniz <b>₺${TL(r)}</b>, bilemezseniz
        <b style="color:var(--kirmizi)">sıfır</b>.
-       Kalan süre <b>${fKalan}</b> saniye — şu an duruyor.</p>
+       Kalan süre <b>${fKalan}</b> saniye, şu an duruyor.</p>
     <button class="buton" style="background:var(--yesil);color:#fff"
-      onclick="finalDur()">TAMAM — ₺${TL(g)} ile bitir</button>
-    <button class="buton" onclick="finalDevam()">DEVAM — süper lingo ▸</button>`);
+      onclick="finalDur()">TAMAM: ₺${TL(g)} ile bitir</button>
+    <button class="buton" onclick="finalDevam()">DEVAM, süper lingo ▸</button>`);
 }
 function finalDur(){ fSuan = 6; finalBitir(); }
 function finalDevam(){
@@ -703,7 +703,7 @@ function finalBitir(){
   let not;
   if(fEnIyi === 7) not = `<b style="color:var(--altin)">SÜPER LİNGO!</b>
     ₺${TL(fTaban)} × 2 + ₺${TL(FINAL.superEk)}`;
-  else if(sifirlandi) not = `7 harfliye kadar geldiniz ama bilemediniz —
+  else if(sifirlandi) not = `7 harfliye kadar geldiniz ama bilemediniz, 
     ₺${TL(fKazanc(6))} elden gitti.`;
   else if(fEnIyi) not = `${fEnIyi} harfliye kadar çıktınız.
     ₺${TL(fTaban)} biriktirmiştiniz.`;

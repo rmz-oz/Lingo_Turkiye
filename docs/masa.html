@@ -280,7 +280,7 @@ const ETAPLAR = [
   {n:4, pk:1000, pp:2000, puz:[8,9],  cal:false, ad:"1. ETAP"},
   {n:5, pk:1500, pp:3000, puz:[9,10], cal:true,  ad:"2. ETAP"}
 ];
-/* 3. etap: dueello — iki masa, sirayla tahmin, odul her tahminde duser */
+/* 3. etap: dueello, iki masa, sirayla tahmin, odul her tahminde duser */
 const DUELLO = {
   odul:[2000,1600,1200,800,400], hak:5, puzOdul:4000, puz:[10,11],
   bolum:[{n:5, adet:4}, {n:6, adet:4}]
@@ -324,11 +324,11 @@ const UNLULER = "aeıioöuü";
 const JMAX = 2;             /* ayni jokerden elde en fazla */
 const JZAM = 1.2;           /* her yeni alista %20 zam */
 const DUKSURE = 60;         /* dukkan sayaci */
-const DUKAD = ["Yola çıkmadan önce — dükkan açık",
-               "1. etap bitti — dükkan yeniden açık",
-               "Düello öncesi — dükkan açık",
-               "Final öncesi — son dükkan"];
-const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP — DÜELLO","FİNAL"];
+const DUKAD = ["Yola çıkmadan önce, dükkan açık",
+               "1. etap bitti, dükkan yeniden açık",
+               "Düello öncesi, dükkan açık",
+               "Final öncesi, son dükkan"];
+const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP: DÜELLO","FİNAL"];
 /* tek sabit oda: kod yazmaya gerek yok, herkes ayni odaya girer */
 const ODA = "lingotr-ailecuk-szyr", ODAAD = "AİLECÜK";
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -450,7 +450,7 @@ const M = {
     m.jok[id]=(m.jok[id]||0)+1;
     m.alim[id]=(m.alim[id]||0)+1;
     m.hazir=false;
-    S.mesaj=`${m.ad} aldı: ${j.em} ${j.ad} — ₺${TL(f)}`; S.msjTip="bek";
+    S.mesaj=`${m.ad} aldı: ${j.em} ${j.ad}: ₺${TL(f)}`; S.msjTip="bek";
     this.gonder();
   },
   hazir(i){
@@ -475,7 +475,7 @@ const M = {
     }
     if(sonra==="etap2"){
       S.faz="etapsonu";
-      S.mesaj=`${ETAPLAR[S.etap].ad} başlıyor — ${ETAPLAR[S.etap].n} harfli · her kelime ₺${TL(ETAPLAR[S.etap].pk)}`;
+      S.mesaj=`${ETAPLAR[S.etap].ad} başlıyor: ${ETAPLAR[S.etap].n} harfli · her kelime ₺${TL(ETAPLAR[S.etap].pk)}`;
       S.msjTip="bek"; this.gonder();
       return setTimeout(()=>this.kelimeAc(), 2800);
     }
@@ -483,7 +483,7 @@ const M = {
     if(sonra==="final"){
       const F=S.fin;
       S.faz="finalgiris"; S.cevaplayan=-1;
-      S.mesaj=`Finale çıkan: ${S.masalar[F.masa].ad} — ₺${TL(F.taban)} ile`;
+      S.mesaj=`Finale çıkan: ${S.masalar[F.masa].ad}: ₺${TL(F.taban)} ile`;
       S.msjTip="iyi"; return this.gonder();
     }
   },
@@ -524,7 +524,7 @@ const M = {
         this.harfAc(bos.splice(Math.floor(Math.random()*bos.length),1)[0]);
     } else if(id==="nisanci"){
       S.nisan=i;
-      S.mesaj="🎯 Nişancı — açmak istediğin kutuya dokun"; S.msjTip="bek";
+      S.mesaj="🎯 Nişancı, açmak istediğin kutuya dokun"; S.msjTip="bek";
       return this.gonder();
     } else if(id==="zaman"){
       const ek=S.top||SURE, kalan=Math.max(1,S.sn||1);
@@ -567,7 +567,7 @@ const M = {
     this.dur();
     S.telAktif=true; S.telefon={kalan:el};
     S.cevaplayan=el[0]; this.girisKur();
-    S.mesaj=`📞 Telefon: ${S.masalar[el[0]].ad} cevaplıyor — ${CALSURE} saniye`;
+    S.mesaj=`📞 Telefon: ${S.masalar[el[0]].ad} cevaplıyor: ${CALSURE} saniye`;
     S.msjTip="bek";
     this.saat(CALSURE, ()=>this.telDene(true));
     this.gonder();
@@ -588,7 +588,7 @@ const M = {
     S.telefon.kalan.shift();
     if(S.telefon.kalan.length){
       S.cevaplayan=S.telefon.kalan[0]; this.girisKur();
-      S.mesaj=`Olmadı — sıra ${S.masalar[S.cevaplayan].ad} masasında`; S.msjTip="kotu";
+      S.mesaj=`Olmadı, sıra ${S.masalar[S.cevaplayan].ad} masasında`; S.msjTip="kotu";
       this.saat(CALSURE, ()=>this.telDene(true));
       return this.gonder();
     }
@@ -606,7 +606,7 @@ const M = {
       F.idx++;
       return setTimeout(()=>this.finKelime(), 1600);
     }
-    S.mesaj="📞 Telefondan cevap gelmedi — tahmin hakkın duruyor"; S.msjTip="kotu";
+    S.mesaj="📞 Telefondan cevap gelmedi, tahmin hakkın duruyor"; S.msjTip="kotu";
     this.finSaat(S.finKalan||1);
     this.gonder();
   },
@@ -622,7 +622,7 @@ const M = {
     this.GIZLI=this.kelimeSec(E.n);
     this.kelimeSifirla();
     S.satirlar=[]; S.aktif=0; S.hak=SATIR; S.acik=null; this.girisKur();
-    S.mesaj=`${S.masalar[S.sira].ad} — ${S.ki+1}. kelime · ₺${TL(E.pk)}`;
+    S.mesaj=`${S.masalar[S.sira].ad}: ${S.ki+1}. kelime · ₺${TL(E.pk)}`;
     S.msjTip="bek"; S.msjDurum=true;
     this.saat(SURE, ()=>this.satirBitir(null));
     this.gonder();
@@ -734,7 +734,7 @@ const M = {
     if(S.faz==="final"){
       if(S.aktif>=this.satirTaban()){
         S.acik=this.GIZLI;
-        S.mesaj=`Bilinemedi — doğru cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+        S.mesaj=`Bilinemedi, doğru cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
         this.gonder(); return setTimeout(()=>this.finBitir(), 2600);
       }
       S.mesaj=`${S.hak} hak kaldı`; S.msjTip="bek"; S.msjDurum=true;
@@ -743,12 +743,12 @@ const M = {
     if(S.faz==="duello"){
       S.duTahmin++;
       if(S.duTahmin>=this.satirTaban()){
-        S.acik=this.GIZLI; S.mesaj=`Kimse bilemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+        S.acik=this.GIZLI; S.mesaj=`Kimse bilemedi: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
         this.gonder(); return setTimeout(()=>this.duSonraki(), 2000);
       }
       S.cevaplayan = S.duSira[S.duTahmin % 2];
       S.duOdul = DUELLO.odul[S.duTahmin];
-      S.mesaj = `Sıra ${S.masalar[S.cevaplayan].ad} — ${S.duTahmin+1}. tahmin · ₺${TL(S.duOdul)}`;
+      S.mesaj = `Sıra ${S.masalar[S.cevaplayan].ad}: ${S.duTahmin+1}. tahmin · ₺${TL(S.duOdul)}`;
       S.msjTip="bek"; S.msjDurum=true;
       this.saat(SURE, ()=>this.satirBitir(null));
       return this.gonder();
@@ -756,7 +756,7 @@ const M = {
     if(S.faz==="calma"){ return this.calmaBitti(); }
     if(S.aktif>=this.satirTaban()){
       if(E.cal && !S.canKilit) return this.calmaAc();
-      S.acik=this.GIZLI; S.mesaj=`Bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+      S.acik=this.GIZLI; S.mesaj=`Bilinemedi: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
       this.gonder();
       return setTimeout(()=>this.sonrakiKelime(), 2000);
     }
@@ -767,14 +767,14 @@ const M = {
   calmaAc(){
     const S=this.S;
     if(S.canKilit){
-      S.acik=this.GIZLI; S.mesaj=`🔒 Çan kilitliydi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+      S.acik=this.GIZLI; S.mesaj=`🔒 Çan kilitliydi: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
       this.gonder(); return setTimeout(()=>this.sonrakiKelime(), 2000);
     }
     S.faz="buzz";
     S.buzz={acik:true, kim:null, kalan:S.masalar.map((_,i)=>i).filter(i=>i!==S.sira)};
-    S.mesaj="Masaya geçmedi — BASAN cevaplar!"; S.msjTip="bek";
+    S.mesaj="Masaya geçmedi: BASAN cevaplar!"; S.msjTip="bek";
     this.saat(10, ()=>{
-      if(!S.buzz.kim){ S.acik=this.GIZLI; S.mesaj=`Kimse basmadı — ${TRU(this.GIZLI)}`;
+      if(!S.buzz.kim){ S.acik=this.GIZLI; S.mesaj=`Kimse basmadı: ${TRU(this.GIZLI)}`;
         S.msjTip="kotu"; this.gonder(); setTimeout(()=>this.sonrakiKelime(),2000); }
     });
     this.gonder();
@@ -787,7 +787,7 @@ const M = {
       S.buzz.acik=false; S.buzz.kim=i; S.cevaplayan=i;
       S.buzz.kalan=S.buzz.kalan.filter(x=>x!==i);
       S.giris=[this.GIZLI[0]];
-      S.mesaj=`${S.masalar[i].ad} bastı — tek tahmin, ${CALSURE} sn · ₺${TL(S.puzzle.odul)}`;
+      S.mesaj=`${S.masalar[i].ad} bastı, tek tahmin, ${CALSURE} sn · ₺${TL(S.puzzle.odul)}`;
       S.msjTip="bek";
       S.puzSaat=setTimeout(()=>this.duPuzYanlis(), CALSURE*1000);
       return this.gonder();
@@ -797,7 +797,7 @@ const M = {
     S.buzz.acik=false; S.buzz.kim=i;
     S.buzz.kalan=S.buzz.kalan.filter(x=>x!==i);
     S.faz="calma"; S.cevaplayan=i; this.girisKur();
-    S.mesaj=`${S.masalar[i].ad} bastı — tek tahmin, ${CALSURE} saniye`; S.msjTip="bek";
+    S.mesaj=`${S.masalar[i].ad} bastı, tek tahmin, ${CALSURE} saniye`; S.msjTip="bek";
     this.saat(CALSURE, ()=>this.satirBitir(null));
     this.gonder();
   },
@@ -806,11 +806,11 @@ const M = {
     if(S.buzz.kalan.length){
       const i=S.buzz.kalan.shift();
       S.faz="calma"; S.cevaplayan=i; this.girisKur();
-      S.mesaj=`Sıra ${S.masalar[i].ad} masasında — tek tahmin`; S.msjTip="bek";
+      S.mesaj=`Sıra ${S.masalar[i].ad} masasında, tek tahmin`; S.msjTip="bek";
       this.saat(CALSURE, ()=>this.satirBitir(null));
       return this.gonder();
     }
-    S.acik=this.GIZLI; S.mesaj=`Kimse bilemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+    S.acik=this.GIZLI; S.mesaj=`Kimse bilemedi: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
     this.gonder(); setTimeout(()=>this.sonrakiKelime(), 2000);
   },
   /* --- sonraki --- */
@@ -820,7 +820,7 @@ const M = {
     if(S.ki<KELSAY) return this.kelimeAc();
     if(S.dogru===KELSAY){
       S.masalar[S.sira].para += PRIM;
-      S.mesaj=`${S.masalar[S.sira].ad} — 3'te 3! +₺${TL(PRIM)}`; S.msjTip="iyi";
+      S.mesaj=`${S.masalar[S.sira].ad}: 3'te 3! +₺${TL(PRIM)}`; S.msjTip="iyi";
       this.gonder();
       return setTimeout(()=>this.puzzleAc(), 2000);
     }
@@ -834,7 +834,7 @@ const M = {
     S.puzzle={n:w.length, tanim:t, acik:[0], odul:E.pp};
     S.pgir=new Array(w.length).fill(null);
     S.giris=[w[0]]; S.kilitli=[0]; S.satirlar=[]; S.acik=null;
-    S.mesaj=`${S.masalar[S.sira].ad} — puzzle · ₺${TL(E.pp)}`;
+    S.mesaj=`${S.masalar[S.sira].ad}, puzzle · ₺${TL(E.pp)}`;
     S.msjTip="bek"; S.msjDurum=true;
     let ac=0;
     this.dur();
@@ -894,7 +894,7 @@ const M = {
       return this.duPuzYanlis();
     }
     if(t===this.GIZLI) return this.puzBitir(true);
-    S.mesaj="Olmadı — bir harf açılıyor"; S.msjTip="kotu";
+    S.mesaj="Olmadı, bir harf açılıyor"; S.msjTip="kotu";
     this.puzHarfAc(); this.gonder();
   },
   puzBitir(ok){
@@ -903,7 +903,7 @@ const M = {
     S.acik=this.GIZLI;
     if(ok){ S.masalar[S.sira].para += S.puzzle.odul;
       S.mesaj=`Puzzle çözüldü! +₺${TL(S.puzzle.odul)}`; S.msjTip="iyi"; }
-    else { S.mesaj=`Puzzle bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu"; }
+    else { S.mesaj=`Puzzle bilinemedi: ${TRU(this.GIZLI)}`; S.msjTip="kotu"; }
     this.gonder();
     setTimeout(()=>this.sonrakiMasa(), 2200);
   },
@@ -941,7 +941,7 @@ const M = {
     const S=this.S;
     S.etap=2; S.du={bol:0, ki:0};
     S.faz="etapsonu";
-    S.mesaj=`3. ETAP — DÜELLO · ${S.kalanlar.map(i=>S.masalar[i].ad).join(" ⚔ ")}`;
+    S.mesaj=`3. ETAP: DÜELLO · ${S.kalanlar.map(i=>S.masalar[i].ad).join(" ⚔ ")}`;
     S.msjTip="bek"; this.gonder();
     setTimeout(()=>this.duKelime(), 3000);
   },
@@ -955,7 +955,7 @@ const M = {
     this.kelimeSifirla();
     S.satirlar=[]; S.aktif=0; S.hak=DUELLO.hak; S.acik=null; this.girisKur();
     S.buzz={acik:false, kim:null, kalan:[]};
-    S.mesaj=`${S.masalar[S.cevaplayan].ad} başlıyor — ${S.du.ki+1}/${B.adet} · ₺${TL(S.duOdul)}`;
+    S.mesaj=`${S.masalar[S.cevaplayan].ad} başlıyor: ${S.du.ki+1}/${B.adet} · ₺${TL(S.duOdul)}`;
     S.msjTip="bek"; S.msjDurum=true;
     this.saat(SURE, ()=>this.satirBitir(null));
     this.gonder();
@@ -976,7 +976,7 @@ const M = {
     S.giris=[w[0]]; S.kilitli=[0]; S.satirlar=[]; S.acik=null;
     S.buzz={acik:true, kim:null, kalan:[...S.kalanlar]};
     S.cevaplayan=-1;
-    S.mesaj="PUZZLE — ilk basan cevaplar"; S.msjTip="bek";
+    S.mesaj="PUZZLE, ilk basan cevaplar"; S.msjTip="bek";
     let ac=0; this.dur();
     const b0=Date.now(), top=PUZSURE*1000; S.sn=PUZSURE; S.top=PUZSURE;
     this.sayac=setInterval(()=>{
@@ -992,8 +992,8 @@ const M = {
   duPuzBitir(ok){
     const S=this.S; this.dur(); S.acik=this.GIZLI;
     if(ok){ S.masalar[S.cevaplayan].para += S.puzzle.odul;
-      S.mesaj=`${S.masalar[S.cevaplayan].ad} — puzzle! +₺${TL(S.puzzle.odul)}`; S.msjTip="iyi"; }
-    else { S.mesaj=`Puzzle bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu"; }
+      S.mesaj=`${S.masalar[S.cevaplayan].ad}, puzzle! +₺${TL(S.puzzle.odul)}`; S.msjTip="iyi"; }
+    else { S.mesaj=`Puzzle bilinemedi: ${TRU(this.GIZLI)}`; S.msjTip="kotu"; }
     this.gonder();
     setTimeout(()=>{
       S.du.bol++; S.du.ki=0;
@@ -1039,7 +1039,7 @@ const M = {
   finKarar(){
     const S=this.S; this.dur();
     S.faz="finalkarar";
-    S.mesaj=`6 harfliyi bildi — garanti ₺${TL(S.finKazanc)}`; S.msjTip="iyi";
+    S.mesaj=`6 harfliyi bildi, garanti ₺${TL(S.finKazanc)}`; S.msjTip="iyi";
     this.gonder();
   },
   karar(devam){
@@ -1058,7 +1058,7 @@ const M = {
     this.GIZLI=this.kelimeSec(n);
     this.kelimeSifirla();
     S.satirlar=[]; S.aktif=0; S.hak=FINAL.satir; S.acik=null; this.girisKur();
-    S.mesaj=`${n} harfli — bilirse ₺${TL(this.fKazanc(n))}` +
+    S.mesaj=`${n} harfli, bilirse ₺${TL(this.fKazanc(n))}` +
       (n===7?" (SÜPER LİNGO)":"");
     S.msjTip="bek"; S.msjDurum=true;
     this.gonder();
@@ -1067,7 +1067,7 @@ const M = {
     const S=this.S;
     if(S.faz!=="final" || S.aktif<1) return;      // once en az bir tahmin
     S.acik=this.GIZLI;
-    S.mesaj=`Pas — cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+    S.mesaj=`Pas, cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
     this.gonder();
     setTimeout(()=>{ if(S.faz==="final") this.finKelime(); }, 2200);
   },
@@ -1078,7 +1078,7 @@ const M = {
     S.finKazanc=kaz; S.masalar[F.masa].para=kaz;
     S.faz="bitti"; S.bitti=true; S.cevaplayan=-1;
     S.mesaj = sifir
-      ? `7 harfliye kadar geldi ama bilemedi — kazanç sıfır`
+      ? `7 harfliye kadar geldi ama bilemedi, kazanç sıfır`
       : (F.enIyi ? `${F.enIyi} harfliye kadar çıktı` : `Finalde ilk kelimeyi geçemedi`);
     S.msjTip = kaz ? "iyi" : "kotu";
     this.gonder();
@@ -1251,7 +1251,7 @@ function kopukGoster(g){
   if(!g){ if(e) e.remove(); return; }
   if(!e){
     e=document.createElement("div"); e.id="kopuk";
-    e.innerHTML='Bağlantı koptu — yazamazsın<small>Dokun: yeniden bağlan</small>';
+    e.innerHTML='Bağlantı koptu, yazamazsın<small>Dokun: yeniden bağlan</small>';
     e.onclick=()=>NET.tekrarBagla();
     document.body.appendChild(e);
   }
@@ -1404,7 +1404,7 @@ function ciz(S){
       <p class="izle">${S.mesaj}${F?` · üç etapta ₺${TL(F.taban)} toplamıştı`:""}</p>
       ${sr.map((m,i)=>{ const el=(S.elenenler||[]).indexOf(m.i)>=0;
         return `<p style="font-size:17px;margin:6px 0;${el?"opacity:.45":""}">
-        ${i+1}. <b>${m.ad}</b> — ${PARA(m.para)}
+        ${i+1}. <b>${m.ad}</b>: ${PARA(m.para)}
         ${el?" <span style='font-size:13px'>(2. etapta elendi)</span>":""}</p>`;}).join("")}
       ${(function(){
         const ad = (NET.benim>=0 && S.masalar[NET.benim]) ? S.masalar[NET.benim].ad : null;
@@ -1426,7 +1426,7 @@ function ciz(S){
     const sr=FINAL.dizi.map(n=>{
       const k = n===7 ? t*2+FINAL.superEk : Math.round(t*FINAL.carpan[n]/100)*100;
       return `<p style="margin:5px 0;font-size:16px">${n} harfli${n===7?" · süper lingo":""}
-        — <b style="color:var(--altin)">₺${TL(k)}</b></p>`;}).join("");
+, <b style="color:var(--altin)">₺${TL(k)}</b></p>`;}).join("");
     ekran(`<h1>FİNAL</h1>
       <p><b>${S.masalar[F.masa].ad}</b> finalde. Üç etapta topladığı
          <b>₺${TL(t)}</b>'nin ne kadarını eve götüreceği burada belli olacak.</p>
@@ -1450,9 +1450,9 @@ function ciz(S){
          Kalan süre <b>${S.sn}</b> saniye (şu an duruyor).</p>
       ${benim
         ? `<button class="buton" style="background:var(--yesil);color:var(--yesilUst)"
-             onclick="NET.yolla({t:'karar',devam:false})">TAMAM — ₺${TL(S.finKazanc)} ile bitir</button>
+             onclick="NET.yolla({t:'karar',devam:false})">TAMAM: ₺${TL(S.finKazanc)} ile bitir</button>
            <button class="buton" onclick="NET.yolla({t:'karar',devam:true})">
-             DEVAM — süper lingo ▸</button>`
+             DEVAM, süper lingo ▸</button>`
         : `<p class="izle">Karar ${S.masalar[F.masa].ad} masasında…</p>`}`);
     skorCiz(S); return;
   }
@@ -1486,7 +1486,7 @@ function ciz(S){
       }).join("");
       h+=`<button class="dukbtn ${m.hazir?"bekle":""}"
         onclick="NET.yolla({t:'hazir'})">${m.hazir
-          ? "✓ HAZIRSIN — diğerleri bekleniyor" : "HAZIRIM ▸"}</button>`;
+          ? "✓ HAZIRSIN, diğerleri bekleniyor" : "HAZIRIM ▸"}</button>`;
     } else {
       h+=`<div class="kese">Bu dükkan
         <b>${S.dukkan.kimler.map(i=>S.masalar[i].ad).join(", ")}</b> için açık.
@@ -1506,7 +1506,7 @@ function ciz(S){
     ekran(`<h2 style="color:var(--kirmizi)">${S.mesaj}</h2>
       <p>3. etap düello olarak devam ediyor:</p>
       <p class="kw">${S.kalanlar.map(i=>S.masalar[i].ad).join("  ⚔  ")}</p>
-      <p class="izle">Elenen masa oyundan çıkmaz — <b>izleyici olarak</b>
+      <p class="izle">Elenen masa oyundan çıkmaz: <b>izleyici olarak</b>
          her şeyi görmeye devam eder.</p>`);
     return;
   }
@@ -1530,10 +1530,10 @@ function ciz(S){
   const dupz = S.faz==="dupuzzle";
   const n = puz ? S.puzzle.n : S.n;
   orta.className="oyun";
-  const kimAd = S.cevaplayan>=0 ? S.masalar[S.cevaplayan].ad : "—";
-  let etiket = S.faz==="calma" ? "ÇALMA — "
-    : (S.faz==="duello" ? "DÜELLO — "
-    : (S.faz==="final" ? (S.n===7?"SÜPER LİNGO — ":"FİNAL — ") : ""));
+  const kimAd = S.cevaplayan>=0 ? S.masalar[S.cevaplayan].ad : ", ";
+  let etiket = S.faz==="calma" ? "ÇALMA, "
+    : (S.faz==="duello" ? "DÜELLO, "
+    : (S.faz==="final" ? (S.n===7?"SÜPER LİNGO, ":"FİNAL, ") : ""));
   let h=`<div class="baslik">${etiket}
     <b>${dupz&&S.cevaplayan<0?"herkes":kimAd}</b> · ${n} HARFLİ · ${S.sn} SN
     ${puz?"":" · "+(S.faz==="duello"?(DUELLO.hak-S.duTahmin)+" TAHMİN KALDI · ₺"+TL(S.duOdul)
@@ -1547,15 +1547,15 @@ function ciz(S){
     if(ids.length) h+=`<div class="jokbar">`+ids.map(id=>{
       const j=JOKERID[id], ok=jokerAcikMi(S, NET.benim, id);
       return `<button ${ok?"":"disabled"} onclick="NET.yolla({t:'joker',id:'${id}'})"
-        title="${j.ad} — ${j.ac}" aria-label="${j.ad}">${j.em}<u>${jk[id]}</u></button>`;
+        title="${j.ad}: ${j.ac}" aria-label="${j.ad}">${j.em}<u>${jk[id]}</u></button>`;
     }).join("")+`</div>`;
   }
   if(dupz && S.buzz.acik && S.buzz.kalan.includes(NET.benim))
     h+=`<button class="buzz" id="bz2">BAS!</button>`;
   if(S.faz==="final" && NET.benim===S.cevaplayan && !S.telAktif)
     h+=`<button class="buton ikinci" id="pasb" ${S.aktif<1?"disabled":""}
-      style="max-width:460px">${S.aktif<1?"PAS — önce bir tahmin yapın"
-                                        :"PAS — başka kelime ▸"}</button>`;
+      style="max-width:460px">${S.aktif<1?"PAS, önce bir tahmin yapın"
+                                        :"PAS, başka kelime ▸"}</button>`;
   orta.innerHTML=h;
   const t=$("#tahta");
   const taban = S.faz==="duello" ? DUELLO.hak : (S.faz==="final" ? FINAL.satir : SATIR);
@@ -1735,7 +1735,7 @@ let masaSoruldu=false;
 function giris(){
   etEl.textContent="MASA YARIŞMASI";
   ekran(`<h1>LİNGO MASA YARIŞMASI</h1>
-    <p>İki, üç ya da dört masa — yayındaki format. Masayı kuran kişi kaç masa
+    <p>İki, üç ya da dört masa, yayındaki format. Masayı kuran kişi kaç masa
        oynanacağını seçer. Herkes kendi telefonundan oynar,
        <b>tahminler anlık olarak herkesin ekranında</b> görünür.</p>
     <p class="izle" style="text-align:left;font-size:13px">
@@ -1761,7 +1761,7 @@ function odaAc(){
   NET.kurucuBasla(null, err=>{
     if(err) return ekran(`<h2>Oda açılamadı</h2>
       <p>${err==="unavailable-id"
-        ? "Zaten açık bir oda var — başka bir cihazda ya da sekmede. Onu kapatıp tekrar deneyin."
+        ? "Zaten açık bir oda var, başka bir cihazda ya da sekmede. Onu kapatıp tekrar deneyin."
         : "Bağlantı kurulamadı: "+err}</p>
       <button class="buton" onclick="odaAc()">TEKRAR DENE</button>
       <button class="buton ikinci" onclick="giris()">geri</button>`);
