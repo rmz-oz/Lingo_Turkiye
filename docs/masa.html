@@ -73,7 +73,8 @@ button{font:inherit;cursor:pointer}
 #bar .kod{background:var(--mor);color:var(--morUst);border-radius:999px;padding:2px 9px;
   font-weight:800;letter-spacing:1.1px;font-size:11px;flex:none}
 #bar .et{color:var(--altin);font-weight:800;letter-spacing:.8px;text-transform:uppercase}
-#bar .ag{margin-left:auto;color:var(--soluk)}
+#bar .sag{margin-left:auto;display:flex;align-items:center;flex:none}
+#bar .ag{color:var(--soluk)}
 #bar #sesd,#bar #temad{border:1px solid var(--cizgi);background:transparent;
   border-radius:99px;width:30px;height:26px;padding:0;font-size:13px;line-height:1;
   color:var(--ink);margin-left:6px;flex:none}
@@ -264,9 +265,9 @@ input.ad{width:100%;background:var(--yuva);border:1.5px solid var(--cizgi);borde
 </style></head><body>
 <div id="bar"><a href="index.html" style="color:var(--soluk);text-decoration:none">‹</a>
   <span class="kod gizli" id="kod"></span><span class="et" id="et"></span>
-  <span class="ag" id="ag"></span>
+  <span class="sag"><span class="ag" id="ag"></span>
   <button id="temad" title="Gece / gündüz" onclick="temaCevir()">🌙</button>
-  <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button></div>
+  <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button></span></div>
 <div id="sure" class="gizli"><i></i></div>
 <div id="skor" class="gizli"></div>
 <div id="orta"></div>
