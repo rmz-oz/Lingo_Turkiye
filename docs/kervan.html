@@ -38,7 +38,9 @@ button{font:inherit;cursor:pointer}
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
   padding:18px 12px 22px;gap:11px;min-height:0;-webkit-overflow-scrolling:touch}
 @media (min-width:640px){ #orta{padding-top:30px} }
-#orta.ort{justify-content:center}
+#orta.ort{justify-content:flex-start}
+#orta.ort > :first-child{margin-top:auto}
+#orta.ort > :last-child{margin-bottom:auto}
 .kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
   padding:19px 17px;max-width:470px;width:100%}
 .kutu.ort{text-align:center}
