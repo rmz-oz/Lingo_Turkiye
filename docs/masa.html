@@ -45,30 +45,62 @@ button{font:inherit;cursor:pointer}
 #skor .m i.eksi{color:var(--kirmizi)}
 #skor .m .jk{display:block;font-size:10px;letter-spacing:.5px;margin-top:1px}
 /* ---- joker dukkani ---- */
-.jkart{display:flex;align-items:center;gap:10px;border:1px solid var(--cizgi);
-  border-radius:12px;background:#141d27;padding:10px 11px;margin-top:7px;
-  max-width:460px;width:100%;text-align:left}
-.jkart .em{font-size:20px;width:26px;text-align:center;flex:none}
+.dukbas{max-width:460px;width:100%;text-align:center;font-size:11px;font-weight:800;
+  letter-spacing:1.9px;text-transform:uppercase;color:#b9a8ff}
+.kese{max-width:460px;width:100%;background:#171d2e;border:1px solid #333a63;
+  border-radius:13px;padding:12px 14px;font-size:13.5px;line-height:1.6;
+  color:#c2cbdd;text-align:center}
+.kese.borc{background:#241a26;border-color:#5c3247}
+.kese b{color:#f2f5f8}
+.kese .tut{display:block;font-size:23px;font-weight:800;letter-spacing:-.4px;
+  color:#e9deff;font-variant-numeric:tabular-nums;margin-bottom:3px}
+.kese.borc .tut{color:#ff9db0}
+.jkart{display:flex;align-items:center;gap:11px;border:1px solid #2a3345;
+  border-radius:14px;background:#161f2b;padding:11px 12px;margin-top:8px;
+  max-width:460px;width:100%;text-align:left;transition:border-color .15s,background .15s}
+.jkart .em{font-size:20px;width:40px;height:40px;flex:none;border-radius:11px;
+  background:#1d2740;border:1px solid #33406b;display:flex;align-items:center;
+  justify-content:center;line-height:1}
 .jkart .gv{flex:1;min-width:0}
-.jkart .gv b{display:block;font-size:14px}
-.jkart .gv span{display:block;font-size:11.5px;color:var(--soluk);line-height:1.4;
-  margin-top:1px}
-.jkart .fy{flex:none;text-align:right;font-weight:800;font-size:13.5px;color:var(--altin);
-  font-variant-numeric:tabular-nums}
-.jkart .fy em{font-style:normal;display:block;font-size:9.5px;color:var(--soluk);
-  letter-spacing:.4px;font-weight:700}
-.jkart.elde{border-color:var(--yesil)}
-.jkart.dolu{opacity:.45;border-style:dashed}
+.jkart .gv b{display:block;font-size:15px;color:#f2f5f8;line-height:1.25}
+.jkart .gv span{display:block;font-size:12.5px;color:#9fb0c4;line-height:1.45;
+  margin-top:3px}
+.jkart .fy{flex:none;text-align:right;font-weight:800;font-size:15px;color:var(--altin);
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.jkart .fy em{font-style:normal;display:block;font-size:9.5px;color:#8291a5;
+  letter-spacing:.5px;font-weight:700;text-transform:uppercase;margin-top:2px}
+.jkart:active{background:#1b2536}
+.jkart.elde{border-color:#3f7d55;background:#15251c}
+.jkart.elde .em{background:#1a3325;border-color:#3f7d55}
+.jkart.elde .fy em{color:#8fd3a8}
+.jkart.dolu{opacity:.62;border-style:dashed;background:transparent}
+.jkart.dolu .fy{color:#8fd3a8}
+.jkart.dolu .gv b{color:#c2cbdd}
 .jkart:disabled{cursor:default}
+@media (hover:hover){ .jkart:not(:disabled):hover{border-color:#5b6cc4;background:#1a2336} }
+.dukbtn{display:block;width:100%;max-width:460px;background:var(--mor);color:#fff;
+  border:0;border-radius:13px;padding:14px;font-weight:800;font-size:16px;
+  margin-top:12px;letter-spacing:.3px}
+.dukbtn.bekle{background:transparent;color:#b9a8ff;border:1.6px solid #4a4192}
+@media (hover:hover){ .dukbtn:hover{filter:brightness(1.1)} }
+.hazsat{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:460px;
+  width:100%;margin-top:9px}
+.hazsat span{font-size:11.5px;font-weight:700;border-radius:99px;padding:4px 10px;
+  border:1px solid var(--cizgi);color:var(--soluk)}
+.hazsat span.ok{border-color:#3f7d55;color:#8fd3a8;background:#15251c}
 .jokbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:460px;
   width:100%;margin-top:2px}
-.jokbar button{background:#141d27;border:1px solid var(--cizgi);color:var(--murekkep);
-  border-radius:99px;padding:7px 12px;font-size:12.5px;font-weight:700}
-.jokbar button:disabled{opacity:.34}
-.jokbar button u{text-decoration:none;color:var(--altin);font-weight:800}
-.ipuc{background:rgba(244,201,93,.1);border:1px solid rgba(244,201,93,.32);
-  border-radius:10px;padding:8px 12px;font-size:13.5px;color:var(--altin);
-  font-weight:700;max-width:460px;width:100%;text-align:center}
+.jokbar button{background:#1a2336;border:1px solid #3a4470;color:#dfe6f2;
+  border-radius:99px;padding:8px 13px;font-size:13px;font-weight:700}
+.jokbar button:disabled{opacity:.3;border-color:var(--cizgi)}
+.jokbar button u{text-decoration:none;color:#b9a8ff;font-weight:800;margin-left:2px}
+@media (hover:hover){ .jokbar button:not(:disabled):hover{border-color:#6c5ce7;
+  background:#212c46} }
+.ipuc{background:rgba(46,158,91,.13);border:1px solid rgba(110,231,160,.34);
+  border-radius:11px;padding:9px 13px;font-size:14px;color:#6ee7a0;
+  font-weight:700;max-width:460px;width:100%;text-align:center;
+  line-height:1.5;letter-spacing:.2px}
+.ipuc b{color:#a7f3c8;font-weight:800}
 .hazirlar{font-size:12.5px;color:var(--soluk);text-align:center;margin-top:4px}
 .hazirlar b{color:var(--altin)}
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
@@ -185,6 +217,9 @@ const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP — DÜELLO","FİNAL"];
 /* tek sabit oda: kod yazmaya gerek yok, herkes ayni odaya girer */
 const ODA = "lingotr-ailecuk-szyr", ODAAD = "AİLECÜK";
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+/* okunmasi karisan harfler adiyla soylenir */
+const HARFAD = {"ğ":"yumuşak G", "ı":"noktasız I", "i":"noktalı İ"};
+const harfSoyle = c => HARFAD[c] || TRU(c);
 const TRL = s => s.replace(/I/g,"ı").replace(/İ/g,"i").toLowerCase();
 const TL = n => n.toLocaleString("tr-TR");
 const PARA = n => (n<0 ? "−₺"+TL(-n) : "₺"+TL(n));
@@ -327,7 +362,8 @@ const M = {
       if(aday.length){
         const k=aday[Math.floor(Math.random()*aday.length)];
         S.acikHarf=(S.acikHarf||[]).concat([k]);
-        S.harfIpuc=(S.harfIpuc ? S.harfIpuc+" · " : "")+`🔤 ${k+1}. harf: ${TRU(w[k])}`;
+        S.harfIpuc=(S.harfIpuc ? S.harfIpuc+" · " : "")+
+          `🔤 ${k+1}. harf: <b>${harfSoyle(w[k])}</b>`;
       } else S.ipuc="🔤 Açılacak harf kalmadı";
     } else if(id==="reklam"){
       const kalan=Math.max(1, S.sn||1), fin=(S.faz==="final");
@@ -1066,32 +1102,39 @@ function ciz(S){
     const ben=NET.benim, katil=ben>=0 && S.dukkan.kimler.indexOf(ben)>=0;
     const m=katil?S.masalar[ben]:null;
     const hazirSay=S.dukkan.kimler.filter(i=>S.masalar[i].hazir).length;
-    let h=`<div class="baslik">${DUKAD[S.dukkan.no-1]}</div>`;
+    let h=`<div class="dukbas">${DUKAD[S.dukkan.no-1]}</div>`;
     if(katil){
       const kese=m.para;
-      h+=`<div class="msj ${kese<0?"kotu":"bek"}" style="max-width:460px">
-        Kesenizde <b>${PARA(kese)}</b>${kese<0?" — kasaya borçlusunuz":""}.
-        Jokerler biriktirdiğiniz parayla alınır, <b>eksiye düşebilirsiniz</b>.
-        Aynı jokerden en fazla <b>${JMAX}</b> tane; aynı jokeri tekrar alırsanız
-        <b>%20 pahalıya</b> gelir. Paranızı çarçur etmeyin!</div>`;
+      h+=`<div class="kese ${kese<0?"borc":""}">
+        <span class="tut">${PARA(kese)}</span>
+        ${kese<0 ? "kasaya borçlusunuz" : "kesenizde"} · jokerler biriktirdiğiniz
+        parayla alınır, <b>eksiye düşebilirsiniz</b>. Aynı jokerden en fazla
+        <b>${JMAX}</b> tane; tekrar alırsanız <b>%20 pahalıya</b> gelir.
+        Paranızı çarçur etmeyin!</div>`;
       h+=JOKER.map(j=>{
         const adet=(m.jok[j.id]||0), f=jokerFiyat(S, ben, j.id), dolu=adet>=JMAX;
         return `<button class="jkart ${adet?"elde":""} ${dolu?"dolu":""}"
           ${dolu?"disabled":""} onclick="NET.yolla({t:'al',id:'${j.id}'})">
           <span class="em">${j.em}</span>
           <span class="gv"><b>${j.ad}</b><span>${j.ac}</span></span>
-          <span class="fy">${dolu?"—":TL(f)}<em>${dolu?"elinde "+adet+" · dolu"
-            :(adet?"elinde "+adet+" · zamlı":"al")}</em></span></button>`;
+          <span class="fy">${dolu?"✓":"₺"+TL(f)}<em>${dolu?"elinde "+adet
+            :(adet?"elinde "+adet+" · zamlı":"satın al")}</em></span></button>`;
       }).join("");
-      h+=`<button class="buton" style="max-width:460px"
-        onclick="NET.yolla({t:'hazir'})">${m.hazir?"HAZIRSIN — bekleniyor":"HAZIRIM ▸"}</button>`;
+      h+=`<button class="dukbtn ${m.hazir?"bekle":""}"
+        onclick="NET.yolla({t:'hazir'})">${m.hazir
+          ? "✓ HAZIRSIN — diğerleri bekleniyor" : "HAZIRIM ▸"}</button>`;
     } else {
-      h+=`<div class="izle">Bu dükkân ${S.dukkan.kimler.map(i=>S.masalar[i].ad).join(", ")}
-        için açık. ${ben>=0?"Sen bu turda alışveriş yapmıyorsun.":"İzliyorsun."}</div>`;
+      h+=`<div class="kese">Bu dükkân
+        <b>${S.dukkan.kimler.map(i=>S.masalar[i].ad).join(", ")}</b> için açık.
+        ${ben>=0?"Bu turda alışveriş yapmıyorsunuz.":"İzliyorsunuz."}</div>`;
     }
+    h+=`<div class="hazsat">${S.dukkan.kimler.map(i=>
+      `<span class="${S.masalar[i].hazir?"ok":""}">${S.masalar[i].hazir?"✓ ":""}${
+        S.masalar[i].ad}</span>`).join("")}</div>`;
     h+=`<div class="hazirlar"><b>${hazirSay}/${S.dukkan.kimler.length}</b> masa hazır ·
-      <b>${S.sn}</b> saniye sonra dükkân kapanıyor</div>`;
-    if(S.mesaj) h+=`<div class="msj ${S.msjTip}" style="max-width:460px">${S.mesaj}</div>`;
+      dükkân <b>${S.sn}</b> saniye sonra kapanıyor</div>`;
+    if(S.mesaj && S.mesaj!==DUKAD[S.dukkan.no-1])
+      h+=`<div class="msj ${S.msjTip}" style="max-width:460px">${S.mesaj}</div>`;
     orta.innerHTML=h;
     return;
   }
