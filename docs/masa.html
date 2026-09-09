@@ -26,6 +26,11 @@ button{font:inherit;cursor:pointer}
   margin-left:6px;flex:none}
 #bar .et{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 #bar .ag{white-space:nowrap;font-size:11px}
+#bar .ag.kopuk{color:var(--kirmizi);font-weight:800}
+#kopuk{position:fixed;left:0;right:0;bottom:0;background:var(--kirmizi);color:#fff;
+  padding:11px 14px calc(11px + env(safe-area-inset-bottom));text-align:center;
+  font-weight:800;font-size:14.5px;z-index:40;box-shadow:0 -4px 18px rgba(0,0,0,.45)}
+#kopuk small{display:block;font-weight:600;font-size:12.5px;opacity:.9;margin-top:2px}
 @media (max-width:400px){ #bar .ag{display:none} }
 #bar #sesd.kapali{opacity:.45}
 #bar .ag b{color:var(--yesil)}
@@ -101,11 +106,16 @@ button{font:inherit;cursor:pointer}
 .jokbar button u{text-decoration:none;color:#b9a8ff;font-weight:800;margin-left:2px}
 @media (hover:hover){ .jokbar button:not(:disabled):hover{border-color:#6c5ce7;
   background:#212c46} }
-.ipuc{background:rgba(46,158,91,.13);border:1px solid rgba(110,231,160,.34);
-  border-radius:11px;padding:7px 11px;font-size:13.5px;color:#6ee7a0;
-  font-weight:700;max-width:460px;width:100%;text-align:center;
-  line-height:1.5;letter-spacing:.2px}
-.ipuc b{color:#a7f3c8;font-weight:800}
+/* yuzen bildirim: yerlesimden yer calmaz, klavyenin hemen ustunde durur */
+#toast{position:fixed;left:0;right:0;bottom:calc(var(--klh, 12px) + 8px);
+  display:flex;justify-content:center;pointer-events:none;z-index:15;padding:0 12px}
+#toast .ic{background:rgba(16,24,33,.94);border:1px solid var(--cizgi);
+  border-radius:11px;padding:7px 14px;font-size:14px;font-weight:700;max-width:460px;
+  text-align:center;line-height:1.35;color:var(--soluk);
+  box-shadow:0 6px 20px rgba(0,0,0,.45)}
+#toast .ic.iyi{color:#7fe0a6;border-color:#2f6a44;background:rgba(15,38,25,.95)}
+#toast .ic.kotu{color:#f2a3ad;border-color:#6b2b36;background:rgba(45,17,23,.95)}
+#toast .ic.bek{color:#cfd8e0}
 .hazirlar{font-size:12.5px;color:var(--soluk);text-align:center;margin-top:4px}
 .hazirlar b{color:var(--altin)}
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
@@ -135,19 +145,24 @@ button{font:inherit;cursor:pointer}
   padding:11px 13px;max-width:460px;text-align:center;font-size:16px;line-height:1.4}
 .ipucu b{color:var(--altin);display:block;font-size:11px;letter-spacing:1.1px;
   text-transform:uppercase;margin-bottom:5px}
-#klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+#klavye{flex:none;padding:4px 3px calc(4px + env(safe-area-inset-bottom));
   background:#0a1119;border-top:1px solid var(--cizgi)}
-#klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
+#klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:3px}
+#klavye .sr:last-child{margin-bottom:0}
 @media (min-width:640px){ #klavye .sr{max-width:620px;margin-left:auto;margin-right:auto} }
 @media (min-width:640px){ #skor .m{max-width:250px} #skor{justify-content:center} }
-#klavye button{flex:1 1 0;min-width:0;height:var(--tush,44px);border:0;border-radius:7px;
-  background:#3a4756;color:#fff;font-weight:700;font-size:var(--tusf,16px);padding:0}
-@media (max-height:820px){ :root{--tush:40px; --tusf:15px} }
-@media (max-height:730px){ :root{--tush:36px; --tusf:14px} }
-@media (max-height:650px){ :root{--tush:32px; --tusf:13px} }
-@media (max-height:580px){ :root{--tush:29px; --tusf:12px} }
-#klavye button.gnis{flex:1.9 1 0;font-size:13px}
-#klavye button.dar{flex:1.25 1 0;font-size:12.5px}
+#klavye button{flex:1 1 0;min-width:0;height:var(--tush);border:0;border-radius:8px;
+  background:#3a4756;color:#fff;font-weight:700;font-size:var(--tusf);padding:0}
+/* rahat yazmak en onemlisi: klavye onceligi alir, tahta kalan yere sigar */
+:root{--tush:56px; --tusf:19px}
+@media (max-height:880px){ :root{--tush:52px; --tusf:18px} }
+@media (max-height:800px){ :root{--tush:49px; --tusf:17px} }
+@media (max-height:720px){ :root{--tush:46px; --tusf:16px} }
+@media (max-height:640px){ :root{--tush:43px; --tusf:16px} }
+@media (max-height:570px){ :root{--tush:40px; --tusf:15px} }
+@media (max-height:500px){ :root{--tush:36px; --tusf:14px} }
+#klavye button.gnis{flex:1.9 1 0;font-size:calc(var(--tusf) * .82)}
+#klavye button.dar{flex:1.3 1 0;font-size:calc(var(--tusf) * .78)}
 #klavye button.tam{background:var(--yesil)}
 #klavye button.var{background:var(--sari);color:#231a00}
 #klavye button.yok{background:#1e2933;color:#5d6b7a}
@@ -176,8 +191,8 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 .link{background:#0a1119;border:1px dashed var(--cizgi);border-radius:10px;padding:10px;
   font-size:12px;color:var(--soluk);word-break:break-all;margin:8px 0;
   font-family:ui-monospace,Menlo,monospace;user-select:text}
-.msj{text-align:center;font-size:14.5px;font-weight:700;padding:6px 11px;border-radius:9px;
-  line-height:1.45;max-width:460px}
+.msj{text-align:center;font-size:14px;font-weight:700;padding:5px 11px;border-radius:9px;
+  line-height:1.4;max-width:460px}
 .msj.iyi{background:#173d27;color:#7fe0a6}
 .msj.kotu{background:#3d1720;color:#f2a3ad}
 .msj.bek{background:#22303d;color:var(--soluk)}
@@ -271,7 +286,7 @@ const M = {
     this.S = {
       faz:"lobi",
       masalar: adlar.map(a=>({ad:a, para:0, online:false, jok:{}, alim:{}, hazir:false})),
-      dukkan:null, ekHak:0, canKilit:false, jokerBu:false, ipuc:"", harfIpuc:"",
+      dukkan:null, ekHak:0, canKilit:false, jokerBu:false,
       dondu:false, kilitli:[0], katla:false, perde:null, nisan:null, elenenHarf:[],
       telefon:null, telAktif:false, finKalan:0, jokerli:JOKERLI,
       elenenler:[],
@@ -284,7 +299,7 @@ const M = {
   },
   dur(){ if(this.sayac){ clearInterval(this.sayac); this.sayac=null; } },
   kelimeSifirla(){ const S=this.S;
-    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.harfIpuc="";
+    S.ekHak=0; S.canKilit=false; S.jokerBu=false;
     S.dondu=false; S.kilitli=[0]; S.katla=false; S.perde=null; S.nisan=null;
     S.elenenHarf=[]; },
   satirTaban(){ const S=this.S;
@@ -407,35 +422,29 @@ const M = {
     m.jok[id]--; if(!m.jok[id]) delete m.jok[id];
     S.jokerBu=true;
     if(id==="ikinci"){
-      if(this.harfAc(1)) S.ipuc=`2️⃣ İkinci harf açıldı`;
-      else S.ipuc="2️⃣ İkinci harf zaten açıktı";
+      this.harfAc(1);
     } else if(id==="son"){
-      if(this.harfAc(S.n-1)) S.ipuc=`🔚 Son harf açıldı`;
-      else S.ipuc="🔚 Son harf zaten açıktı";
+      this.harfAc(S.n-1);
     } else if(id==="unlu"){
-      let c2=0;
-      for(let k=1;k<S.n;k++) if(UNLULER.indexOf(this.GIZLI[k])>=0 && this.harfAc(k)) c2++;
-      S.ipuc = c2 ? `🅰 ${c2} ünlü harf açıldı` : "🅰 Açılacak ünlü kalmadı";
+      for(let k=1;k<S.n;k++) if(UNLULER.indexOf(this.GIZLI[k])>=0) this.harfAc(k);
     } else if(id==="bomba"){
-      const bos=this.bosKonumlar(); let c2=0;
-      for(let t=0;t<2 && bos.length;t++){
-        const k=bos.splice(Math.floor(Math.random()*bos.length),1)[0];
-        if(this.harfAc(k)) c2++;
-      }
-      S.ipuc = c2 ? `💣 ${c2} harf açıldı` : "💣 Açılacak harf kalmadı";
+      const bos=this.bosKonumlar();
+      for(let t=0;t<2 && bos.length;t++)
+        this.harfAc(bos.splice(Math.floor(Math.random()*bos.length),1)[0]);
     } else if(id==="nisanci"){
-      S.nisan=i; S.ipuc="🎯 Nişancı: hangi kutuyu açacağını seç, kutuya dokun";
+      S.nisan=i;
+      S.mesaj="🎯 Nişancı — açmak istediğin kutuya dokun"; S.msjTip="bek";
+      return this.gonder();
     } else if(id==="zaman"){
       const ek=S.top||SURE, kalan=Math.max(1,S.sn||1);
-      S.ipuc=`⏳ Süreye ${ek} saniye eklendi`;
       S.mesaj=`${m.ad}: ${j.em} ${j.ad}`; S.msjTip="iyi";
       if(S.faz==="final") this.finSaat(kalan+ek);
       else this.saat(kalan+ek, this.bitinceSon);
       return this.gonder();
     } else if(id==="perde"){
-      S.perde=i; S.ipuc="👀 Perde çekildi — tahminlerin rakiplerde gizli";
+      S.perde=i;
     } else if(id==="katla"){
-      S.katla=true; S.ipuc="💰 Katla: bu kelimeyi bilirsen ödül iki katı";
+      S.katla=true;
     } else if(id==="yarisi"){
       const icinde=new Set(this.GIZLI.split(""));
       const el=new Set(S.elenenHarf||[]);
@@ -445,11 +454,9 @@ const M = {
       for(let t=0;t<kac && aday.length;t++)
         sec.push(aday.splice(Math.floor(Math.random()*aday.length),1)[0]);
       S.elenenHarf=(S.elenenHarf||[]).concat(sec);
-      S.ipuc=`✂️ ${sec.length} harf klavyeden elendi`;
     } else if(id==="telefon"){
       S.mesaj=`${m.ad}: ${j.em} ${j.ad}`; S.msjTip="iyi";
       if(this.telefonAc()) return;
-      S.ipuc="📞 Elenen masa yok, telefon çalışmadı";
     }
     S.mesaj=`${m.ad}: ${j.em} ${j.ad}`; S.msjTip="iyi";
     this.gonder();
@@ -457,9 +464,8 @@ const M = {
   nisanAt(i, konum){
     const S=this.S;
     if(S.nisan!==i) return;
-    S.nisan=null;
-    if(this.harfAc(konum)) S.ipuc=`🎯 ${konum+1}. harf açıldı`;
-    else S.ipuc="🎯 O kutu zaten açık";
+    S.nisan=null; this.harfAc(konum);
+    S.mesaj=`${S.masalar[i].ad}: 🎯 Nişancı`; S.msjTip="iyi";
     this.gonder();
   },
   /* ---- telefon jokeri: elenen yarismacilar cevaplar ---- */
@@ -471,7 +477,7 @@ const M = {
     S.telAktif=true; S.telefon={kalan:el};
     S.cevaplayan=el[0]; this.girisKur();
     S.mesaj=`📞 Telefon: ${S.masalar[el[0]].ad} cevaplıyor — ${CALSURE} saniye`;
-    S.msjTip="bek"; S.ipuc="📞 Bilirse doğru sayılır, bilemezse hakkın yanmaz";
+    S.msjTip="bek";
     this.saat(CALSURE, ()=>this.telDene(true));
     this.gonder();
     return true;
@@ -485,7 +491,6 @@ const M = {
       if(!GECERLI[S.n].has(t)){ S.mesaj="Sözlükte yok"; S.msjTip="kotu"; return this.gonder(); }
       if(t===this.GIZLI) return this.telefonBitir(true);
       /* yanlis cevap tahtaya yazilmaz: finalistin hakki yanmadigi gibi satiri da yanmaz */
-      S.ipuc=`📞 ${S.masalar[S.cevaplayan].ad}: ${TRU(t)} — olmadı`;
     }
     this.dur();
     S.telefon.kalan.shift();
@@ -504,14 +509,12 @@ const M = {
     if(dogru){
       F.enIyi=S.n; S.finKazanc=this.fKazanc(S.n); S.acik=this.GIZLI;
       S.mesaj=`📞 Telefon tuttu! Garantilenen: ₺${TL(S.finKazanc)}`; S.msjTip="iyi";
-      S.ipuc="";
       this.gonder();
       if(S.n===6) return setTimeout(()=>this.finKarar(), 1600);
       F.idx++;
       return setTimeout(()=>this.finKelime(), 1600);
     }
     S.mesaj="📞 Telefondan cevap gelmedi — tahmin hakkın duruyor"; S.msjTip="kotu";
-    S.ipuc="";
     this.finSaat(S.finKalan||1);
     this.gonder();
   },
@@ -1048,20 +1051,79 @@ const NET = {
       if(this.host && M.S && this.baglar.length) this.yayinlaDurum(M.temiz());
     }, 2000);
   },
+  sonVeri:0, denemeSay:0,
+  veri(m){
+    this.sonVeri=Date.now(); this.denemeSay=0;
+    if(m.t==="durum") ciz(m.d);
+    if(m.t==="sen") this.benim=m.masa;
+    agYaz();
+  },
   katilBasla(kod, ad, masa, tamam){
     this.host=false; this.kod=ODAAD; this.benim=masa;
     this.peer=new Peer({debug:0});
     this.peer.on("open", ()=>{
       const c=this.peer.connect(ODA, {reliable:true});
       this.baglanti=c;
-      c.on("open", ()=>{ c.send({t:"katil", masa, ad}); tamam(null); agYaz(); });
-      c.on("data", m=>{ if(m.t==="durum") ciz(m.d); if(m.t==="sen") this.benim=m.masa; });
-      c.on("close", ()=>{ agYaz(); ekran(`<h2>Bağlantı koptu</h2>
-        <p>Masa yönetimi kapandı ya da ağ düştü.</p>
-        <button class="buton" onclick="location.reload()">YENİDEN BAĞLAN</button>`); });
+      c.on("open", ()=>{ this.sonVeri=Date.now(); c.send({t:"katil", masa, ad});
+        tamam(null); agYaz(); });
+      c.on("data", m=>this.veri(m));
+      c.on("close", ()=>{ agYaz(); this.tekrarBagla(); });
+      c.on("error", ()=>{ agYaz(); this.tekrarBagla(); });
       setTimeout(()=>{ if(!c.open) tamam("baglanamadi"); }, 12000);
     });
-    this.peer.on("error", e=>tamam(e.type||"hata"));
+    this.peer.on("disconnected", ()=>{ try{ this.peer.reconnect(); }catch(e){} agYaz(); });
+    this.peer.on("error", e=>{
+      const t=(e && e.type) || "hata";
+      if(this.baglanti && this.baglanti.open) return;      /* gecici hata */
+      tamam(t);
+    });
+    this.izle();
+  },
+  bagliMi(){
+    if(this.host) return true;
+    return !!(this.baglanti && this.baglanti.open) &&
+           (Date.now()-this.sonVeri < 9000 || !this.sonVeri);
+  },
+  /* uygulamadan cikip donunce ya da ag dusunce kendi kendine toparlanir */
+  izle(){
+    if(this._izle) return;
+    this._izle=setInterval(()=>{
+      if(this.host) return;
+      const acik=!!(this.baglanti && this.baglanti.open);
+      if(!acik || (this.sonVeri && Date.now()-this.sonVeri>9000)) this.tekrarBagla();
+      else agYaz();
+    }, 3000);
+    document.addEventListener("visibilitychange", ()=>{
+      if(document.hidden || this.host) return;
+      const acik=!!(this.baglanti && this.baglanti.open);
+      if(!acik || (this.sonVeri && Date.now()-this.sonVeri>4000)) this.tekrarBagla();
+    });
+    window.addEventListener("online", ()=>{ if(!this.host) this.tekrarBagla(); });
+  },
+  tekrarBagla(){
+    if(this.host) return;
+    if(this._deniyor && Date.now()-this._deniyor<5000) return;
+    this._deniyor=Date.now(); this.denemeSay=(this.denemeSay||0)+1;
+    agYaz();
+    if(this.denemeSay>4){                          /* son care: sayfayi tazele */
+      try{ sessionStorage.setItem("lingo_masa_oto","1"); }catch(e){}
+      return location.reload();
+    }
+    try{
+      if(!this.peer || this.peer.destroyed){
+        try{ sessionStorage.setItem("lingo_masa_oto","1"); }catch(e){}
+        return location.reload();
+      }
+      if(this.peer.disconnected){ try{ this.peer.reconnect(); }catch(e){} }
+      try{ if(this.baglanti) this.baglanti.close(); }catch(e){}
+      const c=this.peer.connect(ODA, {reliable:true});
+      this.baglanti=c;
+      c.on("open", ()=>{ this.sonVeri=Date.now(); this.denemeSay=0;
+        c.send({t:"katil", masa:this.benim, ad:""}); agYaz(); });
+      c.on("data", m=>this.veri(m));
+      c.on("close", ()=>agYaz());
+      c.on("error", ()=>agYaz());
+    }catch(e){ agYaz(); }
   },
   yolla(m){ if(this.host) this.hostMesaj({masa:this.benim}, m);
             else if(this.baglanti && this.baglanti.open) this.baglanti.send(m); }
@@ -1074,8 +1136,27 @@ function perdele(d){
   return k;
 }
 function agYaz(){
-  if(NET.host) agEl.innerHTML = `<b>${NET.baglar.length}</b> bağlı · yönetim sizde`;
-  else agEl.innerHTML = NET.baglanti && NET.baglanti.open ? "<b>bağlı</b>" : "bağlanıyor…";
+  if(NET.host){
+    agEl.className="ag";
+    agEl.innerHTML = `<b>${NET.baglar.length}</b> bağlı · yönetim sizde`;
+    kopukGoster(false); return;
+  }
+  const ok=NET.bagliMi();
+  agEl.className = ok ? "ag" : "ag kopuk";
+  agEl.innerHTML = ok ? "<b>bağlı</b>"
+    : (NET.denemeSay>1 ? "bağlantı yok" : "bağlanıyor…");
+  agEl.onclick = ok ? null : ()=>NET.tekrarBagla();
+  kopukGoster(!ok);
+}
+function kopukGoster(g){
+  let e=document.getElementById("kopuk");
+  if(!g){ if(e) e.remove(); return; }
+  if(!e){
+    e=document.createElement("div"); e.id="kopuk";
+    e.innerHTML='Bağlantı koptu — yazamazsın<small>Dokun: yeniden bağlan</small>';
+    e.onclick=()=>NET.tekrarBagla();
+    document.body.appendChild(e);
+  }
 }
 
 /* ================= arayuz ================= */
@@ -1094,20 +1175,21 @@ function defterYaz(ad, w, hak){
 }
 function ekran(html){
   klv.classList.add("gizli"); sureKap.classList.add("gizli");
+  toastSil();
   orta.className=""; orta.innerHTML=`<div class="kutu">${html}</div>`;
 }
 function hucreBoy(n){
-  /* yatay: ekran genisligi · dikey: bar + skor + baslik + mesaj + klavye payi */
+  /* klavye once yerini alir; tahta kalan alana gore hesaplanir */
   const g=Math.min(window.innerWidth-26, 460);
   const yatay=Math.floor((g-(n-1)*5)/n);
   const bar=(document.getElementById("bar")||{offsetHeight:40}).offsetHeight||40;
-  const sk=(skorEl && !skorEl.classList.contains("gizli")) ? (skorEl.offsetHeight||60) : 0;
-  const kl=(klv && !klv.classList.contains("gizli")) ? (klv.offsetHeight||150) : 40;
-  const pay=bar+sk+kl+96;                      /* baslik + mesaj + joker seridi + bosluk */
-  const kalan=Math.max(120, window.innerHeight-pay);
-  const dikey=Math.floor((kalan-5*6)/6);       /* en fazla 6 satir gorunur */
-  const enBuyuk=window.innerWidth>=640 ? 54 : 50;
-  return Math.max(24, Math.min(enBuyuk, Math.min(yatay, dikey)));
+  const sk=(skorEl && !skorEl.classList.contains("gizli")) ? (skorEl.offsetHeight||58) : 0;
+  const kl=(klv && !klv.classList.contains("gizli")) ? (klv.offsetHeight||160) : 36;
+  const pay=bar+sk+kl+84;                      /* baslik + mesaj + joker seridi + bosluk */
+  const kalan=Math.max(110, window.innerHeight-pay);
+  const dikey=Math.floor((kalan-5*4)/5);       /* bes satir; tasarsa asagida kucultulur */
+  const enBuyuk=window.innerWidth>=640 ? 52 : 46;
+  return Math.max(22, Math.min(enBuyuk, Math.min(yatay, dikey)));
 }
 const DIZ=["ertyuıopğü","asdfghjklşi","zcvbnmöç"];
 let klvTus={};
@@ -1357,10 +1439,7 @@ function ciz(S){
                                      :S.hak+" HAK")}
     ${S.faz==="final"?`<br>garantilenen: <b>₺${TL(S.finKazanc)}</b>`:""}</div>`;
   if(puz) h+=`<div class="ipucu"><b>puzzle · ₺${TL(S.puzzle.odul)}</b>${S.puzzle.tanim}</div>`;
-  h+=`<div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
-      <div class="msj ${S.msjTip}">${S.mesaj}</div>`;
-  const ipucHepsi=[S.harfIpuc, S.ipuc].filter(Boolean).join(" · ");
-  if(ipucHepsi) h+=`<div class="ipuc">${ipucHepsi}</div>`;
+  h+=`<div id="tahta" style="--hg:${hucreBoy(n)}px"></div>`;
   if(NET.benim>=0 && S.masalar[NET.benim]){
     const jk=S.masalar[NET.benim].jok||{};
     const ids=Object.keys(jk).filter(k=>jk[k]>0);
@@ -1451,6 +1530,26 @@ function ciz(S){
   if($("#pasb")) $("#pasb").onclick=()=>NET.yolla({t:"pas"});
   klavye(!benCevap);
   klvBoya(S);
+  toastYaz(S.mesaj, S.msjTip);
+}
+/* --- yuzen bildirim --- */
+function toastKat(){
+  let e=document.getElementById("toast");
+  if(!e){ e=document.createElement("div"); e.id="toast";
+    e.innerHTML='<div class="ic"></div>'; document.body.appendChild(e); }
+  return e;
+}
+function toastYaz(metin, tip){
+  if(!metin){ return toastSil(); }
+  const e=toastKat(), ic=e.querySelector(".ic");
+  ic.className="ic "+(tip||"bek"); ic.innerHTML=metin;
+  const kl=(klv && !klv.classList.contains("gizli")) ? (klv.offsetHeight||0) : 0;
+  document.documentElement.style.setProperty("--klh", kl+"px");
+  e.style.display="flex";
+}
+function toastSil(){
+  const e=document.getElementById("toast");
+  if(e) e.style.display="none";
 }
 /* puzzle'da acilan harfleri herkes gorsun diye durumda tasiyoruz */
 M.temiz=function(){
@@ -1640,6 +1739,7 @@ function masaSecEkrani(S){
 }
 function masaAl(i){
   NET.benim=i; masaSoruldu=true;
+  try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
   NET.yolla({t:"masa", i});
   agYaz(); if(SON) ciz(SON);
 }
@@ -1651,12 +1751,34 @@ document.addEventListener("keydown", e=>{
   else if(e.key.length===1){ const c=TRL(e.key); if(klvTus[c]) NET.yolla({t:"harf", c}); }
 });
 window.addEventListener("resize", ()=>{ if(SON) ciz(SON); });
+function otoKatil(){
+  let oto=null, ben=null;
+  try{ oto=sessionStorage.getItem("lingo_masa_oto");
+       sessionStorage.removeItem("lingo_masa_oto");
+       ben=localStorage.getItem("lingo_masa_ben"); }catch(e){}
+  if(oto!=="1" || ben===null) return false;
+  const i=parseInt(ben,10);
+  ekran(`<h2>Yeniden bağlanılıyor…</h2>
+    <p class="izle">Bağlantı kopmuştu, masana geri dönülüyor.</p>`);
+  NET.katilBasla(null, "", i, err=>{
+    if(err) return ekran(`<h2>Bağlanılamadı</h2>
+      <p>Masayı kuran cihazın sayfası açık olmalı.</p>
+      <button class="buton" onclick="location.reload()">TEKRAR DENE</button>
+      <button class="buton ikinci" onclick="giris()">baştan başla</button>`);
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    NET.benim=i; masaSoruldu=true;
+    NET.yolla({t:"masa", i});
+    agYaz();
+  });
+  return true;
+}
 function yukle(){
   LG_sesDugme(document.getElementById("sesd"));
   ekran(`<h1>LİNGO MASA</h1><p>Kelime havuzu yükleniyor…</p>`);
   fetch("oyun-veri.json").then(r=>{ if(!r.ok) throw 0; return r.json(); })
     .then(d=>{ VERI=d; GECERLI={};
       for(const n in VERI.gecerli) GECERLI[n]=new Set(VERI.gecerli[n]);
+      if(otoKatil()) return;
       giris(); })
     .catch(()=>ekran(`<h2>Yüklenemedi</h2>
       <button class="buton" onclick="location.reload()">YENİLE</button>`));
