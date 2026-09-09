@@ -292,7 +292,7 @@ const M = {
       elenenler:[],
       etap:0, sira:0, ki:0, n:4, satirlar:[], aktif:0, giris:[], hak:SATIR, sn:SURE,
       dogru:0, puzzle:null, buzz:{acik:false, kim:null, kalan:[]},
-      cevaplayan:0, mesaj:"", msjTip:"bek", acik:null, bitti:false,
+      cevaplayan:0, mesaj:"", msjTip:"bek", msjDurum:false, acik:null, bitti:false,
       kalanlar: adlar.map((_,i)=>i), elenen:null, du:null, duSira:[], duTahmin:0, duOdul:0,
       fin:null, finKazanc:0, finalist:[]
     };
@@ -418,6 +418,7 @@ const M = {
   joker(i, id){
     const S=this.S;
     if(!this.jokerUygun(i, id)) return;
+    S.msjDurum=false;
     const m=S.masalar[i], j=JOKERID[id];
     m.jok[id]--; if(!m.jok[id]) delete m.jok[id];
     S.jokerBu=true;
@@ -484,6 +485,7 @@ const M = {
   },
   telDene(zamanBitti){
     const S=this.S;
+    S.msjDurum=false;
     if(!S.telAktif) return;
     if(!zamanBitti){
       if(!this.girisTam()) return;
@@ -530,7 +532,8 @@ const M = {
     this.GIZLI=this.kelimeSec(E.n);
     this.kelimeSifirla();
     S.satirlar=[]; S.aktif=0; S.hak=SATIR; S.acik=null; this.girisKur();
-    S.mesaj=`${S.masalar[S.sira].ad} — ${S.ki+1}. kelime · ₺${TL(E.pk)}`; S.msjTip="bek";
+    S.mesaj=`${S.masalar[S.sira].ad} — ${S.ki+1}. kelime · ₺${TL(E.pk)}`;
+    S.msjTip="bek"; S.msjDurum=true;
     this.saat(SURE, ()=>this.satirBitir(null));
     this.gonder();
   },
@@ -591,6 +594,7 @@ const M = {
     return true; },
   gonderTahmin(){
     const S=this.S;
+    S.msjDurum=false;
     if(S.telAktif) return this.telDene(false);
     if(S.acik) return;                          /* kelime bitti, tahmin alinmaz */
     if(S.faz==="puzzle"||S.faz==="dupuzzle") return this.puzDene();
@@ -609,6 +613,7 @@ const M = {
   satirBitir(tah){
     const S=this.S, E=ETAPLAR[Math.min(S.etap,1)];
     if(S.acik) return;                          /* kelime coktan kapandi */
+    S.msjDurum=false;
     if(S.faz!=="final") this.dur();
     if(tah===null){ S.satirlar.push({h:S.giris.map(c=>c||"·"), r:new Array(S.n).fill("yok")}); }
     else{
@@ -642,7 +647,7 @@ const M = {
         S.mesaj=`Bilinemedi — doğru cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
         this.gonder(); return setTimeout(()=>this.finBitir(), 2600);
       }
-      S.mesaj=`${S.hak} hak kaldı`; S.msjTip="bek";
+      S.mesaj=`${S.hak} hak kaldı`; S.msjTip="bek"; S.msjDurum=true;
       return this.gonder();
     }
     if(S.faz==="duello"){
@@ -654,7 +659,7 @@ const M = {
       S.cevaplayan = S.duSira[S.duTahmin % 2];
       S.duOdul = DUELLO.odul[S.duTahmin];
       S.mesaj = `Sıra ${S.masalar[S.cevaplayan].ad} — ${S.duTahmin+1}. tahmin · ₺${TL(S.duOdul)}`;
-      S.msjTip="bek";
+      S.msjTip="bek"; S.msjDurum=true;
       this.saat(SURE, ()=>this.satirBitir(null));
       return this.gonder();
     }
@@ -686,6 +691,7 @@ const M = {
   },
   buz(i){
     const S=this.S;
+    S.msjDurum=false;
     if(S.faz==="dupuzzle"){
       if(!S.buzz.acik||!S.buzz.kalan.includes(i)) return;
       S.buzz.acik=false; S.buzz.kim=i; S.cevaplayan=i;
@@ -738,7 +744,8 @@ const M = {
     S.puzzle={n:w.length, tanim:t, acik:[0], odul:E.pp};
     S.pgir=new Array(w.length).fill(null);
     S.giris=[w[0]]; S.kilitli=[0]; S.satirlar=[]; S.acik=null;
-    S.mesaj=`${S.masalar[S.sira].ad} — puzzle · ₺${TL(E.pp)}`; S.msjTip="bek";
+    S.mesaj=`${S.masalar[S.sira].ad} — puzzle · ₺${TL(E.pp)}`;
+    S.msjTip="bek"; S.msjDurum=true;
     let ac=0;
     this.dur();
     const b=Date.now(), top=PUZSURE*1000; S.sn=PUZSURE; S.top=PUZSURE;
@@ -786,6 +793,7 @@ const M = {
   puzDene(){
     const S=this.S;
     if(S.acik) return;                          /* puzzle bitti */
+    S.msjDurum=false;
     const t=this.puzTahmin();
     if(t===null){ S.mesaj="Boş kutular var"; S.msjTip="kotu"; return this.gonder(); }
     if(S.faz==="dupuzzle"){
@@ -858,7 +866,7 @@ const M = {
     S.satirlar=[]; S.aktif=0; S.hak=DUELLO.hak; S.acik=null; this.girisKur();
     S.buzz={acik:false, kim:null, kalan:[]};
     S.mesaj=`${S.masalar[S.cevaplayan].ad} başlıyor — ${S.du.ki+1}/${B.adet} · ₺${TL(S.duOdul)}`;
-    S.msjTip="bek";
+    S.msjTip="bek"; S.msjDurum=true;
     this.saat(SURE, ()=>this.satirBitir(null));
     this.gonder();
   },
@@ -962,7 +970,7 @@ const M = {
     S.satirlar=[]; S.aktif=0; S.hak=FINAL.satir; S.acik=null; this.girisKur();
     S.mesaj=`${n} harfli — bilirse ₺${TL(this.fKazanc(n))}` +
       (n===7?" (SÜPER LİNGO)":"");
-    S.msjTip="bek";
+    S.msjTip="bek"; S.msjDurum=true;
     this.gonder();
   },
   pas(){
@@ -1530,7 +1538,7 @@ function ciz(S){
   if($("#pasb")) $("#pasb").onclick=()=>NET.yolla({t:"pas"});
   klavye(!benCevap);
   klvBoya(S);
-  toastYaz(S.mesaj, S.msjTip);
+  toastYaz(S.msjDurum ? "" : S.mesaj, S.msjTip);
 }
 /* --- yuzen bildirim --- */
 function toastKat(){
@@ -1539,15 +1547,21 @@ function toastKat(){
     e.innerHTML='<div class="ic"></div>'; document.body.appendChild(e); }
   return e;
 }
+let toastSon="", toastSaat=null;
 function toastYaz(metin, tip){
-  if(!metin){ return toastSil(); }
+  if(!metin){ toastSon=""; return toastSil(); }
+  if(metin===toastSon) return;                 /* ayni mesaji tekrar acmaz */
+  toastSon=metin;
   const e=toastKat(), ic=e.querySelector(".ic");
   ic.className="ic "+(tip||"bek"); ic.innerHTML=metin;
   const kl=(klv && !klv.classList.contains("gizli")) ? (klv.offsetHeight||0) : 0;
   document.documentElement.style.setProperty("--klh", kl+"px");
   e.style.display="flex";
+  if(toastSaat) clearTimeout(toastSaat);
+  toastSaat=setTimeout(()=>{ toastSil(); }, 2600);
 }
 function toastSil(){
+  if(toastSaat){ clearTimeout(toastSaat); toastSaat=null; }
   const e=document.getElementById("toast");
   if(e) e.style.display="none";
 }
