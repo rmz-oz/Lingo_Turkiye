@@ -304,7 +304,9 @@ const SATICI = [
    {ad:"Belgin", duk:"Belgin'in Tılsım Kitabevi",
     rep:"Kitabı okumadan tılsım satmam. Al, önce bir bak."},
    {ad:"Hatice", duk:"Hatice'nin Kitap Sandığı",
-    rep:"Sandıkta ne var bilmiyorum ama her açtığımda bir kelime çıkıyor."} ],
+    rep:"Sandıkta ne var bilmiyorum ama her açtığımda bir kelime çıkıyor."},
+   {ad:"Derya", duk:"Derya'nın İskelesi",
+    rep:"Deniz her sabah bir şey bırakır kıyıya. Bugün ne bıraktı, gel bak."} ],
  [ {ad:"Yusuf",  duk:"Yusuf'un Ocağı",
     rep:"Kalbini tamir ederim, kelimeni tamir etmem. Onu sen bileceksin."},
    {ad:"Ali",    duk:"Ali'nin Örsü",
@@ -708,6 +710,40 @@ const URUN = [
   tam:"Ramiz her malın kaydını tutar: tezgâhta iki ürün daha açılır. Sevilen'in "+
       "Sözlük Cildi ve Melek Hatun'un Yüzüğü ile birlikte çalışır, yığılabilir — "+
       "iki tane alırsan dört ürün daha görürsün.", kilit:null}
+,
+ /* --- Derya'nin mallari --- */
+ {id:"dAgi", ad:"Derya'nın Ağı", em:"🕸", tip:"joker", han:0, fiyat:95, tek:1, agirlik:2,
+  kisa:"Kelimede olmayan beş harfi eler",
+  tam:"Ramiz'in Elemesi üç harf karartır, bu ağ beşini birden toplar. Altı ve yedi "+
+      "harfli etaplarda klavyeyi ciddi biçimde daraltır.", kilit:null},
+ {id:"dTekne", ad:"Derya'nın Teknesi", em:"⛵", tip:"joker", han:0, fiyat:140, tek:1,
+  kisa:"Etabı atlar ve yarım ödül verir",
+  tam:"Sadi Baba'nın Kestirmesi hiç para vermez; bu tekne seni karşı kıyıya geçirir ve "+
+      "o etabın ödülünün yarısını yine de verir. Kalp ve seri korunur.", kilit:{u:5}},
+ {id:"dYelken", ad:"Derya'nın Yelkeni", em:"🪁", tip:"yetenek", han:1, fiyat:195, yigin:1,
+  kisa:"Bütün etaplarda süre 6 saniye uzun",
+  tam:"Arkadan esen rüzgâr: yolculuğun kalanında her tahmin için 6 saniye daha "+
+      "verilir. Yığılabilir.", kilit:null},
+ {id:"dIskele", ad:"Derya'nın İskelesi", em:"⚓", tip:"yetenek", han:1, fiyat:210, yigin:1,
+  kisa:"Tezgâhta bir ürün daha görünür",
+  tam:"İskeleye yaklaşan her tekne bir mal getirir: tezgâhta bir ürün daha açılır. "+
+      "Ramiz'in Kataloğu ile birlikte çalışır, yığılabilir.", kilit:null},
+ {id:"dFener", ad:"Derya'nın Feneri", em:"🔆", tip:"tilsim", han:2, fiyat:170,
+  kisa:"Gece 22.00–04.00 arası ödüller %25 fazla",
+  tam:"Gelidonya feneri gibi: karanlıkta çalışanı ödüllendirir. O saatlerde kazandığın "+
+      "her ödül %25 artar.", kilit:{r:"Gece Kuşu"}},
+ {id:"dInci", ad:"Derya'nın İncisi", em:"🦪", tip:"tilsim", han:2, fiyat:205,
+  kisa:"7 harfli etaplarda ödül %40 fazla",
+  tam:"Yolun en derin dalışı yedi harfli etaplardır; yarısı sözlükten gelir. İnciyi "+
+      "bulana ödül büyür.", kilit:{r:"Süper Lingo"}},
+ {id:"dSedef", ad:"Derya'nın Sedefi", em:"🐚", tip:"tilsim", han:2, fiyat:190,
+  kisa:"Her doğru cevap seriyi iki artırır",
+  tam:"Seri normalde birer birer yükselir; sedefle ikişer ikişer. Bülent'in Seri "+
+      "Ateşi'ni iki kat hızlı tetikler.", kilit:{r:"Seri"}},
+ {id:"dMatara", ad:"Derya'nın Matarası", em:"💧", tip:"yetenek", han:3, fiyat:185, yigin:1,
+  kisa:"Kalp sayısı bir artar",
+  tam:"Alındığı anda bir kalp ekler ve doldurur. Birden fazla alabilirsin.",
+  kilit:null}
 ];
 const URUNID = {}; URUN.forEach(u => URUNID[u.id] = u);
 
@@ -914,6 +950,7 @@ function etapBasla(zorlaKelime){
              + kac("mKandil") * 8;
   if(n === 6 && sahipmi("demiryurek")) sure = Math.max(sure, 25);
   if(n === 7) sure += kac("ugur") * 10;
+  sure += kac("dYelken") * 6;
   if(i === 0) sure += kac("mKupe") * 8;
   if(sahipmi("lamba")){ const sa = new Date().getHours();
     if(sa >= 22 || sa < 4) sure += 5; }
@@ -978,6 +1015,9 @@ function etapBasla(zorlaKelime){
       if(h >= 22 || h < 4) o *= 1.2; }
     if(sahipmi("hizlim") && !sureyok && !saatDurdu && (sure - kalanSn) <= 8) o *= 1.25;
     if(sahipmi("mBereket")) o *= 1.15;
+    if(sahipmi("dFener")){ const h2 = new Date().getHours();
+      if(h2 >= 22 || h2 < 4) o *= 1.25; }
+    if(n === 7 && sahipmi("dInci")) o *= 1.4;
     if(sahipmi("mDua") && sat + 1 >= satirSay) o *= 2;
     return Math.round(o / 10) * 10;
   }
@@ -1083,7 +1123,7 @@ function etapBasla(zorlaKelime){
     if(akceCift) akce *= 2;
     if(!kazandi) akce = Math.round(akce * 0.4);
     S.para += kazanc; S.akce += akce;
-    if(kazandi){ S.seri++; S.dogru.push(gizli); }
+    if(kazandi){ S.seri += sahipmi("dSedef") ? 2 : 1; S.dogru.push(gizli); }
     else { S.seri = sahipmi("ip") ? Math.max(0, S.seri - 1) : 0;
       S.takilan.push(gizli); S.hatali.push(gizli); }
     S.sonuc[S.etap] = kazandi;
@@ -1222,6 +1262,36 @@ function etapBasla(zorlaKelime){
     } else if(id === "kalem"){
       S.jok[id]--; if(!S.jok[id]) delete S.jok[id]; kaydet();
       gir = gizli.split(""); yaz(); return sonuclandir(gizli);
+    } else if(id === "dAgi"){
+      const icinde = new Set(gizli.split(""));
+      const aday = "abcçdefgğhıijklmnoöprsştuüvyz".split("")
+        .filter(c => !icinde.has(c) && !klvDurum[c]);
+      if(!aday.length) oldu = false;
+      else { const sec = [];
+        for(let k2 = 0; k2 < 5 && aday.length; k2++)
+          sec.push(aday.splice(Math.floor(Math.random()*aday.length), 1)[0]);
+        sec.forEach(c => { klvDurum[c] = "yok";
+          if(klvTus[c]) klvTus[c].className = "yok"; });
+        uyar("Ağa takılanlar: " + sec.map(TRU).join(" ")); }
+    } else if(id === "dTekne"){
+      S.jok[id]--; if(!S.jok[id]) delete S.jok[id];
+      bitti = true; durdur(); sureGoster(false);
+      klv.classList.add("gizli"); jokbar.classList.add("gizli");
+      const yarim = Math.round(odul() / 2);
+      S.para += yarim; S.gorulen.push(gizli); S.sonuc[S.etap] = true; S.etap++;
+      if(S.etap === TOPETAP()) S.sonKapi = false;
+      if(S.etap >= TOPETAP()) S.bitti = "kazandi";
+      kaydet();
+      return ekran(`<div class="kutu ort">
+        <div class="eyebrow">${S.etap}/${TOPETAP()}. etap · tekneyle geçildi</div>
+        <div class="sonuc iyi" style="margin-top:8px">Karşı kıyıya geçtin
+          <span class="kw">${TRU(gizli)}</span></div>
+        <p class="kucuk">Ödülün yarısı kesende: <b>₺${TL(yarim)}</b>. Matara ve seri
+          yerinde.</p>
+        <button class="buton" onclick="ilerle()">DEVAM ▸</button>
+        <button class="buton ikinci" onclick="yolEkran()">🗺 YOL HARİTASI</button>
+        <a class="buton ikinci" href="index.html">ANA SAYFA</a>
+      </div>`);
     } else if(id === "mFisilti"){
       if(acik.has(1) || n < 2) oldu = false;
       else { acik.add(1); gir[1] = gizli[1]; imle = ilkBos();
@@ -1401,7 +1471,8 @@ function stokKur(h){
   const tip = HANTIP[h];
   const gecmis = new Set(HANTIP.slice(0, h + 1));     /* onceki hanlarin mallari da */
   const adet = 4 + ((sahipmi("sozlukcildi") || seviye() >= 3) ? 1 : 0)
-                 + (sahipmi("mYuzuk") ? 1 : 0) + kac("katalog") * 2;
+                 + (sahipmi("mYuzuk") ? 1 : 0) + kac("katalog") * 2
+                 + kac("dIskele");
   const olur = u => kilitDurum(u).acik && (u.tek || u.yigin || !sahipmi(u.id));
   const kendi = URUN.filter(u => u.han === tip && olur(u));
   const digerleri = URUN.filter(u => u.han !== tip && gecmis.has(u.han) && olur(u));
@@ -1498,6 +1569,7 @@ window.satinAl = function(id){
     if(id === "saglamyurek"){ S.maxKalp++; S.kalp++; }
     if(id === "ciftyurek"){ S.maxKalp += 2; S.kalp += 2; }
     if(id === "mYurek"){ S.maxKalp++; S.kalp++; }
+    if(id === "dMatara"){ S.maxKalp++; S.kalp++; }
   }
   S.alinan = (S.alinan || 0) + 1;
   S.hanAlim = (S.hanAlim || 0) + 1;
