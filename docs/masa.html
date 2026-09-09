@@ -42,6 +42,35 @@ button{font:inherit;cursor:pointer}
   font-variant-numeric:tabular-nums}
 #skor .m u{display:block;text-decoration:none;font-size:9.5px;color:var(--soluk);
   letter-spacing:.4px;text-transform:uppercase}
+#skor .m i.eksi{color:var(--kirmizi)}
+#skor .m .jk{display:block;font-size:10px;letter-spacing:.5px;margin-top:1px}
+/* ---- joker dukkani ---- */
+.jkart{display:flex;align-items:center;gap:10px;border:1px solid var(--cizgi);
+  border-radius:12px;background:#141d27;padding:10px 11px;margin-top:7px;
+  max-width:460px;width:100%;text-align:left}
+.jkart .em{font-size:20px;width:26px;text-align:center;flex:none}
+.jkart .gv{flex:1;min-width:0}
+.jkart .gv b{display:block;font-size:14px}
+.jkart .gv span{display:block;font-size:11.5px;color:var(--soluk);line-height:1.4;
+  margin-top:1px}
+.jkart .fy{flex:none;text-align:right;font-weight:800;font-size:13.5px;color:var(--altin);
+  font-variant-numeric:tabular-nums}
+.jkart .fy em{font-style:normal;display:block;font-size:9.5px;color:var(--soluk);
+  letter-spacing:.4px;font-weight:700}
+.jkart.elde{border-color:var(--yesil)}
+.jkart.dolu{opacity:.45;border-style:dashed}
+.jkart:disabled{cursor:default}
+.jokbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:460px;
+  width:100%;margin-top:2px}
+.jokbar button{background:#141d27;border:1px solid var(--cizgi);color:var(--murekkep);
+  border-radius:99px;padding:7px 12px;font-size:12.5px;font-weight:700}
+.jokbar button:disabled{opacity:.34}
+.jokbar button u{text-decoration:none;color:var(--altin);font-weight:800}
+.ipuc{background:rgba(244,201,93,.1);border:1px solid rgba(244,201,93,.32);
+  border-radius:10px;padding:8px 12px;font-size:13.5px;color:var(--altin);
+  font-weight:700;max-width:460px;width:100%;text-align:center}
+.hazirlar{font-size:12.5px;color:var(--soluk);text-align:center;margin-top:4px}
+.hazirlar b{color:var(--altin)}
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
   justify-content:flex-start;padding:10px;gap:9px;min-height:0}
 #orta:not(.ust) > :first-child{margin-top:auto}
@@ -133,12 +162,32 @@ const DUELLO = {
 const FINAL = {sure:200, dizi:[4,5,6,7], carpan:{4:0.5,5:1,6:2,7:2},
                superEk:250000, satir:5};
 const PRIM = 1000, SATIR = 5, SURE = 25, CALSURE = 15, PUZSURE = 60, PUZARALIK = 8, KELSAY = 3;
+/* --- joker dukkani --- */
+const JOKER = [
+  {id:"harf",   em:"🔤", ad:"Bir Harf",     fiyat:1000,
+   ac:"Kelimenin bir harfini kaçıncı sırada olduğuyla söyler"},
+  {id:"reklam", em:"⏱", ad:"Reklam Arası",  fiyat:1000,
+   ac:"Saat 20 saniye tamamen durur, kalan süre korunur"},
+  {id:"uzatma", em:"➕", ad:"Uzatma",        fiyat:1000,
+   ac:"Bu kelimede bir tahmin hakkı daha verir"},
+  {id:"kilit",  em:"🔒", ad:"Çanı Kilitle",  fiyat:1000,
+   ac:"Bu kelimeyi bilemezsen kimse çalamaz, kelime kimseye gitmez"}
+];
+const JOKERID = {}; JOKER.forEach(j => JOKERID[j.id] = j);
+const JMAX = 2;             /* ayni jokerden elde en fazla */
+const JZAM = 1.2;           /* her yeni alista %20 zam */
+const DUKSURE = 60;         /* dukkan sayaci */
+const DUKAD = ["Yola çıkmadan önce — dükkân açık",
+               "1. etap bitti — dükkân yeniden açık",
+               "Düello öncesi — dükkân açık",
+               "Final öncesi — son dükkân"];
 const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP — DÜELLO","FİNAL"];
 /* tek sabit oda: kod yazmaya gerek yok, herkes ayni odaya girer */
 const ODA = "lingotr-ailecuk-szyr", ODAAD = "AİLECÜK";
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const TRL = s => s.replace(/I/g,"ı").replace(/İ/g,"i").toLowerCase();
 const TL = n => n.toLocaleString("tr-TR");
+const PARA = n => (n<0 ? "−₺"+TL(-n) : "₺"+TL(n));
 const $ = s => document.querySelector(s);
 const orta=$("#orta"), klv=$("#klavye"), skorEl=$("#skor"), etEl=$("#et"),
       agEl=$("#ag"), kodEl=$("#kod"), sureKap=$("#sure"), sureBar=sureKap.querySelector("i");
@@ -149,15 +198,21 @@ const M = {
   S: null, GIZLI: null, PUZ: null, sayac: null, yayin: null,
   kur(adlar){
     this.S = {
-      faz:"lobi", masalar: adlar.map(a=>({ad:a, para:0, online:false})),
+      faz:"lobi",
+      masalar: adlar.map(a=>({ad:a, para:0, online:false, jok:{}, alim:{}, hazir:false})),
+      dukkan:null, ekHak:0, canKilit:false, jokerBu:false, ipuc:"", acikHarf:[], dondu:false,
+      elenenler:[],
       etap:0, sira:0, ki:0, n:4, satirlar:[], aktif:0, giris:"", hak:SATIR, sn:SURE,
       dogru:0, puzzle:null, buzz:{acik:false, kim:null, kalan:[]},
       cevaplayan:0, mesaj:"", msjTip:"bek", acik:null, bitti:false,
-      kalanlar:[0,1,2], elenen:null, du:null, duSira:[], duTahmin:0, duOdul:0,
+      kalanlar: adlar.map((_,i)=>i), elenen:null, du:null, duSira:[], duTahmin:0, duOdul:0,
       fin:null, finKazanc:0, finalist:[]
     };
   },
   dur(){ if(this.sayac){ clearInterval(this.sayac); this.sayac=null; } },
+  satirTaban(){ const S=this.S;
+    if(S.faz==="duello") return DUELLO.hak + (S.ekHak||0);
+    return (S.faz==="final" ? FINAL.satir : SATIR) + (S.ekHak||0); },
   /* --- kelime secimi --- */
   kelimeSec(n){
     n=String(n);
@@ -185,21 +240,138 @@ const M = {
     }
     return VERI.puzzle["9"][0];
   },
+  /* --- dukkan --- */
+  fiyat(i, id){
+    const m=this.S.masalar[i], k=(m.alim && m.alim[id]) || 0;
+    return Math.round(JOKERID[id].fiyat * Math.pow(JZAM, k) / 50) * 50;
+  },
+  dukkanAc(no, kimler, sonra){
+    const S=this.S; this.dur();
+    S.faz="dukkan"; S.dukkan={no:no, kimler:kimler.slice(), sonra:sonra};
+    S.cevaplayan=-1; S.acik=null; S.satirlar=[]; S.puzzle=null; S.buzz={acik:false,kim:null,kalan:[]};
+    S.masalar.forEach((m,i)=>{ m.hazir = kimler.indexOf(i)<0; });
+    S.mesaj=DUKAD[no-1]; S.msjTip="bek";
+    this.saat(DUKSURE, ()=>this.dukkanKapat());
+    this.gonder();
+  },
+  satinAl(i, id){
+    const S=this.S;
+    if(S.faz!=="dukkan" || !S.dukkan) return;
+    if(S.dukkan.kimler.indexOf(i)<0) return;
+    const m=S.masalar[i], j=JOKERID[id];
+    if(!m || !j) return;
+    if((m.jok[id]||0) >= JMAX) return;
+    const f=this.fiyat(i, id);
+    m.para -= f;
+    m.jok[id]=(m.jok[id]||0)+1;
+    m.alim[id]=(m.alim[id]||0)+1;
+    m.hazir=false;
+    S.mesaj=`${m.ad} aldı: ${j.em} ${j.ad} — ₺${TL(f)}`; S.msjTip="bek";
+    this.gonder();
+  },
+  hazir(i){
+    const S=this.S;
+    if(S.faz!=="dukkan" || !S.dukkan) return;
+    if(S.dukkan.kimler.indexOf(i)<0) return;
+    S.masalar[i].hazir=true;
+    if(S.masalar.every(m=>m.hazir)) return this.dukkanKapat();
+    this.gonder();
+  },
+  dukkanKapat(){
+    const S=this.S; this.dur();
+    const sonra = S.dukkan ? S.dukkan.sonra : "oyun";
+    S.dukkan=null;
+    this.dukkanSonra(sonra);
+  },
+  dukkanSonra(sonra){
+    const S=this.S;
+    if(sonra==="oyun"){
+      S.faz="oyun"; S.etap=0; S.sira=S.kalanlar[0]; S.ki=0; S.dogru=0;
+      return this.kelimeAc();
+    }
+    if(sonra==="etap2"){
+      S.faz="etapsonu";
+      S.mesaj=`${ETAPLAR[S.etap].ad} başlıyor — ${ETAPLAR[S.etap].n} harfli · her kelime ₺${TL(ETAPLAR[S.etap].pk)}`;
+      S.msjTip="bek"; this.gonder();
+      return setTimeout(()=>this.kelimeAc(), 2800);
+    }
+    if(sonra==="duello") return this.duBasla();
+    if(sonra==="final"){
+      const F=S.fin;
+      S.faz="finalgiris"; S.cevaplayan=-1;
+      S.mesaj=`Finale çıkan: ${S.masalar[F.masa].ad} — ₺${TL(F.taban)} ile`;
+      S.msjTip="iyi"; return this.gonder();
+    }
+  },
+  /* --- joker kullanimi --- */
+  jokerUygun(i, id){
+    const S=this.S, m=S.masalar[i];
+    if(!m || !(m.jok[id]>0)) return false;
+    if(S.jokerBu) return false;
+    if(id==="kilit"){
+      const E=ETAPLAR[Math.min(S.etap,1)];
+      return S.faz==="kelime" && i===S.sira && !S.canKilit && S.etap<2 && E.cal;
+    }
+    if(["kelime","calma","duello","final"].indexOf(S.faz)<0) return false;
+    return i===S.cevaplayan;
+  },
+  joker(i, id){
+    const S=this.S;
+    if(!this.jokerUygun(i, id)) return;
+    const m=S.masalar[i], j=JOKERID[id];
+    m.jok[id]--; if(!m.jok[id]) delete m.jok[id];
+    S.jokerBu=true;
+    if(id==="harf"){
+      const w=this.GIZLI, aday=[];
+      for(let k=1;k<w.length;k++) if((S.acikHarf||[]).indexOf(k)<0) aday.push(k);
+      if(aday.length){
+        const k=aday[Math.floor(Math.random()*aday.length)];
+        S.acikHarf=(S.acikHarf||[]).concat([k]);
+        S.ipuc=`🔤 ${k+1}. harf: ${TRU(w[k])}`;
+      } else S.ipuc="🔤 Açılacak harf kalmadı";
+    } else if(id==="reklam"){
+      const kalan=Math.max(1, S.sn||1), fin=(S.faz==="final");
+      const bit=this.bitinceSon;
+      this.dur(); S.dondu=true;
+      S.ipuc="⏱ Reklam arası — 20 saniye düşünme, saat duruyor";
+      S.mesaj=`${m.ad}: ${j.em} ${j.ad}`; S.msjTip="iyi";
+      this.gonder();
+      setTimeout(()=>{
+        if(S.bitti || S.faz==="dukkan") return;
+        S.dondu=false; S.ipuc="";
+        if(fin) this.finSaat(kalan); else this.saat(kalan, bit);
+        this.gonder();
+      }, 20000);
+      return;
+    } else if(id==="uzatma"){
+      S.ekHak=(S.ekHak||0)+1;
+      S.hak=this.satirTaban()-S.aktif;
+      S.ipuc="➕ Bir tahmin hakkı daha eklendi";
+    } else if(id==="kilit"){
+      S.canKilit=true;
+      S.ipuc="🔒 Çan kilitli — bu kelime kimseye gitmiyor";
+    }
+    S.mesaj=`${m.ad}: ${j.em} ${j.ad}`; S.msjTip="iyi";
+    this.gonder();
+  },
   /* --- akis --- */
-  basla(){ this.kul=new Set(); this.S.faz="oyun"; this.S.etap=0; this.S.sira=0;
-           this.S.ki=0; this.S.dogru=0; this.kelimeAc(); },
+  basla(){ this.kul=new Set();
+           this.S.kalanlar=this.S.masalar.map((_,i)=>i);
+           this.S.elenenler=[]; this.S.elenen=null;
+           this.dukkanAc(1, this.S.kalanlar, "oyun"); },
   kelimeAc(){
     const E=ETAPLAR[this.S.etap], S=this.S;
     S.faz="kelime"; S.n=E.n; S.cevaplayan=S.sira;
     S.buzz={acik:false, kim:null, kalan:[]};
     this.GIZLI=this.kelimeSec(E.n);
+    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.acikHarf=[]; S.dondu=false;
     S.satirlar=[]; S.aktif=0; S.hak=SATIR; S.giris=this.GIZLI[0]; S.acik=null;
     S.mesaj=`${S.masalar[S.sira].ad} — ${S.ki+1}. kelime · ₺${TL(E.pk)}`; S.msjTip="bek";
     this.saat(SURE, ()=>this.satirBitir(null));
     this.gonder();
   },
   saat(sn, bitince){
-    this.dur(); const b=Date.now(), top=sn*1000;
+    this.dur(); this.bitinceSon=bitince; const b=Date.now(), top=sn*1000;
     this.S.sn=sn; this.S.top=sn;
     this.sayac=setInterval(()=>{
       const kalan=Math.max(0, top-(Date.now()-b));
@@ -209,6 +381,7 @@ const M = {
     },120);
   },
   harf(c){ const S=this.S;
+    if(S.acik) return;
     if(!["kelime","calma","puzzle","duello","dupuzzle","final"].includes(S.faz)) return;
     if(S.faz==="puzzle"||S.faz==="dupuzzle"){
       const P=S.puzzle;
@@ -231,6 +404,7 @@ const M = {
     if(S.giris.length>1){ S.giris=S.giris.slice(0,-1); this.gonder(); } },
   gonderTahmin(){
     const S=this.S;
+    if(S.acik) return;                          /* kelime bitti, tahmin alinmaz */
     if(S.faz==="puzzle"||S.faz==="dupuzzle") return this.puzDene();
     const n=S.n;
     if(S.giris.length<n) return;
@@ -245,6 +419,7 @@ const M = {
   },
   satirBitir(tah){
     const S=this.S, E=ETAPLAR[Math.min(S.etap,1)];
+    if(S.acik) return;                          /* kelime coktan kapandi */
     if(S.faz!=="final") this.dur();
     if(tah===null){ S.satirlar.push({h:[...S.giris.padEnd(S.n,"·")], r:new Array(S.n).fill("yok")}); }
     else{
@@ -270,9 +445,9 @@ const M = {
         return setTimeout(()=> S.faz==="duello" ? this.duSonraki() : this.sonrakiKelime(), 1800);
       }
     }
-    S.aktif++; S.hak=(S.faz==="final"?FINAL.satir:SATIR)-S.aktif; S.giris=this.GIZLI[0];
+    S.aktif++; S.hak=this.satirTaban()-S.aktif; S.giris=this.GIZLI[0];
     if(S.faz==="final"){
-      if(S.aktif>=FINAL.satir){
+      if(S.aktif>=this.satirTaban()){
         S.acik=this.GIZLI;
         S.mesaj=`Bilinemedi — doğru cevap: ${TRU(this.GIZLI)}`; S.msjTip="kotu";
         this.gonder(); return setTimeout(()=>this.finBitir(), 2600);
@@ -282,7 +457,7 @@ const M = {
     }
     if(S.faz==="duello"){
       S.duTahmin++;
-      if(S.duTahmin>=DUELLO.hak){
+      if(S.duTahmin>=this.satirTaban()){
         S.acik=this.GIZLI; S.mesaj=`Kimse bilemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
         this.gonder(); return setTimeout(()=>this.duSonraki(), 2000);
       }
@@ -294,8 +469,8 @@ const M = {
       return this.gonder();
     }
     if(S.faz==="calma"){ return this.calmaBitti(); }
-    if(S.aktif>=SATIR){
-      if(E.cal) return this.calmaAc();
+    if(S.aktif>=this.satirTaban()){
+      if(E.cal && !S.canKilit) return this.calmaAc();
       S.acik=this.GIZLI; S.mesaj=`Bilinemedi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
       this.gonder();
       return setTimeout(()=>this.sonrakiKelime(), 2000);
@@ -306,6 +481,10 @@ const M = {
   /* --- calma (buzzer) --- */
   calmaAc(){
     const S=this.S;
+    if(S.canKilit){
+      S.acik=this.GIZLI; S.mesaj=`🔒 Çan kilitliydi — ${TRU(this.GIZLI)}`; S.msjTip="kotu";
+      this.gonder(); return setTimeout(()=>this.sonrakiKelime(), 2000);
+    }
     S.faz="buzz";
     S.buzz={acik:true, kim:null, kalan:S.masalar.map((_,i)=>i).filter(i=>i!==S.sira)};
     S.mesaj="Masaya geçmedi — BASAN cevaplar!"; S.msjTip="bek";
@@ -416,6 +595,7 @@ const M = {
   },
   puzDene(){
     const S=this.S;
+    if(S.acik) return;                          /* puzzle bitti */
     const t=this.puzTahmin();
     if(t===null){ S.mesaj="Boş kutular var"; S.msjTip="kotu"; return this.gonder(); }
     if(S.faz==="dupuzzle"){
@@ -447,21 +627,26 @@ const M = {
     S.etap++;
     if(S.etap>=ETAPLAR.length) return this.eleme();
     S.sira=S.kalanlar[0];
-    S.faz="etapsonu";
-    S.mesaj=`${ETAPLAR[S.etap].ad} başlıyor — ${ETAPLAR[S.etap].n} harfli · her kelime ₺${TL(ETAPLAR[S.etap].pk)}`;
-    S.msjTip="bek"; this.gonder();
-    setTimeout(()=>this.kelimeAc(), 2800);
+    return this.dukkanAc(2, S.kalanlar, "etap2");
   },
-  /* ---------- eleme: en dusuk puan cikar ---------- */
+  /* ---------- eleme: 4 masada iki, 3 masada bir, 2 masada eleme yok ---------- */
   eleme(){
     const S=this.S; this.dur();
-    const en=Math.min(...S.kalanlar.map(i=>S.masalar[i].para));
-    const el=S.kalanlar.find(i=>S.masalar[i].para===en);
-    S.elenen=el; S.kalanlar=S.kalanlar.filter(i=>i!==el);
+    const cikar = S.kalanlar.length>=4 ? 2 : (S.kalanlar.length===3 ? 1 : 0);
+    if(!cikar){
+      S.elenenler=[]; S.elenen=null;
+      return this.dukkanAc(3, S.kalanlar, "duello");
+    }
+    const sirali=S.kalanlar.slice().sort((a,b)=>S.masalar[a].para-S.masalar[b].para);
+    const el=sirali.slice(0, cikar);
+    S.elenenler=el; S.elenen=el[0];
+    S.kalanlar=S.kalanlar.filter(i=>el.indexOf(i)<0);
+    el.forEach(i=>{ S.masalar[i].jok={}; });          /* elenen masanin jokerleri yanar */
     S.faz="eleme";
-    S.mesaj=`${S.masalar[el].ad} elendi — ₺${TL(S.masalar[el].para)}`;
+    S.mesaj = el.map(i=>`${S.masalar[i].ad} (₺${TL(S.masalar[i].para)})`).join(" ve ")
+      + (el.length>1 ? " elendi" : " elendi");
     S.msjTip="kotu"; this.gonder();
-    setTimeout(()=>this.duBasla(), 3500);
+    setTimeout(()=>this.dukkanAc(3, S.kalanlar, "duello"), 3500);
   },
   /* ---------- 3. etap: duello ---------- */
   duBasla(){
@@ -479,6 +664,7 @@ const M = {
     S.duSira=[...S.kalanlar].sort((a,b)=>S.masalar[a].para-S.masalar[b].para);
     S.duTahmin=0; S.duOdul=DUELLO.odul[0]; S.cevaplayan=S.duSira[0];
     this.GIZLI=this.kelimeSec(B.n);
+    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.acikHarf=[]; S.dondu=false;
     S.satirlar=[]; S.aktif=0; S.hak=DUELLO.hak; S.giris=this.GIZLI[0]; S.acik=null;
     S.buzz={acik:false, kim:null, kalan:[]};
     S.mesaj=`${S.masalar[S.cevaplayan].ad} başlıyor — ${S.du.ki+1}/${B.adet} · ₺${TL(S.duOdul)}`;
@@ -537,11 +723,10 @@ const M = {
     const en=Math.max(...hav.map(i=>S.masalar[i].para));
     S.finalist=hav.filter(i=>S.masalar[i].para===en);
     const m=S.finalist[0];
-    S.etap=3; S.faz="finalgiris"; S.cevaplayan=-1;
+    S.etap=3; S.cevaplayan=-1;
     S.fin={masa:m, taban:S.masalar[m].para, idx:0, enIyi:0, suan:0};
     S.finKazanc=0;
-    S.mesaj=`Finale çıkan: ${S.masalar[m].ad} — ₺${TL(S.fin.taban)} ile`;
-    S.msjTip="iyi"; this.gonder();
+    return this.dukkanAc(4, [m], "final");
   },
   /* ---------- FİNAL ---------- */
   fKazanc(n){
@@ -549,7 +734,7 @@ const M = {
     return n===7 ? t*2 + FINAL.superEk : Math.round(t*FINAL.carpan[n]/100)*100;
   },
   finSaat(sn){
-    const S=this.S; this.dur();
+    const S=this.S; this.dur(); this.bitinceSon=()=>this.finBitir();
     const b0=Date.now(), top=sn*1000; S.sn=sn; S.top=FINAL.sure;
     this.sayac=setInterval(()=>{
       const kalan=Math.max(0, top-(Date.now()-b0)), s2=Math.ceil(kalan/1000);
@@ -583,6 +768,7 @@ const M = {
     const n=FINAL.dizi[F.idx]; F.suan=n;
     S.faz="final"; S.n=n; S.cevaplayan=F.masa;
     this.GIZLI=this.kelimeSec(n);
+    S.ekHak=0; S.jokerBu=false; S.ipuc=""; S.acikHarf=[]; S.dondu=false;
     S.satirlar=[]; S.aktif=0; S.hak=FINAL.satir; S.giris=this.GIZLI[0]; S.acik=null;
     S.mesaj=`${n} harfli — bilirse ₺${TL(this.fKazanc(n))}` +
       (n===7?" (SÜPER LİNGO)":"");
@@ -642,6 +828,9 @@ const NET = {
     }
     if(!M.S) return;
     const S=M.S;
+    if(m.t==="al"){ if(c.masa>=0) M.satinAl(c.masa, m.id); return; }
+    if(m.t==="hazir"){ if(c.masa>=0) M.hazir(c.masa); return; }
+    if(m.t==="joker"){ if(c.masa>=0) M.joker(c.masa, m.id); return; }
     if(m.t==="buzz") return M.buz(c.masa);
     if(m.t==="pas"){ if(c.masa===S.cevaplayan) M.pas(); return; }
     if(m.t==="karar"){ if(S.fin && c.masa===S.fin.masa) M.karar(!!m.devam); return; }
@@ -769,7 +958,7 @@ function klvBoya(S){
 function skorCiz(S){
   skorEl.classList.remove("gizli");
   skorEl.innerHTML=S.masalar.map((m,i)=>{
-    const el = S.elenen===i;
+    const el = (S.elenenler||[]).indexOf(i)>=0 || S.elenen===i;
     const dur = el ? "izleyici" : (i===S.cevaplayan ? "cevapta"
       : (S.faz==="duello"&&S.duSira[1]===i ? "bekliyor"
       : (i===S.sira&&S.etap<2 ? "sırada" : "&nbsp;")));
@@ -777,15 +966,32 @@ function skorCiz(S){
       ? LG_unvan(LG_defter(m.ad).length).simdi.ad : null;
     return `<div class="m ${i===S.sira&&!el?"on":""} ${i===NET.benim?"ben":""}"
        style="${el?"opacity:.5":""}">
-       <b>${m.ad}</b><i>₺${TL(m.para)}</i>
-       <u>${unv ? unv : dur}</u></div>`;}).join("");
+       <b>${m.ad}</b><i class="${m.para<0?"eksi":""}">${PARA(m.para)}</i>
+       ${(function(){ const j=m.jok||{}; const k=Object.keys(j).filter(x=>j[x]>0);
+         return k.length ? `<span class="jk">${k.map(x=>JOKERID[x].em +
+           (j[x]>1?j[x]:"")).join(" ")}</span>` : ""; })()}
+       <u>${S.faz==="dukkan" ? (m.hazir?"hazır":"seçiyor") : (unv ? unv : dur)}</u>
+       </div>`;}).join("");
+}
+function jokerFiyat(S, i, id){
+  const m=S.masalar[i], k=(m.alim && m.alim[id]) || 0;
+  return Math.round(JOKERID[id].fiyat * Math.pow(JZAM, k) / 50) * 50;
+}
+function jokerAcikMi(S, i, id){
+  const m=S.masalar[i];
+  if(!m || !(m.jok[id]>0) || S.jokerBu) return false;
+  if(id==="kilit") return S.faz==="kelime" && i===S.sira && !S.canKilit && S.etap<2
+    && ETAPLAR[Math.min(S.etap,1)].cal;
+  if(["kelime","calma","duello","final"].indexOf(S.faz)<0) return false;
+  return i===S.cevaplayan;
 }
 function ciz(S){
   SON=S;
   if(!NET.host && !masaSoruldu) return masaSecEkrani(S);
   if(S.faz==="lobi") return;
   kodEl.classList.remove("gizli"); kodEl.textContent=NET.kod||"";
-  etEl.textContent = S.bitti ? "OYUN BİTTİ" : ETAPAD[Math.min(S.etap,3)];
+  etEl.textContent = S.bitti ? "OYUN BİTTİ"
+    : (S.faz==="dukkan" ? "DÜKKÂN" : ETAPAD[Math.min(S.etap,3)]);
   skorCiz(S);
   const benCevap = NET.benim===S.cevaplayan;
   if(S.faz==="bitti"){
@@ -795,10 +1001,10 @@ function ciz(S){
       <div class="tutar" style="font-size:42px;font-weight:800;color:var(--altin);
         letter-spacing:-1px">₺${TL(S.finKazanc||0)}</div>
       <p class="izle">${S.mesaj}${F?` · üç etapta ₺${TL(F.taban)} toplamıştı`:""}</p>
-      ${sr.map((m,i)=>`<p style="font-size:17px;margin:6px 0;
-        ${S.elenen===m.i?"opacity:.45":""}">
-        ${i+1}. <b>${m.ad}</b> — ₺${TL(m.para)}
-        ${S.elenen===m.i?" <span style='font-size:13px'>(2. etapta elendi)</span>":""}</p>`).join("")}
+      ${sr.map((m,i)=>{ const el=(S.elenenler||[]).indexOf(m.i)>=0;
+        return `<p style="font-size:17px;margin:6px 0;${el?"opacity:.45":""}">
+        ${i+1}. <b>${m.ad}</b> — ${PARA(m.para)}
+        ${el?" <span style='font-size:13px'>(2. etapta elendi)</span>":""}</p>`;}).join("")}
       ${(function(){
         const ad = (NET.benim>=0 && S.masalar[NET.benim]) ? S.masalar[NET.benim].ad : null;
         if(!ad) return "";
@@ -849,6 +1055,42 @@ function ciz(S){
         : `<p class="izle">Karar ${S.masalar[F.masa].ad} masasında…</p>`}`);
     skorCiz(S); return;
   }
+  if(S.faz==="dukkan"){
+    sureKap.classList.remove("gizli");
+    sureBar.style.width=(100*S.sn/(S.top||DUKSURE))+"%";
+    sureKap.classList.toggle("az", S.sn<=10);
+    klv.classList.add("gizli");
+    orta.className="ust";
+    const ben=NET.benim, katil=ben>=0 && S.dukkan.kimler.indexOf(ben)>=0;
+    const m=katil?S.masalar[ben]:null;
+    const hazirSay=S.dukkan.kimler.filter(i=>S.masalar[i].hazir).length;
+    let h=`<div class="baslik">${DUKAD[S.dukkan.no-1]}</div>`;
+    if(katil){
+      const kese=m.para;
+      h+=`<div class="msj ${kese<0?"kotu":"bek"}" style="max-width:460px">
+        Kesende <b>${PARA(kese)}</b>${kese<0?" — borçlusun":""} ·
+        aynı jokerden en fazla <b>${JMAX}</b> tane · her yeni alışta <b>%20 zam</b></div>`;
+      h+=JOKER.map(j=>{
+        const adet=(m.jok[j.id]||0), f=jokerFiyat(S, ben, j.id), dolu=adet>=JMAX;
+        return `<button class="jkart ${adet?"elde":""} ${dolu?"dolu":""}"
+          ${dolu?"disabled":""} onclick="NET.yolla({t:'al',id:'${j.id}'})">
+          <span class="em">${j.em}</span>
+          <span class="gv"><b>${j.ad}</b><span>${j.ac}</span></span>
+          <span class="fy">${dolu?"—":TL(f)}<em>${dolu?"elinde "+adet+" · dolu"
+            :(adet?"elinde "+adet+" · zamlı":"al")}</em></span></button>`;
+      }).join("");
+      h+=`<button class="buton" style="max-width:460px"
+        onclick="NET.yolla({t:'hazir'})">${m.hazir?"HAZIRSIN — bekleniyor":"HAZIRIM ▸"}</button>`;
+    } else {
+      h+=`<div class="izle">Bu dükkân ${S.dukkan.kimler.map(i=>S.masalar[i].ad).join(", ")}
+        için açık. ${ben>=0?"Sen bu turda alışveriş yapmıyorsun.":"İzliyorsun."}</div>`;
+    }
+    h+=`<div class="hazirlar"><b>${hazirSay}/${S.dukkan.kimler.length}</b> masa hazır ·
+      <b>${S.sn}</b> saniye sonra dükkân kapanıyor</div>`;
+    if(S.mesaj) h+=`<div class="msj ${S.msjTip}" style="max-width:460px">${S.mesaj}</div>`;
+    orta.innerHTML=h;
+    return;
+  }
   if(S.faz==="eleme"){
     ekran(`<h2 style="color:var(--kirmizi)">${S.mesaj}</h2>
       <p>3. etap düello olarak devam ediyor:</p>
@@ -889,6 +1131,16 @@ function ciz(S){
   if(puz) h+=`<div class="ipucu"><b>puzzle · ₺${TL(S.puzzle.odul)}</b>${S.puzzle.tanim}</div>`;
   h+=`<div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
       <div class="msj ${S.msjTip}">${S.mesaj}</div>`;
+  if(S.ipuc) h+=`<div class="ipuc">${S.ipuc}</div>`;
+  if(NET.benim>=0 && S.masalar[NET.benim]){
+    const jk=S.masalar[NET.benim].jok||{};
+    const ids=Object.keys(jk).filter(k=>jk[k]>0);
+    if(ids.length) h+=`<div class="jokbar">`+ids.map(id=>{
+      const j=JOKERID[id], ok=jokerAcikMi(S, NET.benim, id);
+      return `<button ${ok?"":"disabled"} onclick="NET.yolla({t:'joker',id:'${id}'})"
+        title="${j.ac}">${j.em} ${j.ad} <u>${jk[id]}</u></button>`;
+    }).join("")+`</div>`;
+  }
   if(dupz && S.buzz.acik && S.buzz.kalan.includes(NET.benim))
     h+=`<button class="buzz" id="bz2">BAS!</button>`;
   if(S.faz==="final" && NET.benim===S.cevaplayan)
@@ -963,27 +1215,44 @@ M.temiz=function(){
 };
 
 /* ================= kurulum ekranlari ================= */
-const VARSAYILAN=["Serpil & Zeynep","Yusuf","Ramiz"];
-const HAZIR=[VARSAYILAN, ["Deniz","Toprak","Rüzgar"]];
-let ADLAR=VARSAYILAN.slice();
+const VARSAYILAN=["Serpil & Zeynep","Yusuf","Ramiz","Elif"];
+const HAZIR=[VARSAYILAN, ["Deniz","Toprak","Rüzgar","Ateş"]];
+let KISI_SAY=3;
+try{ const n=parseInt(localStorage.getItem("lingo_masa_say")||"3",10);
+     if(n>=2&&n<=4) KISI_SAY=n; }catch(e){}
+let ADLAR=VARSAYILAN.slice(0,KISI_SAY);
 try{ const k=JSON.parse(localStorage.getItem("lingo_masalar")||"null");
-     if(Array.isArray(k)&&k.length===3) ADLAR=k; }catch(e){}
+     if(Array.isArray(k)&&k.length>=2&&k.length<=4){ ADLAR=k; KISI_SAY=k.length; } }catch(e){}
+function sayiSec(n){
+  KISI_SAY=n;
+  const eski=ADLAR.slice();
+  ADLAR=[]; for(let i=0;i<n;i++) ADLAR.push(eski[i]||VARSAYILAN[i]);
+  try{ localStorage.setItem("lingo_masa_say", String(n));
+       localStorage.setItem("lingo_masalar", JSON.stringify(ADLAR)); }catch(e){}
+  M.kur(ADLAR); if(M.S) M.gonder();
+  odaEkrani(); uyariGoster(n+" masa ile oynanacak");
+}
 let masaSoruldu=false;
 function giris(){
   etEl.textContent="MASA YARIŞMASI";
   ekran(`<h1>LİNGO MASA YARIŞMASI</h1>
-    <p>Üç masa, yayındaki format. Herkes kendi telefonundan oynar,
+    <p>İki, üç ya da dört masa — yayındaki format. Masayı kuran kişi kaç masa
+       oynanacağını seçer. Herkes kendi telefonundan oynar,
        <b>tahminler anlık olarak herkesin ekranında</b> görünür.</p>
     <p class="izle" style="text-align:left;font-size:13px">
       <b>1. etap</b> 4 harfli ×3, ₺1.000 · 3'te 3 primi ₺1.000 · puzzle<br>
       <b>2. etap</b> 5 harfli ×3, ₺1.500 · bilinemezse butona ilk basan çalar ·
-        etap sonunda <b>en düşük puan elenir</b><br>
+        etap sonunda <b>en düşük puan elenir</b> (dört masada ikisi, iki masada eleme yok)<br>
       <b>3. etap</b> düello: 4×5 harfli + puzzle, 4×6 harfli + puzzle.
         Puanı düşük olan önce cevaplar, bilemezse rakibe geçer;
         toplam 5 tahmin, ödül ₺2.000'den ₺400'e iner. Puzzle'da ilk basan cevaplar.<br>
       <b>Final</b> 200 saniye, 4→5→6→7 harfli. Biriken paranın yarısı / tamamı /
         2 katı; 7 harfliyi bilirse <b>2 katı + ₺250.000</b>, bilemezse sıfır.<br>
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
+    <p class="izle" style="text-align:left;font-size:13px"><b>Joker dükkânı</b>
+      dört kez açılır: başta, 1. etap sonunda, düello öncesi ve final öncesi.
+      Herkes ₺0 ile başlar; joker alan <b>eksiye düşer</b> ve eleme en düşük
+      parayı çıkarır. Aynı jokerden en fazla iki tane; her yeni alışta %20 zam.</p>
     <button class="buton mor" onclick="odaAc()">MASAYI BEN KURARIM</button>
     <button class="buton ikinci" onclick="katilEkran()">BEN HAZIRA KONARIM</button>`);
 }
@@ -1011,6 +1280,16 @@ function odaEkrani(){
          href="https://wa.me/?text=${encodeURIComponent("Ailecük başlıyor! Aç ve masanı seç: "+url)}">
          WHATSAPP'TAN LİNK GÖNDER</a>
       <p class="izle" id="bek">Katılanlar bekleniyor…</p>
+      <p class="izle" style="margin-bottom:4px">Kaç masa oynuyor?</p>
+      <div style="display:flex;gap:7px;max-width:460px;width:100%">
+        ${[2,3,4].map(n=>`<button class="buton ${n===KISI_SAY?"":"ikinci"}"
+          style="margin-top:0" onclick="sayiSec(${n})">${n} MASA</button>`).join("")}
+      </div>
+      <p class="izle" style="font-size:12.5px">${KISI_SAY===2
+        ? "İki masa: eleme yok, iki etaptan sonra doğrudan düello."
+        : (KISI_SAY===3
+          ? "Üç masa: 2. etap sonunda en düşük parası olan elenir."
+          : "Dört masa: 2. etap sonunda en düşük parası olan iki masa elenir.")}</p>
       <button class="buton" onclick="M.basla()">OYUNU BAŞLAT ▸</button>
       <button class="buton ikinci" onclick="isimEkrani()">İSİMLERİ DEĞİŞTİR</button>
       <p class="izle">Masa yönetimi sizde. Siz de bir masaya oturabilirsiniz:</p>
@@ -1021,21 +1300,23 @@ function isimEkrani(){
   ekran(`<h2>Masa isimleri</h2>
     <p class="izle">Hazır takımlar:</p>
     ${HAZIR.map((h,i)=>`<button class="buton ikinci" onclick="isimSeti(${i})">
-      ${h.join(" · ")}</button>`).join("")}
+      ${h.slice(0,KISI_SAY).join(" · ")}</button>`).join("")}
     <p class="izle" style="margin-top:12px">Ya da kendiniz yazın:</p>
-    ${[0,1,2].map(i=>`<input class="ad" id="ai${i}" maxlength="18" value="${ADLAR[i]}">`).join("")}
+    ${ADLAR.map((a,i)=>`<input class="ad" id="ai${i}" maxlength="18" value="${a}">`).join("")}
     <button class="buton" onclick="isimKaydet()">KAYDET ▸</button>`);
 }
 function isimSeti(i){
-  ADLAR=HAZIR[i].slice(); isimUygula(); uyariGoster("İsimler değişti");
+  ADLAR=HAZIR[i].slice(0,KISI_SAY); isimUygula(); uyariGoster("İsimler değişti");
 }
 function isimKaydet(){
-  ADLAR=[0,1,2].map(i=>($("#ai"+i).value.trim()||VARSAYILAN[i]).slice(0,18));
+  ADLAR=ADLAR.map((_,i)=>(($("#ai"+i)&&$("#ai"+i).value.trim())||VARSAYILAN[i]).slice(0,18));
   isimUygula(); uyariGoster("İsimler kaydedildi");
 }
 function isimUygula(){
-  try{ localStorage.setItem("lingo_masalar", JSON.stringify(ADLAR)); }catch(e){}
-  if(M.S){ ADLAR.forEach((a,i)=>{ if(M.S.masalar[i]) M.S.masalar[i].ad=a; }); M.gonder(); }
+  try{ localStorage.setItem("lingo_masalar", JSON.stringify(ADLAR));
+       localStorage.setItem("lingo_masa_say", String(ADLAR.length)); }catch(e){}
+  if(M.S && M.S.masalar.length!==ADLAR.length) M.kur(ADLAR);
+  else if(M.S){ ADLAR.forEach((a,i)=>{ if(M.S.masalar[i]) M.S.masalar[i].ad=a; }); M.gonder(); }
   odaEkrani();
 }
 function uyariGoster(m){
