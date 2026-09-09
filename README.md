@@ -10,7 +10,7 @@
 
 <br>
 
-## 🐪 [BİR HARF KALMIŞTI](https://rmz-oz.github.io/Lingo_Turkiye/kervan.html)
+## 🥾 [LİKYA YOLU](https://rmz-oz.github.io/Lingo_Turkiye/kervan.html)
 
 <br>
 

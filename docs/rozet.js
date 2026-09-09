@@ -227,11 +227,11 @@ function LG_rozet(d, p, kv){
    {e:"🏆",a:"Kupa",           s:"dört uzunlukta da %70+", v:tumUzunlukIyi},
    {e:"🌍",a:"Tam Alfabe",     s:"28 harfin hepsinden kelime", v:tumAlfabe},
    /* --- Bir Harf Kalmisti --- */
-   {e:"🐪",a:"Kervanbaşı",     s:"bir kervan yolculuğunu bitir", v:(K.bitirilen||0)>=1},
-   {e:"🏰",a:"Söz Kalesi",     s:"kervanda son kapıyı aç",       v:(K.sonKapi||0)>=1},
-   {e:"🫀",a:"Tek Kalp",       s:"kervanı tek kalple bitir",     v:!!K.tekKalp},
-   {e:"👝",a:"Kesesi Delik",   s:"bir handa 4 ürün al",          v:!!K.dortUrun},
-   {e:"🥷",a:"Yalın Yolcu",    s:"kervanı hiç ürün almadan bitir", v:!!K.urunsuz}
+   {e:"🥾",a:"Yol Yürüyeni",   s:"bir Likya rotasını bitir",     v:(K.bitirilen||0)>=1},
+   {e:"🗿",a:"Yazıtı Okuyan",  s:"son yazıtı çöz",               v:(K.sonKapi||0)>=1},
+   {e:"💧",a:"Son Damla",      s:"yolu tek matarayla bitir",     v:!!K.tekKalp},
+   {e:"🎒",a:"Ağır Çanta",     s:"bir konakta 4 ürün al",        v:!!K.dortUrun},
+   {e:"👣",a:"Yalın Ayak",     s:"yolu hiç ürün almadan bitir",  v:!!K.urunsuz}
   ];
 }
 function LG_acik(ad){
