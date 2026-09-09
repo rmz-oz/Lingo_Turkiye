@@ -132,6 +132,15 @@ button{font:inherit;cursor:pointer}
   letter-spacing:.4px;margin-top:2px}
 .tutar{font-size:40px;font-weight:800;color:var(--altin);letter-spacing:-1px;
   font-variant-numeric:tabular-nums;line-height:1.1}
+.tumk{max-width:470px;width:100%;text-align:left;margin-top:8px}
+.tumk>div{border-top:1px solid var(--cizgi);padding:9px 0 8px}
+.tumk>div:last-child{border-bottom:1px solid var(--cizgi)}
+.tumk i{display:block;font-style:normal;font-size:10px;letter-spacing:1.4px;
+  text-transform:uppercase;color:var(--soluk);font-weight:800;margin-bottom:5px}
+.tumk p{margin:0;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;
+  line-height:1.85;letter-spacing:.04em;color:#55636f}
+.tumk p b{color:#8ee6a6;font-weight:800}
+.tumk p em{color:var(--altin);font-style:normal;font-weight:700}
 table.rk{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
 table.rk td{padding:6px 3px;border-bottom:1px solid var(--cizgi);color:var(--soluk)}
 table.rk td:last-child{text-align:right;color:var(--murekkep);font-weight:700;
@@ -478,9 +487,26 @@ function bitir(){
   LG_ses("rozet");
   sonEkran();
 }
+function tumKelimeler(){
+  const bulundu = new Set(S.saksi.filter(Boolean).concat(S.bahce));
+  let top = 0, bul = 0, blok = "";
+  for(const n of [4,5,6,7]){
+    const lst = ADAY[n];
+    if(!lst.length) continue;
+    top += lst.length;
+    const parca = lst.map(w => {
+      const v = bulundu.has(w);
+      if(v) bul++;
+      return v ? `<b>${TRU(w)}</b>` : (arsivmi(w) ? `<em>${TRU(w)}</em>` : TRU(w));
+    }).join("  ");
+    blok += `<div><i>${n} harf · ${lst.length} kelime</i><p>${parca}</p></div>`;
+  }
+  return {top:top, bul:bul, html:blok};
+}
 function sonEkran(){
   const yeniRoz = LG_yeni(KISI);
   const tamW = S.saksi[11];
+  const tk = tumKelimeler();
   ekran(`<div class="kutu ort">
       <div class="eyebrow">Demlik doldu</div>
       <h1 style="margin-top:5px">🫖 On iki saksı tamam</h1>
@@ -498,13 +524,24 @@ function sonEkran(){
       ${S.bahce.length ? `<p class="kucuk">Bahçe: ${S.bahce.map(TRU).join(" · ")}</p>` : ""}
       ${yeniRoz.length ? `<p class="kucuk" style="color:var(--altin)">Yeni nişan: ${
         yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</p>` : ""}
-      <p class="kucuk">Bütün kelimeler <b>${KISI}</b>'in defterine yazıldı — ünvan ve
+      <p class="kucuk">Bulduğun kelimeler <b>${KISI}</b>'in defterine yazıldı — ünvan ve
         Likya Yolu'ndaki ürünler buradan da açılır.</p>
+      <p class="eyebrow" style="margin-top:16px">Bu papatyada yazılabilecek
+        bütün kelimeler</p>
+      <p class="kucuk" style="margin-top:4px">Toplam <b>${TL(tk.top)}</b> kelime var,
+        <b>${TL(tk.bul)}</b> tanesini yazdın.
+        <b style="color:#8ee6a6">Yeşil</b> yazdıkların,
+        <b style="color:var(--altin)">altın</b> kaçırdığın ama <b>yayında sorulmuş</b>
+        olanlar, gri sözlükten gelenler.${S.jokerli.length ?
+        ` Joker harfle bulduğun ${S.jokerli.map(TRU).join(", ")} bu listede yok —
+        papatyanın harflerinde olmayan bir harf kullanıyor.` :
+        " Joker harf gerektiren kelimeler bu listede yok."}</p>
+      <div class="tumk">${tk.html}</div>
       <button class="buton" onclick="yeniOyun(null)">🌼 YENİ PAPATYA</button>
       <button class="buton ikinci" onclick="kasaEkran()">📓 REKORLAR</button>
       <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
       <a class="buton ikinci" href="index.html">ANA SAYFA</a>
-    </div>`);
+    </div>`, false);
 }
 function kasaEkran(){
   ekran(`<div class="kutu">
