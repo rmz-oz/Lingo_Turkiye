@@ -222,10 +222,10 @@ const JOKERID = {}; JOKER.forEach(j => JOKERID[j.id] = j);
 const JMAX = 2;             /* ayni jokerden elde en fazla */
 const JZAM = 1.2;           /* her yeni alista %20 zam */
 const DUKSURE = 60;         /* dukkan sayaci */
-const DUKAD = ["Yola çıkmadan önce — dükkân açık",
-               "1. etap bitti — dükkân yeniden açık",
-               "Düello öncesi — dükkân açık",
-               "Final öncesi — son dükkân"];
+const DUKAD = ["Yola çıkmadan önce — dükkan açık",
+               "1. etap bitti — dükkan yeniden açık",
+               "Düello öncesi — dükkan açık",
+               "Final öncesi — son dükkan"];
 const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP — DÜELLO","FİNAL"];
 /* tek sabit oda: kod yazmaya gerek yok, herkes ayni odaya girer */
 const ODA = "lingotr-ailecuk-szyr", ODAAD = "AİLECÜK";
@@ -1051,7 +1051,7 @@ function ciz(S){
   if(S.faz==="lobi") return;
   kodEl.classList.remove("gizli"); kodEl.textContent=NET.kod||"";
   etEl.textContent = S.bitti ? "OYUN BİTTİ"
-    : (S.faz==="dukkan" ? "DÜKKÂN" : ETAPAD[Math.min(S.etap,3)]);
+    : (S.faz==="dukkan" ? "DÜKKAN" : ETAPAD[Math.min(S.etap,3)]);
   skorCiz(S);
   const benCevap = NET.benim===S.cevaplayan;
   if(S.faz==="bitti"){
@@ -1146,7 +1146,7 @@ function ciz(S){
         onclick="NET.yolla({t:'hazir'})">${m.hazir
           ? "✓ HAZIRSIN — diğerleri bekleniyor" : "HAZIRIM ▸"}</button>`;
     } else {
-      h+=`<div class="kese">Bu dükkân
+      h+=`<div class="kese">Bu dükkan
         <b>${S.dukkan.kimler.map(i=>S.masalar[i].ad).join(", ")}</b> için açık.
         ${ben>=0?"Bu turda alışveriş yapmıyorsunuz.":"İzliyorsunuz."}</div>`;
     }
@@ -1154,7 +1154,7 @@ function ciz(S){
       `<span class="${S.masalar[i].hazir?"ok":""}">${S.masalar[i].hazir?"✓ ":""}${
         S.masalar[i].ad}</span>`).join("")}</div>`;
     h+=`<div class="hazirlar"><b>${hazirSay}/${S.dukkan.kimler.length}</b> masa hazır ·
-      dükkân <b>${S.sn}</b> saniye sonra kapanıyor</div>`;
+      dükkan <b>${S.sn}</b> saniye sonra kapanıyor</div>`;
     if(S.mesaj && S.mesaj!==DUKAD[S.dukkan.no-1])
       h+=`<div class="msj ${S.msjTip}" style="max-width:460px">${S.mesaj}</div>`;
     orta.innerHTML=h;
@@ -1352,9 +1352,9 @@ function giris(){
       <b>Final</b> 200 saniye, 4→5→6→7 harfli. Biriken paranın yarısı / tamamı /
         2 katı; 7 harfliyi bilirse <b>2 katı + ₺250.000</b>, bilemezse sıfır.<br>
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
-    <p class="izle" style="text-align:left;font-size:13px"><b>Joker dükkânı</b>
+    <p class="izle" style="text-align:left;font-size:13px"><b>Joker dükkanı</b>
       dört kez açılır: yola çıkmadan önce, 1. etap sonunda, düello öncesi ve
-      final öncesi. Jokerler <b>biriktirdiğiniz parayla</b> alınır; ilk dükkânda
+      final öncesi. Jokerler <b>biriktirdiğiniz parayla</b> alınır; ilk dükkanda
       henüz kazanmadığınız için <b>eksiye düşebilirsiniz</b> —
       kasaya borçlanmak serbest. Aynı jokerden elinizde <b>en fazla iki tane</b>
       tutabilirsiniz; aynı jokeri bir daha almak isterseniz <b>%20 pahalıya</b>
