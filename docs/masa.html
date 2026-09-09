@@ -1068,8 +1068,10 @@ function ciz(S){
     if(katil){
       const kese=m.para;
       h+=`<div class="msj ${kese<0?"kotu":"bek"}" style="max-width:460px">
-        Kesende <b>${PARA(kese)}</b>${kese<0?" — borçlusun":""} ·
-        aynı jokerden en fazla <b>${JMAX}</b> tane · her yeni alışta <b>%20 zam</b></div>`;
+        Kesenizde <b>${PARA(kese)}</b>${kese<0?" — kasaya borçlusunuz":""}.
+        Jokerler biriktirdiğiniz parayla alınır, <b>borçlanabilirsiniz</b>.
+        Aynı jokerden en fazla <b>${JMAX}</b> tane; aynı jokeri tekrar alırsanız
+        <b>%20 pahalıya</b> gelir. Paranızı çarçur etmeyin!</div>`;
       h+=JOKER.map(j=>{
         const adet=(m.jok[j.id]||0), f=jokerFiyat(S, ben, j.id), dolu=adet>=JMAX;
         return `<button class="jkart ${adet?"elde":""} ${dolu?"dolu":""}"
@@ -1276,9 +1278,13 @@ function giris(){
         2 katı; 7 harfliyi bilirse <b>2 katı + ₺250.000</b>, bilemezse sıfır.<br>
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
     <p class="izle" style="text-align:left;font-size:13px"><b>Joker dükkânı</b>
-      dört kez açılır: başta, 1. etap sonunda, düello öncesi ve final öncesi.
-      Herkes ₺0 ile başlar; joker alan <b>eksiye düşer</b> ve eleme en düşük
-      parayı çıkarır. Aynı jokerden en fazla iki tane; her yeni alışta %20 zam.</p>
+      dört kez açılır: yola çıkmadan önce, 1. etap sonunda, düello öncesi ve
+      final öncesi. Jokerler <b>biriktirdiğiniz parayla</b> alınır — dilerseniz
+      <b>kasaya borçlanabilirsiniz</b> de. Aynı jokerden elinizde
+      <b>en fazla iki tane</b> tutabilirsiniz; aynı jokeri bir daha almak
+      isterseniz <b>%20 pahalıya</b> satın alırsınız. Bir kelimede tek joker
+      kullanılır. Unutmayın, eleme <b>en düşük parayı</b> çıkarır —
+      paranızı çarçur etmeyin!</p>
     <button class="buton mor" onclick="odaAc()">MASAYI BEN KURARIM</button>
     <button class="buton ikinci" onclick="katilEkran()">BEN HAZIRA KONARIM</button>`);
 }
