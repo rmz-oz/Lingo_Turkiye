@@ -112,8 +112,9 @@ p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
 </style></head><body>
 <header><a href="index.html">‹</a><b>Çalışma planı</b></header>
 <div class="sar" id="alan"></div>
-<script src="rozet.js?v=4"></script>
+<script src="rozet.js?v=5"></script>
 <script>if(typeof LG_kervanMeta !== "function") window.LG_kervanMeta = function(){ return {}; };</script>
+<script>if(typeof LG_papatyaMeta !== "function") window.LG_papatyaMeta = function(){ return {}; };</script>
 <script>
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
@@ -203,7 +204,7 @@ function ciz(){
   const d = defter(KISI), p = planAl();
   const kalan = kalanGun();
   const U = LG_unvan(d.length), unv = U.simdi, sonraki = U.sonraki;
-  const roz = LG_rozet(d, p, LG_kervanMeta(KISI)), acikRoz = roz.filter(r=>r.v).length;
+  const roz = LG_rozet(d, p, LG_kervanMeta(KISI), LG_papatyaMeta(KISI)), acikRoz = roz.filter(r=>r.v).length;
 
   /* bugun hangi gun: tamamlanmamis ilk gun */
   let bugun = GUNLER.findIndex((g,i)=>ayniGun(gunTarihi(i+1), new Date()));

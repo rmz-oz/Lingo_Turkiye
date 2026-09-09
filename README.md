@@ -14,6 +14,10 @@
 
 <br>
 
+## 🌼 [PAPATYA ÇAYI](https://rmz-oz.github.io/Lingo_Turkiye/papatya.html)
+
+<br>
+
 ## ▶ [OYNA](https://rmz-oz.github.io/Lingo_Turkiye/oyun.html)
 
 <br>
