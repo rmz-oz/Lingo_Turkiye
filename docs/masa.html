@@ -200,7 +200,8 @@ const M = {
     this.S = {
       faz:"lobi",
       masalar: adlar.map(a=>({ad:a, para:0, online:false, jok:{}, alim:{}, hazir:false})),
-      dukkan:null, ekHak:0, canKilit:false, jokerBu:false, ipuc:"", acikHarf:[], dondu:false,
+      dukkan:null, ekHak:0, canKilit:false, jokerBu:false, ipuc:"", harfIpuc:"",
+      acikHarf:[], dondu:false,
       elenenler:[],
       etap:0, sira:0, ki:0, n:4, satirlar:[], aktif:0, giris:"", hak:SATIR, sn:SURE,
       dogru:0, puzzle:null, buzz:{acik:false, kim:null, kalan:[]},
@@ -307,7 +308,6 @@ const M = {
   jokerUygun(i, id){
     const S=this.S, m=S.masalar[i];
     if(!m || !(m.jok[id]>0)) return false;
-    if(S.jokerBu) return false;
     if(id==="kilit"){
       const E=ETAPLAR[Math.min(S.etap,1)];
       return S.faz==="kelime" && i===S.sira && !S.canKilit && S.etap<2 && E.cal;
@@ -327,7 +327,7 @@ const M = {
       if(aday.length){
         const k=aday[Math.floor(Math.random()*aday.length)];
         S.acikHarf=(S.acikHarf||[]).concat([k]);
-        S.ipuc=`🔤 ${k+1}. harf: ${TRU(w[k])}`;
+        S.harfIpuc=(S.harfIpuc ? S.harfIpuc+" · " : "")+`🔤 ${k+1}. harf: ${TRU(w[k])}`;
       } else S.ipuc="🔤 Açılacak harf kalmadı";
     } else if(id==="reklam"){
       const kalan=Math.max(1, S.sn||1), fin=(S.faz==="final");
@@ -364,7 +364,8 @@ const M = {
     S.faz="kelime"; S.n=E.n; S.cevaplayan=S.sira;
     S.buzz={acik:false, kim:null, kalan:[]};
     this.GIZLI=this.kelimeSec(E.n);
-    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.acikHarf=[]; S.dondu=false;
+    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.harfIpuc="";
+    S.acikHarf=[]; S.dondu=false;
     S.satirlar=[]; S.aktif=0; S.hak=SATIR; S.giris=this.GIZLI[0]; S.acik=null;
     S.mesaj=`${S.masalar[S.sira].ad} — ${S.ki+1}. kelime · ₺${TL(E.pk)}`; S.msjTip="bek";
     this.saat(SURE, ()=>this.satirBitir(null));
@@ -664,7 +665,8 @@ const M = {
     S.duSira=[...S.kalanlar].sort((a,b)=>S.masalar[a].para-S.masalar[b].para);
     S.duTahmin=0; S.duOdul=DUELLO.odul[0]; S.cevaplayan=S.duSira[0];
     this.GIZLI=this.kelimeSec(B.n);
-    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.acikHarf=[]; S.dondu=false;
+    S.ekHak=0; S.canKilit=false; S.jokerBu=false; S.ipuc=""; S.harfIpuc="";
+    S.acikHarf=[]; S.dondu=false;
     S.satirlar=[]; S.aktif=0; S.hak=DUELLO.hak; S.giris=this.GIZLI[0]; S.acik=null;
     S.buzz={acik:false, kim:null, kalan:[]};
     S.mesaj=`${S.masalar[S.cevaplayan].ad} başlıyor — ${S.du.ki+1}/${B.adet} · ₺${TL(S.duOdul)}`;
@@ -768,7 +770,7 @@ const M = {
     const n=FINAL.dizi[F.idx]; F.suan=n;
     S.faz="final"; S.n=n; S.cevaplayan=F.masa;
     this.GIZLI=this.kelimeSec(n);
-    S.ekHak=0; S.jokerBu=false; S.ipuc=""; S.acikHarf=[]; S.dondu=false;
+    S.ekHak=0; S.jokerBu=false; S.ipuc=""; S.harfIpuc=""; S.acikHarf=[]; S.dondu=false;
     S.satirlar=[]; S.aktif=0; S.hak=FINAL.satir; S.giris=this.GIZLI[0]; S.acik=null;
     S.mesaj=`${n} harfli — bilirse ₺${TL(this.fKazanc(n))}` +
       (n===7?" (SÜPER LİNGO)":"");
@@ -979,7 +981,7 @@ function jokerFiyat(S, i, id){
 }
 function jokerAcikMi(S, i, id){
   const m=S.masalar[i];
-  if(!m || !(m.jok[id]>0) || S.jokerBu) return false;
+  if(!m || !(m.jok[id]>0)) return false;
   if(id==="kilit") return S.faz==="kelime" && i===S.sira && !S.canKilit && S.etap<2
     && ETAPLAR[Math.min(S.etap,1)].cal;
   if(["kelime","calma","duello","final"].indexOf(S.faz)<0) return false;
@@ -1069,7 +1071,7 @@ function ciz(S){
       const kese=m.para;
       h+=`<div class="msj ${kese<0?"kotu":"bek"}" style="max-width:460px">
         Kesenizde <b>${PARA(kese)}</b>${kese<0?" — kasaya borçlusunuz":""}.
-        Jokerler biriktirdiğiniz parayla alınır, <b>borçlanabilirsiniz</b>.
+        Jokerler biriktirdiğiniz parayla alınır, <b>eksiye düşebilirsiniz</b>.
         Aynı jokerden en fazla <b>${JMAX}</b> tane; aynı jokeri tekrar alırsanız
         <b>%20 pahalıya</b> gelir. Paranızı çarçur etmeyin!</div>`;
       h+=JOKER.map(j=>{
@@ -1133,7 +1135,8 @@ function ciz(S){
   if(puz) h+=`<div class="ipucu"><b>puzzle · ₺${TL(S.puzzle.odul)}</b>${S.puzzle.tanim}</div>`;
   h+=`<div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
       <div class="msj ${S.msjTip}">${S.mesaj}</div>`;
-  if(S.ipuc) h+=`<div class="ipuc">${S.ipuc}</div>`;
+  const ipucHepsi=[S.harfIpuc, S.ipuc].filter(Boolean).join(" · ");
+  if(ipucHepsi) h+=`<div class="ipuc">${ipucHepsi}</div>`;
   if(NET.benim>=0 && S.masalar[NET.benim]){
     const jk=S.masalar[NET.benim].jok||{};
     const ids=Object.keys(jk).filter(k=>jk[k]>0);
@@ -1279,12 +1282,11 @@ function giris(){
       Elenen masa odadan çıkmaz, <b>izleyici</b> olarak kalır.</p>
     <p class="izle" style="text-align:left;font-size:13px"><b>Joker dükkânı</b>
       dört kez açılır: yola çıkmadan önce, 1. etap sonunda, düello öncesi ve
-      final öncesi. Jokerler <b>biriktirdiğiniz parayla</b> alınır — dilerseniz
-      <b>kasaya borçlanabilirsiniz</b> de. Aynı jokerden elinizde
-      <b>en fazla iki tane</b> tutabilirsiniz; aynı jokeri bir daha almak
-      isterseniz <b>%20 pahalıya</b> satın alırsınız. Bir kelimede tek joker
-      kullanılır. Unutmayın, eleme <b>en düşük parayı</b> çıkarır —
-      paranızı çarçur etmeyin!</p>
+      final öncesi. Jokerler <b>biriktirdiğiniz parayla</b> alınır; ilk dükkânda
+      henüz kazanmadığınız için <b>eksiye düşebilirsiniz</b> —
+      kasaya borçlanmak serbest. Aynı jokerden elinizde <b>en fazla iki tane</b>
+      tutabilirsiniz; aynı jokeri bir daha almak isterseniz <b>%20 pahalıya</b>
+      satın alırsınız. Paranızı çarçur etmeyin!</p>
     <button class="buton mor" onclick="odaAc()">MASAYI BEN KURARIM</button>
     <button class="buton ikinci" onclick="katilEkran()">BEN HAZIRA KONARIM</button>`);
 }
