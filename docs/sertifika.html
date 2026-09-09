@@ -3,7 +3,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="theme-color" content="#0f1720">
-<title>Sertifika — Lingo</title>
+<title>Sertifika: Lingo</title>
 <style>
 :root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--altin:#f4c95d;--yesil:#2e9e5b}
@@ -252,7 +252,7 @@ async function pngYap(mod){
   const kadraj = document.getElementById("kadraj");
   if(!sy) return;
   if(typeof html2canvas !== "function"){
-    return uyar("Resim aracı yüklenemedi — internet bağlantısını kontrol et,\n" +
+    return uyar("Resim aracı yüklenemedi, internet bağlantısını kontrol et,\n" +
                 "ya da PDF olarak yazdır.");
   }
   const eskiMetin = btn ? btn.textContent : "";
@@ -315,7 +315,7 @@ addEventListener("resize", olcekle);
 function sertifika(K, d, ra){
   const bil = d.filter(r=>r.k>0);
   const basari = Math.round(100*bil.length/d.length);
-  const ort = bil.length ? (bil.reduce((t,r)=>t+r.k,0)/bil.length).toFixed(1).replace(".",",") : "—";
+  const ort = bil.length ? (bil.reduce((t,r)=>t+r.k,0)/bil.length).toFixed(1).replace(".",",") : ", ";
   const U = LG_unvan(d.length);
   const gunler = new Set(d.map(r=>new Date(r.t).toDateString())).size;
   const p = LG_plan(KISI), gorev = Object.values(p).filter(Boolean).length;
@@ -393,7 +393,7 @@ function ciz(){
     const kalan = 250 - d.length, oran = Math.min(100, Math.round(100*d.length/250));
     $("#alan").innerHTML = secErit + `<div class="bos">
       Sertifika için en az <b>250 kelime</b> gerekiyor.<br>
-      <b>${KISI}</b> adına şu an <b>${d.length}</b> kayıt var — <b>${kalan}</b> kelime kaldı.
+      <b>${KISI}</b> adına şu an <b>${d.length}</b> kayıt var: <b>${kalan}</b> kelime kaldı.
       <div class="ilerle"><i style="width:${oran}%"></i></div>
       <div style="font-size:12.5px">%${oran}</div>
       <div class="kadlist">

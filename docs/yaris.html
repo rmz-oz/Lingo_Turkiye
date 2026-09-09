@@ -367,7 +367,7 @@ function bitir(){
   const puan = sonuc.reduce((t,x) => t + (x.ok ? 100 + (SATIR-x.hak)*20 : 0), 0);
   const grid = sonuc.map(sim).join("");
   const url = location.origin + location.pathname + "#" + macKod(MAC);
-  const metin = `LİNGO YARIŞ · ${MAC.s}\n${AD || "Oyuncu"} — ${d}/${sonuc.length}` +
+  const metin = `LİNGO YARIŞ · ${MAC.s}\n${AD || "Oyuncu"}: ${d}/${sonuc.length}` +
     ` · ${puan} puan · ${dk}:${ss}\n${grid}\n${url}`;
   ekran(`<span class="rozet">${MAC.s}</span>
     <p class="kucuk" style="margin:0">${AD || "Oyuncu"}</p>

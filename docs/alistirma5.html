@@ -3,7 +3,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0f1720">
-<title>5 harfli alıştırma — Lingo</title>
+<title>5 harfli alıştırma: Lingo</title>
 <style>
 :root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--gri:#3a4756;
@@ -343,7 +343,7 @@ function kisiEkrani(){
     <p class="kucuk" style="text-align:left">
       <b>Hangi avatarla oynarsan</b> kayıtlar ona işlenir: Serpil'i seçtiysen
       Serpil'in raporu, Zeynep'i seçtiysen Zeynep'in raporu büyür.
-      Bir kez seçmen yeterli, hatırlanır — istediğin zaman da değiştirebilirsin.</p>
+      Bir kez seçmen yeterli, hatırlanır, istediğin zaman da değiştirebilirsin.</p>
     <div class="kgrid">${KISILER.map(a =>
       `<button class="${a===KISI?"on":""}" onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`
       ).join("")}</div>
@@ -703,10 +703,10 @@ function degerlendir(w){
         Aynı harfi iki kez denemek yerine olabildiğince çok
         <b>farklı</b> harf deneyin.</i></div>`
     : `<div class="oner"><span>bu harfte</span><b>${TRU(L)}</b>
-        <i>Havuz çok küçük olduğu için açılış hesabı yapılmıyor —
+        <i>Havuz çok küçük olduğu için açılış hesabı yapılmıyor, 
         aşağıdaki liste zaten kısa.</i></div>`;
   const liste = D.k.length
-    ? `<h3>${TRU(L)} ile başlayan ${N} harfli — yayında çıkan ${D.k.length} kelime</h3>
+    ? `<h3>${TRU(L)} ile başlayan ${N} harfli, yayında çıkan ${D.k.length} kelime</h3>
        <div class="wrap">${D.k.map(cip).join("")}</div>
        <div class="lej">kaç kez çıktı: ${lej}
          &nbsp;·&nbsp; küçük rakamlar: 1. · 2. · 3. sezon
@@ -714,10 +714,10 @@ function degerlendir(w){
          <b>%${DERS.eskiOran}</b>'${DERS.eskiEk} bu listeden çıktı</div>`
     : `<h3>${TRU(L)} ile başlayan ${N} harfli hiç cevap çıkmadı</h3>`;
   const liste2 = (D.y && D.y.length)
-    ? `<h3>Henüz çıkmadı ama çıkabilir — sözlükte ${D.y.length} kelime daha</h3>
+    ? `<h3>Henüz çıkmadı ama çıkabilir, sözlükte ${D.y.length} kelime daha</h3>
        <div class="wrap">${D.y.map(k => `<span class="k hic">${k}</span>`).join("")}</div>
        <div class="lej">${N} harfli cevapların <b>%${DERS.yeniOran}</b>'${DERS.yeniEk} ilk kez
-         soruluyor — bu liste onun için. Alfabetik sıralı.</div>`
+         soruluyor, bu liste onun için. Alfabetik sıralı.</div>`
     : "";
   orta.className = "ust";
   orta.innerHTML = `<div class="dgr">
@@ -836,7 +836,7 @@ function giris(){
       : "👤 <b>"+KISI+"</b> · "+LG_unvan(LG_defter(KISI).length).simdi.ad
         +" "+LG_serit(KISI, 6)}<u>değiştir</u></div>
     <p class="not">Hangi harfle çalışacaksınız?
-       <b>445 bölümde en çok sorulandan en aza</b> sıralı — baştakiler karşınıza
+       <b>445 bölümde en çok sorulandan en aza</b> sıralı, baştakiler karşınıza
        çıkma ihtimali en yüksek harfler.<br>
        <b>Üstteki sayı</b>: o harf 5 harflide kaç kez soruldu.<br>
        <b>Alttaki satır</b>: sözlükte kaç 5 harfli kelime var ve en iyi iki
@@ -853,7 +853,7 @@ function giris(){
       <span class="em">🎲</span>
       <span class="tx">KARIŞIK OYNA<small>3 harf × 3 kelime · 9 soru</small></span></button>
     <div class="anah ${YARDIM ? "on" : ""}" id="anah" onclick="yardimDegis()">
-      <span class="t"><b>Yardımlı mod — <u class="d">${YARDIM ? "AÇIK" : "KAPALI"}</u></b>
+      <span class="t"><b>Yardımlı mod, <u class="d">${YARDIM ? "AÇIK" : "KAPALI"}</u></b>
         <i>Her tahminden sonra hala mümkün olan kelimeler yeşil,
            elenenler üstü çizili görünür. Oyun sırasında da üstteki
            <b>YARDIM</b> düğmesiyle açıp kapatabilirsiniz.</i></span>

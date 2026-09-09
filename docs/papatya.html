@@ -3,7 +3,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="theme-color" content="#0f1720">
-<title>Papatya Çayı — Lingo</title>
+<title>Papatya Çayı: Lingo</title>
 <style>
 :root{
   --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
@@ -307,7 +307,7 @@ function oyunCiz(mesaj){
        <button type="button" onclick="durEkran()">☰ menü</button>
      </div>
      <div id="not">${mesaj || `Göbek harfi <b>${TRU(ADAY.gobek)}</b> her kelimede
-       olmak zorunda. Sarı yaprak <b>${TRU(S.yaprak)}</b> — onu kullanan kelime iki katı.
+       olmak zorunda. Sarı yaprak <b>${TRU(S.yaprak)}</b>, onu kullanan kelime iki katı.
        🃏 <b>Joker harf</b> papatyada olmayan bir harfin yerini tutar; puanın yarısı.`}</div>` +
     (S.bahce.length ? `<div class="bahce"><b>Bahçe · ${S.bahce.length} kelime</b>
        <span>${S.bahce.map(TRU).join(" ")}</span></div>` : ""), false);
@@ -372,18 +372,18 @@ window.gonder = function(){
   if(ham.indexOf("?") >= 0){
     const bulunan = jokerCoz(ham);
     if(!bulunan.length){ jokerYaz();
-      return yanlis(`<b>${TRU(ham)}</b> — jokerle de kelime çıkmadı,
+      return yanlis(`<b>${TRU(ham)}</b>, jokerle de kelime çıkmadı,
         joker harcanmadı.`); }
     w = bulunan[0]; jokerli = true; S.jokerKalan--;
   } else {
     if(w.indexOf(ADAY.gobek) < 0)
-      return yanlis(`Göbek harfi yok — her kelime <b>${TRU(ADAY.gobek)}</b> içermeli.`);
+      return yanlis(`Göbek harfi yok, her kelime <b>${TRU(ADAY.gobek)}</b> içermeli.`);
     for(let i = 0; i < w.length; i++) if(!ADAY.kume.has(w[i]))
       return yanlis(`<b>${TRU(w[i])}</b> bu papatyada yok.`);
     if(S.saksi.indexOf(w) >= 0 || S.bahce.indexOf(w) >= 0)
       return yanlis(`<b>${TRU(w)}</b> zaten yazıldı.`);
     if(ADAY[w.length].indexOf(w) < 0)
-      return yanlis(`<b>${TRU(w)}</b> — sözlükte yok.`);
+      return yanlis(`<b>${TRU(w)}</b>, sözlükte yok.`);
   }
 
   const ars = KAC[w] || 0, tam = tammi(w);
@@ -450,7 +450,7 @@ window.su = function(){
   bosSaksilar().forEach(k => { const t = SAKSI[k] === "T" ? "tam papatya" : SAKSI[k] + " harf";
     say[t] = (say[t] === undefined ? saksiAdaylari(k).length : say[t]); });
   const m = Object.keys(say).map(t => `${t}: <b>${say[t]}</b> aday`).join(" · ");
-  oyunCiz("💧 Boş saksılarda kaç kelime kaldı — " + m);
+  oyunCiz("💧 Boş saksılarda kaç kelime kaldı, " + m);
 };
 window.sozluk = function(){
   const bos = bosSaksilar();
@@ -524,7 +524,7 @@ function sonEkran(){
       ${S.bahce.length ? `<p class="kucuk">Bahçe: ${S.bahce.map(TRU).join(" · ")}</p>` : ""}
       ${yeniRoz.length ? `<p class="kucuk" style="color:var(--altin)">Yeni nişan: ${
         yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</p>` : ""}
-      <p class="kucuk">Bulduğun kelimeler <b>${KISI}</b>'in defterine yazıldı — ünvan ve
+      <p class="kucuk">Bulduğun kelimeler <b>${KISI}</b>'in defterine yazıldı, ünvan ve
         Likya Yolu'ndaki ürünler buradan da açılır.</p>
       <p class="eyebrow" style="margin-top:16px">Bu papatyada yazılabilecek
         bütün kelimeler</p>
@@ -533,7 +533,7 @@ function sonEkran(){
         <b style="color:#8ee6a6">Yeşil</b> yazdıkların,
         <b style="color:var(--altin)">altın</b> kaçırdığın ama <b>yayında sorulmuş</b>
         olanlar, gri sözlükten gelenler.${S.jokerli.length ?
-        ` Joker harfle bulduğun ${S.jokerli.map(TRU).join(", ")} bu listede yok —
+        ` Joker harfle bulduğun ${S.jokerli.map(TRU).join(", ")} bu listede yok, 
         papatyanın harflerinde olmayan bir harf kullanıyor.` :
         " Joker harf gerektiren kelimeler bu listede yok."}</p>
       <div class="tumk">${tk.html}</div>
@@ -557,7 +557,7 @@ function kasaEkran(){
         <table class="rk">${M.rekor.map((r, i) => `<tr><td>${i+1}. ${TRU(r.h)}
           <br><span style="font-size:11.5px">${r.z} · ${r.t}</span></td>
           <td>${TL(r.p)}</td></tr>`).join("")}</table>` : ""}
-      <p class="kucuk" style="margin-top:12px">Toplam <b>${TL(PAP.length)}</b> papatya var —
+      <p class="kucuk" style="margin-top:12px">Toplam <b>${TL(PAP.length)}</b> papatya var, 
         ${TL(PAP.filter(x => x[2] === 0).length)} kolay,
         ${TL(PAP.filter(x => x[2] === 1).length)} orta,
         ${TL(PAP.filter(x => x[2] === 2).length)} zor.</p>
@@ -624,7 +624,7 @@ function girisEkran(){
         <tr><td>1 saksı</td><td>🌼 yedi harfin hepsi</td></tr>
       </table>
       <button class="buton yesil" onclick="yeniOyun('${bugun()}')">${
-        bugunBitti ? "GÜNÜN PAPATYASI — tekrar" : "GÜNÜN PAPATYASINI ÇÖZ ▸"}</button>
+        bugunBitti ? "GÜNÜN PAPATYASI, tekrar" : "GÜNÜN PAPATYASINI ÇÖZ ▸"}</button>
       <button class="buton ikinci" onclick="yeniOyun(null)">🌼 SERBEST PAPATYA</button>
       ${(M.oynanan || 0) ? `<button class="buton ikinci" onclick="kasaEkran()">
         📓 REKORLAR</button>` : ""}
