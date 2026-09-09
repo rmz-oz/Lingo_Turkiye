@@ -98,12 +98,14 @@ button{font:inherit;cursor:pointer}
 .hazsat span{font-size:11.5px;font-weight:700;border-radius:99px;padding:4px 10px;
   border:1px solid var(--cizgi);color:var(--soluk)}
 .hazsat span.ok{border-color:#3f7d55;color:#8fd3a8;background:#15251c}
-.jokbar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:460px;
-  width:100%;margin-top:2px}
-.jokbar button{background:#1a2336;border:1px solid #3a4470;color:#dfe6f2;
-  border-radius:99px;padding:6px 11px;font-size:12.5px;font-weight:700}
+.jokbar{display:flex;gap:6px;justify-content:center;max-width:100%;width:100%;
+  margin-top:2px;overflow-x:auto;padding:1px 2px;scrollbar-width:none}
+.jokbar::-webkit-scrollbar{display:none}
+.jokbar button{background:#1a2336;border:1px solid #3a4470;color:#dfe6f2;flex:none;
+  border-radius:12px;padding:0 9px;height:38px;min-width:46px;font-size:17px;
+  font-weight:700;display:flex;align-items:center;gap:4px;line-height:1}
 .jokbar button:disabled{opacity:.3;border-color:var(--cizgi)}
-.jokbar button u{text-decoration:none;color:#b9a8ff;font-weight:800;margin-left:2px}
+.jokbar button u{text-decoration:none;color:#b9a8ff;font-weight:800;font-size:12.5px}
 @media (hover:hover){ .jokbar button:not(:disabled):hover{border-color:#6c5ce7;
   background:#212c46} }
 /* yuzen bildirim: yerlesimden yer calmaz, klavyenin hemen ustunde durur */
@@ -126,8 +128,8 @@ button{font:inherit;cursor:pointer}
 .baslik{font-size:11.5px;letter-spacing:1.1px;text-transform:uppercase;color:var(--soluk);
   font-weight:700;text-align:center}
 .baslik b{color:var(--altin)}
-#tahta{display:grid;gap:5px;justify-content:center}
-#tahta .satir{display:grid;gap:5px}
+#tahta{display:grid;gap:4px;justify-content:center}
+#tahta .satir{display:grid;gap:4px}
 .hucre{width:var(--hg);height:var(--hg);border:2px solid var(--cizgi);border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-weight:800;
   font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:calc(var(--hg)*.52);
@@ -154,13 +156,13 @@ button{font:inherit;cursor:pointer}
 #klavye button{flex:1 1 0;min-width:0;height:var(--tush);border:0;border-radius:8px;
   background:#3a4756;color:#fff;font-weight:700;font-size:var(--tusf);padding:0}
 /* rahat yazmak en onemlisi: klavye onceligi alir, tahta kalan yere sigar */
-:root{--tush:56px; --tusf:19px}
-@media (max-height:880px){ :root{--tush:52px; --tusf:18px} }
-@media (max-height:800px){ :root{--tush:49px; --tusf:17px} }
-@media (max-height:720px){ :root{--tush:46px; --tusf:16px} }
-@media (max-height:640px){ :root{--tush:43px; --tusf:16px} }
-@media (max-height:570px){ :root{--tush:40px; --tusf:15px} }
-@media (max-height:500px){ :root{--tush:36px; --tusf:14px} }
+:root{--tush:60px; --tusf:21px}
+@media (max-height:880px){ :root{--tush:56px; --tusf:20px} }
+@media (max-height:800px){ :root{--tush:54px; --tusf:19px} }
+@media (max-height:720px){ :root{--tush:51px; --tusf:18px} }
+@media (max-height:640px){ :root{--tush:48px; --tusf:17px} }
+@media (max-height:570px){ :root{--tush:45px; --tusf:17px} }
+@media (max-height:500px){ :root{--tush:40px; --tusf:15px} }
 #klavye button.gnis{flex:1.9 1 0;font-size:calc(var(--tusf) * .82)}
 #klavye button.dar{flex:1.3 1 0;font-size:calc(var(--tusf) * .78)}
 #klavye button.tam{background:var(--yesil)}
@@ -1194,10 +1196,10 @@ function hucreBoy(n){
   const sk=(skorEl && !skorEl.classList.contains("gizli")) ? (skorEl.offsetHeight||58) : 0;
   const kl=(klv && !klv.classList.contains("gizli")) ? (klv.offsetHeight||160) : 36;
   const pay=bar+sk+kl+84;                      /* baslik + mesaj + joker seridi + bosluk */
-  const kalan=Math.max(110, window.innerHeight-pay);
+  const kalan=Math.max(100, window.innerHeight-pay);
   const dikey=Math.floor((kalan-5*4)/5);       /* bes satir; tasarsa asagida kucultulur */
-  const enBuyuk=window.innerWidth>=640 ? 52 : 46;
-  return Math.max(22, Math.min(enBuyuk, Math.min(yatay, dikey)));
+  const enBuyuk=window.innerWidth>=640 ? 50 : 41;
+  return Math.max(21, Math.min(enBuyuk, Math.min(yatay, dikey)));
 }
 const DIZ=["ertyuıopğü","asdfghjklşi","zcvbnmöç"];
 let klvTus={};
@@ -1272,8 +1274,10 @@ function skorCiz(S){
        style="${el?"opacity:.5":""}">
        <b>${m.ad}</b><i class="${m.para<0?"eksi":""}">${PARA(m.para)}</i>
        ${(function(){ const j=m.jok||{}; const k=Object.keys(j).filter(x=>j[x]>0);
-         return k.length ? `<span class="jk">${k.map(x=>JOKERID[x].em +
-           (j[x]>1?j[x]:"")).join(" ")}</span>` : ""; })()}
+         if(!k.length) return "";
+         const g=k.slice(0,3).map(x=>JOKERID[x].em+(j[x]>1?j[x]:"")).join("");
+         const kalan=k.length-3;
+         return `<span class="jk">${g}${kalan>0?"+"+kalan:""}</span>`; })()}
        <u>${S.faz==="dukkan" ? (m.hazir?"hazır":"seçiyor") : (unv ? unv : dur)}</u>
        </div>`;}).join("");
 }
@@ -1454,7 +1458,7 @@ function ciz(S){
     if(ids.length) h+=`<div class="jokbar">`+ids.map(id=>{
       const j=JOKERID[id], ok=jokerAcikMi(S, NET.benim, id);
       return `<button ${ok?"":"disabled"} onclick="NET.yolla({t:'joker',id:'${id}'})"
-        title="${j.ac}">${j.em} ${j.ad} <u>${jk[id]}</u></button>`;
+        title="${j.ad} — ${j.ac}" aria-label="${j.ad}">${j.em}<u>${jk[id]}</u></button>`;
     }).join("")+`</div>`;
   }
   if(dupz && S.buzz.acik && S.buzz.kalan.includes(NET.benim))
