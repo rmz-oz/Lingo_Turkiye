@@ -2,47 +2,102 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0f1720">
+<meta name="theme-color" content="#0E1520">
 <title>Lingo Masa Yarışması</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <style>
-:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
-  --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--gri:#3a4756;
-  --kirmizi:#d94a5a;--altin:#f4c95d;--mor:#6c5ce7}
+/* ================= iki tema =================
+   gece: derin lacivert mürekkep · gündüz: soğuk beyaz stüdyo
+   Anlam taşıyan üç renk (yeşil doğru, sarı var, gri yok) iki temada da
+   aynı kalır; yalnızca çevresindeki yüzeyler ve yazı tonları değişir.     */
+:root{
+  /* --- yüzeyler --- */
+  --zemin:#0E1520; --bar:#080F18; --barAlt:#0C131D; --kart:#18212E;
+  --ickart:#131B26; --ickart2:#1A2331; --yuva:#212D3A;
+  --cizgi:#2A3542; --cizgiJ:#293344; --ilkCizgi:#4A5A6B; --nokta:#5D6F82;
+  /* --- yazı --- */
+  --ink:#F1F5FA; --ink2:#CED8E3; --ink3:#B7C3D2; --soluk:#93A1B0; --soluk2:#7A889A;
+  /* --- anlam renkleri --- */
+  --yesil:#2E9E5B; --yesilUst:#FFFFFF; --yesilInk:#87DCA9;
+  --yesilZemin:#14291D; --yesilZemin2:#1A3627; --yesilCizgi:#3B7A52;
+  --sari:#E0AE2E; --sariUst:#241A00;
+  --gri:#3A4756; --yokInk:#8FA0B0;
+  --kirmizi:#DB5164; --kirmiziUst:#FFFFFF; --kirmiziInk:#F5A6B0;
+  --kirmiziZemin:#2C161C; --kirmiziCizgi:#5E2F3B; --pembe:#FF9DB0;
+  --kirmiziGolge:rgba(219,81,100,.38);
+  /* --- altın (vurgu) --- */
+  --altin:#F2C75C; --altinUst:#1A1200; --siraZemin:#231E10;
+  /* --- menekşe (dükkan) --- */
+  --mor:#6C5CE7; --mor2:#8E6CE8; --morUst:#FFFFFF; --morInk:#B9A8FF;
+  --morInk2:#E4DAFF; --morZemin:#161C2C; --morKutu:#1B2440; --morKutuCizgi:#313D68;
+  --morCizgi:#2F3760; --morCizgi2:#463D8C; --morCizgi3:#37416A; --morVurgu:#5A69BE;
+  --morHover:#1F2942; --morHalka:rgba(108,92,231,.35); --morHalka2:rgba(108,92,231,.18);
+  /* --- klavye --- */
+  --tus:#3A4756; --tusInk:#FFFFFF; --tusYok:#1C2731; --tusYokInk:#5D6B7A;
+  --kapali:#2C3846;
+  /* --- diğer --- */
+  --toastZemin:rgba(11,17,25,.95); --golge:rgba(0,0,0,.45);
+}
+:root[data-tema="gunduz"]{
+  --zemin:#EDF1F7; --bar:#FFFFFF; --barAlt:#F4F7FB; --kart:#FFFFFF;
+  --ickart:#F5F8FC; --ickart2:#E9EFF7; --yuva:#DEE6F0;
+  --cizgi:#D3DCE7; --cizgiJ:#D8E0EB; --ilkCizgi:#9EAFC1; --nokta:#A4B2C1;
+  --ink:#14202D; --ink2:#2B3949; --ink3:#3C4B5C; --soluk:#5B6A7B; --soluk2:#78879A;
+  --yesil:#2E9E5B; --yesilUst:#FFFFFF; --yesilInk:#1C6E40;
+  --yesilZemin:#E3F4EA; --yesilZemin2:#CFEBDB; --yesilCizgi:#9BD3B2;
+  --sari:#E0AE2E; --sariUst:#3A2900;
+  --gri:#7E8D9E; --yokInk:#FFFFFF;
+  --kirmizi:#C33B2E; --kirmiziUst:#FFFFFF; --kirmiziInk:#93281F;
+  --kirmiziZemin:#FBE7E4; --kirmiziCizgi:#EAB2AB; --pembe:#B22B22;
+  --kirmiziGolge:rgba(195,59,46,.3);
+  --altin:#A9791A; --altinUst:#2B1F00; --siraZemin:#FDF3D8; --altinDolgu:#E8B93F;
+  --mor:#5B4BC4; --mor2:#7360D8; --morUst:#FFFFFF; --morInk:#4B3BAF;
+  --morInk2:#3A2C93; --morZemin:#F0EDFC; --morKutu:#E7E2FA; --morKutuCizgi:#C3B9F0;
+  --morCizgi:#CFC7F3; --morCizgi2:#B4A8EA; --morCizgi3:#C6BDF1; --morVurgu:#7D6CD9;
+  --morHover:#E2DCF8; --morHalka:rgba(91,75,196,.28); --morHalka2:rgba(91,75,196,.14);
+  --tus:#DCE4EE; --tusInk:#14202D; --tusYok:#E6ECF3; --tusYokInk:#98A6B5;
+  --kapali:#CBD5E1; --hucreCizgi:#C6D2E0;
+  --toastZemin:rgba(255,255,255,.96); --golge:rgba(20,32,45,.16);
+  --kartGolge:0 1px 2px rgba(20,32,45,.07);
+}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
+html{color-scheme:dark}
+html[data-tema="gunduz"]{color-scheme:light}
 body{margin:0;background:var(--kagit);color:var(--murekkep);
   font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
   display:flex;flex-direction:column;overflow:hidden;user-select:none}
 button{font:inherit;cursor:pointer}
-#bar{display:flex;align-items:center;gap:7px;padding:6px 10px;background:#0a1119;
+#bar{display:flex;align-items:center;gap:7px;padding:6px 10px;background:var(--bar);
   border-bottom:1px solid var(--cizgi);flex:none;font-size:12px}
-#bar .kod{background:var(--mor);color:#fff;border-radius:999px;padding:2px 9px;
+#bar .kod{background:var(--mor);color:var(--morUst);border-radius:999px;padding:2px 9px;
   font-weight:800;letter-spacing:1.1px;font-size:11px;flex:none}
 #bar .et{color:var(--altin);font-weight:800;letter-spacing:.8px;text-transform:uppercase}
 #bar .ag{margin-left:auto;color:var(--soluk)}
-#bar #sesd{border:1px solid var(--cizgi);background:transparent;border-radius:99px;
-  width:30px;height:26px;padding:0;font-size:13px;line-height:1;color:#fff;
-  margin-left:6px;flex:none}
+#bar #sesd,#bar #temad{border:1px solid var(--cizgi);background:transparent;
+  border-radius:99px;width:30px;height:26px;padding:0;font-size:13px;line-height:1;
+  color:var(--ink);margin-left:6px;flex:none}
+#bar #temad{margin-left:4px}
 #bar .et{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 #bar .ag{white-space:nowrap;font-size:11px}
 #bar .ag.kopuk{color:var(--kirmizi);font-weight:800}
-#kopuk{position:fixed;left:0;right:0;bottom:0;background:var(--kirmizi);color:#fff;
+#kopuk{position:fixed;left:0;right:0;bottom:0;background:var(--kirmizi);color:var(--kirmiziUst);
   padding:11px 14px calc(11px + env(safe-area-inset-bottom));text-align:center;
-  font-weight:800;font-size:14.5px;z-index:40;box-shadow:0 -4px 18px rgba(0,0,0,.45)}
+  font-weight:800;font-size:14.5px;z-index:40;box-shadow:0 -4px 18px var(--golge)}
 #kopuk small{display:block;font-weight:600;font-size:12.5px;opacity:.9;margin-top:2px}
 @media (max-width:400px){ #bar .ag{display:none} }
 #bar #sesd.kapali{opacity:.45}
 #bar .ag b{color:var(--yesil)}
-#sure{width:100%;height:4px;background:#22303d;flex:none}
+#sure{width:100%;height:4px;background:var(--yuva);flex:none}
 #sure i{display:block;height:100%;background:var(--altin);width:100%}
 #sure.az i{background:var(--kirmizi)}
 /* skor tablosu */
-#skor{display:flex;gap:4px;padding:5px 6px;background:#0d151f;flex:none;
+#skor{display:flex;gap:4px;padding:5px 6px;background:var(--barAlt);flex:none;
   border-bottom:1px solid var(--cizgi)}
 #skor .m{flex:1;background:var(--kart);border:1.4px solid var(--cizgi);border-radius:8px;
+  box-shadow:var(--kartGolge,none);
   padding:5px 4px;text-align:center;min-width:0;line-height:1.28}
-#skor .m.on{border-color:var(--altin);background:#241f10}
+#skor .m.on{border-color:var(--altin);background:var(--siraZemin)}
 #skor .m.ben{box-shadow:inset 0 0 0 1.5px var(--mor)}
 #skor .m b{display:block;font-size:11.5px;font-weight:800;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
@@ -56,68 +111,68 @@ button{font:inherit;cursor:pointer}
 #skor .m .jk{display:inline;font-size:10px;letter-spacing:.3px;margin-left:3px}
 /* ---- joker dukkani ---- */
 .dukbas{max-width:460px;width:100%;text-align:center;font-size:11px;font-weight:800;
-  letter-spacing:1.9px;text-transform:uppercase;color:#b9a8ff}
-.kese{max-width:460px;width:100%;background:#171d2e;border:1px solid #333a63;
+  letter-spacing:1.9px;text-transform:uppercase;color:var(--morInk)}
+.kese{max-width:460px;width:100%;background:var(--morZemin);border:1px solid var(--morCizgi);
   border-radius:13px;padding:12px 14px;font-size:13.5px;line-height:1.6;
-  color:#c2cbdd;text-align:center}
-.kese.borc{background:#241a26;border-color:#5c3247}
-.kese b{color:#f2f5f8}
+  color:var(--ink3);text-align:center}
+.kese.borc{background:var(--kirmiziZemin);border-color:var(--kirmiziCizgi)}
+.kese b{color:var(--ink)}
 .kese .tut{display:block;font-size:23px;font-weight:800;letter-spacing:-.4px;
-  color:#e9deff;font-variant-numeric:tabular-nums;margin-bottom:3px}
-.kese.borc .tut{color:#ff9db0}
-.jkart{display:flex;align-items:center;gap:11px;border:1px solid #2a3345;
-  border-radius:14px;background:#161f2b;padding:11px 12px;margin-top:8px;
+  color:var(--morInk2);font-variant-numeric:tabular-nums;margin-bottom:3px}
+.kese.borc .tut{color:var(--pembe)}
+.jkart{display:flex;align-items:center;gap:11px;border:1px solid var(--cizgiJ);
+  border-radius:14px;background:var(--ickart);padding:11px 12px;margin-top:8px;
   max-width:460px;width:100%;text-align:left;transition:border-color .15s,background .15s}
 .jkart .em{font-size:20px;width:40px;height:40px;flex:none;border-radius:11px;
-  background:#1d2740;border:1px solid #33406b;display:flex;align-items:center;
+  background:var(--morKutu);border:1px solid var(--morKutuCizgi);display:flex;align-items:center;
   justify-content:center;line-height:1}
 .jkart .gv{flex:1;min-width:0}
-.jkart .gv b{display:block;font-size:15px;color:#f2f5f8;line-height:1.25}
-.jkart .gv span{display:block;font-size:12.5px;color:#9fb0c4;line-height:1.45;
+.jkart .gv b{display:block;font-size:15px;color:var(--ink);line-height:1.25}
+.jkart .gv span{display:block;font-size:12.5px;color:var(--soluk2);line-height:1.45;
   margin-top:3px}
 .jkart .fy{flex:none;text-align:right;font-weight:800;font-size:15px;color:var(--altin);
   font-variant-numeric:tabular-nums;line-height:1.2}
-.jkart .fy em{font-style:normal;display:block;font-size:9.5px;color:#8291a5;
+.jkart .fy em{font-style:normal;display:block;font-size:9.5px;color:var(--soluk2);
   letter-spacing:.5px;font-weight:700;text-transform:uppercase;margin-top:2px}
-.jkart:active{background:#1b2536}
-.jkart.elde{border-color:#3f7d55;background:#15251c}
-.jkart.elde .em{background:#1a3325;border-color:#3f7d55}
-.jkart.elde .fy em{color:#8fd3a8}
+.jkart:active{background:var(--ickart2)}
+.jkart.elde{border-color:var(--yesilCizgi);background:var(--yesilZemin)}
+.jkart.elde .em{background:var(--yesilZemin2);border-color:var(--yesilCizgi)}
+.jkart.elde .fy em{color:var(--yesilInk)}
 .jkart.dolu{opacity:.62;border-style:dashed;background:transparent}
-.jkart.dolu .fy{color:#8fd3a8}
-.jkart.dolu .gv b{color:#c2cbdd}
+.jkart.dolu .fy{color:var(--yesilInk)}
+.jkart.dolu .gv b{color:var(--ink3)}
 .jkart:disabled{cursor:default}
-@media (hover:hover){ .jkart:not(:disabled):hover{border-color:#5b6cc4;background:#1a2336} }
-.dukbtn{display:block;width:100%;max-width:460px;background:var(--mor);color:#fff;
+@media (hover:hover){ .jkart:not(:disabled):hover{border-color:var(--morVurgu);background:var(--ickart2)} }
+.dukbtn{display:block;width:100%;max-width:460px;background:var(--mor);color:var(--morUst);
   border:0;border-radius:13px;padding:14px;font-weight:800;font-size:16px;
   margin-top:12px;letter-spacing:.3px}
-.dukbtn.bekle{background:transparent;color:#b9a8ff;border:1.6px solid #4a4192}
+.dukbtn.bekle{background:transparent;color:var(--morInk);border:1.6px solid var(--morCizgi2)}
 @media (hover:hover){ .dukbtn:hover{filter:brightness(1.1)} }
 .hazsat{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:460px;
   width:100%;margin-top:9px}
 .hazsat span{font-size:11.5px;font-weight:700;border-radius:99px;padding:4px 10px;
   border:1px solid var(--cizgi);color:var(--soluk)}
-.hazsat span.ok{border-color:#3f7d55;color:#8fd3a8;background:#15251c}
+.hazsat span.ok{border-color:var(--yesilCizgi);color:var(--yesilInk);background:var(--yesilZemin)}
 .jokbar{display:flex;gap:6px;justify-content:center;max-width:100%;width:100%;
   margin-top:2px;overflow-x:auto;padding:1px 2px;scrollbar-width:none}
 .jokbar::-webkit-scrollbar{display:none}
-.jokbar button{background:#1a2336;border:1px solid #3a4470;color:#dfe6f2;flex:none;
+.jokbar button{background:var(--ickart2);border:1px solid var(--morCizgi3);color:var(--ink2);flex:none;
   border-radius:12px;padding:0 9px;height:38px;min-width:46px;font-size:17px;
   font-weight:700;display:flex;align-items:center;gap:4px;line-height:1}
 .jokbar button:disabled{opacity:.3;border-color:var(--cizgi)}
-.jokbar button u{text-decoration:none;color:#b9a8ff;font-weight:800;font-size:12.5px}
-@media (hover:hover){ .jokbar button:not(:disabled):hover{border-color:#6c5ce7;
-  background:#212c46} }
+.jokbar button u{text-decoration:none;color:var(--morInk);font-weight:800;font-size:12.5px}
+@media (hover:hover){ .jokbar button:not(:disabled):hover{border-color:var(--mor);
+  background:var(--morHover)} }
 /* yuzen bildirim: yerlesimden yer calmaz, klavyenin hemen ustunde durur */
 #toast{position:fixed;left:0;right:0;bottom:calc(var(--klh, 12px) + 8px);
   display:flex;justify-content:center;pointer-events:none;z-index:15;padding:0 12px}
-#toast .ic{background:rgba(16,24,33,.94);border:1px solid var(--cizgi);
+#toast .ic{background:var(--toastZemin);border:1px solid var(--cizgi);
   border-radius:11px;padding:7px 14px;font-size:14px;font-weight:700;max-width:460px;
   text-align:center;line-height:1.35;color:var(--soluk);
-  box-shadow:0 6px 20px rgba(0,0,0,.45)}
-#toast .ic.iyi{color:#7fe0a6;border-color:#2f6a44;background:rgba(15,38,25,.95)}
-#toast .ic.kotu{color:#f2a3ad;border-color:#6b2b36;background:rgba(45,17,23,.95)}
-#toast .ic.bek{color:#cfd8e0}
+  box-shadow:0 6px 20px var(--golge)}
+#toast .ic.iyi{color:var(--yesilInk);border-color:var(--yesilCizgi);background:var(--yesilZemin)}
+#toast .ic.kotu{color:var(--kirmiziInk);border-color:var(--kirmiziCizgi);background:var(--kirmiziZemin)}
+#toast .ic.bek{color:var(--ink2)}
 .hazirlar{font-size:12.5px;color:var(--soluk);text-align:center;margin-top:4px}
 .hazirlar b{color:var(--altin)}
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
@@ -133,31 +188,32 @@ button{font:inherit;cursor:pointer}
 .baslik b{color:var(--altin)}
 #tahta{display:grid;gap:4px;justify-content:center}
 #tahta .satir{display:grid;gap:4px}
-.hucre{width:var(--hg);height:var(--hg);border:2px solid var(--cizgi);border-radius:8px;
+.hucre{width:var(--hg);height:var(--hg);border:2px solid var(--hucreCizgi,var(--cizgi));
+  border-radius:8px;
   display:flex;align-items:center;justify-content:center;font-weight:800;
   font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:calc(var(--hg)*.52);
-  background:#141d27}
-.hucre.ilk{border-color:#4a5a6b;color:var(--altin)}
-.hucre.nisan{border-color:var(--mor);box-shadow:0 0 0 2px rgba(108,92,231,.35);
+  background:var(--ickart)}
+.hucre.ilk{border-color:var(--ilkCizgi);color:var(--altin)}
+.hucre.nisan{border-color:var(--mor);box-shadow:0 0 0 2px var(--morHalka);
   cursor:pointer;animation:nisanYan 1.1s infinite}
-@keyframes nisanYan{50%{box-shadow:0 0 0 4px rgba(108,92,231,.18)}}
-.hucre.dolu{border-color:#4a5a6b}
-.hucre.tam{background:var(--yesil);border-color:var(--yesil);color:#fff}
-.hucre.var{background:var(--sari);border-color:var(--sari);color:#231a00}
-.hucre.yok{background:var(--gri);border-color:var(--gri);color:#8fa0b0}
-.satir.aktif .hucre{border-color:#5d6f82}
+@keyframes nisanYan{50%{box-shadow:0 0 0 4px var(--morHalka2)}}
+.hucre.dolu{border-color:var(--ilkCizgi)}
+.hucre.tam{background:var(--yesil);border-color:var(--yesil);color:var(--yesilUst)}
+.hucre.var{background:var(--sari);border-color:var(--sari);color:var(--sariUst)}
+.hucre.yok{background:var(--gri);border-color:var(--gri);color:var(--yokInk)}
+.satir.aktif .hucre{border-color:var(--nokta)}
 .ipucu{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;
   padding:11px 13px;max-width:460px;text-align:center;font-size:16px;line-height:1.4}
 .ipucu b{color:var(--altin);display:block;font-size:11px;letter-spacing:1.1px;
   text-transform:uppercase;margin-bottom:5px}
 #klavye{flex:none;padding:4px 3px calc(4px + env(safe-area-inset-bottom));
-  background:#0a1119;border-top:1px solid var(--cizgi)}
+  background:var(--bar);border-top:1px solid var(--cizgi)}
 #klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:3px}
 #klavye .sr:last-child{margin-bottom:0}
 @media (min-width:640px){ #klavye .sr{max-width:620px;margin-left:auto;margin-right:auto} }
 @media (min-width:640px){ #skor .m{max-width:250px} #skor{justify-content:center} }
 #klavye button{flex:1 1 0;min-width:0;height:var(--tush);border:0;border-radius:8px;
-  background:#3a4756;color:#fff;font-weight:700;font-size:var(--tusf);padding:0}
+  background:var(--tus);color:var(--tusInk);font-weight:700;font-size:var(--tusf);padding:0}
 /* rahat yazmak en onemlisi: klavye onceligi alir, tahta kalan yere sigar */
 :root{--tush:64px; --tusf:22px}
 @media (max-height:880px){ :root{--tush:60px; --tusf:21px} }
@@ -169,13 +225,13 @@ button{font:inherit;cursor:pointer}
 #klavye button.gnis{flex:1.9 1 0;font-size:calc(var(--tusf) * .82)}
 #klavye button.dar{flex:1.3 1 0;font-size:calc(var(--tusf) * .78)}
 #klavye button.tam{background:var(--yesil)}
-#klavye button.var{background:var(--sari);color:#231a00}
-#klavye button.yok{background:#1e2933;color:#5d6b7a}
+#klavye button.var{background:var(--sari);color:var(--sariUst)}
+#klavye button.yok{background:var(--tusYok);color:var(--tusYokInk)}
 #klavye.kilit{opacity:.35;pointer-events:none}
 .izle{text-align:center;font-size:13px;color:var(--soluk);padding:9px}
-.buzz{width:100%;max-width:460px;background:var(--kirmizi);color:#fff;border:0;
+.buzz{width:100%;max-width:460px;background:var(--kirmizi);color:var(--kirmiziUst);border:0;
   border-radius:16px;padding:26px;font-size:26px;font-weight:800;letter-spacing:2px;
-  box-shadow:0 6px 22px rgba(217,74,90,.4);animation:nab 1s infinite}
+  box-shadow:0 6px 22px var(--kirmiziGolge);animation:nab 1s infinite}
 @keyframes nab{50%{transform:scale(.97)}}
 .kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
   padding:18px 16px;max-width:460px;width:100%;text-align:center}
@@ -183,24 +239,25 @@ button{font:inherit;cursor:pointer}
 .kutu h2{font-size:19px;margin:0 0 8px}
 .kutu p{color:var(--soluk);margin:0 0 10px;font-size:15px;line-height:1.5}
 .kutu p b{color:var(--murekkep)}
-.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+.buton{display:block;width:100%;background:var(--altinDolgu,var(--altin));
+  color:var(--altinUst);border:0;
   border-radius:12px;padding:14px;font-weight:800;font-size:16.5px;margin-top:9px}
 .buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
-.buton.mor{background:linear-gradient(135deg,#6c5ce7,#8e6ce8);color:#fff}
-.buton:disabled{background:#3a4756;color:#8b98a6}
-input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:10px;
+.buton.mor{background:linear-gradient(135deg,var(--mor),var(--mor2));color:var(--morUst)}
+.buton:disabled{background:var(--kapali);color:var(--soluk2)}
+input.ad{width:100%;background:var(--yuva);border:1.5px solid var(--cizgi);border-radius:10px;
   padding:11px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;
   margin:5px 0}
-input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-radius:10px;
+input.ad{width:100%;background:var(--yuva);border:1.5px solid var(--cizgi);border-radius:10px;
   padding:11px;color:var(--murekkep);font:inherit;font-weight:700;text-align:center;margin:5px 0}
-.link{background:#0a1119;border:1px dashed var(--cizgi);border-radius:10px;padding:10px;
+.link{background:var(--bar);border:1px dashed var(--cizgi);border-radius:10px;padding:10px;
   font-size:12px;color:var(--soluk);word-break:break-all;margin:8px 0;
   font-family:ui-monospace,Menlo,monospace;user-select:text}
 .msj{text-align:center;font-size:14px;font-weight:700;padding:5px 11px;border-radius:9px;
   line-height:1.4;max-width:460px}
-.msj.iyi{background:#173d27;color:#7fe0a6}
-.msj.kotu{background:#3d1720;color:#f2a3ad}
-.msj.bek{background:#22303d;color:var(--soluk)}
+.msj.iyi{background:var(--yesilZemin);color:var(--yesilInk)}
+.msj.kotu{background:var(--kirmiziZemin);color:var(--kirmiziInk)}
+.msj.bek{background:var(--yuva);color:var(--soluk)}
 .kw{font-family:ui-monospace,Menlo,monospace;font-size:24px;font-weight:800;
   letter-spacing:4px;color:var(--altin)}
 .gizli{display:none!important}
@@ -208,6 +265,7 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 <div id="bar"><a href="index.html" style="color:var(--soluk);text-decoration:none">‹</a>
   <span class="kod gizli" id="kod"></span><span class="et" id="et"></span>
   <span class="ag" id="ag"></span>
+  <button id="temad" title="Gece / gündüz" onclick="temaCevir()">🌙</button>
   <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button></div>
 <div id="sure" class="gizli"><i></i></div>
 <div id="skor" class="gizli"></div>
@@ -280,6 +338,32 @@ const TRL = s => s.replace(/I/g,"ı").replace(/İ/g,"i").toLowerCase();
 const TL = n => n.toLocaleString("tr-TR");
 const PARA = n => (n<0 ? "−₺"+TL(-n) : "₺"+TL(n));
 const $ = s => document.querySelector(s);
+/* ================= gece / gunduz ================= */
+const TEMALAR = {gece:"#0E1520", gunduz:"#EDF1F7"};
+function temaOku(){
+  try{ const t=localStorage.getItem("lingo_masa_tema");
+       if(t==="gece"||t==="gunduz") return t; }catch(e){}
+  try{ if(window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches)
+         return "gunduz"; }catch(e){}
+  return "gece";
+}
+function temaUygula(t, kaydet){
+  const kok=document.documentElement;
+  if(t==="gunduz") kok.setAttribute("data-tema","gunduz");
+  else kok.removeAttribute("data-tema");
+  const m=document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute("content", TEMALAR[t] || TEMALAR.gece);
+  const b=document.getElementById("temad");
+  if(b){ b.textContent = t==="gunduz" ? "☀️" : "🌙";
+         b.setAttribute("aria-label", t==="gunduz" ? "Gece moduna geç" : "Gündüz moduna geç"); }
+  if(kaydet){ try{ localStorage.setItem("lingo_masa_tema", t); }catch(e){} }
+  return t;
+}
+let TEMA = "gece";
+function temaCevir(){
+  TEMA = temaUygula(TEMA==="gunduz" ? "gece" : "gunduz", true);
+  if(typeof SON!=="undefined" && SON) ciz(SON);
+}
 const orta=$("#orta"), klv=$("#klavye"), skorEl=$("#skor"), etEl=$("#et"),
       agEl=$("#ag"), kodEl=$("#kod"), sureKap=$("#sure"), sureBar=sureKap.querySelector("i");
 let VERI=null, GECERLI=null;
@@ -1364,7 +1448,7 @@ function ciz(S){
          bilirse <b>₺${TL(risk)}</b>, bilemezse <b style="color:var(--kirmizi)">sıfır</b>.
          Kalan süre <b>${S.sn}</b> saniye (şu an duruyor).</p>
       ${benim
-        ? `<button class="buton" style="background:var(--yesil);color:#fff"
+        ? `<button class="buton" style="background:var(--yesil);color:var(--yesilUst)"
              onclick="NET.yolla({t:'karar',devam:false})">TAMAM — ₺${TL(S.finKazanc)} ile bitir</button>
            <button class="buton" onclick="NET.yolla({t:'karar',devam:true})">
              DEVAM — süper lingo ▸</button>`
@@ -1731,7 +1815,7 @@ function isimUygula(){
 function uyariGoster(m){
   const d=document.createElement("div");
   d.style.cssText="position:fixed;left:50%;transform:translateX(-50%);bottom:80px;"+
-    "background:#f2f5f8;color:#0f1720;padding:9px 16px;border-radius:999px;"+
+    "background:var(--ink);color:var(--zemin);padding:9px 16px;border-radius:999px;"+
     "font-weight:700;z-index:30";
   d.textContent=m; document.body.appendChild(d); setTimeout(()=>d.remove(),1400);
 }
@@ -1795,6 +1879,9 @@ function otoKatil(){
   return true;
 }
 function yukle(){
+  TEMA = temaUygula(temaOku(), false);
+  const td=document.getElementById("temad");
+  if(td) td.onclick = temaCevir;
   LG_sesDugme(document.getElementById("sesd"));
   ekran(`<h1>LİNGO MASA</h1><p>Kelime havuzu yükleniyor…</p>`);
   fetch("oyun-veri.json").then(r=>{ if(!r.ok) throw 0; return r.json(); })
