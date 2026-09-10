@@ -34,6 +34,13 @@ button{font:inherit;cursor:pointer}
 /* orta alan */
 #orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
   justify-content:flex-start;padding:10px 12px;gap:10px;min-height:0}
+#orta.oyun{gap:6px;padding:6px 10px}
+#orta.sikisik{gap:4px}
+#orta.sikisik .fbar div{padding:2px 2px}
+#orta.sikisik .fbar div b{font-size:13px}
+#orta.sikisik .fbar div span{display:none}
+#orta.sikisik .baslik{font-size:11.5px}
+#orta.sikisik .altsat .buton,#orta.sikisik #mikb{padding:7px 4px;font-size:13.5px}
 #orta > :first-child{margin-top:auto}
 #orta > :last-child{margin-bottom:auto}
 .baslik{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--soluk);
@@ -63,8 +70,9 @@ button{font:inherit;cursor:pointer}
 #klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
   background:#0a1119;border-top:1px solid var(--cizgi)}
 #klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
-#klavye button{flex:1 1 0;min-width:0;height:46px;border:0;border-radius:7px;
-  background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
+#klavye{--tush:clamp(42px,6.1vh,56px)}
+#klavye button{flex:1 1 0;min-width:0;height:var(--tush);border:0;
+  border-radius:7px;background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
 #klavye button.gnis{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
 #klavye button.dar{flex:1.25 1 0;font-size:12.5px;letter-spacing:.5px}
 #klavye button.tam{background:var(--yesil)}
@@ -115,7 +123,7 @@ table.merd tr:last-child td b{color:var(--altin)}
   border-radius:11px;padding:12px 8px;font-weight:700;font-size:15px}
 .fbar{display:flex;gap:5px;max-width:430px;width:100%;margin:0 auto 2px}
 .fbar div{flex:1;text-align:center;border:1.5px solid var(--cizgi);border-radius:9px;
-  padding:6px 2px;background:#141d27}
+  padding:4px 2px;background:#141d27}
 .fbar div b{display:block;font-size:15px;font-weight:800}
 .fbar div span{display:block;font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;
   color:var(--soluk);margin-top:2px}
@@ -146,17 +154,19 @@ table.ist tr.yok td.sn{color:var(--kirmizi)}
 .gec{font-size:13px;color:var(--soluk);line-height:1.7;margin-top:8px}
 .gec b{color:var(--murekkep);font-variant-numeric:tabular-nums}
 /* ses tanima */
-.altsat{display:flex;gap:7px;max-width:430px;width:100%;margin-top:6px;
+.altsat{display:flex;gap:6px;max-width:430px;width:100%;margin-top:4px;
   align-items:stretch}
-.altsat .buton{margin-top:0;flex:1 1 auto}
-#mikb{flex:none;width:118px;background:transparent;color:var(--murekkep);
-  border:1.5px solid var(--cizgi);border-radius:12px;font-weight:800;font-size:14.5px;
-  padding:12px 4px;line-height:1.25}
+.altsat .buton{margin-top:0;flex:1.6 1 0;padding:9px 6px;font-size:15px;border-radius:10px}
+.altsat .buton:disabled{opacity:.45}
+#mikb{flex:1 1 0;background:transparent;color:var(--murekkep);
+  border:1.5px solid var(--cizgi);border-radius:10px;font-weight:800;font-size:14px;
+  padding:9px 4px;line-height:1.2}
 #mikb.dinle{background:#3d1720;border-color:var(--kirmizi);color:#f2a3ad;
   animation:nabiz 1.1s infinite}
 @keyframes nabiz{0%,100%{opacity:1}50%{opacity:.5}}
-#duy{font-size:13px;color:var(--soluk);text-align:center;min-height:17px;line-height:1.4;
-  max-width:430px}
+#duy{font-size:12.5px;color:var(--soluk);text-align:center;line-height:1.35;
+  max-width:430px;min-height:0}
+#duy:empty{display:none}
 #duy b{color:var(--altin);font-family:ui-monospace,Menlo,monospace;letter-spacing:1px}
 #duy s{text-decoration:none;color:var(--kirmizi)}
 #bar .para{color:var(--altin)}
@@ -456,8 +466,33 @@ window.mikBas = function(){
 
 /* ---------------- lingo kelimesi ---------------- */
 function hucreBoy(n){
-  const g = Math.min(window.innerWidth - 30, 430);
-  return Math.max(30, Math.min(56, Math.floor((g - (n-1)*5) / n)));
+  const g = Math.min(window.innerWidth - 26, 430);
+  const enBoy = Math.floor((g - (n-1)*5) / n);
+  /* tahtanin payina dusen yukseklik: ekran eksi bar, klavye, serit, butonlar */
+  const kl = klv.getBoundingClientRect().height || Math.round(window.innerHeight*0.24);
+  const kalanY = window.innerHeight - kl - 190;
+  const boyY = Math.floor((kalanY - (FSATIR-1)*5) / FSATIR);
+  return Math.max(28, Math.min(64, enBoy, boyY > 0 ? boyY : enBoy));
+}
+/* tahta ekrani kaydirma gerektirmesin: sigmazsa hucreleri kucult */
+function boyAyarla(){
+  const t = document.getElementById("tahta"); if(!t) return;
+  const tasti = () => orta.scrollHeight > orta.clientHeight + 1;
+  let hg = parseInt(t.style.getPropertyValue("--hg"), 10) || 40, kez = 0;
+  /* once hucreler makul bir alt sinira kadar kucultulur */
+  while(tasti() && hg > 34 && kez++ < 24){ hg -= 2; t.style.setProperty("--hg", hg + "px"); }
+  /* yetmezse klavye kisilir */
+  const tus = klv.querySelector("button");
+  let kh = tus ? Math.round(tus.getBoundingClientRect().height) : 46;
+  kez = 0;
+  while(tasti() && kh > 36 && kez++ < 16){ kh -= 2; klv.style.setProperty("--tush", kh + "px"); }
+  /* hala sigmadiysa hucreler biraz daha */
+  kez = 0;
+  while(tasti() && hg > 26 && kez++ < 12){ hg -= 2; t.style.setProperty("--hg", hg + "px"); }
+  /* cok kisa ekran: serit ve klavye son bir tur kisilir */
+  if(tasti()) orta.classList.add("sikisik");
+  kez = 0;
+  while(tasti() && kh > 32 && kez++ < 8){ kh -= 2; klv.style.setProperty("--tush", kh + "px"); }
 }
 
 function altsatKapat(){
@@ -576,12 +611,12 @@ function kelimeOyna(n){
   const gizli = kelimeSec(n);
   let sat = 0, giris = gizli[0];
   klvDurum = {};
-  orta.className = "";
+  orta.className = "oyun";
   orta.innerHTML = serit() +
     `<div class="baslik" id="ust"></div>
      <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
      <div class="altsat" id="altsat">
-       <button class="buton ikinci" id="pasb" disabled>PAS, önce bir tahmin yapın</button>
+       <button class="buton ikinci" id="pasb" disabled>PAS</button>
        <button id="mikb" class="${SRC ? "" : "gizli"}" onclick="mikBas()">🎙 SÖYLE</button>
      </div>
      <div id="duy"></div>
@@ -608,7 +643,7 @@ function kelimeOyna(n){
   function pasYaz(){
     const pb = $("#pasb"); if(!pb) return;
     pb.disabled = sat < 1;
-    pb.textContent = sat < 1 ? "PAS, önce bir tahmin yapın" : "PAS, başka kelime ▸";
+    pb.textContent = sat < 1 ? "PAS" : "PAS, yeni kelime ▸";
   }
   function yaz(){
     const h = satirlar[sat].children;
@@ -673,7 +708,7 @@ function kelimeOyna(n){
   buKelime = {n: n, w: gizli};
   sesDur(); sesHavuz = null; sesBaglam = {n: n, ilk: gizli[0]};
   sesUygula = w => { if(!kapandi){ giris = w; yaz(); } };
-  ustYaz(); yaz(); pasYaz(); klavyeCiz(gir, sil, gonder);
+  ustYaz(); yaz(); pasYaz(); klavyeCiz(gir, sil, gonder); boyAyarla();
 }
 
 function sonEkran(tamam){
@@ -686,7 +721,9 @@ function sonEkran(tamam){
   buKelime = null;
   const kullanilanSure = FSURE - kalan;
   const bilinen = kayit.filter(k => k && k.ok);
-  const enUzak = bilinen.length ? bilinen[bilinen.length - 1].n : 0;
+  const girilen = kayit.filter(Boolean);
+  /* nereye kadar geldi: bilemese de sirası gelen uzunluk sayilir */
+  const enUzak = girilen.length ? girilen[girilen.length - 1].n : 0;
 
   const m = metaOku();
   m.deneme++;
@@ -739,11 +776,6 @@ function sonEkran(tamam){
       <div><b>${m.tam}</b><span>tamamlanan</span></div>
       <div><b>${m.enIyi ? m.enIyi + " sn" : "-"}</b><span>en iyi süre</span></div>
     </div>
-    ${sesSay.toplam ? `<p class="eyebrow" style="margin-top:12px">Sesle yazma denemesi</p>
-      <p class="kucuk">${sesSay.toplam} kez söyledin:
-        <b>${sesSay.tam}</b> tam anladı,
-        <b>${sesSay.yakin}</b> yakın kelimeye çevirdi,
-        <b>${sesSay.bos}</b> hiç bulamadı.</p>` : ""}
     ${m.gecmis.length > 1 ? `<p class="eyebrow" style="margin-top:12px">Son denemeler</p>
       <div class="gec">${m.gecmis.slice(0, 5).map(g =>
         `${new Date(g.t).toLocaleDateString("tr-TR")} · ${g.tam
