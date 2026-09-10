@@ -1839,12 +1839,18 @@ function masaSecEkrani(S){
   ekran(`<span class="rozet">${ODAAD}</span>
     <h2>Hangi masadasınız?</h2>
     <p class="izle">Masanıza dokunun.</p>
-    ${S.masalar.map((m,i)=>`<button class="buton ${i===0?"":"ikinci"}"
+    ${S.masalar.map((m,i)=>`<button class="buton ikinci" data-masa="${i}"
       onclick="masaAl(${i})">${m.ad}</button>`).join("")}
-    <button class="buton ikinci" style="margin-top:14px"
+    <button class="buton ikinci" data-masa="-1" style="margin-top:14px"
       onclick="masaAl(-1)">Sadece izleyeceğim</button>`);
 }
 function masaAl(i){
+  /* secilen dugme sarıya donsun, digerleri sonuk kalsin */
+  const dl = document.querySelectorAll(".kutu button[data-masa]");
+  dl.forEach(b => {
+    b.className = b.getAttribute("data-masa") === String(i) ? "buton" : "buton ikinci";
+    b.style.pointerEvents = "none";      /* disabled yaparsak sari sonuyor */
+  });
   NET.benim=i; masaSoruldu=true;
   try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
   NET.yolla({t:"masa", i});
