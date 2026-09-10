@@ -82,7 +82,9 @@ header .sar{padding-bottom:0}
   border-radius:14px;padding:18px 16px;margin:20px 0 6px;text-decoration:none;
   text-align:center;box-shadow:0 6px 20px rgba(224,169,46,.3)}
 .yarkart > b{display:block;font-size:19px;letter-spacing:-.2px}
-.yarkart span{display:block;font-size:15px;margin-top:6px;font-weight:600}
+.yarkart span{display:block;font-size:15px;margin-top:6px;font-weight:600;
+  text-wrap:balance}
+.yarkart span.sev{margin-top:3px;font-weight:800}
 .plankart{display:block;background:linear-gradient(135deg,#6c5ce7,#8e6ce8);
   color:#fff;border-radius:14px;padding:16px;margin:10px 0 8px;text-decoration:none;
   box-shadow:0 5px 18px rgba(108,92,231,.28)}
@@ -161,6 +163,8 @@ header .sar{padding-bottom:0}
 .pdf{display:block;background:var(--koyu);color:var(--koyuyazi);border-radius:10px;
   padding:13px;text-align:center;text-decoration:none;font-weight:700;font-size:15px}
 .alis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.alis.tek{grid-template-columns:1fr}
+.alis.tek a{padding:15px 10px;font-size:16px;letter-spacing:.4px}
 .alis a{background:var(--koyu);color:var(--koyuyazi);border-radius:10px;padding:12px 6px;
   text-align:center;text-decoration:none;font-weight:700;font-size:15px}
 .bilgi{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
@@ -296,6 +300,9 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
   .kapak h1{font-size:32px} .sec{grid-template-columns:1fr}
   .secenek .not{font-size:12px}
 }
+
+/* centik payi: saat ve kamera cubugunun altina girmesin */
+header{padding-top:calc(12px + env(safe-area-inset-top,0px))}
 </style>
 <script>
 /* tema, sayfa boyanmadan uygulansin ki gozu almasin */
@@ -404,7 +411,7 @@ kelimeler kaç kez ve hangi sezonda çıktıklarıyla renkli listelenir.</p>
 <p style="margin-top:12px">Bir de <b>final alıştırması</b> var: 120 saniyede sırayla
  4, 5, 6 ve 7 harfli birer kelime, tek sayaç. Sonunda hangi uzunluğu kaç saniyede
  bildiğin tek tek yazılır.</p>
-<div class="alis"><a href="final.html">⏱ final alıştırması</a></div>
+<div class="alis tek"><a href="final.html">⏱ FİNAL ALIŞTIRMASI</a></div>
 
 </div>
 
@@ -458,7 +465,8 @@ her gün birkaç harf yeter.</p>
 </div>
 <a class="yarkart" href="yarisma.html">
   <b>🎬 YARIŞMA GÜNÜ</b>
-  <span>Bol şans Serpil, bol şans Zeynep! · Sizi seviyoruz 🏆</span></a>
+  <span>Bol şans Serpil, bol şans Zeynep!</span>
+  <span class="sev">Sizi seviyoruz 🏆</span></a>
 <div class="dip">Sorular 5-445. bölümlerin cevap arşivi ve TDK Güncel Türkçe
 Sözlük havuzu üzerinden hesaplandı. "Kalan aday" sayısı, o harfle başlayan
 bütün sözlük kelimeleri üzerinden, kelimelerin kullanım sıklığıyla
