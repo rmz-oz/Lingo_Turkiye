@@ -40,9 +40,20 @@ table{width:100%;border-collapse:collapse;font-size:14.5px}
 td,th{padding:8px 5px;border-bottom:1px solid var(--cizgi);text-align:left}
 th{font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--soluk)}
 td.h{font-weight:800;font-size:18px;width:34px;color:var(--altin)}
-td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.2px;
-  font-size:12.5px;white-space:nowrap}
-@media(max-width:430px){ td.w{font-size:11px} td,th{padding:7px 3px} }
+td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.4px;
+  font-size:13.5px}
+/* uzunluga gore gruplanmis acilis listesi */
+.grp{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  padding:12px 14px;margin-bottom:10px}
+.gbas{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--altin);
+  font-weight:800;margin-bottom:8px}
+.glist{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px 14px}
+.sat{display:flex;align-items:baseline;gap:10px;padding:7px 0;
+  border-bottom:1px solid var(--cizgi)}
+.glist .sat:last-child{border-bottom:0}
+.gh{font-weight:800;font-size:17px;color:var(--altin);width:20px;flex:none}
+.gw{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.5px;
+  font-size:14px}
 .uy{background:#3d1720;border:1px solid #5c2230;border-radius:13px;padding:13px 15px;
   font-size:14.5px;line-height:1.6;color:#f2c0c7;margin-bottom:10px}
 .uy b{color:#fff}
@@ -81,8 +92,7 @@ td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.2p
   yani yarısı zorlu. Bu normal, herkes için böyle.</p></div>
 
 <h2>Son bir bakış, açılış ikilileri</h2>
-<div class="k" style="padding:8px 10px 4px;overflow-x:auto"><table id="tab">
-<tr><th>harf</th><th>4 harfli</th><th>5 harfli</th><th>6 harfli</th></tr></table></div>
+<div id="ikili"></div>
 
 <h2>Aklınızda kalsın</h2>
 <div class="uy"><b>Panik yapılacak harf:</b> K. 1.539 kez çıktı, açık ara birinci, 
@@ -126,16 +136,19 @@ td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.2p
   }
   if(!az) tur();
 })();
-/* acilis ikilileri tablosu */
+/* acilis ikilileri: uzunluk uzunluk gruplanmis liste */
 fetch("yarisma.json").then(r=>r.json()).then(v=>{
-  const t = document.getElementById("tab");
-  for(const h in v){
-    const r = document.createElement("tr");
-    r.innerHTML = `<td class="h">${h}</td>
-      <td class="w">${v[h]["4"] ? v[h]["4"].join(" + ") : ""}</td>
-      <td class="w">${v[h]["5"] ? v[h]["5"].join(" + ") : ""}</td>
-      <td class="w">${v[h]["6"] ? v[h]["6"].join(" + ") : ""}</td>`;
-    t.appendChild(r);
+  const kap = document.getElementById("ikili");
+  for(const n of ["4","5","6"]){
+    const harfler = Object.keys(v).filter(h => v[h][n]);
+    if(!harfler.length) continue;
+    const g = document.createElement("div");
+    g.className = "grp";
+    g.innerHTML = `<div class="gbas">${n} harfli</div>
+      <div class="glist">${harfler.map(h =>
+        `<div class="sat"><span class="gh">${h}</span>
+           <span class="gw">${v[h][n].join(" + ")}</span></div>`).join("")}</div>`;
+    kap.appendChild(g);
   }
 }).catch(()=>{});
 </script></body></html>
