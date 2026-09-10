@@ -352,6 +352,7 @@ function sesKur(){
       mikDurum(false, `duydum: <b>${TRU(duyulan)}</b> · en yakını <b>${TRU(e.w)}</b>,
         yanlışsa SİL ile düzelt`); }
   };
+  r.onstart = () => { LG_ses("sure"); mikDurum(true, "şimdi söyleyin"); };
   r.onerror = ev => {
     const izin = ev.error === "not-allowed" || ev.error === "service-not-allowed";
     const m = {"no-speech": "ses gelmedi, tekrar dene",
@@ -377,7 +378,7 @@ window.mikBas = function(){
   if(!SRC) return uyar("Bu tarayıcı sesle yazmayı desteklemiyor");
   if(dinliyor){ sesDur(); return; }
   if(!tanir) tanir = sesKur();
-  try{ tanir.start(); dinliyor = true; mikDurum(true, "söyle: kelimenin tamamını"); }
+  try{ tanir.start(); dinliyor = true; mikDurum(true, "hazırlanıyor, bir saniye"); }
   catch(e){ try{ tanir.abort(); }catch(e2){} dinliyor = false; }
 };
 
@@ -431,17 +432,13 @@ function girisEkran(){
   const m = metaOku();
   ekran(`<div class="eyebrow">${KISI}</div>
     <h1>Final Alıştırması</h1>
-    <p><b>120 saniye</b>, tek sayaç. Sırayla <b>4, 5, 6 ve 7</b> harfli birer kelime.
-      Her kelime için <b>5 tahmin hakkı</b> var; saat kelime aralarında durmuyor.</p>
-    <p class="kucuk">Takıldığın kelimede <b>PAS</b> diyebilirsin: aynı uzunlukta yeni
-      kelime gelir, saat işlemeye devam eder. Önce en az bir tahmin yapman gerekir.
-      Beş hakkın biterse alıştırma orada durur.</p>
-    <p class="kucuk">Sonunda <b>hangi uzunluğu kaç saniyede bildiğin</b> tek tek yazılır.</p>
-    ${SRC ? `<p class="kucuk">Yeni: tahta ekranında <b>🎙 SÖYLE</b> tuşu var. Bas, kelimenin
-      tamamını söyle, yazı tahtaya kendiliğinden gelsin. Tam duyamazsa en yakın kelimeyi
-      yazar, SİL ile düzeltebilirsin. Deneme aşamasında, internet gerekiyor.</p>`
-      : `<p class="kucuk">Bu tarayıcı sesle yazmayı desteklemiyor, klavyeyle çalış.
-      Sesli deneme için Android telefonda Chrome kullan.</p>`}
+    <p><b>120 saniyeniz var.</b> Sırayla <b>4, 5, 6 ve 7</b> harfli birer kelime,
+      her kelimede <b>5 tahmin hakkı</b>. Saat kelime aralarında durmuyor.</p>
+    <p class="kucuk">Takıldığınız kelimede <b>PAS</b> diyebilirsiniz, aynı uzunlukta
+      yenisi gelir.</p>
+    ${SRC ? `<p class="kucuk"><b>🎙 SÖYLE</b> tuşuna basın, <b>yarım saniye bekleyin</b>,
+      sonra kelimeyi söyleyin. Tahtaya kendiliğinden yazılır.</p>`
+      : `<p class="kucuk">Bu tarayıcı sesle yazmayı desteklemiyor, klavyeyle çalışın.</p>`}
     ${m.deneme ? `<div class="rek">
       <div><b>${m.deneme}</b><span>deneme</span></div>
       <div><b>${m.tam}</b><span>tamamlanan</span></div>
