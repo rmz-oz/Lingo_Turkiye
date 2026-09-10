@@ -23,6 +23,9 @@ button{font:inherit;cursor:pointer}
 #bar .yer{font-size:12px;letter-spacing:.9px;font-weight:700;color:var(--altin);
   text-transform:uppercase;min-width:0;overflow:hidden;text-overflow:ellipsis;
   white-space:nowrap}
+#bar .geri{color:var(--soluk);text-decoration:none;font-size:22px;line-height:1;
+  padding:0 4px 2px;flex:none;display:flex;align-items:center}
+#bar .geri:active{opacity:.6}
 #bar .kalp{font-size:14px;letter-spacing:1px;flex:none}
 #bar .akce,#bar .lira{font-variant-numeric:tabular-nums;font-weight:800;flex:none;
   font-size:14px}
@@ -212,17 +215,19 @@ table.rek td.tl{text-align:right;color:var(--yesil);font-weight:800;
 .harita svg{display:block;width:100%;height:auto}
 .efs{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px;font-size:12px;color:var(--soluk)}
 .efs span{display:flex;align-items:center;gap:5px}
-</style><link rel="icon" href="fiko-32.png" sizes="32x32">
+</style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="fiko-180.png">
+<link rel="apple-touch-icon" href="fiko-180.png?v=2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fiko">
+<script src="tema.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
 </head><body>
 
 <div id="bar">
+  <a class="geri" href="index.html" aria-label="Ana sayfa">‹</a>
   <span class="yer" id="yer">Likya Yolu</span>
   <span class="kalp" id="kalp"></span>
   <span class="sag">
