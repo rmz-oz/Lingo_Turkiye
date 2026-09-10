@@ -284,6 +284,7 @@ function klvBoya(tah, r){
 /* ---------------- ses tanima ---------------- */
 const SRC = window.SpeechRecognition || window.webkitSpeechRecognition;
 let tanir = null, dinliyor = false, sesUygula = null, sesBaglam = null, sesHavuz = null;
+let sonucGeldi = false, hataGeldi = false;
 let sesSay = {toplam: 0, tam: 0, yakin: 0, bos: 0};
 
 function sesTemiz(t){
@@ -377,10 +378,22 @@ function mikDurum(dinle, metin){
 }
 function sesKur(){
   const r = new SRC();
-  r.lang = "tr-TR"; r.continuous = false; r.interimResults = false; r.maxAlternatives = 6;
+  r.lang = "tr-TR"; r.continuous = false; r.interimResults = true; r.maxAlternatives = 6;
+  r.onstart = () => { sonucGeldi = false; hataGeldi = false;
+    mikDurum(true, "şimdi söyleyin"); };
   r.onresult = ev => {
-    const res = ev.results[0], secenek = [];
-    for(let i = 0; i < res.length; i++) secenek.push(res[i].transcript);
+    let ara = "", son = null;
+    for(let i = ev.resultIndex; i < ev.results.length; i++){
+      const res = ev.results[i];
+      if(res.isFinal) son = res; else ara += res[0].transcript;
+    }
+    if(!son){                                  /* konusurken anlik yazi */
+      if(ara.trim()) mikDurum(true, `duyuluyor: <b>${ara.trim()}</b>`);
+      return;
+    }
+    sonucGeldi = true;
+    const secenek = [];
+    for(let i = 0; i < son.length; i++) secenek.push(son[i].transcript);
     sesSay.toplam++;
     const e = sesEsle(secenek);
     const duyulan = sesTemiz(secenek[0] || "");
@@ -391,50 +404,38 @@ function sesKur(){
     }
     if(sesUygula) sesUygula(e.w);
     if(e.d === 0){ sesSay.tam++;
-      mikDurum(false, `duydum: <b>${TRU(e.w)}</b> · yazdım, TAMAM'a bas`); }
+      mikDurum(false, `duydum: <b>${TRU(e.w)}</b> · yazdım, TAMAM'a basın`); }
     else{ sesSay.yakin++;
       mikDurum(false, `duydum: <b>${TRU(duyulan)}</b> · en yakını <b>${TRU(e.w)}</b>,
-        yanlışsa SİL ile düzelt`); }
+        yanlışsa SİL ile düzeltin`); }
   };
-  r.onstart = () => { LG_ses("sure"); mikDurum(true, "şimdi söyleyin"); };
   r.onerror = ev => {
+    hataGeldi = true; dinliyor = false;
     const izin = ev.error === "not-allowed" || ev.error === "service-not-allowed";
-    const m = {"no-speech": "ses gelmedi, tekrar dene",
-               "audio-capture": "mikrofon bulunamadı",
-               "aborted": "dinleme durdu",
+    if(ev.error === "aborted") return;
+    const m = {"no-speech": "ses gelmedi, tekrar deneyin",
+               "audio-capture": "mikrofon başka uygulamada, onu kapatın",
                "network": "internet gerekiyor"}[ev.error] || ev.error;
-    dinliyor = false;
     mikDurum(false, izin
-      ? `<s>mikrofon izni kapalı</s> · adres çubuğundaki kilit simgesine bas,
-         <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b> de, sonra sayfayı yenile`
+      ? `<s>mikrofon izni kapalı</s> · adres çubuğundaki kilit simgesine basın,
+         <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b>, sonra sayfayı yenileyin`
       : `<s>${m}</s>`);
   };
   r.onend = () => { dinliyor = false;
     const b = document.getElementById("mikb");
-    if(b){ b.classList.remove("dinle"); b.innerHTML = "🎙 SÖYLE"; } };
+    if(b){ b.classList.remove("dinle"); b.innerHTML = "🎙 SÖYLE"; }
+    if(!sonucGeldi && !hataGeldi)
+      mikDurum(false, "<s>ses alınamadı</s> · tuşa basıp bir saniye sonra konuşun");
+  };
   return r;
 }
 function sesDur(){
   dinliyor = false;
   if(tanir){ try{ tanir.abort(); }catch(e){} }
 }
-let izinAlindi = false;
-window.mikBas = async function(){
+window.mikBas = function(){
   if(!SRC) return uyar("Bu tarayıcı sesle yazmayı desteklemiyor");
   if(dinliyor){ sesDur(); return; }
-  if(!izinAlindi){
-    const d = await izinDurum();
-    if(d !== "granted"){
-      mikDurum(true, "mikrofon izni isteniyor, <b>İzin ver</b> deyin");
-      const ok = await mikIzin();
-      if(!ok) return mikDurum(false, ICTARAYICI
-        ? `<s>uygulama içi tarayıcıda mikrofon çalışmaz</s> · üç noktaya basıp
-           <b>Chrome'da aç</b> deyin`
-        : `<s>mikrofon izni kapalı</s> · adres çubuğundaki kilit simgesine basın,
-           <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b>, sonra sayfayı yenileyin`);
-    }
-    izinAlindi = true;
-  }
   if(!tanir) tanir = sesKur();
   try{ tanir.start(); dinliyor = true; mikDurum(true, "hazırlanıyor, bir saniye"); }
   catch(e){ try{ tanir.abort(); }catch(e2){} dinliyor = false; }
@@ -462,7 +463,8 @@ const FSURE = 120, FDIZI = [4, 5, 6, 7], FSATIR = 5;
 const KISI_VAR = ["Serpil", "Zeynep"];
 let KISILER = LG_kisiler(KISI_VAR), KISI = LG_kisiDogrula(KISILER) || KISILER[0];
 
-let kalan = FSURE, fi = 0, kayit = [], basSn = FSURE, buPas = 0, bitti = false;
+let kalan = FSURE, fi = 0, kayit = [], basSn = FSURE, buPas = 0, buHata = 0,
+    buKelime = null, bitti = false;
 
 const anahtar = () => "lingo_final_" + KISI;
 function metaOku(){
@@ -493,7 +495,7 @@ function girisEkran(){
     <p><b>120 saniyeniz var.</b> Sırayla <b>4, 5, 6 ve 7</b> harfli birer kelime,
       her kelimede <b>5 tahmin hakkı</b>. Saat kelime aralarında durmuyor.</p>
     <p class="kucuk">Takıldığınız kelimede <b>PAS</b> diyebilirsiniz, aynı uzunlukta
-      yenisi gelir.</p>
+      yenisi gelir. Beş hakkınız biterse de yenisi gelir; alıştırma süre bitene kadar sürer.</p>
     ${SRC ? `<p class="kucuk"><b>🎙 SÖYLE</b> tuşuna basın, <b>yarım saniye bekleyin</b>,
       sonra kelimeyi söyleyin. Tahtaya kendiliğinden yazılır.</p>
       <button class="buton ikinci" id="izinb" onclick="izinIste()">🎙 MİKROFONU AÇ</button>
@@ -538,7 +540,7 @@ window.basla = function(){
 
 function kelimeGetir(){
   if(fi >= FDIZI.length) return sonEkran(true);
-  basSn = kalan; buPas = 0;
+  basSn = kalan; buPas = 0; buHata = 0;
   kelimeOyna(FDIZI[fi]);
 }
 
@@ -604,7 +606,8 @@ function kelimeOyna(n){
       LG_ses("dogru"); kapandi = true;
       defterYaz(gizli, sat + 1);
       kayit[fi] = {n:n, sn: Math.max(0, basSn - kalan), tahmin: sat + 1,
-                   pas: buPas, w: gizli, ok: true};
+                   pas: buPas, hata: buHata, w: gizli, ok: true};
+      buKelime = null;
       klv.classList.add("gizli"); altsatKapat();
       $("#alt").innerHTML = `<div class="sonuc iyi" style="margin-top:10px">
         ${n} harfli tamam: <b>${Math.max(0, basSn - kalan)} saniye</b>,
@@ -617,12 +620,14 @@ function kelimeOyna(n){
     if(sat >= FSATIR){
       kapandi = true;
       defterYaz(gizli, 0);
-      kayit[fi] = {n:n, sn: Math.max(0, basSn - kalan), tahmin: FSATIR,
-                   pas: buPas, w: gizli, ok: false};
+      buHata++;
       klv.classList.add("gizli"); altsatKapat();
       $("#alt").innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
-        Hakların bitti<span class="kw">${TRU(gizli)}</span></div>`;
-      return setTimeout(() => sonEkran(false, "hak"), 1900);
+        Hakların bitti<span class="kw">${TRU(gizli)}</span>
+        <div class="kucuk" style="margin-top:4px">yeni kelime geliyor</div></div>`;
+      const p = buPas, h = buHata;
+      return setTimeout(() => {
+        if(!bitti){ buPas = p; buHata = h; kelimeOyna(n); } }, 1900);
     }
     ustYaz(); yaz(); pasYaz();
   }
@@ -633,17 +638,23 @@ function kelimeOyna(n){
     $("#alt").innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
       Pas, doğru cevap<span class="kw">${TRU(gizli)}</span></div>`;
     defterYaz(gizli, 0);
-    const p = buPas;
-    setTimeout(() => { if(!bitti){ buPas = p; kelimeOyna(n); } }, 1400);
+    const p = buPas, h = buHata;
+    setTimeout(() => { if(!bitti){ buPas = p; buHata = h; kelimeOyna(n); } }, 1400);
   };
+  buKelime = {n: n, w: gizli};
   sesDur(); sesHavuz = null; sesBaglam = {n: n, ilk: gizli[0]};
   sesUygula = w => { if(!kapandi){ giris = w; yaz(); } };
   ustYaz(); yaz(); pasYaz(); klavyeCiz(gir, sil, gonder);
 }
 
-function sonEkran(tamam, sebep){
+function sonEkran(tamam){
   if(bitti) return;
   bitti = true; durdur(); sureGoster(false); klv.classList.add("gizli");
+  /* sure dolduysa ustunde calisilan kelime de rapora girsin */
+  if(!tamam && buKelime && !kayit[fi])
+    kayit[fi] = {n: buKelime.n, sn: Math.max(0, basSn - kalan), tahmin: 0,
+                 pas: buPas, hata: buHata, w: buKelime.w, ok: false, yarim: true};
+  buKelime = null;
   const kullanilanSure = FSURE - kalan;
   const bilinen = kayit.filter(k => k && k.ok);
   const enUzak = bilinen.length ? bilinen[bilinen.length - 1].n : 0;
@@ -666,8 +677,9 @@ function sonEkran(tamam, sebep){
     return `<tr class="${k.ok ? "" : "yok"}">
       <td class="n">${n} harfli</td>
       <td class="kw">${TRU(k.w)}</td>
-      <td>${k.ok ? k.tahmin + ". tahmin" : "bilinemedi"}${
-        k.pas ? " · " + k.pas + " pas" : ""}
+      <td>${k.ok ? k.tahmin + ". tahmin" : (k.yarim ? "süre doldu" : "bilinemedi")}${
+        k.pas ? " · " + k.pas + " pas" : ""}${
+        k.hata ? " · " + k.hata + " kelime kaçtı" : ""}
         <div class="cubuk ${k.ok ? "" : "yok"}"><i style="width:${oran}%"></i></div></td>
       <td class="sn">${k.sn} sn</td></tr>`;
   }).join("");
@@ -679,8 +691,7 @@ function sonEkran(tamam, sebep){
     return `${n} harfliyi <b>${toplamSn}.</b> saniyede`;
   }).filter(Boolean).join(", ");
 
-  const bas = tamam ? "Final tamamlandı"
-    : (sebep === "hak" ? "Haklar bitti" : "Süre bitti");
+  const bas = tamam ? "Final tamamlandı" : "Süre bitti";
   ekran(`<div class="eyebrow">${bas}</div>
     <h1>${tamam ? "Dördünü de bildin" : (enUzak ? enUzak + " harfliye kadar geldin"
                                                : "İlk kelimeyi geçemedin")}</h1>
@@ -688,10 +699,7 @@ function sonEkran(tamam, sebep){
     <p class="kucuk">${tamam
       ? `120 saniyenin <b>${kullanilanSure}</b> saniyesini kullandın,
          <b>${kalan}</b> saniye artırdın.`
-      : (sebep === "hak"
-        ? `Beş tahmin hakkı da bitti. O ana kadar <b>${bilinen.length}</b> kelime bildin,
-           <b>${kalan}</b> saniyen duruyordu.`
-        : `Süre doldu. O ana kadar <b>${bilinen.length}</b> kelime bildin.`)}</p>
+      : `Süre doldu. O ana kadar <b>${bilinen.length}</b> kelime bildin.`}</p>
     ${zaman ? `<p class="kucuk">${zaman} bildin.</p>` : ""}
     <table class="ist">
       <tr><th>Uzunluk</th><th>Kelime</th><th>Nasıl</th><th style="text-align:right">Süre</th></tr>
