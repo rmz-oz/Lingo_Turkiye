@@ -1,0 +1,558 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0f1720">
+<title>Final Alıştırması</title>
+<style>
+:root{
+  --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
+  --cizgi:#2c3947; --yesil:#2e9e5b; --sari:#e6b22e; --gri:#3a4756;
+  --kirmizi:#d94a5a; --altin:#f4c95d;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  display:flex;flex-direction:column;overflow:hidden;user-select:none}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+button{font:inherit;cursor:pointer}
+/* ust bar */
+#bar{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#0a1119;
+  border-bottom:1px solid var(--cizgi);flex:none}
+#bar .etap{font-size:13px;letter-spacing:1px;font-weight:700;color:var(--altin);
+  text-transform:uppercase}
+#bar .para{margin-left:auto;font-weight:800;font-variant-numeric:tabular-nums;font-size:16px}
+#bar .para em{font-style:normal;color:var(--soluk);font-weight:600;font-size:13px}
+#bar #sesd{border:1px solid var(--cizgi);background:transparent;border-radius:99px;
+  width:34px;height:28px;padding:0;font-size:14px;line-height:1;color:#fff;
+  margin-left:10px;flex:none}
+#bar #sesd.kapali{opacity:.45}
+#sure{width:100%;height:4px;background:#22303d;flex:none}
+#sure i{display:block;height:100%;background:var(--altin);width:100%;transition:width .1s linear}
+#sure.az i{background:var(--kirmizi)}
+/* orta alan */
+#orta{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:10px 12px;gap:10px;min-height:0}
+#orta > :first-child{margin-top:auto}
+#orta > :last-child{margin-bottom:auto}
+.baslik{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--soluk);
+  font-weight:700;text-align:center}
+/* tahta */
+#tahta{display:grid;gap:5px;justify-content:center}
+#tahta .satir{display:grid;gap:5px}
+.hucre{width:var(--hg);height:var(--hg);border:2px solid var(--cizgi);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-weight:800;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:calc(var(--hg)*.52);
+  background:#141d27;transition:background .15s,border-color .15s}
+.hucre.ilk{border-color:#4a5a6b;color:var(--altin)}
+.hucre.dolu{border-color:#4a5a6b}
+.hucre.tam{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.hucre.var{background:var(--sari);border-color:var(--sari);color:#231a00}
+.hucre.yok{background:var(--gri);border-color:var(--gri);color:#8fa0b0}
+.satir.aktif .hucre{border-color:#5d6f82}
+.satir.sarsil{animation:sars .35s}
+@keyframes sars{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}
+  75%{transform:translateX(7px)}}
+/* puzzle */
+.ipucu{background:var(--kart);border:1px solid var(--cizgi);border-radius:12px;
+  padding:13px 15px;max-width:460px;text-align:center;font-size:17px;line-height:1.45}
+.ipucu b{color:var(--altin);display:block;font-size:12px;letter-spacing:1.2px;
+  text-transform:uppercase;margin-bottom:6px}
+/* klavye */
+#klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  background:#0a1119;border-top:1px solid var(--cizgi)}
+#klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:4px}
+#klavye button{flex:1 1 0;min-width:0;height:46px;border:0;border-radius:7px;
+  background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
+#klavye button.gnis{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
+#klavye button.dar{flex:1.25 1 0;font-size:12.5px;letter-spacing:.5px}
+#klavye button.tam{background:var(--yesil)}
+#klavye button.var{background:var(--sari);color:#231a00}
+#klavye button.yok{background:#1e2933;color:#5d6b7a}
+#klavye button:active{opacity:.7}
+/* kartlar / ekranlar */
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:22px 20px;max-width:460px;width:100%;text-align:center}
+.kutu h1{font-size:32px;margin:0 0 4px;letter-spacing:-.5px}
+.kutu h2{font-size:21px;margin:0 0 10px}
+.kutu p{color:var(--soluk);margin:0 0 12px;font-size:15.5px;line-height:1.55}
+.kutu p b{color:var(--murekkep)}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:12px;padding:15px;font-weight:800;font-size:17px;margin-top:8px;text-align:center;text-decoration:none}
+.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
+.tutar{font-size:40px;font-weight:800;color:var(--altin);letter-spacing:-1px;
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.kucuk{font-size:13.5px;color:var(--soluk);line-height:1.5}
+.kural{text-align:left;font-size:14.5px;color:var(--soluk);line-height:1.6;
+  margin:10px 0 0;padding-left:18px}
+.kural li{margin-bottom:5px}
+.kural b{color:var(--murekkep)}
+.ornekler{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.ornekler span{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-family:ui-monospace,Menlo,monospace}
+.uyari{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:#f2f5f8;
+  color:#0f1720;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14.5px;
+  z-index:20;box-shadow:0 6px 22px rgba(0,0,0,.4)}
+.sonuc{font-size:17px;font-weight:700;text-align:center}
+.sonuc.iyi{color:var(--yesil)} .sonuc.kotu{color:var(--kirmizi)}
+.sonuc .kw{font-family:ui-monospace,Menlo,monospace;letter-spacing:2px;
+  color:var(--altin);display:block;font-size:22px;margin-top:3px}
+table.merd{width:100%;border-collapse:collapse;margin:12px 0 4px;font-size:15.5px}
+table.merd td{padding:6px 2px;border-bottom:1px solid var(--cizgi);text-align:left;
+  color:var(--soluk)}
+table.merd td:last-child{text-align:right;color:var(--murekkep);
+  font-variant-numeric:tabular-nums}
+table.merd tr:last-child td{border-bottom:0;color:var(--altin)}
+table.merd tr:last-child td b{color:var(--altin)}
+.gizli{display:none!important}
+
+/* ---- final alistirmasi ---- */
+.eyebrow{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--altin);font-weight:800}
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kgrid button{background:#141d27;border:1.5px solid var(--cizgi);color:var(--murekkep);
+  border-radius:11px;padding:12px 8px;font-weight:700;font-size:15px}
+.fbar{display:flex;gap:5px;max-width:430px;width:100%;margin:0 auto 2px}
+.fbar div{flex:1;text-align:center;border:1.5px solid var(--cizgi);border-radius:9px;
+  padding:6px 2px;background:#141d27}
+.fbar div b{display:block;font-size:15px;font-weight:800}
+.fbar div span{display:block;font-size:9.5px;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--soluk);margin-top:2px}
+.fbar div.simdi{border-color:var(--altin);background:#241f10}
+.fbar div.ok{border-color:var(--yesil);background:#132417}
+.fbar div.ok b{color:#8fd3a8}
+.fbar div.hata{border-color:var(--kirmizi);background:#2a151a}
+.fbar div.hata b{color:#f2a3ad}
+table.ist{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+table.ist th{font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--soluk);
+  text-align:left;padding:0 4px 5px 0;font-weight:800;border-bottom:1px solid var(--cizgi)}
+table.ist td{padding:7px 4px;border-bottom:1px solid var(--cizgi);vertical-align:middle}
+table.ist td.n{font-weight:800;width:16%}
+table.ist td.sn{text-align:right;font-variant-numeric:tabular-nums;font-weight:800;
+  color:var(--altin);white-space:nowrap}
+table.ist td.kw{font-family:ui-monospace,Menlo,monospace;letter-spacing:1.2px;font-size:13px}
+table.ist tr.yok td{color:var(--soluk)}
+table.ist tr.yok td.sn{color:var(--kirmizi)}
+.cubuk{height:7px;background:#22303d;border-radius:4px;overflow:hidden;margin-top:5px}
+.cubuk i{display:block;height:100%;background:var(--altin)}
+.cubuk.yok i{background:var(--kirmizi)}
+.rek{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0 2px}
+.rek div{background:#141d27;border:1px solid var(--cizgi);border-radius:11px;padding:9px 5px;
+  text-align:center}
+.rek b{display:block;font-size:19px;font-variant-numeric:tabular-nums;color:var(--altin)}
+.rek span{display:block;font-size:9.5px;color:var(--soluk);text-transform:uppercase;
+  letter-spacing:.5px;margin-top:2px}
+.gec{font-size:13px;color:var(--soluk);line-height:1.7;margin-top:8px}
+.gec b{color:var(--murekkep);font-variant-numeric:tabular-nums}
+#bar .para{color:var(--altin)}
+#bar .para.az{color:var(--kirmizi)}
+</style></head><body>
+
+<div id="bar"><span class="etap" id="etapAd">FİNAL ALIŞTIRMASI</span>
+  <span class="para" id="para">120</span>
+  <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button></div>
+<div id="sure" class="gizli"><i></i></div>
+<div id="orta"></div>
+<div id="klavye" class="gizli"></div>
+
+<script src="rozet.js?v=5"></script>
+<script src="ses.js?v=3"></script>
+<script>
+let VERI = null, TANIM = {};
+const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
+const TL  = n => n.toLocaleString("tr-TR");
+const $   = s => document.querySelector(s);
+const orta = $("#orta"), klv = $("#klavye"), bar = $("#etapAd"), sayacEl = $("#para");
+const sureKap = $("#sure"), sureBar = sureKap.querySelector("i");
+
+const SATIR = 5;
+/* 3. etap: odul her tahminde duser (Ailecuk duellosuyla ayni) */
+
+let kullanilan = new Set(), sayac = null;
+const GECERLI = {};
+
+/* ---------------- istatistige dayali kelime secimi ---------------- */
+const KUM = {};
+function kumul(n){
+  if(KUM[n]) return KUM[n];
+  const a = VERI.arsiv[n], c = []; let t = 0;
+  for(const [w, k] of a){ t += k; c.push(t); }
+  return KUM[n] = {c, t, a};
+}
+function agirlikliArsiv(n){
+  const {c, t, a} = kumul(n), r = Math.random()*t;
+  let lo = 0, hi = c.length-1;
+  while(lo < hi){ const m = (lo+hi)>>1; if(c[m] <= r) lo = m+1; else hi = m; }
+  return a[lo][0];
+}
+function kelimeSec(n){
+  n = String(n);
+  const Y = VERI.yeni[n] || [];
+  for(let t = 0; t < 400; t++){
+    let w;
+    if(Math.random() < 0.80 || !Y.length) w = agirlikliArsiv(n);
+    else w = Y[Math.floor(Math.pow(Math.random(), 1.8) * Y.length)];
+    if(w && !kullanilan.has(w)){ kullanilan.add(w); return w; }
+  }
+  return agirlikliArsiv(n);
+}
+
+/* ---------------- yardimcilar ---------------- */
+function defterYaz(w, hak){
+  try{
+    const ad = localStorage.getItem("lingo_kisi");
+    if(!ad || ad === "__kayitsiz__") return;
+    const k = "lingo_defter_" + ad;
+    const d = JSON.parse(localStorage.getItem(k) || "[]");
+    d.push({w: w, n: w.length, h: w[0], k: hak, t: Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(k, JSON.stringify(d));
+  }catch(e){}
+}
+function uyar(m){
+  const d = document.createElement("div"); d.className = "uyari"; d.textContent = m;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 1300);
+}
+function renk(gizli, tah){
+  const n = gizli.length, r = new Array(n).fill("yok"), kal = {};
+  for(let i = 0; i < n; i++)
+    if(tah[i] === gizli[i]) r[i] = "tam"; else kal[gizli[i]] = (kal[gizli[i]]||0)+1;
+  for(let i = 0; i < n; i++)
+    if(r[i] !== "tam" && kal[tah[i]] > 0){ r[i] = "var"; kal[tah[i]]--; }
+  return r;
+}
+function durdur(){ if(sayac){ clearInterval(sayac); sayac = null; } }
+function sureGoster(g){ sureKap.classList.toggle("gizli", !g); }
+function sureBasla(sn, bitince, tikla){
+  durdur(); sureGoster(true); sureKap.classList.remove("az");
+  const bas = Date.now(), top = sn*1000; let son = sn;
+  sayac = setInterval(() => {
+    const kalan = Math.max(0, top - (Date.now()-bas));
+    sureBar.style.width = (100*kalan/top) + "%";
+    sureKap.classList.toggle("az", kalan < top*0.31);
+    const s2 = Math.ceil(kalan/1000);
+    if(tikla && s2 !== son){ son = s2; tikla(s2); if(s2 <= 5 && s2 > 0) LG_ses("sure"); }
+    if(kalan <= 0){ durdur(); bitince(); }
+  }, 100);
+}
+
+/* ---------------- klavye ---------------- */
+const DIZ = ["ertyuıopğü", "asdfghjklşi", "zcvbnmöç"];   // Türkçe Q
+let klvDurum = {}, klvTus = {};
+function klavyeCiz(gir, sil, gonder){
+  klv.innerHTML = ""; klvTus = {};
+  DIZ.forEach((sr, k) => {
+    const d = document.createElement("div"); d.className = "sr";
+    for(const c of sr){
+      const b = document.createElement("button"); b.textContent = TRU(c);
+      b.onclick = () => gir(c); klvTus[c] = b; d.appendChild(b);
+    }
+    if(k === 1){ const b = document.createElement("button");     // SİL, TAMAM'in ustunde
+      b.className = "dar"; b.textContent = "SİL"; b.onclick = sil; d.appendChild(b); }
+    if(k === 2){ const b = document.createElement("button");
+      b.className = "gnis"; b.textContent = "TAMAM"; b.onclick = gonder; d.appendChild(b); }
+    klv.appendChild(d);
+  });
+  klv.classList.remove("gizli");
+  for(const c in klvDurum) if(klvTus[c]) klvTus[c].className = klvDurum[c];
+}
+function klvBoya(tah, r){
+  const oncelik = {tam:3, var:2, yok:1};
+  for(let i = 0; i < tah.length; i++){
+    const c = tah[i];
+    if((oncelik[klvDurum[c]]||0) < oncelik[r[i]]){
+      klvDurum[c] = r[i]; if(klvTus[c]) klvTus[c].className = r[i];
+    }
+  }
+}
+
+/* ---------------- lingo kelimesi ---------------- */
+function hucreBoy(n){
+  const g = Math.min(window.innerWidth - 30, 430);
+  return Math.max(30, Math.min(56, Math.floor((g - (n-1)*5) / n)));
+}
+
+function ekran(html){
+  durdur(); sureGoster(false); klv.classList.add("gizli");
+  orta.className = ""; orta.innerHTML = `<div class="kutu">${html}</div>`;
+}
+/* ================= final alistirmasi ================= */
+const FSURE = 120, FDIZI = [4, 5, 6, 7], FSATIR = 5;
+const KISI_VAR = ["Serpil", "Zeynep"];
+let KISILER = LG_kisiler(KISI_VAR), KISI = LG_kisiDogrula(KISILER) || KISILER[0];
+
+let kalan = FSURE, fi = 0, kayit = [], basSn = FSURE, buPas = 0, bitti = false;
+
+const anahtar = () => "lingo_final_" + KISI;
+function metaOku(){
+  try{ const v = JSON.parse(localStorage.getItem(anahtar()) || "null");
+       if(v && typeof v === "object") return Object.assign({deneme:0, tam:0, enIyi:0,
+         enUzak:0, gecmis:[]}, v); }catch(e){}
+  return {deneme:0, tam:0, enIyi:0, enUzak:0, gecmis:[]};
+}
+function metaYaz(m){ try{ localStorage.setItem(anahtar(), JSON.stringify(m)); }catch(e){} }
+
+function sayacYaz(){
+  sayacEl.textContent = kalan;
+  sayacEl.classList.toggle("az", kalan <= 20);
+}
+function serit(){
+  return `<div class="fbar">` + FDIZI.map((n, i) => {
+    const k = kayit[i];
+    const sinif = k ? (k.ok ? "ok" : "hata") : (i === fi && !bitti ? "simdi" : "");
+    return `<div class="${sinif}"><b>${k && k.ok ? k.sn + " sn" : n}</b>
+      <span>${k && k.ok ? n + " harfli" : (k ? "bilinemedi" : "harfli")}</span></div>`;
+  }).join("") + `</div>`;
+}
+
+function girisEkran(){
+  const m = metaOku();
+  ekran(`<div class="eyebrow">${KISI}</div>
+    <h1>Final Alıştırması</h1>
+    <p><b>120 saniye</b>, tek sayaç. Sırayla <b>4, 5, 6 ve 7</b> harfli birer kelime.
+      Her kelime için <b>5 tahmin hakkı</b> var; saat kelime aralarında durmuyor.</p>
+    <p class="kucuk">Takıldığın kelimede <b>PAS</b> diyebilirsin: aynı uzunlukta yeni
+      kelime gelir, saat işlemeye devam eder. Önce en az bir tahmin yapman gerekir.
+      Beş hakkın biterse alıştırma orada durur.</p>
+    <p class="kucuk">Sonunda <b>hangi uzunluğu kaç saniyede bildiğin</b> tek tek yazılır.</p>
+    ${m.deneme ? `<div class="rek">
+      <div><b>${m.deneme}</b><span>deneme</span></div>
+      <div><b>${m.tam}</b><span>tamamlanan</span></div>
+      <div><b>${m.enIyi ? m.enIyi + " sn" : "-"}</b><span>en iyi süre</span></div>
+    </div>` : ""}
+    <button class="buton" onclick="basla()">BAŞLA ▸</button>
+    <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
+    <a class="buton ikinci" href="alistirma7.html">7 HARF ALIŞTIRMASI</a>
+    <a class="buton ikinci" href="index.html">ANA SAYFA</a>`);
+}
+function kisiEkran(){
+  ekran(`<h2>Kim çalışıyor?</h2>
+    <p class="kucuk">Bulduğun kelimeler o kişinin defterine yazılır.</p>
+    <div class="kgrid">${KISILER.map(a =>
+      `<button onclick="kisiSec('${a.replace(/'/g,"")}')">${a}</button>`).join("")}</div>
+    <a class="buton ikinci" href="index.html">ANA SAYFA</a>`);
+}
+window.kisiSec = function(a){
+  KISI = a; try{ localStorage.setItem("lingo_kisi", a); }catch(e){}
+  girisEkran();
+};
+
+window.basla = function(){
+  kalan = FSURE; fi = 0; kayit = []; bitti = false; kullanilan = new Set();
+  sayacYaz(); sureGoster(true);
+  sureBasla(FSURE, () => sonEkran(false), sn => {
+    kalan = sn; sayacYaz();
+    const u = document.getElementById("ustSure");
+    if(u) u.textContent = kalan + " SN";
+  });
+  kelimeGetir();
+};
+
+function kelimeGetir(){
+  if(fi >= FDIZI.length) return sonEkran(true);
+  basSn = kalan; buPas = 0;
+  kelimeOyna(FDIZI[fi]);
+}
+
+function kelimeOyna(n){
+  const gizli = kelimeSec(n);
+  let sat = 0, giris = gizli[0];
+  klvDurum = {};
+  orta.className = "";
+  orta.innerHTML = serit() +
+    `<div class="baslik" id="ust"></div>
+     <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
+     <button class="buton ikinci" id="pasb" disabled
+       style="margin-top:8px;max-width:430px">PAS, önce bir tahmin yapın</button>
+     <div class="kucuk" id="alt"></div>`;
+  const tahta = $("#tahta");
+  for(let r = 0; r < FSATIR; r++){
+    const d = document.createElement("div"); d.className = "satir";
+    d.style.gridTemplateColumns = `repeat(${n}, var(--hg))`;
+    for(let i = 0; i < n; i++){
+      const h = document.createElement("div"); h.className = "hucre" + (i === 0 ? " ilk" : "");
+      if(i === 0) h.textContent = TRU(gizli[0]);
+      d.appendChild(h);
+    }
+    tahta.appendChild(d);
+  }
+  const satirlar = [...tahta.children];
+  let kapandi = false;
+
+  function ustYaz(){
+    $("#ust").innerHTML = `${n} HARFLİ · ${FSATIR - sat} HAK ·
+      <span id="ustSure">${kalan} SN</span>`;
+    satirlar.forEach((s, k) => s.classList.toggle("aktif", k === sat));
+  }
+  function pasYaz(){
+    const pb = $("#pasb"); if(!pb) return;
+    pb.disabled = sat < 1;
+    pb.textContent = sat < 1 ? "PAS, önce bir tahmin yapın" : "PAS, başka kelime ▸";
+  }
+  function yaz(){
+    const h = satirlar[sat].children;
+    for(let i = 1; i < n; i++){
+      h[i].textContent = giris[i] ? TRU(giris[i]) : "";
+      h[i].className = "hucre" + (giris[i] ? " dolu" : "");
+    }
+  }
+  function gir(c){ if(giris.length < n){ giris += c; yaz(); } }
+  function sil(){ if(giris.length > 1){ giris = giris.slice(0, -1); yaz(); } }
+  function sarsil(){
+    satirlar[sat].classList.add("sarsil");
+    setTimeout(() => satirlar[sat].classList.remove("sarsil"), 360);
+  }
+  function gonder(){
+    if(kapandi) return;
+    if(giris.length < n){ uyar("Harfler eksik"); sarsil(); return; }
+    if(!GECERLI[n].has(giris)){ LG_ses("gecersiz"); uyar("Sözlükte yok"); sarsil(); return; }
+    const tah = giris, r = renk(gizli, tah), h = satirlar[sat].children;
+    for(let i = 0; i < n; i++) h[i].className = "hucre " + r[i];
+    klvBoya(tah, r);
+    if(tah === gizli){
+      LG_ses("dogru"); kapandi = true;
+      defterYaz(gizli, sat + 1);
+      kayit[fi] = {n:n, sn: Math.max(0, basSn - kalan), tahmin: sat + 1,
+                   pas: buPas, w: gizli, ok: true};
+      klv.classList.add("gizli");
+      $("#pasb").classList.add("gizli");
+      $("#alt").innerHTML = `<div class="sonuc iyi" style="margin-top:10px">
+        ${n} harfli tamam: <b>${Math.max(0, basSn - kalan)} saniye</b>,
+        ${sat + 1}. tahminde</div>`;
+      fi++;
+      return setTimeout(kelimeGetir, 1200);
+    }
+    LG_ses("yanlis");
+    sat++; giris = gizli[0];
+    if(sat >= FSATIR){
+      kapandi = true;
+      defterYaz(gizli, 0);
+      kayit[fi] = {n:n, sn: Math.max(0, basSn - kalan), tahmin: FSATIR,
+                   pas: buPas, w: gizli, ok: false};
+      klv.classList.add("gizli"); $("#pasb").classList.add("gizli");
+      $("#alt").innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
+        Hakların bitti<span class="kw">${TRU(gizli)}</span></div>`;
+      return setTimeout(() => sonEkran(false, "hak"), 1900);
+    }
+    ustYaz(); yaz(); pasYaz();
+  }
+  $("#pasb").onclick = () => {
+    if(kapandi || sat < 1) return;
+    kapandi = true; buPas++;
+    klv.classList.add("gizli");
+    $("#alt").innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
+      Pas, doğru cevap<span class="kw">${TRU(gizli)}</span></div>`;
+    defterYaz(gizli, 0);
+    const p = buPas;
+    setTimeout(() => { if(!bitti){ buPas = p; kelimeOyna(n); } }, 1400);
+  };
+  ustYaz(); yaz(); pasYaz(); klavyeCiz(gir, sil, gonder);
+}
+
+function sonEkran(tamam, sebep){
+  if(bitti) return;
+  bitti = true; durdur(); sureGoster(false); klv.classList.add("gizli");
+  const kullanilanSure = FSURE - kalan;
+  const bilinen = kayit.filter(k => k && k.ok);
+  const enUzak = bilinen.length ? bilinen[bilinen.length - 1].n : 0;
+
+  const m = metaOku();
+  m.deneme++;
+  if(tamam){ m.tam++; if(!m.enIyi || kullanilanSure < m.enIyi) m.enIyi = kullanilanSure; }
+  m.enUzak = Math.max(m.enUzak || 0, enUzak);
+  m.gecmis.unshift({t: Date.now(), sn: kullanilanSure, uzak: enUzak, tam: !!tamam,
+                    ayrinti: kayit.filter(Boolean).map(k => ({n:k.n, sn:k.sn, ok:k.ok}))});
+  m.gecmis = m.gecmis.slice(0, 8);
+  metaYaz(m);
+
+  const enUzunSn = Math.max(1, ...kayit.filter(Boolean).map(k => k.sn));
+  const satirlar = FDIZI.map((n, i) => {
+    const k = kayit[i];
+    if(!k) return `<tr class="yok"><td class="n">${n} harfli</td>
+      <td colspan="2">sıra gelmedi</td><td class="sn">-</td></tr>`;
+    const oran = Math.round(100 * k.sn / enUzunSn);
+    return `<tr class="${k.ok ? "" : "yok"}">
+      <td class="n">${n} harfli</td>
+      <td class="kw">${TRU(k.w)}</td>
+      <td>${k.ok ? k.tahmin + ". tahmin" : "bilinemedi"}${
+        k.pas ? " · " + k.pas + " pas" : ""}
+        <div class="cubuk ${k.ok ? "" : "yok"}"><i style="width:${oran}%"></i></div></td>
+      <td class="sn">${k.sn} sn</td></tr>`;
+  }).join("");
+
+  let toplamSn = 0;
+  const zaman = FDIZI.map((n, i) => {
+    const k = kayit[i]; if(!k || !k.ok) return null;
+    toplamSn += k.sn;
+    return `${n} harfliyi <b>${toplamSn}.</b> saniyede`;
+  }).filter(Boolean).join(", ");
+
+  const bas = tamam ? "Final tamamlandı"
+    : (sebep === "hak" ? "Haklar bitti" : "Süre bitti");
+  ekran(`<div class="eyebrow">${bas}</div>
+    <h1>${tamam ? "Dördünü de bildin" : (enUzak ? enUzak + " harfliye kadar geldin"
+                                               : "İlk kelimeyi geçemedin")}</h1>
+    <div class="tutar">${kullanilanSure} sn</div>
+    <p class="kucuk">${tamam
+      ? `120 saniyenin <b>${kullanilanSure}</b> saniyesini kullandın,
+         <b>${kalan}</b> saniye artırdın.`
+      : (sebep === "hak"
+        ? `Beş tahmin hakkı da bitti. O ana kadar <b>${bilinen.length}</b> kelime bildin,
+           <b>${kalan}</b> saniyen duruyordu.`
+        : `Süre doldu. O ana kadar <b>${bilinen.length}</b> kelime bildin.`)}</p>
+    ${zaman ? `<p class="kucuk">${zaman} bildin.</p>` : ""}
+    <table class="ist">
+      <tr><th>Uzunluk</th><th>Kelime</th><th>Nasıl</th><th style="text-align:right">Süre</th></tr>
+      ${satirlar}
+    </table>
+    <div class="rek">
+      <div><b>${m.deneme}</b><span>deneme</span></div>
+      <div><b>${m.tam}</b><span>tamamlanan</span></div>
+      <div><b>${m.enIyi ? m.enIyi + " sn" : "-"}</b><span>en iyi süre</span></div>
+    </div>
+    ${m.gecmis.length > 1 ? `<p class="eyebrow" style="margin-top:12px">Son denemeler</p>
+      <div class="gec">${m.gecmis.slice(0, 5).map(g =>
+        `${new Date(g.t).toLocaleDateString("tr-TR")} · ${g.tam
+          ? `<b>tamam, ${g.sn} sn</b>` : `${g.uzak ? g.uzak + " harfliye kadar" : "ilk kelime"}`}`
+        ).join("<br>")}</div>` : ""}
+    <button class="buton" onclick="basla()">TEKRAR DENE</button>
+    <a class="buton ikinci" href="alistirma7.html">7 HARF ALIŞTIRMASI</a>
+    <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
+    <a class="buton ikinci" href="index.html">ANA SAYFA</a>`);
+}
+
+document.addEventListener("keydown", e => {
+  if(klv.classList.contains("gizli")) return;
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  const k = e.key;
+  if(k === "Enter"){ const b = [...klv.querySelectorAll("button")]
+      .find(x => x.textContent === "TAMAM"); if(b){ e.preventDefault(); b.click(); } }
+  else if(k === "Backspace"){ const b = [...klv.querySelectorAll("button")]
+      .find(x => x.textContent === "SİL"); if(b){ e.preventDefault(); b.click(); } }
+  else if(k.length === 1){ const c = k.toLocaleLowerCase("tr");
+    if(klvTus[c]){ e.preventDefault(); klvTus[c].click(); } }
+});
+
+function yukle(){
+  LG_sesDugme($("#sesd"));
+  orta.innerHTML = `<div class="kutu"><h2>Hazırlanıyor…</h2>
+    <p class="kucuk">Kelime havuzu yükleniyor.</p></div>`;
+  Promise.all([
+    fetch("oyun-veri.json").then(r => r.json()),
+    fetch("oyun-tanim.json").then(r => r.json()).catch(() => ({}))
+  ]).then(([v, t]) => {
+    VERI = v; TANIM = t || {};
+    for(const n of [4,5,6,7]) GECERLI[n] = new Set(v.gecerli[n]);
+    KISILER = LG_kisiler(KISI_VAR);
+    KISI = LG_kisiDogrula(KISILER) || KISILER[0];
+    if(!KISI || KISI === LG_KAYITSIZ) return kisiEkran();
+    girisEkran();
+  }).catch(e => {
+    orta.innerHTML = `<div class="kutu"><h2>Açılamadı</h2>
+      <p class="kucuk">${(e && e.message) || e}</p>
+      <button class="buton" onclick="location.reload()">YENİLE</button></div>`;
+  });
+}
+yukle();
+</script></body></html>
