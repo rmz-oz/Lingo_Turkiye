@@ -18,28 +18,8 @@
 
 <br>
 
-## 🏠 [ANA SAYFA](https://rmz-oz.github.io/Lingo_Turkiye/)
+## 📱 [FİKO'YU AÇ](https://rmz-oz.github.io/Lingo_Turkiye/)
 
-<br>
-
-### 🗓 [4 GÜNLÜK ÇALIŞMA PLANI](https://rmz-oz.github.io/Lingo_Turkiye/plan.html)
-
-<br>
-
-### 🏅 [SERTİFİKALARIM](https://rmz-oz.github.io/Lingo_Turkiye/sertifika.html)
-
-<br>
-
-### 📊 [GELİŞİM RAPORUM](https://rmz-oz.github.io/Lingo_Turkiye/rapor.html)
-
-<br>
-
-### 🎯 [Alıştırma: 4 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma4.html)
-
-### 🎯 [Alıştırma: 5 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma5.html)
-
-### 🎯 [Alıştırma: 6 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma6.html)
-
-### 🎯 [Alıştırma: 7 harf](https://rmz-oz.github.io/Lingo_Turkiye/alistirma7.html)
-
-### ⏱ [FİNAL ALIŞTIRMASI](https://rmz-oz.github.io/Lingo_Turkiye/final.html)
+Telefonda açın, tarayıcı menüsünden **Ana ekrana ekle** deyin. Bütün oyunlar,
+alıştırmalar, çalışma planı, gelişim raporu ve sertifikalar içinde.
+Bir kez açtıktan sonra internet olmadan da çalışır.
