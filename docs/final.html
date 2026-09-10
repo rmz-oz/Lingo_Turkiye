@@ -477,7 +477,7 @@ const KISI_VAR = ["Serpil", "Zeynep"];
 let KISILER = LG_kisiler(KISI_VAR), KISI = LG_kisiDogrula(KISILER) || KISILER[0];
 
 let kalan = FSURE, fi = 0, kayit = [], basSn = FSURE, buPas = 0, buHata = 0,
-    buKelime = null, bitti = false;
+    buKelime = null, bitti = false, kapaniyor = false;
 
 const anahtar = () => "lingo_final_" + KISI;
 function metaOku(){
@@ -540,16 +540,31 @@ window.kisiSec = function(a){
 };
 
 window.basla = function(){
-  kalan = FSURE; fi = 0; kayit = []; bitti = false; kullanilan = new Set();
+  kalan = FSURE; fi = 0; kayit = []; bitti = false; kapaniyor = false;
+  kullanilan = new Set();
   sesSay = {toplam: 0, tam: 0, yakin: 0, bos: 0};
   sayacYaz(); sureGoster(true);
-  sureBasla(FSURE, () => sonEkran(false), sn => {
+  sureBasla(FSURE, () => sureDoldu(), sn => {
     kalan = sn; sayacYaz();
     const u = document.getElementById("ustSure");
     if(u) u.textContent = kalan + " SN";
   });
   kelimeGetir();
 };
+
+/* sure biterken tahtadaki kelimenin cevabini goster, sonra sonuc ekrani */
+function sureDoldu(){
+  if(bitti || kapaniyor) return;
+  kapaniyor = true; durdur(); sureGoster(false);
+  const alt = document.getElementById("alt");
+  if(buKelime && alt){
+    klv.classList.add("gizli"); altsatKapat();
+    alt.innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
+      Süre bitti, doğru cevap<span class="kw">${TRU(buKelime.w)}</span></div>`;
+    return setTimeout(() => { kapaniyor = false; sonEkran(false); }, 2800);
+  }
+  kapaniyor = false; sonEkran(false);
+}
 
 function kelimeGetir(){
   if(fi >= FDIZI.length) return sonEkran(true);
@@ -626,7 +641,7 @@ function kelimeOyna(n){
         ${n} harfli tamam: <b>${Math.max(0, basSn - kalan)} saniye</b>,
         ${sat + 1}. tahminde</div>`;
       fi++;
-      return setTimeout(kelimeGetir, 1200);
+      return setTimeout(() => { if(!bitti && !kapaniyor) kelimeGetir(); }, 1200);
     }
     LG_ses("yanlis");
     sat++; giris = gizli[0];
@@ -640,7 +655,7 @@ function kelimeOyna(n){
         <div class="kucuk" style="margin-top:4px">yeni kelime geliyor</div></div>`;
       const p = buPas, h = buHata;
       return setTimeout(() => {
-        if(!bitti){ buPas = p; buHata = h; kelimeOyna(n); } }, 1900);
+        if(!bitti && !kapaniyor){ buPas = p; buHata = h; kelimeOyna(n); } }, 1900);
     }
     ustYaz(); yaz(); pasYaz();
   }
@@ -652,7 +667,8 @@ function kelimeOyna(n){
       Pas, doğru cevap<span class="kw">${TRU(gizli)}</span></div>`;
     defterYaz(gizli, 0);
     const p = buPas, h = buHata;
-    setTimeout(() => { if(!bitti){ buPas = p; buHata = h; kelimeOyna(n); } }, 1400);
+    setTimeout(() => {
+      if(!bitti && !kapaniyor){ buPas = p; buHata = h; kelimeOyna(n); } }, 1400);
   };
   buKelime = {n: n, w: gizli};
   sesDur(); sesHavuz = null; sesBaglam = {n: n, ilk: gizli[0]};
