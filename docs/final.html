@@ -145,6 +145,20 @@ table.ist tr.yok td.sn{color:var(--kirmizi)}
   letter-spacing:.5px;margin-top:2px}
 .gec{font-size:13px;color:var(--soluk);line-height:1.7;margin-top:8px}
 .gec b{color:var(--murekkep);font-variant-numeric:tabular-nums}
+/* ses tanima */
+.altsat{display:flex;gap:7px;max-width:430px;width:100%;margin-top:6px;
+  align-items:stretch}
+.altsat .buton{margin-top:0;flex:1 1 auto}
+#mikb{flex:none;width:118px;background:transparent;color:var(--murekkep);
+  border:1.5px solid var(--cizgi);border-radius:12px;font-weight:800;font-size:14.5px;
+  padding:12px 4px;line-height:1.25}
+#mikb.dinle{background:#3d1720;border-color:var(--kirmizi);color:#f2a3ad;
+  animation:nabiz 1.1s infinite}
+@keyframes nabiz{0%,100%{opacity:1}50%{opacity:.5}}
+#duy{font-size:13px;color:var(--soluk);text-align:center;min-height:17px;line-height:1.4;
+  max-width:430px}
+#duy b{color:var(--altin);font-family:ui-monospace,Menlo,monospace;letter-spacing:1px}
+#duy s{text-decoration:none;color:var(--kirmizi)}
 #bar .para{color:var(--altin)}
 #bar .para.az{color:var(--kirmizi)}
 </style></head><body>
@@ -267,14 +281,117 @@ function klvBoya(tah, r){
   }
 }
 
+/* ---------------- ses tanima ---------------- */
+const SRC = window.SpeechRecognition || window.webkitSpeechRecognition;
+let tanir = null, dinliyor = false, sesUygula = null, sesBaglam = null, sesHavuz = null;
+let sesSay = {toplam: 0, tam: 0, yakin: 0, bos: 0};
+
+function sesTemiz(t){
+  return String(t).toLocaleLowerCase("tr")
+    .replace(/[âÂ]/g, "a").replace(/[îÎ]/g, "i").replace(/[ûÛ]/g, "u")
+    .replace(/[^a-zçğıöşü]/g, "");
+}
+function mesafe(a, b){
+  const m = a.length, n = b.length;
+  if(Math.abs(m - n) > 3) return 99;
+  let onc = new Array(n + 1), simdi = new Array(n + 1);
+  for(let j = 0; j <= n; j++) onc[j] = j;
+  for(let i = 1; i <= m; i++){
+    simdi[0] = i;
+    for(let j = 1; j <= n; j++){
+      const c = a[i-1] === b[j-1] ? 0 : 1;
+      simdi[j] = Math.min(simdi[j-1] + 1, onc[j] + 1, onc[j-1] + c);
+    }
+    const t = onc; onc = simdi; simdi = t;
+  }
+  return onc[n];
+}
+/* duyulan metni o turdaki gecerli kelimelere esle */
+function sesEsle(secenek){
+  const n = sesBaglam.n, ilk = sesBaglam.ilk;
+  if(!sesHavuz) sesHavuz = [...GECERLI[n]].filter(w => w[0] === ilk);
+  let iyi = null;
+  for(const ham of secenek){
+    const c = sesTemiz(ham);
+    if(!c) continue;
+    if(c.length === n && c[0] === ilk && GECERLI[n].has(c))
+      return {w: c, ham: c, d: 0};
+    for(const w of sesHavuz){
+      const d = mesafe(c, w);
+      if(!iyi || d < iyi.d) iyi = {w: w, ham: c, d: d};
+      if(d === 0) break;
+    }
+  }
+  return iyi;
+}
+function mikDurum(dinle, metin){
+  const b = document.getElementById("mikb");
+  if(b){ b.classList.toggle("dinle", !!dinle);
+         b.innerHTML = dinle ? "🎙 DİNLİYOR" : "🎙 SÖYLE"; }
+  const d = document.getElementById("duy");
+  if(d && metin !== undefined) d.innerHTML = metin;
+}
+function sesKur(){
+  const r = new SRC();
+  r.lang = "tr-TR"; r.continuous = false; r.interimResults = false; r.maxAlternatives = 6;
+  r.onresult = ev => {
+    const res = ev.results[0], secenek = [];
+    for(let i = 0; i < res.length; i++) secenek.push(res[i].transcript);
+    sesSay.toplam++;
+    const e = sesEsle(secenek);
+    const duyulan = sesTemiz(secenek[0] || "");
+    if(!e || e.d > 2){
+      sesSay.bos++;
+      return mikDurum(false, `duydum: <b>${duyulan ? TRU(duyulan) : "?"}</b>
+        <s>bu uzunlukta karşılığı yok</s>`);
+    }
+    if(sesUygula) sesUygula(e.w);
+    if(e.d === 0){ sesSay.tam++;
+      mikDurum(false, `duydum: <b>${TRU(e.w)}</b> · yazdım, TAMAM'a bas`); }
+    else{ sesSay.yakin++;
+      mikDurum(false, `duydum: <b>${TRU(duyulan)}</b> · en yakını <b>${TRU(e.w)}</b>,
+        yanlışsa SİL ile düzelt`); }
+  };
+  r.onerror = ev => {
+    const m = {"not-allowed": "mikrofon izni verilmedi",
+               "service-not-allowed": "mikrofon izni verilmedi",
+               "no-speech": "ses gelmedi, tekrar dene",
+               "audio-capture": "mikrofon bulunamadı",
+               "network": "internet gerekiyor"}[ev.error] || ev.error;
+    dinliyor = false; mikDurum(false, `<s>${m}</s>`);
+  };
+  r.onend = () => { dinliyor = false;
+    const b = document.getElementById("mikb");
+    if(b){ b.classList.remove("dinle"); b.innerHTML = "🎙 SÖYLE"; } };
+  return r;
+}
+function sesDur(){
+  dinliyor = false;
+  if(tanir){ try{ tanir.abort(); }catch(e){} }
+}
+window.mikBas = function(){
+  if(!SRC) return uyar("Bu tarayıcı sesle yazmayı desteklemiyor");
+  if(dinliyor){ sesDur(); return; }
+  if(!tanir) tanir = sesKur();
+  try{ tanir.start(); dinliyor = true; mikDurum(true, "söyle: kelimenin tamamını"); }
+  catch(e){ try{ tanir.abort(); }catch(e2){} dinliyor = false; }
+};
+
 /* ---------------- lingo kelimesi ---------------- */
 function hucreBoy(n){
   const g = Math.min(window.innerWidth - 30, 430);
   return Math.max(30, Math.min(56, Math.floor((g - (n-1)*5) / n)));
 }
 
+function altsatKapat(){
+  sesDur(); sesUygula = null;
+  const a = document.getElementById("altsat"), d = document.getElementById("duy");
+  if(a) a.classList.add("gizli");
+  if(d) d.classList.add("gizli");
+}
 function ekran(html){
   durdur(); sureGoster(false); klv.classList.add("gizli");
+  sesDur(); sesUygula = null;
   orta.className = ""; orta.innerHTML = `<div class="kutu">${html}</div>`;
 }
 /* ================= final alistirmasi ================= */
@@ -316,6 +433,11 @@ function girisEkran(){
       kelime gelir, saat işlemeye devam eder. Önce en az bir tahmin yapman gerekir.
       Beş hakkın biterse alıştırma orada durur.</p>
     <p class="kucuk">Sonunda <b>hangi uzunluğu kaç saniyede bildiğin</b> tek tek yazılır.</p>
+    ${SRC ? `<p class="kucuk">Yeni: tahta ekranında <b>🎙 SÖYLE</b> tuşu var. Bas, kelimenin
+      tamamını söyle, yazı tahtaya kendiliğinden gelsin. Tam duyamazsa en yakın kelimeyi
+      yazar, SİL ile düzeltebilirsin. Deneme aşamasında, internet gerekiyor.</p>`
+      : `<p class="kucuk">Bu tarayıcı sesle yazmayı desteklemiyor, klavyeyle çalış.
+      Sesli deneme için Android telefonda Chrome kullan.</p>`}
     ${m.deneme ? `<div class="rek">
       <div><b>${m.deneme}</b><span>deneme</span></div>
       <div><b>${m.tam}</b><span>tamamlanan</span></div>
@@ -339,6 +461,7 @@ window.kisiSec = function(a){
 
 window.basla = function(){
   kalan = FSURE; fi = 0; kayit = []; bitti = false; kullanilan = new Set();
+  sesSay = {toplam: 0, tam: 0, yakin: 0, bos: 0};
   sayacYaz(); sureGoster(true);
   sureBasla(FSURE, () => sonEkran(false), sn => {
     kalan = sn; sayacYaz();
@@ -362,8 +485,11 @@ function kelimeOyna(n){
   orta.innerHTML = serit() +
     `<div class="baslik" id="ust"></div>
      <div id="tahta" style="--hg:${hucreBoy(n)}px"></div>
-     <button class="buton ikinci" id="pasb" disabled
-       style="margin-top:8px;max-width:430px">PAS, önce bir tahmin yapın</button>
+     <div class="altsat" id="altsat">
+       <button class="buton ikinci" id="pasb" disabled>PAS, önce bir tahmin yapın</button>
+       <button id="mikb" class="${SRC ? "" : "gizli"}" onclick="mikBas()">🎙 SÖYLE</button>
+     </div>
+     <div id="duy"></div>
      <div class="kucuk" id="alt"></div>`;
   const tahta = $("#tahta");
   for(let r = 0; r < FSATIR; r++){
@@ -414,8 +540,7 @@ function kelimeOyna(n){
       defterYaz(gizli, sat + 1);
       kayit[fi] = {n:n, sn: Math.max(0, basSn - kalan), tahmin: sat + 1,
                    pas: buPas, w: gizli, ok: true};
-      klv.classList.add("gizli");
-      $("#pasb").classList.add("gizli");
+      klv.classList.add("gizli"); altsatKapat();
       $("#alt").innerHTML = `<div class="sonuc iyi" style="margin-top:10px">
         ${n} harfli tamam: <b>${Math.max(0, basSn - kalan)} saniye</b>,
         ${sat + 1}. tahminde</div>`;
@@ -429,7 +554,7 @@ function kelimeOyna(n){
       defterYaz(gizli, 0);
       kayit[fi] = {n:n, sn: Math.max(0, basSn - kalan), tahmin: FSATIR,
                    pas: buPas, w: gizli, ok: false};
-      klv.classList.add("gizli"); $("#pasb").classList.add("gizli");
+      klv.classList.add("gizli"); altsatKapat();
       $("#alt").innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
         Hakların bitti<span class="kw">${TRU(gizli)}</span></div>`;
       return setTimeout(() => sonEkran(false, "hak"), 1900);
@@ -439,13 +564,15 @@ function kelimeOyna(n){
   $("#pasb").onclick = () => {
     if(kapandi || sat < 1) return;
     kapandi = true; buPas++;
-    klv.classList.add("gizli");
+    klv.classList.add("gizli"); altsatKapat();
     $("#alt").innerHTML = `<div class="sonuc kotu" style="margin-top:10px">
       Pas, doğru cevap<span class="kw">${TRU(gizli)}</span></div>`;
     defterYaz(gizli, 0);
     const p = buPas;
     setTimeout(() => { if(!bitti){ buPas = p; kelimeOyna(n); } }, 1400);
   };
+  sesDur(); sesHavuz = null; sesBaglam = {n: n, ilk: gizli[0]};
+  sesUygula = w => { if(!kapandi){ giris = w; yaz(); } };
   ustYaz(); yaz(); pasYaz(); klavyeCiz(gir, sil, gonder);
 }
 
@@ -510,6 +637,11 @@ function sonEkran(tamam, sebep){
       <div><b>${m.tam}</b><span>tamamlanan</span></div>
       <div><b>${m.enIyi ? m.enIyi + " sn" : "-"}</b><span>en iyi süre</span></div>
     </div>
+    ${sesSay.toplam ? `<p class="eyebrow" style="margin-top:12px">Sesle yazma denemesi</p>
+      <p class="kucuk">${sesSay.toplam} kez söyledin:
+        <b>${sesSay.tam}</b> tam anladı,
+        <b>${sesSay.yakin}</b> yakın kelimeye çevirdi,
+        <b>${sesSay.bos}</b> hiç bulamadı.</p>` : ""}
     ${m.gecmis.length > 1 ? `<p class="eyebrow" style="margin-top:12px">Son denemeler</p>
       <div class="gec">${m.gecmis.slice(0, 5).map(g =>
         `${new Date(g.t).toLocaleDateString("tr-TR")} · ${g.tam
