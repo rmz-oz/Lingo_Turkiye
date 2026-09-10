@@ -79,6 +79,10 @@ ol b{color:var(--murekkep_yazi)}
   color:var(--r52654_yazi);font-size:15px;margin-top:14px}
 .iyi b{color:var(--r75636_yazi)}
 .gizli{display:none!important}
+.kutular{display:flex;flex-direction:column}
+.kutu .cihaz{font:800 8.5pt/1 "Helvetica Neue",Arial,sans-serif;letter-spacing:1.2px;
+  text-transform:uppercase;color:#1a1200;background:var(--altin);border-radius:99px;
+  padding:4px 9px;margin-left:8px;vertical-align:middle}
 .sim{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
   border-radius:9px;background:var(--r9515_zemin);color:var(--altin_yazi);vertical-align:middle;margin:0 4px}
 ol i{font-style:normal;color:var(--soluk_yazi)}
@@ -96,6 +100,7 @@ ol i{font-style:normal;color:var(--soluk_yazi)}
   <button class="buton gizli" id="kurb">🐾 ANA EKRANA EKLE</button>
   <a class="buton gizli" id="acb" href="index.html">FİKO'YU AÇ</a>
 
+  <div class="kutular" id="kutular">
   <div class="kutu gizli" id="ios">
     <h2>iPhone için üç adım</h2>
     <ol>
@@ -128,6 +133,8 @@ ol i{font-style:normal;color:var(--soluk_yazi)}
       <li>Simge yoksa sağ üstteki <b>üç noktadan</b> <b>Yayınla, gönder, yükle</b>,
         sonra <b>Fiko'yu yükle</b>.</li>
     </ol>
+  </div>
+
   </div>
 
   <div class="iyi gizli" id="tamam"><b>Fiko ekranınızda.</b>
@@ -166,12 +173,19 @@ function durum(){
     return;
   }
   goster("kurb", !!istek);
-  goster("ios", IOS);
-  goster("android", ANDROID);
-  goster("masaustu", !IOS && !ANDROID);
-  goster("samsung", ANDROID && SAMSUNG);
+  /* uc tarif de dursun; kullanilan cihazinki en uste gelsin */
+  goster("ios", true); goster("android", true); goster("masaustu", true);
+  goster("samsung", true);
+  const sira = IOS ? ["ios", "android", "masaustu"]
+             : ANDROID ? ["android", "ios", "masaustu"]
+                       : ["masaustu", "android", "ios"];
+  sira.forEach((id, i) => { $(id).style.order = i; });
+  const bu = $(sira[0]).querySelector("h2");
+  if(bu && !bu.querySelector(".cihaz"))
+    bu.insertAdjacentHTML("beforeend", '<span class="cihaz">bu cihaz</span>');
   const b = $("androidbas");
-  if(b) b.textContent = istek ? "Tuş çalışmazsa menüden" : "Android için üç adım";
+  if(b) b.textContent = istek ? "Android: tuş çalışmazsa menüden"
+                              : "Android için üç adım";
 }
 
 window.addEventListener("beforeinstallprompt", e => {
