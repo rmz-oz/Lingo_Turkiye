@@ -162,6 +162,13 @@ table.rk tr:last-child td{border-bottom:0}
 
 /* centik payi: saat ve kamera cubugunun altina girmesin */
 #bar{padding-top:calc(9px + env(safe-area-inset-top,0px))}
+
+/* --- geri oku: buyuk ve rahat dokunulur --- */
+#bar .geri,header .geri{font-size:30px;line-height:1;font-weight:400;
+  text-decoration:none;color:var(--murekkep);opacity:.9;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:46px;height:44px;margin-left:-6px;padding:0}
+#bar .geri:active,header .geri:active{opacity:.5}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
@@ -174,7 +181,7 @@ table.rk tr:last-child td{border-bottom:0}
 </head><body>
 
 <div id="bar">
-  <a class="geri" href="index.html" aria-label="Ana sayfa">‹</a>
+  <a class="geri" href="index.html" aria-label="Ana sayfa">←</a>
   <span class="yer" id="yer">Papatya Çayı</span>
   <span class="sag">
     <span class="sk" id="bsaksi"></span>

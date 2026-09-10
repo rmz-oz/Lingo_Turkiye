@@ -49,7 +49,7 @@ button{font:inherit;cursor:pointer}
 #klavye button{flex:1 1 0;min-width:0;height:46px;border:0;border-radius:7px;
   background:#3a4756;color:#fff;font-weight:700;font-size:16px;padding:0}
 #klavye button.gnis{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
-#klavye button.dar{flex:1.25 1 0;font-size:12.5px;letter-spacing:.5px}
+#klavye button.dar{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
 #klavye button.tam{background:var(--yesil)}
 #klavye button.var{background:var(--sari);color:#231a00}
 #klavye button.yok{background:#1e2933;color:#5d6b7a}
@@ -107,6 +107,13 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 
 /* centik payi: saat ve kamera cubugunun altina girmesin */
 #bar{padding-top:calc(9px + env(safe-area-inset-top,0px))}
+
+/* --- geri oku: buyuk ve rahat dokunulur --- */
+#bar .geri,header .geri{font-size:30px;line-height:1;font-weight:400;
+  text-decoration:none;color:var(--murekkep);opacity:.9;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:46px;height:44px;margin-left:-6px;padding:0}
+#bar .geri:active,header .geri:active{opacity:.5}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
@@ -117,7 +124,7 @@ input.ad{width:100%;background:#22303d;border:1.5px solid var(--cizgi);border-ra
 <script src="tema.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
 </head><body>
-<div id="bar"><a href="index.html">‹</a><span class="etap" id="bas">LİNGO YARIŞ</span>
+<div id="bar"><a class="geri" href="index.html" aria-label="Ana sayfa">←</a><span class="etap" id="bas">LİNGO YARIŞ</span>
   <span class="sag" id="skor"></span></div>
 <div id="sure" class="gizli"><i></i></div>
 <div id="orta"></div>

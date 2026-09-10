@@ -112,6 +112,13 @@ p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
 
 /* centik payi: saat ve kamera cubugunun altina girmesin */
 header{padding-top:calc(11px + env(safe-area-inset-top,0px))}
+
+/* --- geri oku: buyuk ve rahat dokunulur --- */
+#bar .geri,header .geri{font-size:30px;line-height:1;font-weight:400;
+  text-decoration:none;color:var(--murekkep);opacity:.9;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:46px;height:44px;margin-left:-6px;padding:0}
+#bar .geri:active,header .geri:active{opacity:.5}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
@@ -122,7 +129,7 @@ header{padding-top:calc(11px + env(safe-area-inset-top,0px))}
 <script src="tema.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
 </head><body>
-<header><a href="index.html">‹</a><b>Çalışma planı</b></header>
+<header><a class="geri" href="index.html" aria-label="Ana sayfa">←</a><b>Çalışma planı</b></header>
 <div class="sar" id="alan"></div>
 <script src="rozet.js?v=6"></script>
 <script>if(typeof LG_kervanMeta !== "function") window.LG_kervanMeta = function(){ return {}; };</script>

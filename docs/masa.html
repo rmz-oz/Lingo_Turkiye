@@ -224,7 +224,7 @@ button{font:inherit;cursor:pointer}
 @media (max-height:570px){ :root{--tush:48px; --tusf:18px} }
 @media (max-height:500px){ :root{--tush:43px; --tusf:16px} }
 #klavye button.gnis{flex:1.9 1 0;font-size:calc(var(--tusf) * .82)}
-#klavye button.dar{flex:1.3 1 0;font-size:calc(var(--tusf) * .78)}
+#klavye button.dar{flex:1.9 1 0;font-size:calc(var(--tusf) * .82)}
 #klavye button.tam{background:var(--yesil)}
 #klavye button.var{background:var(--sari);color:var(--sariUst)}
 #klavye button.yok{background:var(--tusYok);color:var(--tusYokInk)}
@@ -275,6 +275,13 @@ input.ad{width:100%;background:var(--yuva);border:1.5px solid var(--cizgi);borde
 
 /* centik payi: saat ve kamera cubugunun altina girmesin */
 #bar{padding-top:calc(9px + env(safe-area-inset-top,0px))}
+
+/* --- geri oku: buyuk ve rahat dokunulur --- */
+#bar .geri,header .geri{font-size:30px;line-height:1;font-weight:400;
+  text-decoration:none;color:var(--murekkep);opacity:.9;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:46px;height:44px;margin-left:-6px;padding:0}
+#bar .geri:active,header .geri:active{opacity:.5}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
@@ -285,7 +292,7 @@ input.ad{width:100%;background:var(--yuva);border:1.5px solid var(--cizgi);borde
 <script src="tema.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
 </head><body>
-<div id="bar"><a href="index.html" style="color:var(--soluk);text-decoration:none">‹</a>
+<div id="bar"><a class="geri" href="index.html" aria-label="Ana sayfa">←</a>
   <span class="kod gizli" id="kod"></span><span class="et" id="et"></span>
   <span class="sag"><span class="ag" id="ag"></span>
   <button id="temad" title="Gece / gündüz" onclick="temaCevir()">🌙</button>
