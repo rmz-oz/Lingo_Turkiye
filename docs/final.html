@@ -324,6 +324,50 @@ function sesEsle(secenek){
   }
   return iyi;
 }
+/* uygulama ici tarayici (WhatsApp, Instagram) mikrofon sormuyor */
+const ICTARAYICI = /\bwv\b|FBAN|FBAV|Instagram|Line\/|GSA\//.test(navigator.userAgent)
+  && /Android/.test(navigator.userAgent);
+async function izinDurum(){
+  try{ if(navigator.permissions && navigator.permissions.query){
+    const p = await navigator.permissions.query({name: "microphone"});
+    return p.state; } }catch(e){}
+  return "bilinmiyor";
+}
+/* asil izin kutusunu getiren cagri: getUserMedia */
+async function mikIzin(){
+  try{
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+    const ak = await navigator.mediaDevices.getUserMedia({audio: true});
+    ak.getTracks().forEach(t => t.stop());
+    return true;
+  }catch(e){ return false; }
+}
+window.izinIste = async function(){
+  const b = document.getElementById("izinb"), m = document.getElementById("izinm");
+  if(m) m.innerHTML = "izin kutusu açılıyor, <b>İzin ver</b> deyin";
+  const ok = await mikIzin();
+  if(ok){
+    if(b) b.classList.add("gizli");
+    if(m) m.innerHTML = "<b>Mikrofon hazır.</b> Oyunda SÖYLE tuşunu kullanabilirsiniz.";
+  }else if(m){
+    m.innerHTML = ICTARAYICI
+      ? `Bu sayfa uygulama içi tarayıcıda açılmış, orada mikrofon çalışmaz.
+         Sağ üstteki üç noktaya basıp <b>Chrome'da aç</b> deyin.`
+      : `İzin verilmedi. Adres çubuğundaki kilit simgesine basın,
+         <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b> deyin, sonra sayfayı yenileyin.`;
+  }
+};
+async function izinKontrol(){
+  if(!SRC) return;
+  const b = document.getElementById("izinb"), m = document.getElementById("izinm");
+  if(!b) return;
+  const d = await izinDurum();
+  if(d === "granted"){ b.classList.add("gizli");
+    if(m) m.innerHTML = "Mikrofon izni verilmiş, SÖYLE tuşu hazır."; }
+  else if(d === "denied"){ b.classList.add("gizli");
+    if(m) m.innerHTML = `Mikrofon izni kapalı. Adres çubuğundaki kilit simgesine basın,
+      <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b> deyin, sonra sayfayı yenileyin.`; }
+}
 function mikDurum(dinle, metin){
   const b = document.getElementById("mikb");
   if(b){ b.classList.toggle("dinle", !!dinle);
@@ -374,9 +418,23 @@ function sesDur(){
   dinliyor = false;
   if(tanir){ try{ tanir.abort(); }catch(e){} }
 }
-window.mikBas = function(){
+let izinAlindi = false;
+window.mikBas = async function(){
   if(!SRC) return uyar("Bu tarayıcı sesle yazmayı desteklemiyor");
   if(dinliyor){ sesDur(); return; }
+  if(!izinAlindi){
+    const d = await izinDurum();
+    if(d !== "granted"){
+      mikDurum(true, "mikrofon izni isteniyor, <b>İzin ver</b> deyin");
+      const ok = await mikIzin();
+      if(!ok) return mikDurum(false, ICTARAYICI
+        ? `<s>uygulama içi tarayıcıda mikrofon çalışmaz</s> · üç noktaya basıp
+           <b>Chrome'da aç</b> deyin`
+        : `<s>mikrofon izni kapalı</s> · adres çubuğundaki kilit simgesine basın,
+           <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b>, sonra sayfayı yenileyin`);
+    }
+    izinAlindi = true;
+  }
   if(!tanir) tanir = sesKur();
   try{ tanir.start(); dinliyor = true; mikDurum(true, "hazırlanıyor, bir saniye"); }
   catch(e){ try{ tanir.abort(); }catch(e2){} dinliyor = false; }
@@ -437,7 +495,12 @@ function girisEkran(){
     <p class="kucuk">Takıldığınız kelimede <b>PAS</b> diyebilirsiniz, aynı uzunlukta
       yenisi gelir.</p>
     ${SRC ? `<p class="kucuk"><b>🎙 SÖYLE</b> tuşuna basın, <b>yarım saniye bekleyin</b>,
-      sonra kelimeyi söyleyin. Tahtaya kendiliğinden yazılır.</p>`
+      sonra kelimeyi söyleyin. Tahtaya kendiliğinden yazılır.</p>
+      <button class="buton ikinci" id="izinb" onclick="izinIste()">🎙 MİKROFONU AÇ</button>
+      <p class="kucuk" id="izinm">${ICTARAYICI
+        ? `Bu sayfa uygulama içi tarayıcıda açık görünüyor. Mikrofon için sağ üstteki
+           üç noktaya basıp <b>Chrome'da aç</b> deyin.`
+        : "Tuşa basın, çıkan kutuda <b>İzin ver</b> deyin. Bir kez yeter."}</p>`
       : `<p class="kucuk">Bu tarayıcı sesle yazmayı desteklemiyor, klavyeyle çalışın.</p>`}
     ${m.deneme ? `<div class="rek">
       <div><b>${m.deneme}</b><span>deneme</span></div>
@@ -447,6 +510,7 @@ function girisEkran(){
     <button class="buton" onclick="basla()">BAŞLA ▸</button>
     <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
     <a class="buton ikinci" href="index.html">ANA SAYFA</a>`);
+  izinKontrol();
 }
 function kisiEkran(){
   ekran(`<h2>Kim çalışıyor?</h2>
