@@ -1836,6 +1836,7 @@ function katilEkran(){
 }
 /* isimler kurandan geldikten sonra masa secimi */
 function masaSecEkrani(S){
+  masaSecili = null;
   ekran(`<span class="rozet">${ODAAD}</span>
     <h2>Hangi masadasınız?</h2>
     <p class="izle">Masanıza dokunun.</p>
@@ -1844,16 +1845,18 @@ function masaSecEkrani(S){
     <button class="buton ikinci" data-masa="-1" style="margin-top:14px"
       onclick="masaAl(-1)">Sadece izleyeceğim</button>`);
 }
+let masaSecili = null;
 function masaAl(i){
-  /* secilen dugme sarıya donsun, digerleri sonuk kalsin */
-  const dl = document.querySelectorAll(".kutu button[data-masa]");
-  dl.forEach(b => {
-    b.className = b.getAttribute("data-masa") === String(i) ? "buton" : "buton ikinci";
-    b.style.pointerEvents = "none";      /* disabled yaparsak sari sonuyor */
+  /* ayni tusa ikinci dokunus secimi kaldirir, baska tusa dokunus secimi tasir */
+  masaSecili = (masaSecili === i) ? null : i;
+  document.querySelectorAll(".kutu button[data-masa]").forEach(b => {
+    b.className = (masaSecili !== null && b.getAttribute("data-masa") === String(masaSecili))
+      ? "buton" : "buton ikinci";
   });
-  NET.benim=i; masaSoruldu=true;
-  try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
-  NET.yolla({t:"masa", i});
+  const g = masaSecili === null ? -1 : masaSecili;
+  NET.benim=g; masaSoruldu=true;
+  try{ localStorage.setItem("lingo_masa_ben", String(g)); }catch(e){}
+  NET.yolla({t:"masa", i:g});
   agYaz(); if(SON) ciz(SON);
 }
 function yeniden(){ M.kur(ADLAR); M.basla(); }
