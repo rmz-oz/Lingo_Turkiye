@@ -284,7 +284,7 @@ function klvBoya(tah, r){
 /* ---------------- ses tanima ---------------- */
 const SRC = window.SpeechRecognition || window.webkitSpeechRecognition;
 let tanir = null, dinliyor = false, sesUygula = null, sesBaglam = null, sesHavuz = null;
-let sonucGeldi = false, hataGeldi = false;
+let sonucGeldi = false, hataGeldi = false, sonAra = "", araZaman = null;
 let sesSay = {toplam: 0, tam: 0, yakin: 0, bos: 0};
 
 function sesTemiz(t){
@@ -376,10 +376,30 @@ function mikDurum(dinle, metin){
   const d = document.getElementById("duy");
   if(d && metin !== undefined) d.innerHTML = metin;
 }
+/* duyulan secenekleri tahtaya yaz */
+function sesIsle(secenek){
+  if(sonucGeldi) return;
+  sonucGeldi = true;
+  sesSay.toplam++;
+  const e = sesEsle(secenek);
+  const duyulan = sesTemiz(secenek[0] || "");
+  if(!e || e.d > 2){
+    sesSay.bos++;
+    return mikDurum(false, `duydum: <b>${duyulan ? TRU(duyulan) : "?"}</b>
+      <s>bu uzunlukta karşılığı yok</s>`);
+  }
+  if(sesUygula) sesUygula(e.w);
+  if(e.d === 0){ sesSay.tam++;
+    mikDurum(false, `duydum: <b>${TRU(e.w)}</b> · yazdım, TAMAM'a basın`); }
+  else{ sesSay.yakin++;
+    mikDurum(false, `duydum: <b>${TRU(duyulan)}</b> · en yakını <b>${TRU(e.w)}</b>,
+      yanlışsa SİL ile düzeltin`); }
+}
 function sesKur(){
   const r = new SRC();
   r.lang = "tr-TR"; r.continuous = false; r.interimResults = true; r.maxAlternatives = 6;
-  r.onstart = () => { sonucGeldi = false; hataGeldi = false;
+  r.onstart = () => { sonucGeldi = false; hataGeldi = false; sonAra = "";
+    clearTimeout(araZaman);
     mikDurum(true, "şimdi söyleyin"); };
   r.onresult = ev => {
     let ara = "", son = null;
@@ -388,26 +408,13 @@ function sesKur(){
       if(res.isFinal) son = res; else ara += res[0].transcript;
     }
     if(!son){                                  /* konusurken anlik yazi */
-      if(ara.trim()) mikDurum(true, `duyuluyor: <b>${ara.trim()}</b>`);
+      if(ara.trim()){ sonAra = ara.trim();
+        mikDurum(true, `duyuluyor: <b>${sonAra}</b>`); }
       return;
     }
-    sonucGeldi = true;
     const secenek = [];
     for(let i = 0; i < son.length; i++) secenek.push(son[i].transcript);
-    sesSay.toplam++;
-    const e = sesEsle(secenek);
-    const duyulan = sesTemiz(secenek[0] || "");
-    if(!e || e.d > 2){
-      sesSay.bos++;
-      return mikDurum(false, `duydum: <b>${duyulan ? TRU(duyulan) : "?"}</b>
-        <s>bu uzunlukta karşılığı yok</s>`);
-    }
-    if(sesUygula) sesUygula(e.w);
-    if(e.d === 0){ sesSay.tam++;
-      mikDurum(false, `duydum: <b>${TRU(e.w)}</b> · yazdım, TAMAM'a basın`); }
-    else{ sesSay.yakin++;
-      mikDurum(false, `duydum: <b>${TRU(duyulan)}</b> · en yakını <b>${TRU(e.w)}</b>,
-        yanlışsa SİL ile düzeltin`); }
+    sesIsle(secenek);
   };
   r.onerror = ev => {
     hataGeldi = true; dinliyor = false;
@@ -421,16 +428,22 @@ function sesKur(){
          <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b>, sonra sayfayı yenileyin`
       : `<s>${m}</s>`);
   };
+  /* Android'de kesin sonuc bazen hic gelmiyor, son anlik yaziyi kullan */
   r.onend = () => { dinliyor = false;
     const b = document.getElementById("mikb");
     if(b){ b.classList.remove("dinle"); b.innerHTML = "🎙 SÖYLE"; }
+    if(!sonucGeldi && sonAra) return sesIsle([sonAra]);
     if(!sonucGeldi && !hataGeldi)
       mikDurum(false, "<s>ses alınamadı</s> · tuşa basıp bir saniye sonra konuşun");
+  };
+  r.onspeechend = () => {                    /* kesin sonuc gelmezse kisa bekle, sonra yaz */
+    clearTimeout(araZaman);
+    araZaman = setTimeout(() => { if(!sonucGeldi && sonAra) sesIsle([sonAra]); }, 900);
   };
   return r;
 }
 function sesDur(){
-  dinliyor = false;
+  dinliyor = false; clearTimeout(araZaman); sonAra = ""; sonucGeldi = true;
   if(tanir){ try{ tanir.abort(); }catch(e){} }
 }
 window.mikBas = function(){
