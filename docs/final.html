@@ -353,12 +353,16 @@ function sesKur(){
         yanlışsa SİL ile düzelt`); }
   };
   r.onerror = ev => {
-    const m = {"not-allowed": "mikrofon izni verilmedi",
-               "service-not-allowed": "mikrofon izni verilmedi",
-               "no-speech": "ses gelmedi, tekrar dene",
+    const izin = ev.error === "not-allowed" || ev.error === "service-not-allowed";
+    const m = {"no-speech": "ses gelmedi, tekrar dene",
                "audio-capture": "mikrofon bulunamadı",
+               "aborted": "dinleme durdu",
                "network": "internet gerekiyor"}[ev.error] || ev.error;
-    dinliyor = false; mikDurum(false, `<s>${m}</s>`);
+    dinliyor = false;
+    mikDurum(false, izin
+      ? `<s>mikrofon izni kapalı</s> · adres çubuğundaki kilit simgesine bas,
+         <b>İzinler</b>, <b>Mikrofon</b>, <b>İzin ver</b> de, sonra sayfayı yenile`
+      : `<s>${m}</s>`);
   };
   r.onend = () => { dinliyor = false;
     const b = document.getElementById("mikb");
