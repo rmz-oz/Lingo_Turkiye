@@ -73,10 +73,10 @@ button{font:inherit;cursor:pointer}
 #klavye{flex:none;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
   background:#0a1119;border-top:1px solid var(--cizgi)}
 #klavye .sr{display:flex;gap:4px;justify-content:center;margin-bottom:5px}
-#klavye{--tush:clamp(46px,7.8vh,66px)}
+#klavye{--tush:clamp(48px,8.6vh,72px)}
 #klavye button{flex:1 1 0;min-width:0;height:var(--tush);border:0;
   border-radius:8px;background:#3a4756;color:#fff;font-weight:700;
-  font-size:clamp(16px,2.1vh,19px);padding:0}
+  font-size:clamp(16px,2.3vh,20px);padding:0}
 #klavye button.gnis{flex:1.9 1 0;font-size:13px;letter-spacing:.5px}
 #klavye button.dar{flex:1.25 1 0;font-size:12.5px;letter-spacing:.5px}
 #klavye button.tam{background:var(--yesil)}
@@ -175,6 +175,16 @@ table.ist tr.yok td.sn{color:var(--kirmizi)}
 #duy s{text-decoration:none;color:var(--kirmizi)}
 #bar .para{color:var(--altin)}
 #bar .para.az{color:var(--kirmizi)}
+
+/* --- gezinme tuslari buyutuldu: rahat dokunulsun --- */
+#bar{gap:13px;padding-top:9px;padding-bottom:9px}
+#bar .geri{font-size:31px;line-height:1;padding:0 8px 4px 2px;min-width:30px;
+  color:var(--murekkep);opacity:.85}
+#bar .geri:active{opacity:.5}
+#bar #sesd,#bar #temad{width:44px;height:38px;font-size:20px;border-radius:99px;
+  padding:0;flex:none}
+#bar #temad{margin-left:10px}
+#bar .sag{gap:12px}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
