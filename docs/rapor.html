@@ -5,116 +5,182 @@
 <meta name="theme-color" content="#0f1720">
 <title>Gelişim raporu: Lingo</title>
 <style>
+/* tema-otomatik: renkler role gore jetonlandi */
+:root{
+  --altin_golge:#f4c95d;
+  --altin_kenar:#f4c95d;
+  --altin_yazi:#f4c95d;
+  --altin_zemin:#f4c95d;
+  --cizgi_kenar:#2c3947;
+  --kagit_zemin:#0f1720;
+  --kart2_zemin:#141d27;
+  --kart_zemin:#1a2430;
+  --kirmizi_yazi:#d94a5a;
+  --kirmizi_zemin:#d94a5a;
+  --murekkep_yazi:#f2f5f8;
+  --r21792_yazi:#f2a3ad;
+  --r23984_yazi:#1a1200;
+  --r28178_yazi:#f0d089;
+  --r29910_kenar:#5c2230;
+  --r34930_yazi:#7fe0a6;
+  --r45448_zemin:#3d1720;
+  --r55748_zemin:#3a2f0c;
+  --r59778_yazi:#5f6b78;
+  --r75636_yazi:#fff;
+  --r78170_kenar:#5c4a12;
+  --r85597_zemin:#173d27;
+  --r87780_kenar:#235c39;
+  --r91543_zemin:#0a1119;
+  --r9515_zemin:#22303d;
+  --sari_zemin:#e6b22e;
+  --soluk_yazi:#8b98a6;
+  --yesil_kenar:#2e9e5b;
+  --yesil_yazi:#2e9e5b;
+  --yesil_zemin:#2e9e5b;
+}
+:root[data-tema="gunduz"]{
+  --altin_golge:#f4c95d;
+  --altin_kenar:#f4c95d;
+  --altin_yazi:#a17507;
+  --altin_zemin:#f4c95d;
+  --cizgi_kenar:#b3bcc7;
+  --kagit_zemin:#eaedf0;
+  --kart2_zemin:#eaedf0;
+  --kart_zemin:#eaedf0;
+  --kirmizi_yazi:#a31e2d;
+  --kirmizi_zemin:#d94a5a;
+  --murekkep_yazi:#42617f;
+  --r21792_yazi:#ad1428;
+  --r23984_yazi:#1a1200;
+  --r28178_yazi:#996e10;
+  --r29910_kenar:#d1a9b2;
+  --r34930_yazi:#1e8a4a;
+  --r45448_zemin:#f1e9eb;
+  --r55748_zemin:#f3f0e7;
+  --r59778_yazi:#5f6b78;
+  --r75636_yazi:#141414;
+  --r78170_kenar:#dacca0;
+  --r85597_zemin:#e9f1ed;
+  --r87780_kenar:#a9d0b8;
+  --r91543_zemin:#e9edf1;
+  --r9515_zemin:#ebedf0;
+  --sari_zemin:#e6b22e;
+  --soluk_yazi:#596674;
+  --yesil_kenar:#a5d4b8;
+  --yesil_yazi:#2e9e5b;
+  --yesil_zemin:#2e9e5b;
+}
+
 :root{--kagit:#0f1720;--kart:#1a2430;--kart2:#141d27;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--kirmizi:#d94a5a;--altin:#f4c95d}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--kagit);color:var(--murekkep);
+body{margin:0;background:var(--kagit_zemin);color:var(--murekkep_yazi);
   font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
 button{font:inherit;cursor:pointer}
-header{background:#0a1119;border-bottom:1px solid var(--cizgi);padding:11px 14px;
+header{background:var(--r91543_zemin);border-bottom:1px solid var(--cizgi_kenar);padding:11px 14px;
   display:flex;align-items:center;gap:11px;position:sticky;top:0;z-index:5}
-header a{color:var(--soluk);text-decoration:none;font-size:16px}
-header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:uppercase}
+header a{color:var(--soluk_yazi);text-decoration:none;font-size:16px}
+header b{font-size:12px;letter-spacing:1.4px;color:var(--altin_yazi);text-transform:uppercase}
 .sar{max-width:620px;margin:0 auto;padding:18px 14px 48px}
 h1{font-size:27px;margin:0 0 3px;letter-spacing:-.6px}
-.alt1{color:var(--soluk);font-size:14px;margin:0 0 16px}
-h2{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--soluk);
-  margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--cizgi);font-weight:800}
-p{color:var(--soluk);font-size:14.5px;margin:0 0 10px;line-height:1.55}
+.alt1{color:var(--soluk_yazi);font-size:14px;margin:0 0 16px}
+h2{font-size:11.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--soluk_yazi);
+  margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--cizgi_kenar);font-weight:800}
+p{color:var(--soluk_yazi);font-size:14.5px;margin:0 0 10px;line-height:1.55}
 /* kisi */
 .kisi{display:flex;align-items:center;justify-content:space-between;gap:10px;
-  background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  background:var(--kart_zemin);border:1px solid var(--cizgi_kenar);border-radius:14px;
   padding:12px 15px;margin:0 0 16px;cursor:pointer}
 .kisi .sol{display:flex;align-items:center;gap:10px}
-.kisi .av{width:34px;height:34px;border-radius:50%;background:var(--altin);color:#1a1200;
+.kisi .av{width:34px;height:34px;border-radius:50%;background:var(--altin_zemin);color:var(--r23984_yazi);
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
 .kisi b{font-size:16.5px;display:block;line-height:1.2}
-.kisi i{font-style:normal;font-size:12.5px;color:var(--soluk)}
-.kisi u{text-decoration:none;color:var(--yesil);font-weight:700;font-size:13px;
+.kisi i{font-style:normal;font-size:12.5px;color:var(--soluk_yazi)}
+.kisi u{text-decoration:none;color:var(--yesil_yazi);font-weight:700;font-size:13px;
   white-space:nowrap}
 .kgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;
   margin:0 0 18px}
-.kgrid button{background:var(--kart2);border:1.5px solid var(--cizgi);border-radius:12px;
-  padding:12px 8px;color:var(--murekkep);font-weight:700;font-size:15px;text-align:left}
-.kgrid button.on{background:var(--yesil);border-color:var(--yesil);color:#fff}
+.kgrid button{background:var(--kart2_zemin);border:1.5px solid var(--cizgi_kenar);border-radius:12px;
+  padding:12px 8px;color:var(--murekkep_yazi);font-weight:700;font-size:15px;text-align:left}
+.kgrid button.on{background:var(--yesil_zemin);border-color:var(--yesil_kenar);color:var(--r75636_yazi)}
 .kgrid button small{display:block;font-size:11px;font-weight:600;opacity:.75;margin-top:2px}
 /* ozet */
 .ozet{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.ozet div{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+.ozet div{background:var(--kart_zemin);border:1px solid var(--cizgi_kenar);border-radius:14px;
   padding:14px 6px;text-align:center}
 .ozet b{display:block;font-size:23px;font-weight:800;letter-spacing:-.6px;
   font-variant-numeric:tabular-nums;line-height:1.1}
-.ozet span{font-size:10px;color:var(--soluk);text-transform:uppercase;letter-spacing:.6px;
+.ozet span{font-size:10px;color:var(--soluk_yazi);text-transform:uppercase;letter-spacing:.6px;
   display:block;margin-top:5px;line-height:1.3}
 /* akis noktalari */
 .akis{display:flex;flex-wrap:wrap;gap:5px}
 .akis i{width:15px;height:15px;border-radius:5px;display:block}
-.akis i.d{background:var(--yesil)}.akis i.y{background:var(--kirmizi)}
+.akis i.d{background:var(--yesil_zemin)}.akis i.y{background:var(--kirmizi_zemin)}
 /* uzunluk kartlari */
-.uz{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+.uz{background:var(--kart_zemin);border:1px solid var(--cizgi_kenar);border-radius:14px;
   padding:14px 15px;margin-bottom:9px}
 .uz .b1{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
 .uz .b1 b{font-size:17px;letter-spacing:-.2px}
 .uz .b1 u{text-decoration:none;font-size:19px;font-weight:800;
   font-variant-numeric:tabular-nums}
-.cub{height:8px;border-radius:5px;background:#22303d;overflow:hidden}
+.cub{height:8px;border-radius:5px;background:var(--r9515_zemin);overflow:hidden}
 .cub i{display:block;height:100%;border-radius:5px}
-.i1{background:var(--yesil)}.i2{background:var(--sari)}.i3{background:var(--kirmizi)}
-.uz .b2{display:flex;gap:14px;margin-top:9px;font-size:12.5px;color:var(--soluk);
+.i1{background:var(--yesil_zemin)}.i2{background:var(--sari_zemin)}.i3{background:var(--kirmizi_zemin)}
+.uz .b2{display:flex;gap:14px;margin-top:9px;font-size:12.5px;color:var(--soluk_yazi);
   flex-wrap:wrap}
-.uz .b2 em{font-style:normal;color:var(--murekkep);font-weight:700}
+.uz .b2 em{font-style:normal;color:var(--murekkep_yazi);font-weight:700}
 /* harf tablosu */
-.hbas{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--altin);
+.hbas{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--altin_yazi);
   font-weight:800;margin:16px 0 6px}
 table{width:100%;border-collapse:collapse;font-size:15px}
-td{padding:9px 6px;border-bottom:1px solid var(--cizgi);vertical-align:middle}
+td{padding:9px 6px;border-bottom:1px solid var(--cizgi_kenar);vertical-align:middle}
 td.h{font-weight:800;font-size:18px;width:42px}
 td.b{width:44%}
-td.s{color:var(--soluk);font-size:12.5px;width:62px}
+td.s{color:var(--soluk_yazi);font-size:12.5px;width:62px}
 td.o{text-align:right;font-weight:800;font-variant-numeric:tabular-nums;width:56px}
 tr.tik{cursor:pointer}
-tr.tik:active{background:var(--kart2)}
+tr.tik:active{background:var(--kart2_zemin)}
 /* kelimeler */
 .wrap{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 2px}
 .wrap span{font-family:ui-monospace,Menlo,monospace;font-size:14px;font-weight:700;
   padding:6px 10px;border-radius:8px;letter-spacing:1.2px}
-.wrap span.k{background:#3d1720;color:#f2a3ad;border:1px solid #5c2230}
-.wrap span.d{background:#173d27;color:#7fe0a6;border:1px solid #235c39}
-.wrap span.s{background:#3a2f0c;color:#f0d089;border:1px solid #5c4a12}
+.wrap span.k{background:var(--r45448_zemin);color:var(--r21792_yazi);border:1px solid var(--r29910_kenar)}
+.wrap span.d{background:var(--r85597_zemin);color:var(--r34930_yazi);border:1px solid var(--r87780_kenar)}
+.wrap span.s{background:var(--r55748_zemin);color:var(--r28178_yazi);border:1px solid var(--r78170_kenar)}
 .wrap span i{font-style:normal;font-size:10px;opacity:.75;margin-left:5px}
-.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+.buton{display:block;width:100%;background:var(--altin_zemin);color:var(--r23984_yazi);border:0;
   border-radius:13px;padding:14px;font-weight:800;font-size:16px;margin-top:10px;
   text-align:center;text-decoration:none}
-.buton.ikinci{background:transparent;color:var(--murekkep);border:1.5px solid var(--cizgi)}
-.bos{background:var(--kart2);border:1px dashed var(--cizgi);border-radius:12px;
-  padding:16px;text-align:center;color:var(--soluk);font-size:14px;line-height:1.6}
-.unvk{background:var(--kart);border:1px solid var(--altin);border-radius:14px;
+.buton.ikinci{background:transparent;color:var(--murekkep_yazi);border:1.5px solid var(--cizgi_kenar)}
+.bos{background:var(--kart2_zemin);border:1px dashed var(--cizgi_kenar);border-radius:12px;
+  padding:16px;text-align:center;color:var(--soluk_yazi);font-size:14px;line-height:1.6}
+.unvk{background:var(--kart_zemin);border:1px solid var(--altin_kenar);border-radius:14px;
   padding:14px 16px;text-align:center}
-.unvk b{display:block;font-size:19px;color:var(--altin);letter-spacing:-.3px}
-.unvk span{font-size:13px;color:var(--soluk)}
+.unvk b{display:block;font-size:19px;color:var(--altin_yazi);letter-spacing:-.3px}
+.unvk span{font-size:13px;color:var(--soluk_yazi)}
 .rozg{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;
   margin-top:9px}
-.rozg div{background:var(--kart);border:1px solid var(--altin);border-radius:12px;
+.rozg div{background:var(--kart_zemin);border:1px solid var(--altin_kenar);border-radius:12px;
   padding:10px 6px;text-align:center;cursor:pointer;position:relative}
-.rozg div.vit{background:#3a2f0c;box-shadow:0 0 0 2px var(--altin) inset}
-.rozg div.vit:after{content:"★";position:absolute;top:3px;right:6px;color:var(--altin);
+.rozg div.vit{background:var(--r55748_zemin);box-shadow:0 0 0 2px var(--altin_golge) inset}
+.rozg div.vit:after{content:"★";position:absolute;top:3px;right:6px;color:var(--altin_yazi);
   font-size:12px}
 .rozg span{font-size:22px;line-height:1;display:block}
 .rozg b{display:block;font-size:11.5px;margin-top:4px}
 /* final */
 .mini{display:flex;gap:4px}
-.mini i{width:15px;height:15px;border-radius:5px;display:block;background:#22303d}
-.mini i.d{background:var(--yesil)}.mini i.y{background:var(--kirmizi)}
-td.t{width:74px;color:var(--soluk);font-size:13px}
-.dip{font-size:12px;color:#5f6b78;margin-top:20px;line-height:1.6}
-.dip s{text-decoration:none;color:var(--kirmizi);cursor:pointer}
+.mini i{width:15px;height:15px;border-radius:5px;display:block;background:var(--r9515_zemin)}
+.mini i.d{background:var(--yesil_zemin)}.mini i.y{background:var(--kirmizi_zemin)}
+td.t{width:74px;color:var(--soluk_yazi);font-size:13px}
+.dip{font-size:12px;color:var(--r59778_yazi);margin-top:20px;line-height:1.6}
+.dip s{text-decoration:none;color:var(--kirmizi_yazi);cursor:pointer}
 
 /* centik payi: saat ve kamera cubugunun altina girmesin */
 header{padding-top:calc(11px + env(safe-area-inset-top,0px))}
 
 /* --- geri oku: buyuk ve rahat dokunulur --- */
 #bar .geri,header .geri{font-size:30px;line-height:1;font-weight:400;
-  text-decoration:none;color:var(--murekkep);opacity:.9;flex:none;
+  text-decoration:none;color:var(--murekkep_yazi);opacity:.9;flex:none;
   display:inline-flex;align-items:center;justify-content:center;
   min-width:46px;height:44px;margin-left:-6px;padding:0}
 #bar .geri:active,header .geri:active{opacity:.5}
@@ -216,13 +282,13 @@ function finalHtml(){
       <div><b>${F.deneme}</b><span>deneme</span></div>
       <div><b style="color:${F.tam ? "var(--yesil)" : "var(--soluk)"}">${F.tam}</b>
         <span>tamamlanan</span></div>
-      <div><b style="color:var(--altin)">${F.enIyi ? F.enIyi + " sn" : "-"}</b>
+      <div><b style="color:var(--altin_yazi)">${F.enIyi ? F.enIyi + " sn" : "-"}</b>
         <span>en iyi süre</span></div>
       <div><b>${F.enUzak ? F.enUzak : "-"}</b><span>en uzak uzunluk</span></div>
     </div>
     ${ortSn ? `<p style="margin-top:9px;font-size:13px">Tamamladığın denemelerde
-      ortalama <b style="color:var(--murekkep)">${ortSn} saniye</b> kullandın,
-      elinde <b style="color:var(--murekkep)">${120-ortSn} saniye</b> kaldı.</p>` : ""}
+      ortalama <b style="color:var(--murekkep_yazi)">${ortSn} saniye</b> kullandın,
+      elinde <b style="color:var(--murekkep_yazi)">${120-ortSn} saniye</b> kaldı.</p>` : ""}
     <div class="hbas">Uzunluk uzunluk süre</div>
     ${uzHtml || `<div class="bos">Süre kırılımı için bir deneme daha gerekiyor.</div>`}
     <p style="font-size:12.5px">Çubuk uzadıkça o uzunluk daha çok saniye yiyor.
@@ -325,7 +391,7 @@ function ciz(){
     <h2>Son ${son.length} kelime</h2>
     <div class="akis">${son.map(r=>`<i class="${r.k>0?"d":"y"}"></i>`).join("")}</div>
     <p style="margin-top:9px;font-size:13px">Yeşil bildiklerin, kırmızı takıldıkların.
-      İlk tahminde bildiğin kelime sayısı: <b style="color:var(--murekkep)">${ilk}</b>.</p>
+      İlk tahminde bildiğin kelime sayısı: <b style="color:var(--murekkep_yazi)">${ilk}</b>.</p>
 
     <h2>Uzunluğa göre</h2>
     ${uzHtml}

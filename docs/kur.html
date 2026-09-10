@@ -13,41 +13,79 @@
 <script src="tema.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
 <style>
+/* tema-otomatik: renkler role gore jetonlandi */
+:root{
+  --altin_kenar:#f4c95d;
+  --altin_yazi:#f4c95d;
+  --altin_zemin:#f4c95d;
+  --cizgi_kenar:#2c3947;
+  --kagit_zemin:#0f1720;
+  --kart_zemin:#1a2430;
+  --murekkep_yazi:#f2f5f8;
+  --r23984_yazi:#1a1200;
+  --r52654_yazi:#bfe9d0;
+  --r55744_golge:rgba(0,0,0,.45);
+  --r59778_yazi:#5f6b78;
+  --r75636_yazi:#fff;
+  --r85597_zemin:#173d27;
+  --r87780_kenar:#235c39;
+  --r9515_zemin:#22303d;
+  --soluk_yazi:#8b98a6;
+}
+:root[data-tema="gunduz"]{
+  --altin_kenar:#f4c95d;
+  --altin_yazi:#a17507;
+  --altin_zemin:#f4c95d;
+  --cizgi_kenar:#b3bcc7;
+  --kagit_zemin:#eaedf0;
+  --kart_zemin:#eaedf0;
+  --murekkep_yazi:#42617f;
+  --r23984_yazi:#1a1200;
+  --r52654_yazi:#297f4c;
+  --r55744_golge:rgba(0,0,0,.45);
+  --r59778_yazi:#5f6b78;
+  --r75636_yazi:#141414;
+  --r85597_zemin:#e9f1ed;
+  --r87780_kenar:#a9d0b8;
+  --r9515_zemin:#ebedf0;
+  --soluk_yazi:#596674;
+}
+
 :root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--altin:#f4c95d;--yesil:#2e9e5b}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--kagit);color:var(--murekkep);
+body{margin:0;background:var(--kagit_zemin);color:var(--murekkep_yazi);
   font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
 .sar{max-width:520px;margin:0 auto;padding:26px 16px 48px;text-align:center}
 /* centik payi */
 .sar{padding-top:calc(26px + env(safe-area-inset-top,0px))}
 .foto{width:132px;height:132px;border-radius:50%;object-fit:cover;
-  border:3px solid var(--altin);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+  border:3px solid var(--altin_kenar);box-shadow:0 10px 30px var(--r55744_golge)}
 h1{font-size:27px;margin:16px 0 6px;letter-spacing:-.5px;line-height:1.2}
-p{color:var(--soluk);font-size:15.5px;margin:0 0 12px}
-p b{color:var(--murekkep)}
-.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+p{color:var(--soluk_yazi);font-size:15.5px;margin:0 0 12px}
+p b{color:var(--murekkep_yazi)}
+.buton{display:block;width:100%;background:var(--altin_zemin);color:var(--r23984_yazi);border:0;
   border-radius:13px;padding:16px;font:inherit;font-weight:800;font-size:17px;
   margin-top:12px;text-decoration:none;text-align:center;cursor:pointer}
-.buton.ikinci{background:transparent;color:var(--murekkep);
-  border:1.5px solid var(--cizgi);font-weight:700}
-.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+.buton.ikinci{background:transparent;color:var(--murekkep_yazi);
+  border:1.5px solid var(--cizgi_kenar);font-weight:700}
+.kutu{background:var(--kart_zemin);border:1px solid var(--cizgi_kenar);border-radius:16px;
   padding:18px 18px 14px;margin-top:16px;text-align:left}
-.kutu h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--altin);
+.kutu h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--altin_yazi);
   margin:0 0 10px}
-ol{margin:0;padding-left:20px;color:var(--soluk);font-size:15px;line-height:1.7}
-ol b{color:var(--murekkep)}
-.iyi{background:#173d27;border:1px solid #235c39;border-radius:13px;padding:14px;
-  color:#bfe9d0;font-size:15px;margin-top:14px}
-.iyi b{color:#fff}
+ol{margin:0;padding-left:20px;color:var(--soluk_yazi);font-size:15px;line-height:1.7}
+ol b{color:var(--murekkep_yazi)}
+.iyi{background:var(--r85597_zemin);border:1px solid var(--r87780_kenar);border-radius:13px;padding:14px;
+  color:var(--r52654_yazi);font-size:15px;margin-top:14px}
+.iyi b{color:var(--r75636_yazi)}
 .gizli{display:none!important}
 .sim{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
-  border-radius:9px;background:#22303d;color:var(--altin);vertical-align:middle;margin:0 4px}
-ol i{font-style:normal;color:var(--soluk)}
-.uyari{margin-top:10px;font-size:13.5px;color:var(--soluk);
-  border-top:1px solid var(--cizgi);padding-top:10px}
-.uyari b{color:var(--murekkep)}
-.dip{font-size:13px;color:#5f6b78;margin-top:22px;line-height:1.6}
+  border-radius:9px;background:var(--r9515_zemin);color:var(--altin_yazi);vertical-align:middle;margin:0 4px}
+ol i{font-style:normal;color:var(--soluk_yazi)}
+.uyari{margin-top:10px;font-size:13.5px;color:var(--soluk_yazi);
+  border-top:1px solid var(--cizgi_kenar);padding-top:10px}
+.uyari b{color:var(--murekkep_yazi)}
+.dip{font-size:13px;color:var(--r59778_yazi);margin-top:22px;line-height:1.6}
 </style></head><body>
 <div class="sar">
   <img class="foto" src="fiko-512.png?v=2" alt="Fiko">
