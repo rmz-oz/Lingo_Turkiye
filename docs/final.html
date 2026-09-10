@@ -336,6 +336,8 @@ function sesEsle(secenek){
   return iyi;
 }
 /* uygulama ici tarayici (WhatsApp, Instagram) mikrofon sormuyor */
+const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const ICTARAYICI = /\bwv\b|FBAN|FBAV|Instagram|Line\/|GSA\//.test(navigator.userAgent)
   && /Android/.test(navigator.userAgent);
 async function izinDurum(){
@@ -540,17 +542,19 @@ function girisEkran(){
   const m = metaOku();
   ekran(`<div class="eyebrow">${KISI}</div>
     <h1>Final Alıştırması</h1>
-    <p><b>120 saniyeniz var.</b> Sırayla <b>4, 5, 6 ve 7</b> harfli birer kelime,
-      her kelimede <b>5 tahmin hakkı</b>. Saat kelime aralarında durmuyor.</p>
-    <p class="kucuk">Takıldığınız kelimede <b>PAS</b> diyebilirsiniz, aynı uzunlukta
-      yenisi gelir. Beş hakkınız biterse de yenisi gelir; alıştırma süre bitene kadar sürer.</p>
-    ${SRC ? `<p class="kucuk"><b>🎙 SÖYLE</b> tuşuna basın, <b>yarım saniye bekleyin</b>,
-      sonra kelimeyi söyleyin. Tahtaya kendiliğinden yazılır.</p>
+    <p><b>120 saniyeniz var.</b></p>
+    <p class="kucuk">İlk tahmininizden sonra <b>PAS</b> diyebilirsiniz.</p>
+    ${SRC ? `<p class="kucuk"><b>🎙 SÖYLE</b> tuşuna basın, <b>yarım saniye bekleyip</b>
+      kelimeyi söyleyin.</p>
       <button class="buton ikinci" id="izinb" onclick="izinIste()">🎙 MİKROFONU AÇ</button>
       <p class="kucuk" id="izinm">${ICTARAYICI
         ? `Bu sayfa uygulama içi tarayıcıda açık görünüyor. Mikrofon için sağ üstteki
            üç noktaya basıp <b>Chrome'da aç</b> deyin.`
-        : "Tuşa basın, çıkan kutuda <b>İzin ver</b> deyin. Bir kez yeter."}</p>`
+        : (IOS
+          ? `Tuşa basın, çıkan kutuda <b>İzin ver</b> deyin. Safari her açılışta yeniden
+             sorar; sormasın isterseniz adres çubuğundaki <b>aA</b> menüsünden
+             <b>Web Sitesi Ayarları</b>, <b>Mikrofon</b>, <b>İzin Ver</b> deyin.`
+          : "Tuşa basın, çıkan kutuda <b>İzin ver</b> deyin. Bir kez yeter.")}</p>`
       : `<p class="kucuk">Bu tarayıcı sesle yazmayı desteklemiyor, klavyeyle çalışın.</p>`}
     ${m.deneme ? `<div class="rek">
       <div><b>${m.deneme}</b><span>deneme</span></div>
