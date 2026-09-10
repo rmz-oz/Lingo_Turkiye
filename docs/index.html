@@ -249,7 +249,11 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
   border-radius:9px;padding:9px 8px;font:inherit;font-size:15px;font-weight:600;
   cursor:pointer;transition:background .12s}
 .tablar button.on{background:#fff;color:var(--murekkep);font-weight:700}
-.gizli{display:none}
+.gizli{display:none!important}
+.kurbtn{display:block;width:100%;margin-top:14px;background:var(--sari);color:#1a1200;
+  border:0;border-radius:13px;padding:14px;font:inherit;font-weight:800;font-size:16px;
+  cursor:pointer;box-shadow:0 6px 18px rgba(244,201,93,.25)}
+.kurbtn:active{transform:scale(.99)}
 /* gece gunduz dugmesi */
 .kapust{display:flex;align-items:center;gap:12px;justify-content:space-between}
 .temad{display:inline-flex;align-items:center;gap:9px;background:var(--kart);
@@ -325,6 +329,7 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
  <h1>Lingo Türkiye Hatırası</h1>
  <p>445 bölümün cevap arşivinden çıkarılmış ders notları, quizler ve
  oyunun kendisi.</p>
+ <button class="kurbtn gizli" id="kurbtn">🐾 FİKO'YU ANA EKRANA EKLE</button>
 </div>
 <a class="yariskart" href="masa.html" style="background:linear-gradient(135deg,#c0392b,#e05a3f);box-shadow:0 6px 20px rgba(192,57,43,.3)">
   <b>📺 AİLECÜK</b>
@@ -543,5 +548,25 @@ function temaUygula(t, kaydet){
 }
 let TEMA = temaUygula(temaOku(), false);
 function temaCevir(){ TEMA = temaUygula(TEMA === "gece" ? "gunduz" : "gece", true); }
+
+/* --- ana ekrana ekleme tusu: sadece kurulabilir durumda gorunur --- */
+(function(){
+  var istek = null, b = document.getElementById("kurbtn");
+  if(!b) return;
+  window.addEventListener("beforeinstallprompt", function(e){
+    e.preventDefault(); istek = e; b.classList.remove("gizli");
+  });
+  window.addEventListener("appinstalled", function(){
+    istek = null; b.classList.add("gizli");
+  });
+  b.onclick = async function(){
+    if(!istek) return (location.href = "kur.html");
+    istek.prompt();
+    var s = await istek.userChoice.catch(function(){ return {outcome:"dismissed"}; });
+    istek = null;
+    if(s.outcome === "accepted") b.classList.add("gizli");
+    else location.href = "kur.html";
+  };
+})();
 </script>
 </body></html>
