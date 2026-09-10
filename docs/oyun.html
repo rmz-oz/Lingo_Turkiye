@@ -234,6 +234,12 @@ table.merd tr:last-child td b{color:var(--altin_yazi)}
 .sesdurum:empty{display:none}
 .sesdurum b{color:var(--altin);font-family:ui-monospace,Menlo,monospace;letter-spacing:1px}
 .sesdurum s{text-decoration:none;color:var(--kirmizi)}
+
+/* --- klavye buyutuldu: rahat yazilsin --- */
+#klavye{--tush:clamp(50px,9.4vh,78px)}
+#klavye button{height:var(--tush);font-size:clamp(17px,2.5vh,22px);border-radius:8px}
+#klavye .sr{margin-bottom:5px}
+#klavye button.gnis,#klavye button.dar{font-size:clamp(12.5px,1.7vh,15px)}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
