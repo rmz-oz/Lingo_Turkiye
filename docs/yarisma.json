@@ -7,6 +7,10 @@
   "5": [
    "KURAL",
    "KİMSE"
+  ],
+  "6": [
+   "KURALI",
+   "KONSEY"
   ]
  },
  "S": {
@@ -17,6 +21,10 @@
   "5": [
    "SERİN",
    "SIKMA"
+  ],
+  "6": [
+   "SİNYAL",
+   "SÜRMEK"
   ]
  },
  "A": {
@@ -39,18 +47,30 @@
   "5": [
    "TERLİ",
    "TAKIM"
-  ]
- },
- "D": {
-  "5": [
-   "DEMİN",
-   "DOLAR"
+  ],
+  "6": [
+   "TESLİM",
+   "TOPRAK"
   ]
  },
  "M": {
   "5": [
    "MİRAS",
    "MEZUN"
+  ],
+  "6": [
+   "MİLYAR",
+   "MEKTUP"
+  ]
+ },
+ "D": {
+  "5": [
+   "DEMİN",
+   "DOLAR"
+  ],
+  "6": [
+   "DİRSEK",
+   "DALGIN"
   ]
  },
  "Ç": {
