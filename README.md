@@ -22,7 +22,7 @@
 
 <br>
 
-## 📱 [FİKO'YU AÇ](https://rmz-oz.github.io/Lingo_Turkiye/)
+## 📱 [FİKO'YA EKRANDA BİR MİNDER SER](https://rmz-oz.github.io/Lingo_Turkiye/)
 
 Telefonda açın, tarayıcı menüsünden **Ana ekrana ekle** deyin. Bütün oyunlar,
 alıştırmalar, çalışma planı, gelişim raporu ve sertifikalar içinde.
