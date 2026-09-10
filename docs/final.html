@@ -297,8 +297,24 @@ let tanir = null, dinliyor = false, sesUygula = null, sesBaglam = null, sesHavuz
 let sonucGeldi = false, hataGeldi = false, sonAra = "", araZaman = null;
 let sesSay = {toplam: 0, tam: 0, yakin: 0, bos: 0};
 
+/* tanıyıcı "kırk" yerine 40 yazabiliyor, rakamlari yaziya cevir */
+const SBIR = ["", "bir", "iki", "üç", "dört", "beş", "altı", "yedi", "sekiz", "dokuz"];
+const SON10 = ["", "on", "yirmi", "otuz", "kırk", "elli", "altmış", "yetmiş",
+               "seksen", "doksan"];
+function sayiYazi(n){
+  if(!isFinite(n) || n < 0) return "";
+  if(n === 0) return "sıfır";
+  let y = "";
+  if(n >= 1000000){ const m = Math.floor(n / 1000000);
+    y += (m === 1 ? "bir" : sayiYazi(m)) + "milyon"; n %= 1000000; }
+  if(n >= 1000){ const b = Math.floor(n / 1000);
+    y += (b === 1 ? "" : sayiYazi(b)) + "bin"; n %= 1000; }
+  if(n >= 100){ const c = Math.floor(n / 100);
+    y += (c === 1 ? "" : SBIR[c]) + "yüz"; n %= 100; }
+  return y + SON10[Math.floor(n / 10)] + SBIR[n % 10];
+}
 function sesTemiz(t){
-  return String(t).toLocaleLowerCase("tr")
+  return String(t).replace(/\d+/g, m => sayiYazi(parseInt(m, 10))).toLocaleLowerCase("tr")
     .replace(/[âÂ]/g, "a").replace(/[îÎ]/g, "i").replace(/[ûÛ]/g, "u")
     .replace(/[^a-zçğıöşü]/g, "");
 }
