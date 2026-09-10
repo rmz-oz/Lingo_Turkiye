@@ -81,8 +81,11 @@ td.w{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:.4p
 <h2>Son bir bakış, açılış ikilileri</h2>
 <div class="k" style="padding:8px 14px 4px"><table id="tab">
 <tr><th>harf</th><th>4 harfli</th><th>5 harfli</th></tr></table></div>
-<div class="k"><p>Bu yedi harf tüm cevapların <b>%46'sı</b>. Aklınızda bunlar kalsın,
-  gerisi kendiliğinden gelir.</p></div>
+<div class="k"><p>Bu on iki harf, 4 ve 5 harfli cevapların <b>%66'sı</b>. Önce soldaki
+  kelimeyi söyleyin, sonra sağdakini; iki kelimenin ortak harfi yok, hiçbir harf de
+  kendi içinde tekrar etmiyor. 6 harflide ezberlenecek tek yer <b>S</b>:
+  <b style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.4px">SİNYAL</b> sonra <b style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.4px">SÜRMEK</b>. 7 harflide açılış ikilisi
+  fark etmiyor, aklınıza gelen iki kelimeyi söyleyin.</p></div>
 
 <h2>Aklınızda kalsın</h2>
 <div class="uy"><b>Panik yapılacak harf:</b> K. 1.539 kez çıktı, açık ara birinci, 
@@ -132,8 +135,8 @@ fetch("yarisma.json").then(r=>r.json()).then(v=>{
   for(const h in v){
     const r = document.createElement("tr");
     r.innerHTML = `<td class="h">${h}</td>
-      <td class="w">${v[h]["4"] ? v[h]["4"].join(" + ") : ", "}</td>
-      <td class="w">${v[h]["5"] ? v[h]["5"].join(" + ") : ", "}</td>`;
+      <td class="w">${v[h]["4"] ? v[h]["4"].join(" + ") : ""}</td>
+      <td class="w">${v[h]["5"] ? v[h]["5"].join(" + ") : ""}</td>`;
     t.appendChild(r);
   }
 }).catch(()=>{});
