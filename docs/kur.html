@@ -1,0 +1,120 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="theme-color" content="#0f1720">
+<title>Fiko'ya minder ser</title>
+<link rel="icon" href="fiko-32.png" sizes="32x32">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="fiko-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fiko">
+<script src="pwa.js?v=1"></script>
+<style>
+:root{--kagit:#0f1720;--kart:#1a2430;--murekkep:#f2f5f8;--soluk:#8b98a6;
+  --cizgi:#2c3947;--altin:#f4c95d;--yesil:#2e9e5b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--kagit);color:var(--murekkep);
+  font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
+.sar{max-width:520px;margin:0 auto;padding:26px 16px 48px;text-align:center}
+.foto{width:132px;height:132px;border-radius:50%;object-fit:cover;
+  border:3px solid var(--altin);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+h1{font-size:27px;margin:16px 0 6px;letter-spacing:-.5px;line-height:1.2}
+p{color:var(--soluk);font-size:15.5px;margin:0 0 12px}
+p b{color:var(--murekkep)}
+.buton{display:block;width:100%;background:var(--altin);color:#1a1200;border:0;
+  border-radius:13px;padding:16px;font:inherit;font-weight:800;font-size:17px;
+  margin-top:12px;text-decoration:none;text-align:center;cursor:pointer}
+.buton.ikinci{background:transparent;color:var(--murekkep);
+  border:1.5px solid var(--cizgi);font-weight:700}
+.kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
+  padding:18px 18px 14px;margin-top:16px;text-align:left}
+.kutu h2{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:var(--altin);
+  margin:0 0 10px}
+ol{margin:0;padding-left:20px;color:var(--soluk);font-size:15px;line-height:1.7}
+ol b{color:var(--murekkep)}
+.iyi{background:#173d27;border:1px solid #235c39;border-radius:13px;padding:14px;
+  color:#bfe9d0;font-size:15px;margin-top:14px}
+.iyi b{color:#fff}
+.gizli{display:none!important}
+.dip{font-size:13px;color:#5f6b78;margin-top:22px;line-height:1.6}
+</style></head><body>
+<div class="sar">
+  <img class="foto" src="fiko-512.png" alt="Fiko">
+  <h1>Fiko'ya ekranınızda<br>bir minder serin</h1>
+  <p id="ust">Tek dokunuşla telefonunuzun ana ekranına yerleşsin.
+    İnternet olmadan da açılır.</p>
+
+  <button class="buton gizli" id="kurb">🐾 ANA EKRANA EKLE</button>
+  <a class="buton gizli" id="acb" href="index.html">FİKO'YU AÇ</a>
+
+  <div class="kutu gizli" id="ios">
+    <h2>iPhone için üç adım</h2>
+    <ol>
+      <li>Alt çubuktaki <b>Paylaş</b> tuşuna dokunun (yukarı ok işareti).</li>
+      <li>Listeyi kaydırıp <b>Ana Ekrana Ekle</b> deyin.</li>
+      <li><b>Ekle</b> deyin. Fiko ana ekranınıza yerleşir.</li>
+    </ol>
+  </div>
+
+  <div class="kutu gizli" id="elle">
+    <h2>Menüden ekleme</h2>
+    <ol>
+      <li>Tarayıcının sağ üstündeki <b>üç noktaya</b> dokunun.</li>
+      <li><b>Ana ekrana ekle</b> ya da <b>Uygulamayı yükle</b> seçin.</li>
+      <li><b>Ekle</b> deyin, ikon Fiko olacak.</li>
+    </ol>
+  </div>
+
+  <div class="iyi gizli" id="tamam"><b>Fiko ekranınızda.</b>
+    Artık tarayıcıya girmenize gerek yok, ikona dokunmanız yeterli.</div>
+
+  <a class="buton ikinci" href="index.html">ANA SAYFAYA GİT</a>
+  <div class="dip">Uygulama telefonunuza kurulur, mağazaya gerek yok.
+    Güncellemeler kendiliğinden gelir.</div>
+</div>
+<script>
+const $ = s => document.getElementById(s);
+const goster = (id, ac) => $(id).classList.toggle("gizli", !ac);
+const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const KURULU = window.matchMedia("(display-mode: standalone)").matches
+  || window.navigator.standalone === true;
+
+let istek = null;
+
+function durum(){
+  if(KURULU){
+    goster("tamam", true); goster("acb", true);
+    $("ust").textContent = "Fiko zaten bu telefonda kurulu.";
+    return;
+  }
+  if(istek){ goster("kurb", true); goster("elle", false); goster("ios", false); return; }
+  goster("ios", IOS);
+  goster("elle", !IOS);
+}
+
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault(); istek = e; durum();
+});
+window.addEventListener("appinstalled", () => {
+  istek = null; goster("kurb", false); goster("ios", false); goster("elle", false);
+  goster("tamam", true); goster("acb", true);
+  $("ust").textContent = "Kurulum tamam, Fiko ana ekranınızda.";
+});
+
+$("kurb").onclick = async () => {
+  if(!istek) return durum();
+  $("kurb").textContent = "…";
+  istek.prompt();
+  const sonuc = await istek.userChoice.catch(() => ({outcome: "dismissed"}));
+  istek = null;
+  if(sonuc.outcome !== "accepted"){
+    $("kurb").textContent = "🐾 ANA EKRANA EKLE";
+    goster("kurb", false); goster("elle", true);
+    $("ust").innerHTML = "Kurulum yarıda kaldı, menüden de ekleyebilirsiniz.";
+  }
+};
+durum();
+</script></body></html>

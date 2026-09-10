@@ -22,8 +22,8 @@
 
 <br>
 
-## 📱 [FİKO'YA EKRANINIZDA BİR MİNDER SERİN](https://rmz-oz.github.io/Lingo_Turkiye/)
+## 📱 [FİKO'YA EKRANINIZDA BİR MİNDER SERİN](https://rmz-oz.github.io/Lingo_Turkiye/kur.html)
 
-Telefonda açın, tarayıcı menüsünden **Ana ekrana ekle** deyin. Bütün oyunlar,
-alıştırmalar, çalışma planı, gelişim raporu ve sertifikalar içinde.
-Bir kez açtıktan sonra internet olmadan da çalışır.
+Linke telefondan dokunun, çıkan **Ana ekrana ekle** tuşuna basın, gerisi kendiliğinden
+olur. Bütün oyunlar, alıştırmalar, çalışma planı, gelişim raporu ve sertifikalar içinde.
+Bir kez kurulduktan sonra internet olmadan da çalışır.
