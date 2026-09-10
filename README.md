@@ -18,12 +18,12 @@
 
 <br>
 
+## 🏠 [ANA SAYFA](https://rmz-oz.github.io/Lingo_Turkiye/index.html)
+
+<br>
+
 ## 📱 [FİKO'YU AÇ](https://rmz-oz.github.io/Lingo_Turkiye/)
 
 Telefonda açın, tarayıcı menüsünden **Ana ekrana ekle** deyin. Bütün oyunlar,
 alıştırmalar, çalışma planı, gelişim raporu ve sertifikalar içinde.
 Bir kez açtıktan sonra internet olmadan da çalışır.
-
-<br>
-
-## 🏠 [ANA SAYFA](https://rmz-oz.github.io/Lingo_Turkiye/index.html)
