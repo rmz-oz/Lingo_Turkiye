@@ -374,6 +374,24 @@ header{padding-top:calc(12px + env(safe-area-inset-top,0px))}
 /* --- geri oku: buyuk ve rahat dokunulur --- */
 .hb .geri{font-size:20px;font-weight:700;opacity:.95;display:inline-flex;
   align-items:center;gap:6px;min-height:44px;padding-right:6px}
+
+/* --- uc nokta menusu --- */
+.mnk{width:44px;height:38px;flex:none;border:1px solid var(--cizgi);border-radius:99px;
+  background:transparent;color:var(--murekkep);font-size:22px;line-height:1;
+  padding:0 0 4px;margin-left:10px;cursor:pointer;font-family:inherit}
+.mnk:active{opacity:.6}
+.mnf{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}
+.mnf.acik{display:block}
+.mnl{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:10px;z-index:61;
+  background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
+  box-shadow:0 12px 34px rgba(0,0,0,.45);padding:6px;display:none;min-width:212px}
+.mnl.acik{display:block}
+.mnl button,.mnl a{display:flex;align-items:center;gap:12px;width:100%;
+  background:transparent;border:0;border-radius:10px;padding:13px 12px;
+  color:var(--murekkep);font:inherit;font-size:16px;font-weight:600;text-align:left;
+  text-decoration:none;cursor:pointer}
+.mnl button:active,.mnl a:active{background:rgba(127,127,127,.18)}
+.mnl i{font-style:normal;font-size:19px;width:24px;text-align:center}
 </style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=2">
@@ -563,4 +581,5 @@ function ozet(){
 function sifirla(){ i=0; dogru=0; cevaplanan=0; gecmis=[]; kaydet(); ciz(); window.scrollTo(0,0); }
 ciz();
 try{ if(localStorage.getItem(ANAHTAR+"_sekme") === "1") sekme(1); }catch(e){}
-</script></body></html>
+</script><script src="menu.js?v=1"></script>
+</body></html>
