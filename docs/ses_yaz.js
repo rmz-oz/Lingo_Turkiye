@@ -150,11 +150,10 @@
         tus.onclick = bas;
         satir = document.createElement("div"); satir.className = "sesdurum";
         kutu.appendChild(satir); kutu.appendChild(tus);
-        document.body.appendChild(kutu);
+        /* klavyenin ustune yapistir: klavye boyu degisse de kaymaz */
         var k = document.getElementById("klavye");
-        var h = k && !k.classList.contains("gizli")
-          ? Math.round(k.getBoundingClientRect().height) : 0;
-        kutu.style.bottom = (h + 8) + "px";
+        if(k){ kutu.classList.add("klv"); k.appendChild(kutu); }
+        else document.body.appendChild(kutu);
         return kutu;
       }
       if(!ayar.kap) return null;
