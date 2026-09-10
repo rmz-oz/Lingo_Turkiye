@@ -2,12 +2,40 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<title>Lingo Türkiye: Açılış Quizleri</title><style>
+<meta name="theme-color" content="#f5f6f8">
+<title>Serpil ve Zeynep: Lingo Türkiye Hatırası</title><style>
 :root{
-  --kagit:#f5f6f8; --kart:#ffffff; --murekkep:#0f1720; --soluk:#5b6673;
-  --cizgi:#dfe3e8; --kirmizi:#c8102e; --mor:#6b21a8; --yesil:#1a7f37;
+  --kagit:#f5f6f8; --kart:#ffffff; --kart2:#fafafb; --murekkep:#0f1720; --soluk:#5b6673;
+  --cizgi:#dfe3e8; --cizgi2:#b9c1cb; --kirmizi:#c8102e; --mor:#6b21a8; --yesil:#1a7f37;
   --sari:#f4c95d; --golge:0 1px 2px rgba(15,23,32,.06),0 6px 18px rgba(15,23,32,.05);
+  --ustbar:#0f1720; --ustyazi:#ffffff;
+  --koyu:#0f1720; --koyuyazi:#ffffff; --koyukart:#0f1720; --koyukenar:#0f1720;
+  --sonuk:#c3cad3; --seczemin:#f0f2f5;
+  --yesilzemin:#eaf6ee; --yesilzemin2:#f4faf6;
+  --kirmizizemin:#fdecef; --kirmizicizgi:#f3c2cb;
+  --bosizgara:#e7eaee; --bosyazi:#98a2ad;
+  --simzemin:#eef1f5; --simyazi:#5d6b78;
+  --brkenar:#d9b38c; --brzemin:#fdf6ef; --bryazi:#9c5f2b;
+  --gmkenar:#c3ccd5; --gmzemin:#f6f8fa; --gmyazi:#5d6b78;
+  --alkenar:#e4c96a; --alzemin:#fdf8e8; --alyazi:#8a7326;
 }
+:root[data-tema="gece"]{
+  --kagit:#0f1720; --kart:#18222d; --kart2:#131c25; --murekkep:#eef2f6; --soluk:#95a3b2;
+  --cizgi:#2b3846; --cizgi2:#3d4b5a; --kirmizi:#e2576a; --mor:#a78bfa; --yesil:#37ab5d;
+  --sari:#f4c95d; --golge:0 1px 2px rgba(0,0,0,.45),0 6px 18px rgba(0,0,0,.35);
+  --ustbar:#0a1119; --ustyazi:#ffffff;
+  --koyu:#2f3f4f; --koyuyazi:#f4f7fa; --koyukart:#111b24; --koyukenar:#2b3846;
+  --sonuk:#4b5866; --seczemin:#223042;
+  --yesilzemin:#14301f; --yesilzemin2:#10261a;
+  --kirmizizemin:#331a1f; --kirmizicizgi:#5c2a33;
+  --bosizgara:#22303d; --bosyazi:#6d7c8a;
+  --simzemin:#24303d; --simyazi:#9fb0bf;
+  --brkenar:#5a4530; --brzemin:#241a12; --bryazi:#d1a273;
+  --gmkenar:#4a5560; --gmzemin:#1c242c; --gmyazi:#b6c2ce;
+  --alkenar:#6b5a24; --alzemin:#2a2413; --alyazi:#e4c96a;
+}
+html{color-scheme:light}
+html[data-tema="gece"]{color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--kagit);color:var(--murekkep);
@@ -17,7 +45,7 @@ body{margin:0;background:var(--kagit);color:var(--murekkep);
 a{color:inherit}
 .sar{max-width:640px;margin:0 auto;padding:0 16px}
 /* ust bar */
-header{background:var(--murekkep);color:#fff;padding:12px 0 0;position:sticky;top:0;z-index:9}
+header{background:var(--ustbar);color:var(--ustyazi);padding:12px 0 0;position:sticky;top:0;z-index:9}
 header .sar{padding-bottom:0}
 .hb{display:flex;align-items:center;gap:12px;padding-bottom:10px}
 .geri{color:#fff;text-decoration:none;font-size:15px;opacity:.75;white-space:nowrap}
@@ -45,7 +73,7 @@ header .sar{padding-bottom:0}
 .serit{display:none;align-items:center;gap:9px;background:var(--kart);
   border:1px solid var(--cizgi);border-radius:999px;padding:8px 14px;margin:14px 0 0;
   font-size:14px;text-decoration:none;color:var(--murekkep)}
-.serit .av{width:26px;height:26px;border-radius:50%;background:#0f1720;color:#f4c95d;
+.serit .av{width:26px;height:26px;border-radius:50%;background:var(--koyu);color:var(--sari);
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
 .serit b{font-weight:700}
 .serit em{font-style:normal;color:var(--soluk)}
@@ -68,36 +96,37 @@ header .sar{padding-bottom:0}
   line-height:1.5}
 .serkart .kad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
 .serkart .kad div{border-radius:11px;padding:11px 6px;text-align:center;
-  border:1px solid var(--cizgi);background:#fafafb}
+  border:1px solid var(--cizgi);background:var(--kart2)}
 .serkart .kad i{font-style:normal;font-size:21px;line-height:1;display:block}
 .serkart .kad b{display:block;font-size:11px;letter-spacing:1.1px;margin-top:5px;
   font-weight:800}
 .serkart .kad u{display:block;text-decoration:none;font-size:11px;color:var(--soluk);
   margin-top:2px;font-variant-numeric:tabular-nums}
-.serkart .kad .br{border-color:#d9b38c;background:#fdf6ef}
-.serkart .kad .br b{color:#9c5f2b}
-.serkart .kad .gm{border-color:#c3ccd5;background:#f6f8fa}
-.serkart .kad .gm b{color:#5d6b78}
-.serkart .kad .al{border-color:#e4c96a;background:#fdf8e8}
-.serkart .kad .al b{color:#8a7326}
+.serkart .kad .br{border-color:var(--brkenar);background:var(--brzemin)}
+.serkart .kad .br b{color:var(--bryazi)}
+.serkart .kad .gm{border-color:var(--gmkenar);background:var(--gmzemin)}
+.serkart .kad .gm b{color:var(--gmyazi)}
+.serkart .kad .al{border-color:var(--alkenar);background:var(--alzemin)}
+.serkart .kad .al b{color:var(--alyazi)}
 /* kisisellestirilmis rapor karti */
 .rk{display:block;background:var(--kart);border:1px solid var(--cizgi);
   border-radius:16px;padding:16px 17px 15px;margin:10px 0 4px;text-decoration:none;
   box-shadow:var(--golge);color:inherit}
 .rk .ust{display:flex;align-items:center;gap:12px}
-.rk .av{width:44px;height:44px;border-radius:50%;background:#0f1720;color:#f4c95d;
+.rk .av{width:44px;height:44px;border-radius:50%;background:var(--koyu);color:var(--sari);
   display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;
   flex:none}
-.rk .av.sim{background:#eef1f5;color:#5d6b78;font-size:21px}
+.rk .av.sim{background:var(--simzemin);color:var(--simyazi);font-size:21px}
 .rk .kim{flex:1;min-width:0}
 .rk .kim b{display:block;font-size:17.5px;letter-spacing:-.2px;line-height:1.25;
   color:var(--murekkep)}
 .rk .kim span{display:flex;align-items:center;flex-wrap:wrap;gap:7px;font-size:13px;
   color:var(--soluk);margin-top:4px}
 .rk .kim em{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.9px;
-  text-transform:uppercase;color:#8a7326;background:#fdf8e8;border:1px solid #e4c96a;
+  text-transform:uppercase;color:var(--alyazi);background:var(--alzemin);
+  border:1px solid var(--alkenar);
   border-radius:999px;padding:3px 9px;line-height:1}
-.rk .ok{color:#c3cad3;font-size:22px;line-height:1;flex:none}
+.rk .ok{color:var(--sonuk);font-size:22px;line-height:1;flex:none}
 .rk .ayr{height:1px;background:var(--cizgi);margin:13px 0 0}
 .rk .say{display:grid;grid-template-columns:repeat(4,1fr);
   border-bottom:1px solid var(--cizgi)}
@@ -107,7 +136,7 @@ header .sar{padding-bottom:0}
   font-variant-numeric:tabular-nums;line-height:1.1;color:var(--murekkep)}
 .rk .say span{display:block;font-size:9.5px;color:var(--soluk);text-transform:uppercase;
   letter-spacing:.6px;margin-top:5px}
-.rk.pasif .say b{color:#c3cad3;font-weight:600}
+.rk.pasif .say b{color:var(--sonuk);font-weight:600}
 .rk .vit{display:flex;align-items:center;gap:9px;margin-top:12px}
 .rk .vit i{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:1px;
   text-transform:uppercase;color:var(--soluk);flex:none}
@@ -121,25 +150,25 @@ header .sar{padding-bottom:0}
 .yariskart span{display:block;font-size:14.5px;color:#e3ddfb;margin:7px 0 12px;line-height:1.5}
 .yariskart u{display:inline-block;text-decoration:none;background:#fff;color:#3b2f8f;
   font-weight:800;font-size:15px;border-radius:9px;padding:9px 18px}
-.oyunkart{display:block;background:#0f1720;color:#fff;border-radius:16px;
+.oyunkart{display:block;background:var(--koyukart);color:#fff;border-radius:16px;
   padding:20px 18px;margin:22px 0 6px;text-decoration:none;box-shadow:var(--golge);
-  border:1px solid #0f1720}
+  border:1px solid var(--koyukenar)}
 .oyunkart > b{display:block;font-size:26px;letter-spacing:-.5px;line-height:1.1}
 .oyunkart span{display:block;font-size:14.5px;color:#9aa6b4;margin:7px 0 12px;
   line-height:1.5}
 .oyunkart u{display:inline-block;text-decoration:none;background:#f4c95d;color:#1a1200;
   font-weight:800;font-size:15px;border-radius:9px;padding:9px 18px}
-.pdf{display:block;background:var(--murekkep);color:#fff;border-radius:10px;
+.pdf{display:block;background:var(--koyu);color:var(--koyuyazi);border-radius:10px;
   padding:13px;text-align:center;text-decoration:none;font-weight:700;font-size:15px}
 .alis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
-.alis a{background:var(--murekkep);color:#fff;border-radius:10px;padding:12px 6px;
+.alis a{background:var(--koyu);color:var(--koyuyazi);border-radius:10px;padding:12px 6px;
   text-align:center;text-decoration:none;font-weight:700;font-size:15px}
 .bilgi{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
   padding:18px 18px 14px;margin:18px 0;box-shadow:var(--golge)}
 .bilgi h2{font-size:16px;margin:0 0 8px}
-.bilgi p{margin:0 0 10px;font-size:15.5px;color:#2c3540}
+.bilgi p{margin:0 0 10px;font-size:15.5px;color:var(--murekkep)}
 .bilgi p:last-child{margin-bottom:0}
-.ornek{background:var(--kagit);border-radius:10px;padding:12px 14px;margin:10px 0;
+.ornek{background:var(--kart2);border-radius:10px;padding:12px 14px;margin:10px 0;
   font-size:15px;line-height:1.7}
 .ornek .w{font-weight:700}
 .dip{color:var(--soluk);font-size:13.5px;margin-top:20px;line-height:1.6}
@@ -147,7 +176,7 @@ header .sar{padding-bottom:0}
 .kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;
   padding:20px 18px;margin:20px 0;box-shadow:var(--golge)}
 .rozet{display:inline-flex;align-items:center;justify-content:center;min-width:44px;
-  height:44px;background:var(--murekkep);color:#fff;border-radius:11px;font-size:24px;
+  height:44px;background:var(--koyu);color:var(--koyuyazi);border-radius:11px;font-size:24px;
   font-weight:700;padding:0 10px}
 .bas{display:flex;align-items:center;gap:13px;margin-bottom:4px}
 .bas .t{font-size:15px;color:var(--soluk);line-height:1.35}
@@ -158,33 +187,33 @@ header .sar{padding-bottom:0}
   border:1.5px solid var(--cizgi);border-radius:12px;padding:13px 14px;margin-bottom:9px;
   font:inherit;cursor:pointer;display:flex;align-items:center;gap:12px;
   transition:border-color .12s,background .12s}
-.secenek:hover{border-color:#b9c1cb}
-.kutu{width:24px;height:24px;border:2px solid #c3cad3;border-radius:7px;flex:none;
+.secenek:hover{border-color:var(--cizgi2)}
+.kutu{width:24px;height:24px;border:2px solid var(--sonuk);border-radius:7px;flex:none;
   display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
 .secenek .w{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   font-size:19px;font-weight:700;letter-spacing:1.5px;flex:1}
 .secenek .not{font-size:13px;color:var(--soluk);text-align:right;line-height:1.35;
   display:none;white-space:nowrap}
-.secenek.on{border-color:var(--murekkep);background:#f0f2f5}
+.secenek.on{border-color:var(--murekkep);background:var(--seczemin)}
 .secenek.on .kutu{background:var(--murekkep);border-color:var(--murekkep)}
 .secenek.on .kutu:after{content:"✓"}
 .bitti .secenek{cursor:default}
 .bitti .secenek .not{display:block}
-.secenek.dogru{border-color:var(--yesil);background:#eaf6ee}
+.secenek.dogru{border-color:var(--yesil);background:var(--yesilzemin)}
 .secenek.dogru .kutu{background:var(--yesil);border-color:var(--yesil)}
 .secenek.dogru .kutu:after{content:"✓"}
-.secenek.yanlis{border-color:var(--kirmizi);background:#fdecef}
+.secenek.yanlis{border-color:var(--kirmizi);background:var(--kirmizizemin)}
 .secenek.yanlis .kutu{background:var(--kirmizi);border-color:var(--kirmizi)}
 .secenek.yanlis .kutu:after{content:"✕"}
-.secenek.kacan{border-color:var(--yesil);border-style:dashed;background:#f4faf6}
-button.ana{width:100%;background:var(--murekkep);color:#fff;border:0;border-radius:12px;
+.secenek.kacan{border-color:var(--yesil);border-style:dashed;background:var(--yesilzemin2)}
+button.ana{width:100%;background:var(--koyu);color:var(--koyuyazi);border:0;border-radius:12px;
   padding:15px;font:inherit;font-weight:700;font-size:17px;cursor:pointer;margin-top:4px}
-button.ana:disabled{background:#c3cad3;cursor:default}
+button.ana:disabled{background:var(--sonuk);cursor:default}
 .cevap{margin:6px 0 16px;border-top:1px solid var(--cizgi);padding-top:14px;display:none}
 .bitti .cevap{display:block}
 .basl{font-weight:700;font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
 .basl.iyi{color:var(--yesil)} .basl.kotu{color:var(--kirmizi)}
-.cift{background:var(--murekkep);color:#fff;border-radius:11px;padding:13px 14px;
+.cift{background:var(--koyu);color:var(--koyuyazi);border-radius:11px;padding:13px 14px;
   text-align:center;margin-bottom:11px}
 .cift .w{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:22px;
   font-weight:700;letter-spacing:2px}
@@ -198,8 +227,8 @@ button.ana:disabled{background:#c3cad3;cursor:default}
 /* liste karti */
 .wlist{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 4px}
 .wlist span{border:1px solid var(--cizgi);border-radius:7px;padding:4px 9px;font-size:15px;
-  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;background:var(--kagit)}
-.wlist span.c{background:#fdecef;border-color:#f3c2cb;color:var(--kirmizi)}
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;background:var(--kart2)}
+.wlist span.c{background:var(--kirmizizemin);border-color:var(--kirmizicizgi);color:var(--kirmizi)}
 .wlist span i{font-style:normal;font-size:11px;opacity:.7;margin-left:3px}
 /* ozet */
 .ozet{text-align:center;padding:12px 0 4px}
@@ -207,10 +236,10 @@ button.ana:disabled{background:#c3cad3;cursor:default}
 .ozet .alt{color:var(--soluk);font-size:16px;margin-top:4px}
 .izgara{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:20px 0}
 .izgara span{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;
-  justify-content:center;font-weight:700;font-size:16px;background:#e7eaee;color:var(--soluk)}
+  justify-content:center;font-weight:700;font-size:16px;background:var(--bosizgara);color:var(--soluk)}
 .izgara span.d{background:var(--yesil);color:#fff}
 .izgara span.y{background:var(--kirmizi);color:#fff}
-.izgara span.n{background:#e7eaee;color:#98a2ad}
+.izgara span.n{background:var(--bosizgara);color:var(--bosyazi)}
 .dugmeler{display:flex;gap:10px;margin-top:16px}
 .dugmeler button{flex:1}
 button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid var(--cizgi)}
@@ -221,13 +250,25 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
   cursor:pointer;transition:background .12s}
 .tablar button.on{background:#fff;color:var(--murekkep);font-weight:700}
 .gizli{display:none}
+/* gece gunduz dugmesi */
+.kapust{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.temad{display:inline-flex;align-items:center;gap:9px;background:var(--kart);
+  border:1.5px solid var(--cizgi);border-radius:999px;padding:10px 16px 10px 13px;
+  color:var(--murekkep);font:inherit;font-size:14px;font-weight:800;letter-spacing:.8px;
+  cursor:pointer;box-shadow:var(--golge);flex:none;line-height:1;
+  transition:border-color .12s,background .12s}
+.temad i{font-style:normal;font-size:21px;line-height:1}
+.temad:hover{border-color:var(--cizgi2)}
+.temad:active{transform:scale(.97)}
+@media(max-width:420px){ .temad{padding:9px 13px 9px 11px;font-size:13px}
+  .temad i{font-size:19px} }
 /* ders notu */
 .notgiris{margin:18px 0 6px;color:var(--soluk);font-size:15.5px;line-height:1.55}
 .harfsc{display:flex;flex-wrap:wrap;gap:5px;margin:12px 0 4px}
 .harfsc a{background:var(--kart);border:1px solid var(--cizgi);border-radius:8px;
   width:32px;height:32px;display:flex;align-items:center;justify-content:center;
   font-weight:700;font-size:15px;text-decoration:none;color:var(--murekkep)}
-.harfsc a:hover{background:var(--murekkep);color:#fff;border-color:var(--murekkep)}
+.harfsc a:hover{background:var(--koyu);color:var(--koyuyazi);border-color:var(--koyu)}
 .nk{background:var(--kart);border:1px solid var(--cizgi);border-radius:14px;
   padding:14px 16px;margin:12px 0;box-shadow:var(--golge);scroll-margin-top:110px}
 .nk .nb{display:flex;align-items:center;gap:11px;margin-bottom:9px}
@@ -251,12 +292,29 @@ button.ikinci{background:var(--kart);color:var(--murekkep);border:1.5px solid va
   .kapak h1{font-size:32px} .sec{grid-template-columns:1fr}
   .secenek .not{font-size:12px}
 }
-</style></head><body>
+</style>
+<script>
+/* tema, sayfa boyanmadan uygulansin ki gozu almasin */
+(function(){
+  var t = null;
+  try{ t = localStorage.getItem("lingo_masa_tema"); }catch(e){}
+  if(t !== "gece" && t !== "gunduz"){
+    try{ t = (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)
+      ? "gece" : "gunduz"; }catch(e){ t = "gunduz"; }
+  }
+  if(t === "gece") document.documentElement.setAttribute("data-tema", "gece");
+})();
+</script>
+</head><body>
 <div class="sar">
 <div class="serit" id="serit"></div>
 <div class="kapak">
- <div class="ust">Lingo Türkiye · TRT 1</div>
- <h1>Çalışma ve Oyun</h1>
+ <div class="kapust">
+  <div class="ust">Serpil &amp; Zeynep</div>
+  <button class="temad" id="temad" onclick="temaCevir()" aria-label="Gece moduna geç">
+    <i>🌙</i><b>GECE</b></button>
+ </div>
+ <h1>Lingo Türkiye Hatırası</h1>
  <p>445 bölümün cevap arşivinden çıkarılmış ders notları, quizler ve
  oyunun kendisi.</p>
 </div>
@@ -451,5 +509,31 @@ ağırlıklandırılarak bulundu.</div>
       '<div class="not">Zayıf harflerin, takıldığın kelimeler ve tekrar turların için dokun.</div>';
   }catch(e){}
 })();
+
+/* --- gece gunduz dugmesi --- */
+const TEMARENK = {gunduz: "#f5f6f8", gece: "#0f1720"};
+function temaOku(){
+  try{ const t = localStorage.getItem("lingo_masa_tema");
+       if(t === "gece" || t === "gunduz") return t; }catch(e){}
+  try{ if(window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches)
+         return "gece"; }catch(e){}
+  return "gunduz";
+}
+function temaUygula(t, kaydet){
+  const kok = document.documentElement;
+  if(t === "gece") kok.setAttribute("data-tema", "gece");
+  else kok.removeAttribute("data-tema");
+  const m = document.querySelector('meta[name="theme-color"]');
+  if(m) m.setAttribute("content", TEMARENK[t] || TEMARENK.gunduz);
+  const b = document.getElementById("temad");
+  if(b){
+    b.innerHTML = t === "gece" ? "<i>☀️</i><b>GÜNDÜZ</b>" : "<i>🌙</i><b>GECE</b>";
+    b.setAttribute("aria-label", t === "gece" ? "Gündüz moduna geç" : "Gece moduna geç");
+  }
+  if(kaydet){ try{ localStorage.setItem("lingo_masa_tema", t); }catch(e){} }
+  return t;
+}
+let TEMA = temaUygula(temaOku(), false);
+function temaCevir(){ TEMA = temaUygula(TEMA === "gece" ? "gunduz" : "gece", true); }
 </script>
 </body></html>
