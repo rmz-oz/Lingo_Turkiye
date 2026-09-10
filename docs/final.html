@@ -156,7 +156,7 @@ table.ist tr.yok td.sn{color:var(--kirmizi)}
 <div id="orta"></div>
 <div id="klavye" class="gizli"></div>
 
-<script src="rozet.js?v=5"></script>
+<script src="rozet.js?v=6"></script>
 <script src="ses.js?v=3"></script>
 <script>
 let VERI = null, TANIM = {};
@@ -322,8 +322,7 @@ function girisEkran(){
       <div><b>${m.enIyi ? m.enIyi + " sn" : "-"}</b><span>en iyi süre</span></div>
     </div>` : ""}
     <button class="buton" onclick="basla()">BAŞLA ▸</button>
-    <button class="buton ikinci" onclick="kisiEkran()">KİŞİ DEĞİŞTİR</button>
-    <a class="buton ikinci" href="alistirma7.html">7 HARF ALIŞTIRMASI</a>
+    <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
     <a class="buton ikinci" href="index.html">ANA SAYFA</a>`);
 }
 function kisiEkran(){
@@ -517,7 +516,6 @@ function sonEkran(tamam, sebep){
           ? `<b>tamam, ${g.sn} sn</b>` : `${g.uzak ? g.uzak + " harfliye kadar" : "ilk kelime"}`}`
         ).join("<br>")}</div>` : ""}
     <button class="buton" onclick="basla()">TEKRAR DENE</button>
-    <a class="buton ikinci" href="alistirma7.html">7 HARF ALIŞTIRMASI</a>
     <a class="buton ikinci" href="rapor.html">📊 GELİŞİM RAPORUM</a>
     <a class="buton ikinci" href="index.html">ANA SAYFA</a>`);
 }

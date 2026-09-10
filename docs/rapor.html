@@ -101,14 +101,20 @@ tr.tik:active{background:var(--kart2)}
   font-size:12px}
 .rozg span{font-size:22px;line-height:1;display:block}
 .rozg b{display:block;font-size:11.5px;margin-top:4px}
+/* final */
+.mini{display:flex;gap:4px}
+.mini i{width:15px;height:15px;border-radius:5px;display:block;background:#22303d}
+.mini i.d{background:var(--yesil)}.mini i.y{background:var(--kirmizi)}
+td.t{width:74px;color:var(--soluk);font-size:13px}
 .dip{font-size:12px;color:#5f6b78;margin-top:20px;line-height:1.6}
 .dip s{text-decoration:none;color:var(--kirmizi);cursor:pointer}
 </style></head><body>
 <header><a href="index.html">‹</a><b>Gelişim raporu</b></header>
 <div class="sar" id="alan"></div>
-<script src="rozet.js?v=5"></script>
+<script src="rozet.js?v=6"></script>
 <script>if(typeof LG_kervanMeta !== "function") window.LG_kervanMeta = function(){ return {}; };</script>
 <script>if(typeof LG_papatyaMeta !== "function") window.LG_papatyaMeta = function(){ return {}; };</script>
+<script>if(typeof LG_finalMeta !== "function") window.LG_finalMeta = function(){ return {}; };</script>
 <script>
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 const $ = s => document.querySelector(s);
@@ -125,6 +131,90 @@ function kisiSec(a){ KISI=a; secimAcik=false;
 function sinif(o){ return o>=75 ? "i1" : (o>=50 ? "i2" : "i3"); }
 function renk(o){ return o>=75 ? "var(--yesil)" : (o>=50 ? "var(--sari)" : "var(--kirmizi)"); }
 function UZ(n){ return n + " harfli"; }
+
+const AYLAR = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+function tarihKisa(t){ const g = new Date(t);
+  return g.getDate() + " " + AYLAR[g.getMonth()]; }
+
+/* --- final alistirmasi performansi --- */
+function finalHtml(){
+  const F = LG_finalMeta(KISI) || {}, g = F.gecmis || [];
+  if(!F.deneme){
+    return `<h2>Final performansı</h2>
+      <div class="bos">Final alıştırması henüz denenmemiş.<br>
+        120 saniye, tek sayaç: sırayla 4, 5, 6 ve 7 harfli birer kelime.</div>
+      <a class="buton ikinci" href="final.html">FİNAL ALIŞTIRMASINA BAŞLA</a>`;
+  }
+
+  /* uzunluk kirilimi, saklanan denemelerden */
+  const uz = {};
+  for(const t of g) for(const a of (t.ayrinti || [])){
+    const u = uz[a.n] = uz[a.n] || {t:0, b:0, sn:[]};
+    u.t++; if(a.ok) u.sn.push(a.sn);
+  }
+  let enSn = 1;
+  for(const n in uz) for(const x of uz[n].sn) if(x > enSn) enSn = x;
+
+  let uzHtml = "";
+  for(const n of [4,5,6,7]){
+    const u = uz[n]; if(!u || !u.t) continue;
+    const b = u.sn.length, o = Math.round(100*b/u.t);
+    const ort = b ? Math.round(u.sn.reduce((x,y)=>x+y,0)/b) : 0;
+    const hiz = b ? Math.min(...u.sn) : 0, yav = b ? Math.max(...u.sn) : 0;
+    uzHtml += `<div class="uz">
+      <div class="b1"><b>${UZ(n)}</b><u style="color:${b ? renk(o) : "var(--soluk)"}">${
+        b ? ort + " sn" : "bilinemedi"}</u></div>
+      <div class="cub"><i class="${sinif(o)}" style="width:${
+        b ? Math.max(6, Math.round(100*ort/enSn)) : 100}%"></i></div>
+      <div class="b2"><span><em>${b}/${u.t}</em> bilindi</span>
+        ${b ? `<span>en hızlı <em>${hiz} sn</em></span>` : ""}
+        ${b && yav !== hiz ? `<span>en yavaş <em>${yav} sn</em></span>` : ""}</div>
+    </div>`;
+  }
+
+  /* deneme listesi */
+  const dl = g.map(t => {
+    const kut = [4,5,6,7].map(n => {
+      const a = (t.ayrinti || []).find(x => x.n === n);
+      return `<i class="${a ? (a.ok ? "d" : "y") : ""}"></i>`;
+    }).join("");
+    const sag = t.tam ? t.sn + " sn"
+      : (t.uzak ? t.uzak + " harf" : "-");
+    return `<tr><td class="t">${tarihKisa(t.t)}</td>
+      <td class="b"><div class="mini">${kut}</div></td>
+      <td class="s">${t.tam ? "tamam" : "yarım"}</td>
+      <td class="o" style="color:${t.tam ? "var(--yesil)" : "var(--soluk)"}">${sag}</td></tr>`;
+  }).join("");
+
+  const ortTam = g.filter(t=>t.tam);
+  const ortSn = ortTam.length
+    ? Math.round(ortTam.reduce((x,t)=>x+t.sn,0)/ortTam.length) : 0;
+
+  return `<h2>Final performansı</h2>
+    <p>120 saniyede 4, 5, 6 ve 7 harfli birer kelime. Aşağıdaki kırılım
+      son ${g.length} denemeden çıkıyor.</p>
+    <div class="ozet">
+      <div><b>${F.deneme}</b><span>deneme</span></div>
+      <div><b style="color:${F.tam ? "var(--yesil)" : "var(--soluk)"}">${F.tam}</b>
+        <span>tamamlanan</span></div>
+      <div><b style="color:var(--altin)">${F.enIyi ? F.enIyi + " sn" : "-"}</b>
+        <span>en iyi süre</span></div>
+      <div><b>${F.enUzak ? F.enUzak : "-"}</b><span>en uzak uzunluk</span></div>
+    </div>
+    ${ortSn ? `<p style="margin-top:9px;font-size:13px">Tamamladığın denemelerde
+      ortalama <b style="color:var(--murekkep)">${ortSn} saniye</b> kullandın,
+      elinde <b style="color:var(--murekkep)">${120-ortSn} saniye</b> kaldı.</p>` : ""}
+    <div class="hbas">Uzunluk uzunluk süre</div>
+    ${uzHtml || `<div class="bos">Süre kırılımı için bir deneme daha gerekiyor.</div>`}
+    <p style="font-size:12.5px">Çubuk uzadıkça o uzunluk daha çok saniye yiyor.
+      Bilinemeyen uzunluk kırmızı dolu görünür.</p>
+    <div class="hbas">Denemeler</div>
+    <table>${dl}</table>
+    <p style="font-size:12.5px">Kutucuklar sırayla 4, 5, 6 ve 7 harfliyi gösterir:
+      yeşil bildiklerin, kırmızı takıldıkların, boş sıra gelmeyenler.
+      Son 8 deneme saklanır.</p>
+    <a class="buton ikinci" href="final.html">FİNAL ALIŞTIRMASI</a>`;
+}
 
 function ciz(){
   const d = defter(KISI);
@@ -220,6 +310,8 @@ function ciz(){
 
     <h2>Uzunluğa göre</h2>
     ${uzHtml}
+
+    ${finalHtml()}
 
     <h2>Harf harf</h2>
     ${hbVar

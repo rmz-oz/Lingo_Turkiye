@@ -88,6 +88,11 @@ function LG_papatyaMeta(ad){
   try{ const v = JSON.parse(localStorage.getItem("lingo_papatya_meta_"+ad) || "null");
        return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
 }
+/* --- Final alistirmasi meta durumu --- */
+function LG_finalMeta(ad){
+  try{ const v = JSON.parse(localStorage.getItem("lingo_final_"+ad) || "null");
+       return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
+}
 function LG_rozet(d, p, kv, pv){
   p = p || {}; const K = kv || {}, P = pv || {};
   const bil = d.filter(r=>r.k>0), ilk = bil.filter(r=>r.k===1).length;
