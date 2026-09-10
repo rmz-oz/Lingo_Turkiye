@@ -302,7 +302,10 @@ button{font:inherit;cursor:pointer}
 .lej3 i{font-style:normal;padding:2px 9px;border-radius:5px;font-weight:700;font-size:11.5px}
 /* yardimli mod */
 .yrd{width:100%;max-width:620px;margin-top:2px;display:flex;gap:10px;
-  align-items:flex-start}
+  align-items:flex-start;max-height:20vh;overflow-y:auto}
+/* yardim acikken klavye biraz kisilir, tahta buyuk kalir */
+body.yrdac #klavye{--tush:clamp(44px,7.2vh,62px)}
+body.yrdac #klavye button{font-size:clamp(15px,2vh,19px)}
 .ysol{flex:0 0 150px;background:var(--r59595_zemin);border:1px solid var(--r65111_kenar);border-radius:10px;
   padding:9px 10px}
 .ysag{flex:1;min-width:0}
@@ -732,9 +735,20 @@ function hucreBoy(n, kucuk){
   /* klavye once yerini alir, tahta kalanla yetinir */
   const kl = (klv && !klv.classList.contains("gizli"))
     ? klv.getBoundingClientRect().height : Math.round(window.innerHeight * 0.30);
-  const kalanY = window.innerHeight - kl - (kucuk ? 250 : 170);
+  const yrdPay = kucuk ? Math.round(window.innerHeight * 0.20) + 40 : 0;
+  const kalanY = window.innerHeight - kl - yrdPay - 110;
   const boyY = Math.floor((kalanY - (SATIR - 1) * 5) / SATIR);
-  return Math.max(24, Math.min(kucuk ? 40 : 56, enBoy, boyY > 0 ? boyY : enBoy));
+  return Math.max(24, Math.min(56, enBoy, boyY > 0 ? boyY : enBoy));
+}
+/* yardim acilip kapandiginda tahtayi yeniden olcup buyut ya da kucult */
+function tahtaOlc(){
+  document.body.classList.toggle("yrdac", !!YARDIM);
+  const t = document.getElementById("tahta");
+  if(!t) return;
+  const o = document.getElementById("orta");
+  if(o) o.className = YARDIM ? "ust" : "";
+  t.style.setProperty("--hg", hucreBoy(N, YARDIM) + "px");
+  boyAyarla();
 }
 /* tahta ekrani kaydirma gerektirmesin */
 function boyAyarla(){
@@ -857,7 +871,7 @@ function kelimeOyna(){
       bitirSatir(giris);
     });
   tik();
-  boyAyarla();
+  tahtaOlc();
   if(window.LG_Ses && LG_Ses.destek())
     LG_Ses.kur({kayan: true, n: N, ilk: gizli[0], havuz: [...GECERLI],
       gecerli: w => GECERLI.has(w),
@@ -1003,6 +1017,7 @@ function yardimDegis(){
   }
   ydgYaz();
   if(cizYardim) cizYardim();
+  tahtaOlc();
 }
 let turBasi = [];
 function basla(L, ozel){
