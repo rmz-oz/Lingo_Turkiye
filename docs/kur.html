@@ -70,12 +70,25 @@ ol i{font-style:normal;color:var(--soluk)}
       ucunda</b>. Safari'de açarsanız uygulama daha düzgün kurulur.</div>
   </div>
 
-  <div class="kutu gizli" id="elle">
-    <h2>Menüden ekleme</h2>
+  <div class="kutu gizli" id="android">
+    <h2 id="androidbas">Android için üç adım</h2>
     <ol>
-      <li>Tarayıcının sağ üstündeki <b>üç noktaya</b> dokunun.</li>
-      <li><b>Ana ekrana ekle</b> ya da <b>Uygulamayı yükle</b> seçin.</li>
-      <li><b>Ekle</b> deyin, ikon Fiko olacak.</li>
+      <li>Sağ üstteki <b>üç noktaya</b> dokunun.</li>
+      <li>Listede <b>Uygulamayı yükle</b> ya da <b>Ana ekrana ekle</b> yazar,
+        ona dokunun.</li>
+      <li>Çıkan kutuda <b>Yükle</b> deyin. Fiko ana ekranınıza iner.</li>
+    </ol>
+    <div class="uyari" id="samsung">Samsung İnternet kullanıyorsanız: alt çubuktaki
+      <b>üç çizgi</b>, sonra <b>Sayfayı ekle</b>, sonra <b>Ana ekran</b>.</div>
+  </div>
+
+  <div class="kutu gizli" id="masaustu">
+    <h2>Bilgisayarda</h2>
+    <ol>
+      <li>Adres çubuğunun sağ ucundaki <b>yükleme simgesine</b> tıklayın
+        (ekran ve aşağı ok).</li>
+      <li>Simge yoksa sağ üstteki <b>üç noktadan</b> <b>Yayınla, gönder, yükle</b>,
+        sonra <b>Fiko'yu yükle</b>.</li>
     </ol>
   </div>
 
@@ -104,22 +117,31 @@ function iosAyar(){
     goster("safari", true);
   }
 }
+const ANDROID = /Android/.test(navigator.userAgent);
+const SAMSUNG = /SamsungBrowser/.test(navigator.userAgent);
 function durum(){
   if(KURULU){
     goster("tamam", true); goster("acb", true);
-    $("ust").textContent = "Fiko zaten bu telefonda kurulu.";
+    goster("kurb", false); goster("ios", false);
+    goster("android", false); goster("masaustu", false);
+    $("ust").textContent = "Fiko zaten bu cihazda kurulu.";
     return;
   }
-  if(istek){ goster("kurb", true); goster("elle", false); goster("ios", false); return; }
+  goster("kurb", !!istek);
   goster("ios", IOS);
-  goster("elle", !IOS);
+  goster("android", ANDROID);
+  goster("masaustu", !IOS && !ANDROID);
+  goster("samsung", ANDROID && SAMSUNG);
+  const b = $("androidbas");
+  if(b) b.textContent = istek ? "Tuş çalışmazsa menüden" : "Android için üç adım";
 }
 
 window.addEventListener("beforeinstallprompt", e => {
   e.preventDefault(); istek = e; durum();
 });
 window.addEventListener("appinstalled", () => {
-  istek = null; goster("kurb", false); goster("ios", false); goster("elle", false);
+  istek = null; goster("kurb", false); goster("ios", false);
+  goster("android", false); goster("masaustu", false);
   goster("tamam", true); goster("acb", true);
   $("ust").textContent = "Kurulum tamam, Fiko ana ekranınızda.";
 });
@@ -132,8 +154,8 @@ $("kurb").onclick = async () => {
   istek = null;
   if(sonuc.outcome !== "accepted"){
     $("kurb").textContent = "🐾 ANA EKRANA EKLE";
-    goster("kurb", false); goster("elle", true);
-    $("ust").innerHTML = "Kurulum yarıda kaldı, menüden de ekleyebilirsiniz.";
+    goster("kurb", false); goster("android", ANDROID); goster("masaustu", !IOS && !ANDROID);
+    $("ust").innerHTML = "Kurulum yarıda kaldı, aşağıdaki adımlarla da ekleyebilirsiniz.";
   }
 };
 iosAyar();
