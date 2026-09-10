@@ -28,6 +28,9 @@ button{font:inherit;cursor:pointer}
   width:34px;height:28px;padding:0;font-size:14px;line-height:1;color:#fff;
   margin-left:10px;flex:none}
 #bar #sesd.kapali{opacity:.45}
+#bar .geri{color:var(--soluk);text-decoration:none;font-size:22px;line-height:1;
+  padding:0 4px 2px;flex:none;display:flex;align-items:center}
+#bar .geri:active{opacity:.6}
 #sure{width:100%;height:4px;background:#22303d;flex:none}
 #sure i{display:block;height:100%;background:var(--altin);width:100%;transition:width .1s linear}
 #sure.az i{background:var(--kirmizi)}
@@ -106,17 +109,18 @@ table.merd td:last-child{text-align:right;color:var(--murekkep);
 table.merd tr:last-child td{border-bottom:0;color:var(--altin)}
 table.merd tr:last-child td b{color:var(--altin)}
 .gizli{display:none!important}
-</style><link rel="icon" href="fiko-32.png" sizes="32x32">
+</style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="fiko-180.png">
+<link rel="apple-touch-icon" href="fiko-180.png?v=2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Fiko">
+<script src="tema.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
 </head><body>
 
-<div id="bar"><span class="etap" id="etapAd">LİNGO TÜRKİYE</span>
+<div id="bar"><a class="geri" href="index.html" aria-label="Ana sayfa">‹</a><span class="etap" id="etapAd">LİNGO TÜRKİYE</span>
   <span class="para" id="para"><em>₺</em>0</span>
   <button id="sesd" onclick="LG_sesDegis();LG_sesDugme(this)">🔊</button></div>
 <div id="sure" class="gizli"><i></i></div>
