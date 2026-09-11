@@ -632,6 +632,16 @@ function puzzleOyna(nler, tamOdul, bitti){
     if(t === null){ LG_ses("gecersiz"); uyar("Boş kutular var"); return; }
     dene(t);
   });
+  if(window.LG_Ses && LG_Ses.destek()){
+    const puzHavuz = (VERI.puzzle[n] || []).map(x => x[0]);
+    LG_Ses.kur({kayan: true, n: n, ilk: kelime[0], havuz: puzHavuz,
+      gecerli: w => puzHavuz.indexOf(w) >= 0,
+      uygula: w => {
+        if(kapandi) return;
+        for(let i = 0; i < n; i++) if(!acik.has(i)) gir[i] = w[i] || null;
+        yaz();
+      }});
+  }
   durdur(); sureGoster(true); sureKap.classList.remove("az");
   const bas = Date.now(); let sonAcma = 0;
   sayac = setInterval(() => {
@@ -679,14 +689,51 @@ function giris(){
           bilemezseniz <b>sıfır</b>.</li>
     </ul>
     ${en ? `<p class="kucuk" style="margin-top:12px">En iyi kazancınız: <b>₺${TL(en)}</b></p>` : ""}
-    <button class="buton" onclick="basla()">OYNA</button>`);
+    <button class="buton" onclick="basla()">${kayitOku() ? "BAŞTAN OYNA" : "OYNA"}</button>
+    ${kayitOku() ? `<button class="buton yesil" onclick="devamEt()">
+       ▸ KALDIĞIN YERDEN DEVAM ET</button>
+       <p class="kucuk" style="margin-top:8px">${devamNot()}</p>` : ""}`);
 }
 let oyunBasiRoz = [];
 function basla(){
   const k = LG_kisi();
   oyunBasiRoz = (k && k !== LG_KAYITSIZ) ? LG_acik(k).map(r=>r.a) : [];
+  kayitSil();
   etapBasla(0);
 }
+/* ---- kaldigi yerden devam ---- */
+const KAYIT = "lingo_oyun_kayit";
+function kayitYaz(d){
+  try{
+    localStorage.setItem(KAYIT, JSON.stringify(Object.assign({
+      para: para, kullanilan: [...kullanilan], roz: oyunBasiRoz, t: Date.now()
+    }, d)));
+  }catch(e){}
+}
+function kayitOku(){
+  try{ const v = JSON.parse(localStorage.getItem(KAYIT) || "null");
+       return (v && typeof v === "object" && v.faz) ? v : null; }catch(e){ return null; }
+}
+function kayitSil(){ try{ localStorage.removeItem(KAYIT); }catch(e){} }
+function devamNot(){
+  const v = kayitOku(); if(!v) return "";
+  const yer = v.faz === "uc" ? "3. etap"
+            : v.faz === "puzzle" ? ((v.e + 1) + ". etap puzzle")
+            : ((v.e + 1) + ". etap, " + (v.k + 1) + ". kelime");
+  const g = new Date(v.t || Date.now());
+  return `Kayıt: ${yer} · kasada ₺${TL(v.para || 0)} · ` +
+    g.toLocaleDateString("tr-TR") + " " +
+    g.toLocaleTimeString("tr-TR", {hour: "2-digit", minute: "2-digit"});
+}
+window.devamEt = function(){
+  const v = kayitOku(); if(!v) return basla();
+  para = v.para || 0; paraYaz();
+  kullanilan = new Set(v.kullanilan || []);
+  oyunBasiRoz = v.roz || [];
+  if(v.faz === "puzzle") return etapPuzzle(v.e || 0);
+  if(v.faz === "uc") return ucBasla();
+  return etapSira(v.e || 0, v.k || 0, v.dogru || 0);
+};
 function rozOzet(){
   const k = LG_kisi();
   if(!k || k === LG_KAYITSIZ) return "";
@@ -729,12 +776,14 @@ function etapSira(e, k, dogruSay){
     return etapPuzzle(e);
   }
   bar.textContent = `${E.ad} · ${k+1}/${E.kelime.length}`;
+  kayitYaz({faz: "kelime", e: e, k: k, dogru: dogruSay});
   kelimeOyna(E.kelime[k], E.pk, {},
     (ok, w) => sonucAra(ok, w, () => etapSira(e, k+1, dogruSay + (ok?1:0))));
 }
 function etapPuzzle(e){
   const E = ETAPLAR[e];
   bar.textContent = `${E.ad} · PUZZLE`;
+  kayitYaz({faz: "puzzle", e: e});
   puzzleOyna(E.puz, E.pp, (ok, w) => sonucAra(ok, w, () => etapBasla(e+1)));
 }
 function sonucAra(ok, w, devam){
@@ -763,6 +812,7 @@ let uc = {bol:0, ki:0};
 function ucBasla(){
   uc = {bol:0, ki:0};
   bar.textContent = "3. ETAP";
+  kayitYaz({faz: "uc"});
   ekran(`<h2>3. ETAP</h2>
     <p>İki bölüm: önce <b>4 tane 5 harfli</b> kelime ve bir puzzle,
        sonra <b>4 tane 6 harfli</b> kelime ve bir puzzle.</p>
@@ -868,6 +918,7 @@ function finalDevam(){
 }
 function finalBitir(){
   if(fBitti) return; fBitti = true;
+  kayitSil();
   durdur(); sureGoster(false); klv.classList.add("gizli");
   const sifirlandi = (fSuan === 7 && fEnIyi !== 7);
   para = sifirlandi ? 0 : finalOdul();
