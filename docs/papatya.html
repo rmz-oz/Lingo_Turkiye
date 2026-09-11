@@ -192,24 +192,24 @@ button{font:inherit;cursor:pointer}
 /* ---- saksilar ---- */
 .saksilar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;
   max-width:470px;width:100%}
-.sk{position:relative;border:1.5px dashed var(--cizgi_kenar);border-radius:14px;
+.saksilar .sk{position:relative;border:1.5px dashed var(--cizgi_kenar);border-radius:14px;
   min-height:62px;padding:8px 4px 9px;text-align:center;background:var(--r11340_zemin);
   font-size:13px;line-height:1.25;font-family:ui-monospace,"SF Mono",Menlo,monospace;
   font-weight:800;display:flex;flex-direction:column;align-items:center;
   justify-content:center;gap:3px;overflow:hidden;
   transition:transform .14s,border-color .14s,background .14s}
-.sk .ik{font-size:17px;line-height:1;opacity:.55;font-family:-apple-system,system-ui,sans-serif}
-.sk i{font-style:normal;font-family:-apple-system,system-ui,sans-serif;font-size:9px;
+.saksilar .sk .ik{font-size:17px;line-height:1;opacity:.55;font-family:-apple-system,system-ui,sans-serif}
+.saksilar .sk i{font-style:normal;font-family:-apple-system,system-ui,sans-serif;font-size:9px;
   letter-spacing:.1em;color:var(--soluk_yazi);text-transform:uppercase;font-weight:700}
-.sk.dolu{border-style:solid;border-color:var(--sap_kenar);color:var(--r37010_yazi);
+.saksilar .sk.dolu{border-style:solid;border-color:var(--sap_kenar);color:var(--r37010_yazi);
   background:var(--r34619_zemin);box-shadow:0 3px 12px rgba(63,125,77,.18)}
-.sk.dolu .ik{opacity:1}
-.sk.yeni{animation:skac .45s ease-out}
+.saksilar .sk.dolu .ik{opacity:1}
+.saksilar .sk.yeni{animation:skac .45s ease-out}
 @keyframes skac{0%{transform:scale(.82)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
-.sk.tam{border-color:var(--altin_kenar);border-width:2px}
-.sk.tam.dolu{border-color:var(--altin_kenar);background:var(--r1419_zemin);color:var(--altin_yazi);
+.saksilar .sk.tam{border-color:var(--altin_kenar);border-width:2px}
+.saksilar .sk.tam.dolu{border-color:var(--altin_kenar);background:var(--r1419_zemin);color:var(--altin_yazi);
   box-shadow:0 3px 14px rgba(224,169,46,.25)}
-.sk.ipucu{border-color:var(--sari_kenar)}
+.saksilar .sk.ipucu{border-color:var(--sari_kenar)}
 .yard{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:470px;width:100%}
 .yard button{flex:1 1 auto;background:transparent;border:1px solid var(--cizgi_kenar);
   color:var(--soluk_yazi);border-radius:99px;padding:8px 11px;font-size:12.5px;font-weight:700}
