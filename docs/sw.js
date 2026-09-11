@@ -1,5 +1,5 @@
 /* Fiko: cevrimdisi calisma katmani. Otomatik uretildi, elle duzenleme.
-   Uretim: 2026-09-11 14:52 */
+   Uretim: 2026-09-11 14:56 */
 const SURUM = "fiko-b0bb2dd305";
 const DOSYALAR = [
   "./",
