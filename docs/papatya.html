@@ -331,6 +331,7 @@ table.rk tr:last-child td{border-bottom:0}
 <script src="rozet.js?v=6"></script>
 <script>if(typeof LG_papatyaMeta !== "function") window.LG_papatyaMeta = function(){ return {}; };</script>
 <script src="ses.js?v=3"></script>
+<script src="odul.js?v=1"></script>
 <script>
 const $ = s => document.querySelector(s);
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -572,6 +573,8 @@ window.gonder = function(){
   defterYaz(w);
   M.kelime = (M.kelime || 0) + 1;
   if(tam) M.tam = (M.tam || 0) + 1;
+  /* kazanim: her kelime akce, tam papatya bir joker kuponu */
+  if(window.LG_Odul) LG_Odul.kazan(tam ? 50 : 5, tam ? 1 : 0);
   metaYaz();
 
   let m = `<span class="iyi">${TRU(w)}</span> · +${p} puan`;
@@ -652,6 +655,7 @@ function bitir(){
     M.sonGun = S.gun;
     M.enSeri = Math.max(M.enSeri || 0, M.gunSeri);
   }
+  if(window.LG_Odul) LG_Odul.kazan(100, 0);      /* 12 saksi tamam primi */
   M.rekor.push({p:S.puan, z:ZORAD[PAP[S.i][2]], h:PAP[S.i][0],
     t:new Date().toLocaleDateString("tr-TR")});
   M.rekor.sort((a, b) => b.p - a.p); M.rekor = M.rekor.slice(0, 5);
