@@ -74,6 +74,11 @@
   --yesil_yazi:#2e9e5b;
   --yesil_zemin:#2e9e5b;
 }
+/* tema-duzeltme: koyu kalan kutularda yazi beyaz kalsin */
+:root[data-tema="gunduz"] #sure.az i{color:#fff}
+:root[data-tema="gunduz"] .hucre.tam{color:#fff}
+:root[data-tema="gunduz"] #klavye button.tam{color:#fff}
+
 
 :root{
   --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
@@ -203,7 +208,7 @@ table.merd tr:last-child td b{color:var(--altin_yazi)}
 /* --- uc nokta menusu --- */
 .mnk{width:44px;height:38px;flex:none;border:1px solid var(--cizgi);border-radius:99px;
   background:transparent;color:var(--murekkep);font-size:22px;line-height:1;
-  padding:0 0 4px;margin-left:10px;cursor:pointer;font-family:inherit}
+  padding:0 0 4px;margin-left:auto;cursor:pointer;font-family:inherit}
 .mnk:active{opacity:.6}
 .mnf{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}
 .mnf.acik{display:block}
