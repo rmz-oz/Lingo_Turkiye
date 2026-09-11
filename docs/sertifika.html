@@ -99,6 +99,7 @@ header b{font-size:12px;letter-spacing:1.4px;color:var(--altin);text-transform:u
   letter-spacing:.3em;text-transform:uppercase;color:var(--metalK);margin-top:6.5mm;
   text-indent:.3em;font-weight:600}
 .nisan{display:flex;flex-wrap:wrap;gap:2.2mm;margin-top:3mm;justify-content:center}
+.nisan span.artik{color:var(--metalK);border-style:dashed}
 .nisan span{border:.5pt solid var(--metalA);border-radius:999px;padding:1.6mm 4mm;
   font-family:Optima,"Gill Sans",Candara,sans-serif;font-size:8.4pt;font-weight:600;
   letter-spacing:.08em;color:var(--metalK)}
@@ -243,13 +244,20 @@ const KOSE = y => `<svg class="ks ${y}" viewBox="0 0 60 60" fill="none" stroke="
  <path d="M22 22 l4 4 -4 4 -4 -4 z" fill="currentColor" stroke="none" opacity=".8"/></svg>`;
 
 const DAL = t => `<svg class="defne ${t}" viewBox="0 0 60 120" fill="none"
- stroke="var(--metal)" stroke-width="1.4"><path d="M46 8 C22 30, 14 66, 26 112"/>
- <g opacity=".9" fill="var(--metal)" stroke="none">
-  <path d="M42 18 C31 15, 24 22, 26 31 C35 31, 42 27, 42 18z"/>
-  <path d="M36 38 C25 35, 18 42, 20 51 C29 51, 36 47, 36 38z"/>
-  <path d="M31 58 C20 55, 13 62, 15 71 C24 71, 31 67, 31 58z"/>
-  <path d="M28 78 C17 75, 10 82, 12 91 C21 91, 28 87, 28 78z"/>
-  <path d="M27 97 C16 94, 9 101, 11 110 C20 110, 27 106, 27 97z"/></g></svg>`;
+ stroke="var(--metal)" stroke-width="1.2"><path d="M40 116 C30 94, 22 66, 26 10"/>
+ <g fill="var(--metal)" stroke="none" opacity=".92">
+  <path d="M37.6 110.5 Q31 100.5 19.3 97.9 Q25.9 107.9 37.6 110.5 z"/>
+  <path d="M36.6 107.9 Q43.2 98 40.9 86.2 Q34.3 96.2 36.6 107.9 z"/>
+  <path d="M33 97.9 Q27.7 88.1 17 84.8 Q22.3 94.6 33 97.9 z"/>
+  <path d="M32.1 95 Q39.1 86.3 38 75.2 Q31 83.9 32.1 95 z"/>
+  <path d="M29.2 83.3 Q25.2 73.7 15.6 69.7 Q19.6 79.3 29.2 83.3 z"/>
+  <path d="M28.5 79.9 Q35.7 72.5 35.7 62.2 Q28.5 69.5 28.5 79.9 z"/>
+  <path d="M26.5 67.2 Q23.7 58 15.2 53.5 Q18.1 62.6 26.5 67.2 z"/>
+  <path d="M26.1 63.1 Q33.4 56.9 34.3 47.4 Q27 53.6 26.1 63.1 z"/>
+  <path d="M25.2 49.4 Q23.2 40.8 15.7 36 Q17.7 44.6 25.2 49.4 z"/>
+  <path d="M25 44.7 Q32.2 39.5 33.7 30.7 Q26.5 36 25 44.7 z"/>
+  <path d="M25 31.6 Q23.6 23.5 16.9 18.7 Q18.3 26.8 25 31.6 z"/>
+  <path d="M25.1 26.3 Q32.1 21.8 33.9 13.7 Q27 18.2 25.1 26.3 z"/></g></svg>`;
 
 const MUHUR = K => `<svg viewBox="0 0 120 120">
  <defs><path id="mu" d="M60,60 m-44,0 a44,44 0 1,1 88,0" fill="none"/>
@@ -373,7 +381,8 @@ function sertifika(K, d, ra){
   const t = new Date();
   const gun = String(t.getDate()).padStart(2,"0");
   const tarih = gun+" "+AYLAR[t.getMonth()]+" "+t.getFullYear();
-  const nis = ra.slice(0,7).map(r=>`<span>${r.a}</span>`).join("");
+  const nis = ra.slice(0,7).map(r=>`<span>${r.a}</span>`).join("")
+    + (ra.length > 7 ? `<span class="artik">+${ra.length - 7}</span>` : "");
   const stil = `--kagit:${K.kagit};--kagit2:${K.kagit2};--ink:${K.ink};--metal:${K.metal};
     --metalK:${K.metalK};--metalA:${K.metalA};--soluk2:${K.soluk};--yumusak:${K.metal}22;
     background:${K.kagit}`;
