@@ -654,12 +654,20 @@ window.yardimKullan = function(tip){
 window.filiz = function(){
   const bos = bosSaksilar().filter(k => !S.ipucu[k]);
   if(!bos.length) return uyar("Açacak saksı kalmadı");
-  const k = bos[Math.floor(Math.random() * bos.length)];
-  const ad = saksiAdaylari(k);
-  if(!ad.length) return uyar("Bu saksı için aday kalmadı");
-  S.ipucu[k] = ad[Math.floor(Math.random() * ad.length)][0];
+  /* ayni harfi iki kez acmasin: once kullanilmamis harflere bak */
+  const kullanilan = new Set(Object.keys(S.ipucu || {}).map(k => S.ipucu[k]));
+  const secenek = [];
+  bos.forEach(k => saksiAdaylari(k).forEach(w => secenek.push([k, w[0]])));
+  if(!secenek.length) return uyar("Bu saksı için aday kalmadı");
+  const taze = secenek.filter(x => !kullanilan.has(x[1]));
+  const havuz = taze.length ? taze : secenek;
+  const sec = havuz[Math.floor(Math.random() * havuz.length)];
+  const k = sec[0];
+  S.ipucu[k] = sec[1];
   S.yardim.filiz++; kaydet();
-  oyunCiz(`🌱 Bir filiz açtı: o saksının kelimesi <b>${TRU(S.ipucu[k])}</b> ile başlıyor.`);
+  const tur = SAKSI[k] === "T" ? "tam papatya" : SAKSI[k] + " harfli";
+  oyunCiz(`🌱 Bir filiz açtı: <b>${tur}</b> saksının kelimesi
+    <b>${TRU(S.ipucu[k])}</b> ile başlıyor.`);
 };
 window.su = function(){
   S.yardim.su++; kaydet();
@@ -675,7 +683,12 @@ window.sozluk = function(){
   const sec = [];
   bos.forEach(k => saksiAdaylari(k).forEach(w => { if(TANIM && TANIM[w]) sec.push([k, w]); }));
   if(!sec.length) return uyar("Sözlük kaydı bulunamadı");
-  const [k, w] = sec[Math.floor(Math.random() * sec.length)];
+  /* daha once anlami verilen kelimeyi tekrarlamasin */
+  S.verilen = S.verilen || [];
+  const taze = sec.filter(x => S.verilen.indexOf(x[1]) < 0);
+  const havuz = taze.length ? taze : sec;
+  const [k, w] = havuz[Math.floor(Math.random() * havuz.length)];
+  S.verilen.push(w);
   S.yardim.tanim++; kaydet();
   const t = SAKSI[k] === "T" ? "tam papatya" : SAKSI[k] + " harfli";
   oyunCiz(`📖 Bir ${t} saksının kelimesinin anlamı: <b>${TANIM[w]}</b>`);
