@@ -1235,8 +1235,26 @@ const NET = {
       this.baglar.push(c);
       c.on("data", m=>this.hostMesaj(c, m));
       c.on("open", ()=>{ if(M.S) c.send({t:"durum", d:M.temiz()}); agYaz(); this.lobiYolla(); });
-      c.on("close", ()=>{ this.baglar=this.baglar.filter(x=>x!==c); agYaz(); this.lobiYolla(); });
+      c.on("close", ()=>{
+        this.baglar=this.baglar.filter(x=>x!==c);
+        if(M.S && M.S.faz==="lobi") this.koltukBosalt(c.masa, c);
+        agYaz(); this.lobiYolla();
+      });
     });
+  },
+  /* bir koltukta baskasi oturuyor mu */
+  koltukDolu(i, hariç){
+    if(i < 0) return false;
+    if(this.benim === i && hariç !== "ben") return true;
+    return this.baglar.some(x => x !== hariç && x.open && x.masa === i);
+  },
+  /* eski koltugu bosalt: isim numaraya doner */
+  koltukBosalt(i, sahip){
+    if(!(i >= 0) || !M.S || !M.S.masalar[i]) return;
+    if(this.koltukDolu(i, sahip)) return;
+    M.S.masalar[i].online = false;
+    M.S.masalar[i].ad = (i + 1) + ". masa";
+    ADLAR[i] = M.S.masalar[i].ad;
   },
   hostMesaj(c, m){
     if(m.t==="katil"){
@@ -1259,7 +1277,13 @@ const NET = {
     if(m.t==="pas"){ if(c.masa===S.cevaplayan) M.pas(); return; }
     if(m.t==="karar"){ if(S.fin && c.masa===S.fin.masa) M.karar(!!m.devam); return; }
     if(m.t==="masa"){
+      const eski = (typeof c.masa === "number") ? c.masa : -1;
+      if(m.i >= 0 && this.koltukDolu(m.i, c)){
+        c.send({t:"dolu", i:m.i});               /* baskasi oturuyor */
+        return;
+      }
       c.masa=m.i;
+      if(eski !== m.i) this.koltukBosalt(eski, c);
       if(M.S && M.S.masalar[m.i]){
         M.S.masalar[m.i].online=true;
         if(m.ad){ M.S.masalar[m.i].ad = String(m.ad).slice(0,18); ADLAR[m.i] = M.S.masalar[m.i].ad; }
@@ -1309,6 +1333,7 @@ const NET = {
     if(m.t==="durum") ciz(m.d);
 
     if(m.t==="sen") this.benim=m.masa;
+    if(m.t==="dolu"){ uyariGoster("Bu masada başkası oturuyor"); }
     agYaz();
   },
   katilBasla(kod, ad, masa, tamam){
@@ -1566,6 +1591,7 @@ function jokerAcikMi(S, i, id){
 function ciz(S){
   SON=S;
   if(S.faz==="lobi"){ masaSoruldu=true; return lobiCiz(S); }
+  isimAcik=false;
   if(!NET.host && !masaSoruldu) return masaSecEkrani(S);
   kodEl.classList.remove("gizli"); kodEl.textContent=NET.kod||"";
   etEl.textContent = S.bitti ? "OYUN BİTTİ"
@@ -2001,10 +2027,12 @@ function odaAc(){
   });
 }
 /* --- bekleme odasi: iki tarafta da ayni ekran --- */
-let LOBI = null;
+let LOBI = null, isimAcik = false;
 function lobiCiz(S){
   LOBI = S || LOBI;
   if(!LOBI || !LOBI.masalar) return;
+  /* isim yazarken gelen tazeleme ekrani silmesin */
+  if(isimAcik) return;
   const host = NET.host;
   const oy = LOBI.masalar.map((m, i) => ({
     ad: m.ad, masa: i, ben: NET.benim === i,
@@ -2052,10 +2080,12 @@ window.jokerAl = function(id){
 };
 window.lobiOtur = function(i){
   if(i >= 0) return isimSor(i);
+  isimAcik = false;
   lobiYerles(i, null);
 };
 /* oturmadan once ismi sor: telefondaki isim hazir gelir, rehberden secilebilir */
 window.isimSor = function(i){
+  isimAcik = true;
   const r = rehberOku(), hazir = benimAdim();
   ekran(`<span class="rozet">ODA ${ODAKOD}</span>
     <h2>${i + 1}. masa</h2>
@@ -2067,7 +2097,7 @@ window.isimSor = function(i){
         `<button type="button" onclick="adSec('${a.replace(/'/g, "")}')">${a}</button>`
         ).join("")}</div>` : ""}
     <button class="buton" onclick="adOnayla(${i})">MASAYA OTUR ▸</button>
-    <button class="buton ikinci" onclick="lobiCiz(LOBI)">geri</button>`);
+    <button class="buton ikinci" onclick="isimVazgec()">geri</button>`);
   setTimeout(() => { const e = document.getElementById("adgir"); if(e) e.focus(); }, 200);
 };
 window.adSec = function(a){
@@ -2080,13 +2110,22 @@ window.adOnayla = function(i){
   if(!ad) return uyariGoster("Bir isim yazın");
   rehberEkle(ad);
   try{ localStorage.setItem("lingo_kisi", ad); }catch(e2){}
+  isimAcik = false;
   lobiYerles(i, ad);
 };
+window.isimVazgec = function(){ isimAcik = false; lobiCiz(LOBI); };
 function lobiYerles(i, ad){
+  const eski = NET.benim;
+  if(NET.host && i >= 0 && NET.koltukDolu(i, "ben") && eski !== i)
+    return uyariGoster("Bu masada başkası oturuyor");
   NET.benim = i;
   try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
   if(NET.host){
-    if(ad && M.S && M.S.masalar[i]){ M.S.masalar[i].ad = ad; ADLAR[i] = ad; }
+    if(eski !== i) NET.koltukBosalt(eski, "ben");
+    if(M.S && M.S.masalar[i]){
+      M.S.masalar[i].online = true;
+      if(ad){ M.S.masalar[i].ad = ad; ADLAR[i] = ad; }
+    }
     NET.lobiYolla();
   }else{
     NET.yolla({t:"masa", i:i, ad:ad || null});
