@@ -70,6 +70,15 @@
   --yesil_yazi:#2e9e5b;
   --yesil_zemin:#2e9e5b;
 }
+/* tema-duzeltme: koyu kalan kutularda yazi beyaz kalsin */
+:root[data-tema="gunduz"] .kgrid button.on{color:#fff}
+:root[data-tema="gunduz"] .akis i.d{color:#fff}
+:root[data-tema="gunduz"] .akis i.y{color:#fff}
+:root[data-tema="gunduz"] .i1{color:#fff}
+:root[data-tema="gunduz"] .i3{color:#fff}
+:root[data-tema="gunduz"] .mini i.d{color:#fff}
+:root[data-tema="gunduz"] .mini i.y{color:#fff}
+
 
 :root{--kagit:#0f1720;--kart:#1a2430;--kart2:#141d27;--murekkep:#f2f5f8;--soluk:#8b98a6;
   --cizgi:#2c3947;--yesil:#2e9e5b;--sari:#e6b22e;--kirmizi:#d94a5a;--altin:#f4c95d}
@@ -188,7 +197,7 @@ header{padding-top:calc(11px + env(safe-area-inset-top,0px))}
 /* --- uc nokta menusu --- */
 .mnk{width:44px;height:38px;flex:none;border:1px solid var(--cizgi);border-radius:99px;
   background:transparent;color:var(--murekkep);font-size:22px;line-height:1;
-  padding:0 0 4px;margin-left:10px;cursor:pointer;font-family:inherit}
+  padding:0 0 4px;margin-left:auto;cursor:pointer;font-family:inherit}
 .mnk:active{opacity:.6}
 .mnf{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}
 .mnf.acik{display:block}

@@ -92,6 +92,9 @@
   --sari_zemin:#e6b22e;
   --soluk_yazi:#596674;
 }
+/* tema-duzeltme: koyu kalan kutularda yazi beyaz kalsin */
+:root[data-tema="gunduz"] .pap .sp{color:#fff}
+
 
 :root{
   --kagit:#0f1720; --kart:#1a2430; --murekkep:#f2f5f8; --soluk:#8b98a6;
@@ -261,7 +264,7 @@ table.rk tr:last-child td{border-bottom:0}
 /* --- uc nokta menusu --- */
 .mnk{width:44px;height:38px;flex:none;border:1px solid var(--cizgi);border-radius:99px;
   background:transparent;color:var(--murekkep);font-size:22px;line-height:1;
-  padding:0 0 4px;margin-left:10px;cursor:pointer;font-family:inherit}
+  padding:0 0 4px;margin-left:auto;cursor:pointer;font-family:inherit}
 .mnk:active{opacity:.6}
 .mnf{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}
 .mnf.acik{display:block}
