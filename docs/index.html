@@ -149,6 +149,12 @@ header .sar{padding-bottom:0}
   color:#fff;border-radius:16px;padding:20px 18px;margin:22px 0 10px;
   text-decoration:none;box-shadow:0 6px 20px rgba(108,92,231,.3)}
 .yariskart > b{display:block;font-size:24px;letter-spacing:-.4px;line-height:1.15}
+.papdur{display:inline-flex;align-items:center;gap:7px;margin-top:10px;
+  background:rgba(255,255,255,.9);color:#1e4429;border-radius:999px;
+  padding:7px 13px;font-size:13.5px;font-weight:800;line-height:1.25;
+  max-width:100%;box-sizing:border-box}
+.papdur.yok{background:rgba(255,255,255,.22);color:#fff}
+@media(max-width:380px){ .papdur{font-size:12.5px;padding:6px 11px} }
 .yariskart span{display:block;font-size:14.5px;color:#e3ddfb;margin:7px 0 12px;line-height:1.5}
 .yariskart u{display:inline-block;text-decoration:none;background:#fff;color:#3b2f8f;
   font-weight:800;font-size:15px;border-radius:9px;padding:9px 18px}
@@ -363,7 +369,8 @@ header{padding-top:calc(12px + env(safe-area-inset-top,0px))}
   dört tane 5 harfli, iki tane 6 harfli, bir de yedi harfin hepsini kullanan
   <b style="color:#fff">tam papatya</b>. Saksılara giren kelimelerin hepsi yayında
   en az bir kez sorulmuş; sözlükten bulduklarınsa bahçeye girer.</span>
-  <u style="color:#1e4429">DEMLE ▸</u></a>
+  <u style="color:#1e4429">DEMLE ▸</u>
+  <span class="papdur" id="papdur"></span></a>
 <a class="oyunkart" href="oyun.html">
   <b>LİNGO'YU OYNA</b>
   <span>Gerçek oyun: 3 etap, puzzle ve 120 saniyelik final. Kelimeler arşivden,
@@ -473,6 +480,7 @@ Sözlük havuzu üzerinden hesaplandı. "Kalan aday" sayısı, o harfle başlaya
 bütün sözlük kelimeleri üzerinden, kelimelerin kullanım sıklığıyla
 ağırlıklandırılarak bulundu.</div>
 </div><script src="rozet.js?v=6"></script>
+<script src="odul.js?v=1"></script>
 <script>if(typeof LG_kervanMeta !== "function") window.LG_kervanMeta = function(){ return {}; };</script>
 <script>if(typeof LG_papatyaMeta !== "function") window.LG_papatyaMeta = function(){ return {}; };</script>
 <script>
@@ -531,6 +539,23 @@ ağırlıklandırılarak bulundu.</div>
         gos.map(function(r){return r.e;}).join("") + '</u></div>' : "") +
       '<div class="not">Zayıf harflerin, takıldığın kelimeler ve tekrar turların için dokun.</div>';
   }catch(e){}
+})();
+
+/* --- gunun papatyasi durumu --- */
+(function(){
+  var e = document.getElementById("papdur");
+  if(!e || !window.LG_Odul) return;
+  var b = LG_Odul.bugun(), d = LG_Odul.durum();
+  var ek = [];
+  if(b.seri > 1) ek.push(b.seri + " gün seri");
+  if(d.akce > 0) ek.push("🪙 " + d.akce.toLocaleString("tr-TR") + " akçe");
+  if(d.kupon > 0) ek.push("🎟 " + d.kupon + " joker kuponu");
+  if(b.cozuldu){
+    e.textContent = "✓ Bugünün papatyası çözüldü" + (ek.length ? " · " + ek.join(" · ") : "");
+  }else{
+    e.className = "papdur yok";
+    e.textContent = "🌼 Bugünün papatyası bekliyor" + (ek.length ? " · " + ek.join(" · ") : "");
+  }
 })();
 
 /* --- gece gunduz dugmesi --- */

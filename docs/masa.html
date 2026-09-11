@@ -231,6 +231,10 @@ button{font:inherit;cursor:pointer}
 #klavye.kilit{opacity:.35;pointer-events:none}
 .izle{text-align:center;font-size:13px;color:var(--soluk);padding:9px}
 /* bekleme odasi */
+.papodul{max-width:460px;width:100%;margin:2px auto 8px;padding:9px 12px;
+  border-radius:12px;background:rgba(90,166,106,.16);border:1px solid rgba(90,166,106,.34);
+  font-size:13px;line-height:1.5;text-align:center}
+.papodul b{font-weight:800}
 .lobi{display:flex;flex-direction:column;gap:8px;margin:12px 0 14px}
 .lobisat{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
   background:var(--ickart);border:1.5px solid var(--cizgi);border-radius:13px;
@@ -367,6 +371,7 @@ input.ad{width:100%;background:var(--yuva);border:1.5px solid var(--cizgi);borde
 <div id="klavye" class="gizli"></div>
 <script src="rozet.js?v=6"></script>
 <script src="ses.js?v=3"></script>
+<script src="odul.js?v=1"></script>
 <script>
 /* ================= sabitler ================= */
 const ETAPLAR = [
@@ -550,7 +555,7 @@ const M = {
     this.saat(DUKSURE, ()=>this.dukkanKapat());
     this.gonder();
   },
-  satinAl(i, id){
+  satinAl(i, id, ek){
     const S=this.S;
     if(S.faz!=="dukkan" || !S.dukkan) return;
     if(S.dukkan.kimler.indexOf(i)<0) return;
@@ -558,12 +563,18 @@ const M = {
     if(!m || !j) return;
     if((STOK[S.dukkan.no]||TEMEL).indexOf(id) < 0) return;
     if((m.jok[id]||0) >= JMAX) return;
-    const f=this.fiyat(i, id);
+    ek = ek || {};
+    let f=this.fiyat(i, id), papnot="";
+    if(ek.kupon){ f = 0; papnot = " · 🌼 papatya kuponu"; }
+    else if(ek.ind > 0){
+      const d = Math.round(f * Math.min(20, ek.ind) / 100);
+      f -= d; papnot = ` · 🌼 papatya indirimi ₺${TL(d)}`;
+    }
     m.para -= f;
     m.jok[id]=(m.jok[id]||0)+1;
     m.alim[id]=(m.alim[id]||0)+1;
     m.hazir=false;
-    S.mesaj=`${m.ad} aldı: ${j.em} ${j.ad}: ₺${TL(f)}`; S.msjTip="bek";
+    S.mesaj=`${m.ad} aldı: ${j.em} ${j.ad}: ₺${TL(f)}${papnot}`; S.msjTip="bek";
     this.gonder();
   },
   hazir(i){
@@ -1233,7 +1244,7 @@ const NET = {
     }
     if(!M.S) return;
     const S=M.S;
-    if(m.t==="al"){ if(c.masa>=0) M.satinAl(c.masa, m.id); return; }
+    if(m.t==="al"){ if(c.masa>=0) M.satinAl(c.masa, m.id, {kupon:!!m.kupon, ind:m.ind||0}); return; }
     if(m.t==="hazir"){ if(c.masa>=0) M.hazir(c.masa); return; }
     if(m.t==="joker"){ if(c.masa>=0) M.joker(c.masa, m.id); return; }
     if(m.t==="nisan"){ if(c.masa>=0) M.nisanAt(c.masa, m.i); return; }
@@ -1630,15 +1641,27 @@ function ciz(S){
         parayla alınır, <b>eksiye düşebilirsiniz</b>. Aynı jokerden en fazla
         <b>${JMAX}</b> tane; tekrar alırsanız <b>%20 pahalıya</b> gelir.
         Paranızı çarçur etmeyin!</div>`;
+      const P = window.LG_Odul ? LG_Odul.durum() : {kupon:0, indirim:0};
+      if(P.kupon > 0 || P.indirim > 0){
+        h+=`<div class="papodul">🌼 Papatya Çayı'ndan:
+          ${P.kupon > 0 ? `<b>${P.kupon} bedava joker kuponu</b>` : ""}
+          ${P.kupon > 0 && P.indirim > 0 ? " · " : ""}
+          ${P.indirim > 0 ? `<b>%${P.indirim} indirim</b>` : ""}
+        </div>`;
+      }
       h+=(STOK[S.dukkan.no]||TEMEL).map(id=>{
         const j=JOKERID[id];
         const adet=(m.jok[id]||0), f=jokerFiyat(S, ben, id), dolu=adet>=JMAX;
+        const ind = P.indirim > 0 ? Math.round(f * P.indirim / 100) : 0;
         return `<button class="jkart ${adet?"elde":""} ${dolu?"dolu":""}"
-          ${dolu?"disabled":""} onclick="NET.yolla({t:'al',id:'${id}'})">
+          ${dolu?"disabled":""} onclick="jokerAl('${id}')">
           <span class="em">${j.em}</span>
           <span class="gv"><b>${j.ad}</b><span>${j.ac}</span></span>
-          <span class="fy">${dolu?"✓":"₺"+TL(f)}<em>${dolu?"elinde "+adet
-            :(adet?"elinde "+adet+" · zamlı":"satın al")}</em></span></button>`;
+          <span class="fy">${dolu ? "✓"
+            : (P.kupon > 0 ? "🌼 bedava" : "₺"+TL(f-ind))}<em>${dolu?"elinde "+adet
+            : (P.kupon > 0 ? "papatya kuponu"
+              : (ind ? "₺"+TL(f)+" yerine" : (adet?"elinde "+adet+" · zamlı":"satın al")))
+            }</em></span></button>`;
       }).join("");
       h+=`<button class="dukbtn ${m.hazir?"bekle":""}"
         onclick="NET.yolla({t:'hazir'})">${m.hazir
@@ -1991,6 +2014,16 @@ function lobiCiz(S){
     : `<p class="izle">Masayı kuran kişi başlatınca oyun açılacak.</p>
        <button class="buton ikinci" onclick="lobiOtur(-1)">SADECE İZLEYECEĞİM</button>`}`);
 }
+/* papatya odulunu kullanarak joker al */
+window.jokerAl = function(id){
+  const P = window.LG_Odul ? LG_Odul.durum() : {kupon:0, indirim:0};
+  if(P.kupon > 0 && LG_Odul.kuponHarca()){
+    NET.yolla({t:"al", id:id, kupon:1});
+    uyariGoster("🌼 Papatya kuponuyla alındı");
+    return;
+  }
+  NET.yolla({t:"al", id:id, ind:P.indirim || 0});
+};
 window.lobiOtur = function(i){
   NET.benim = i;
   try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
