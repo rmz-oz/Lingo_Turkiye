@@ -415,9 +415,62 @@ window.yazdir = function(){
   bastirildi();
 };
 
+/* --- vektor cikti: sertifikayi SVG dosyasina cevir --- */
+async function gorselData(yol){
+  try{
+    const r = await fetch(yol);
+    const b = await r.blob();
+    return await new Promise(c => { const f = new FileReader();
+      f.onload = () => c(f.result); f.readAsDataURL(b); });
+  }catch(e){ return yol; }
+}
+window.svgYap = async function(){
+  const btn = document.getElementById("svgbtn");
+  const sy = document.querySelector(".sayfa");
+  if(!sy) return;
+  const eski = btn ? btn.textContent : "";
+  if(btn){ btn.disabled = true; btn.textContent = "SVG hazırlanıyor…"; }
+  try{
+    const gen = 1123, yuk = 794;            /* 297 x 210 mm, 96 dpi */
+    const imza = await gorselData("assets/imza.png");
+    const klon = sy.cloneNode(true);
+    klon.style.transform = "none";
+    klon.querySelectorAll("img").forEach(i => i.setAttribute("src", imza));
+    const stil = [...document.querySelectorAll("style")]
+      .map(x => x.textContent).join("\n");
+    const govde = new XMLSerializer().serializeToString(klon);
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${gen}" height="${yuk}"
+     viewBox="0 0 ${gen} ${yuk}">
+  <foreignObject x="0" y="0" width="${gen}" height="${yuk}">
+    <div xmlns="http://www.w3.org/1999/xhtml">
+      <style><![CDATA[
+${stil}
+      ]]></style>
+      ${govde}
+    </div>
+  </foreignObject>
+</svg>`;
+    const ad = (KISI || "Sertifika").replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü]+/g, "_");
+    const kadAd = (document.querySelector(".kadsec button.on b") || {}).textContent || "";
+    const blob = new Blob([svg], {type:"image/svg+xml;charset=utf-8"});
+    const u = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = u; a.download = `Lingo_${kadAd.replace(/\s+/g,"_")}_${ad}.svg`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(u), 4000);
+    bastirildi();
+  }catch(e){
+    uyar("SVG yapılamadı: " + ((e && e.message) || e));
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = eski; }
+  }
+};
+
 /* --- sertifikayi yuksek cozunurluklu resme cevir --- */
-const PNGEN = 2400;                     /* uzun kenar · A4 yatayda ~205 dpi */
-async function pngYap(mod){
+const PNGEN = 2400;      /* paylasim · A4 yatayda ~205 dpi */
+const PNGBASKI = 4200;   /* baski · A4 yatayda ~360 dpi */
+async function pngYap(mod, hedefGen){
   const btn = document.getElementById("pngbtn");
   const sy = document.querySelector(".sayfa");
   const kadraj = document.getElementById("kadraj");
@@ -427,7 +480,16 @@ async function pngYap(mod){
                 "ya da PDF olarak yazdır.");
   }
   const eskiMetin = btn ? btn.textContent : "";
-  if(btn){ btn.disabled = true; btn.textContent = "Resim hazırlanıyor…"; }
+  const eskiMetinB = document.getElementById("pngbtnB")
+    ? document.getElementById("pngbtnB").textContent : "";
+  const btnB = document.getElementById("pngbtnB");
+  if(btn){ btn.disabled = true; }
+  if(btnB){ btnB.disabled = true; }
+  let basariz = false;
+  const bekle = (hedefGen || PNGEN) >= PNGBASKI ? "Baskı resmi hazırlanıyor…"
+                                                : "Resim hazırlanıyor…";
+  const hedefBtn = (hedefGen || PNGEN) >= PNGBASKI ? btnB : btn;
+  if(hedefBtn) hedefBtn.textContent = bekle;
   /* olcek sifirlanir, gercek boyutta cizilir, sonra geri alinir */
   const eskiTr = sy.style.transform, eskiH = kadraj ? kadraj.style.height : "";
   const eskiOv = kadraj ? kadraj.style.overflow : "";
@@ -436,7 +498,7 @@ async function pngYap(mod){
   try{
     const gen = sy.offsetWidth || 1122;
     const cvs = await html2canvas(sy, {
-      scale: PNGEN / gen,
+      scale: (hedefGen || PNGEN) / gen,
       backgroundColor: null,
       useCORS: false,
       logging: false,
@@ -445,7 +507,8 @@ async function pngYap(mod){
     });
     const ad = (KISI || "Sertifika").replace(/[^0-9A-Za-zÇĞİÖŞÜçğıöşü]+/g, "_");
     const kadAd = (document.querySelector(".kadsec button.on b") || {}).textContent || "";
-    const dosya = `Lingo_${kadAd.replace(/\s+/g,"_")}_${ad}.png`;
+    const dosya = `Lingo_${kadAd.replace(/\s+/g,"_")}_${ad}${
+      (hedefGen || PNGEN) >= PNGBASKI ? "_baski" : ""}.png`;
     const blob = await new Promise(r => cvs.toBlob(r, "image/png"));
     if(!blob) throw new Error("resim üretilemedi");
     const f = new File([blob], dosya, {type:"image/png"});
@@ -459,12 +522,21 @@ async function pngYap(mod){
     }
     bastirildi();
   }catch(e){
-    if(!(e && e.name === "AbortError")) uyar("Resim yapılamadı: " + ((e&&e.message)||e));
+    if(e && e.name === "AbortError"){ /* paylasmaktan vazgecildi */ }
+    else if((hedefGen || PNGEN) >= PNGBASKI){
+      /* eski telefonlarda bu boyut tuvale sigmayabilir, bir kademe dusurup dene */
+      basariz = true;
+    } else uyar("Resim yapılamadı: " + ((e&&e.message)||e));
   }finally{
     sy.style.transform = eskiTr;
     if(kadraj){ kadraj.style.height = eskiH; kadraj.style.overflow = eskiOv; }
     if(btn){ btn.disabled = false; btn.textContent = eskiMetin; }
+    if(btnB){ btnB.disabled = false; btnB.textContent = eskiMetinB; }
     olcekle();
+  }
+  if(basariz){
+    uyar("Bu telefon baskı boyutunu kaldıramadı, biraz küçüğünü deniyorum.");
+    return pngYap(mod, 3000);
   }
 }
 function uyar(m){
@@ -591,11 +663,21 @@ function ciz(){
   $("#alan").innerHTML = secErit + kadSec + sertifika(kad, d, ra) +
     `<button class="buton" id="pngbtn" onclick="pngYap('paylas')">
        📷 RESİM OLARAK KAYDET / PAYLAŞ</button>
-     <p class="not">WhatsApp'ta en iyi görünen budur: yüksek çözünürlüklü tek bir
-       resim. Telefonda paylaşma menüsü açılır, bilgisayarda dosya olarak iner.</p>
+     <p class="not">WhatsApp ve mesaj için bu: tek bir resim, uzun kenarı
+       <b>2400 piksel</b>. Telefonda paylaşma menüsü açılır, bilgisayarda dosya
+       olarak iner.</p>
+     <button class="buton ikinci" id="pngbtnB" onclick="pngYap('indir', PNGBASKI)">
+       🖼 BASKI KALİTESİ PNG (4200 piksel)</button>
+     <p class="not">Fotoğrafçıya bastırmak için: A4 boyutunda <b>360 nokta/inç</b>.
+       Hazırlanması birkaç saniye sürer, dosya büyük olur.</p>
      <button class="buton ikinci" onclick="yazdir()">🖨 PDF olarak yazdır</button>
-     <p class="not">Yazdır ekranında <b>hedef: PDF olarak kaydet</b>, <b>yön: yatay</b>,
-       <b>arka plan grafikleri: açık</b> seçin.</p>` +
+     <p class="not">En kalitelisi budur: yazı ve çizgiler <b>vektör</b> kalır, ne kadar
+       büyütürsen büyüt kırılmaz. Yazdır ekranında <b>hedef: PDF olarak kaydet</b>,
+       <b>yön: yatay</b>, <b>arka plan grafikleri: açık</b> seçin.</p>
+     <button class="buton ikinci" id="svgbtn" onclick="svgYap()">
+       🧩 SVG olarak indir</button>
+     <p class="not">Tasarım programında açmak isteyenler için vektör dosya. Tarayıcıda
+       birebir açılır; yazı tipleri karşı bilgisayarda yoksa yazılar benzerine düşer.</p>` +
     `<p class="not">Kazandığın her kademeyi istediğin zaman, <b>o günkü güncel
        rakamlarınla</b> yeniden bastırabilirsin.</p>` +
     (sonraki ? `<p class="not">${sonraki.em} <b>${sonraki.ad}</b> sertifika için
