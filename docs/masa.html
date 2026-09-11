@@ -235,6 +235,10 @@ button{font:inherit;cursor:pointer}
   border-radius:12px;background:rgba(90,166,106,.16);border:1px solid rgba(90,166,106,.34);
   font-size:13px;line-height:1.5;text-align:center}
 .papodul b{font-weight:800}
+.rehber{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:6px}
+.rehber button{background:var(--ickart);border:1px solid var(--cizgi);color:var(--murekkep);
+  border-radius:99px;padding:9px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
+.lobisat b.bosad{color:var(--soluk);font-weight:700}
 .lobi{display:flex;flex-direction:column;gap:8px;margin:12px 0 14px}
 .lobisat{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
   background:var(--ickart);border:1.5px solid var(--cizgi);border-radius:13px;
@@ -1237,7 +1241,10 @@ const NET = {
   hostMesaj(c, m){
     if(m.t==="katil"){
       c.masa=(typeof m.masa==="number")?m.masa:-1; c.ad=m.ad;
-      if(M.S && M.S.masalar[c.masa]) M.S.masalar[c.masa].online=true;
+      if(M.S && M.S.masalar[c.masa]){
+        M.S.masalar[c.masa].online=true;
+        if(m.ad){ M.S.masalar[c.masa].ad = String(m.ad).slice(0,18); ADLAR[c.masa] = M.S.masalar[c.masa].ad; }
+      }
       c.send({t:"sen", masa:m.masa});
       agYaz(); if(M.S) M.gonder(); else this.lobiYolla();
       return;
@@ -1253,7 +1260,10 @@ const NET = {
     if(m.t==="karar"){ if(S.fin && c.masa===S.fin.masa) M.karar(!!m.devam); return; }
     if(m.t==="masa"){
       c.masa=m.i;
-      if(M.S && M.S.masalar[m.i]) M.S.masalar[m.i].online=true;
+      if(M.S && M.S.masalar[m.i]){
+        M.S.masalar[m.i].online=true;
+        if(m.ad){ M.S.masalar[m.i].ad = String(m.ad).slice(0,18); ADLAR[m.i] = M.S.masalar[m.i].ad; }
+      }
       agYaz(); if(M.S) M.gonder(); else this.lobiYolla();
       return;
     }
@@ -1845,17 +1855,30 @@ M.temiz=function(){
 };
 
 /* ================= kurulum ekranlari ================= */
-const VARAD = {
-  2: ["Serpil","Zeynep"],
-  3: ["Serpil & Zeynep","Yusuf","Ramiz"],
-  4: ["Serpil","Zeynep","Yusuf","Ramiz"]
-};
+/* Masalar numarayla baslar; oturan kendi adini yazar. */
+function numaraAd(n){ const a=[]; for(let i=0;i<n;i++) a.push((i+1)+". masa"); return a; }
+const VARAD = {2: numaraAd(2), 3: numaraAd(3), 4: numaraAd(4)};
 const IKINCI = ["Deniz","Toprak","Rüzgar","Ateş"];
 const hazirSetler = n => [VARAD[n].slice(), IKINCI.slice(0,n)];
-function adlariYukle(n){
-  try{ const k=JSON.parse(localStorage.getItem("lingo_masalar_"+n)||"null");
-       if(Array.isArray(k) && k.length===n) return k.slice(); }catch(e){}
-  return VARAD[n].slice();
+function adlariYukle(n){ return numaraAd(n); }
+function bosAdMi(a, i){ return !a || a === (i+1)+". masa"; }
+/* --- isim rehberi: daha once oynayan isimler telefonda birikir --- */
+function rehberOku(){
+  try{ const v=JSON.parse(localStorage.getItem("lingo_masa_rehber")||"[]");
+       return Array.isArray(v) ? v.filter(x=>typeof x==="string").slice(0,12) : []; }
+  catch(e){ return []; }
+}
+function rehberEkle(ad){
+  if(!ad) return;
+  const v = rehberOku().filter(x => x.toLocaleLowerCase("tr") !== ad.toLocaleLowerCase("tr"));
+  v.unshift(ad);
+  try{ localStorage.setItem("lingo_masa_rehber", JSON.stringify(v.slice(0,12))); }catch(e){}
+}
+function benimAdim(){
+  try{ const a=localStorage.getItem("lingo_kisi");
+       if(a && a!=="__kayitsiz__") return a; }catch(e){}
+  const r = rehberOku();
+  return r.length ? r[0] : "";
 }
 let KISI_SAY=3, JOKERLI=true;
 try{ const n=parseInt(localStorage.getItem("lingo_masa_say")||"3",10);
@@ -1988,13 +2011,16 @@ function lobiCiz(S){
     online: !!m.online || NET.benim === i
   }));
   const dolu = oy.filter(x => x.online).length;
-  const satir = oy.map(x => `
+  const satir = oy.map(x => {
+    const bos = bosAdMi(x.ad, x.masa);
+    return `
     <button class="lobisat${x.online ? " var" : ""}${x.ben ? " ben" : ""}"
-      onclick="lobiOtur(${x.masa})">
+      onclick="${x.ben ? `isimSor(${x.masa})` : `lobiOtur(${x.masa})`}">
       <span class="lnok ${x.online ? "on" : ""}"></span>
-      <b>${x.ad}</b>
-      <i>${x.ben ? "sen" : (x.online ? "bağlandı" : "bekleniyor")}</i>
-    </button>`).join("");
+      <b${bos ? ' class="bosad"' : ""}>${x.ad}</b>
+      <i>${x.ben ? "sen · adını değiştir" : (x.online ? "bağlandı" : "boş, otur")}</i>
+    </button>`;
+  }).join("");
   ekran(`<span class="rozet">ODA ${ODAKOD}</span>
     <h2>Bekleme odası</h2>
     <p class="izle">${dolu} / ${oy.length} masa oturdu${
@@ -2025,16 +2051,52 @@ window.jokerAl = function(id){
   NET.yolla({t:"al", id:id, ind:P.indirim || 0});
 };
 window.lobiOtur = function(i){
+  if(i >= 0) return isimSor(i);
+  lobiYerles(i, null);
+};
+/* oturmadan once ismi sor: telefondaki isim hazir gelir, rehberden secilebilir */
+window.isimSor = function(i){
+  const r = rehberOku(), hazir = benimAdim();
+  ekran(`<span class="rozet">ODA ${ODAKOD}</span>
+    <h2>${i + 1}. masa</h2>
+    <p class="izle">Adını yaz, masaya otur. Herkes seni bu isimle görecek.</p>
+    <input class="ad" id="adgir" maxlength="18" placeholder="adın"
+      value="${(hazir || "").replace(/"/g, "")}" style="font-size:18px;text-align:center">
+    ${r.length ? `<p class="izle" style="margin-top:10px">Daha önce oynayanlar:</p>
+      <div class="rehber">${r.map(a =>
+        `<button type="button" onclick="adSec('${a.replace(/'/g, "")}')">${a}</button>`
+        ).join("")}</div>` : ""}
+    <button class="buton" onclick="adOnayla(${i})">MASAYA OTUR ▸</button>
+    <button class="buton ikinci" onclick="lobiCiz(LOBI)">geri</button>`);
+  setTimeout(() => { const e = document.getElementById("adgir"); if(e) e.focus(); }, 200);
+};
+window.adSec = function(a){
+  const e = document.getElementById("adgir");
+  if(e){ e.value = a; e.focus(); }
+};
+window.adOnayla = function(i){
+  const e = document.getElementById("adgir");
+  const ad = ((e && e.value) || "").trim().slice(0, 18);
+  if(!ad) return uyariGoster("Bir isim yazın");
+  rehberEkle(ad);
+  try{ localStorage.setItem("lingo_kisi", ad); }catch(e2){}
+  lobiYerles(i, ad);
+};
+function lobiYerles(i, ad){
   NET.benim = i;
   try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
-  if(NET.host) NET.lobiYolla();
-  else NET.yolla({t:"masa", i:i});
+  if(NET.host){
+    if(ad && M.S && M.S.masalar[i]){ M.S.masalar[i].ad = ad; ADLAR[i] = ad; }
+    NET.lobiYolla();
+  }else{
+    NET.yolla({t:"masa", i:i, ad:ad || null});
+  }
   agYaz();
   if(LOBI && LOBI.masalar){
-    if(LOBI.masalar[i]) LOBI.masalar[i].online = true;
+    if(LOBI.masalar[i]){ LOBI.masalar[i].online = true; if(ad) LOBI.masalar[i].ad = ad; }
     lobiCiz(LOBI);
   }
-};
+}
 window.kodKopya = function(){
   const t = odaLink();
   if(navigator.clipboard) navigator.clipboard.writeText(t)
