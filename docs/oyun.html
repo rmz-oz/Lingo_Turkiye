@@ -207,8 +207,8 @@ table.merd tr:last-child td b{color:var(--altin_yazi)}
 
 /* --- uc nokta menusu --- */
 .mnk{width:44px;height:38px;flex:none;border:1px solid var(--cizgi);border-radius:99px;
-  background:transparent;color:var(--murekkep);font-size:22px;line-height:1;
-  padding:0 0 4px;margin-left:auto;cursor:pointer;font-family:inherit}
+  background:transparent;color:var(--murekkep);font-size:19px;line-height:1;
+  padding:0;margin-left:auto;cursor:pointer;font-family:inherit}
 .mnk:active{opacity:.6}
 .mnf{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}
 .mnf.acik{display:block}
@@ -590,6 +590,7 @@ function puzzleOyna(nler, tamOdul, bitti){
     if(!kapali.length) return false;
     const yeni = kapali[Math.floor(Math.random()*kapali.length)];
     acik.add(yeni); gir[yeni] = null;
+    LG_ses("gecersiz");                       /* harf acildi: kisa uyari sesi */
     odulHesap(); ustYaz(); yaz();
     return true;
   }
@@ -608,6 +609,7 @@ function puzzleOyna(nler, tamOdul, bitti){
   function bitirPuzzle(kazandi){
     if(kapandi) return; kapandi = true;
     durdur(); sureGoster(false);
+    LG_ses(kazandi ? "dogru" : "bitti");
     for(let i = 0; i < n; i++){
       h[i].textContent = TRU(kelime[i]);
       h[i].className = "hucre " + (kazandi ? "tam" : "yok");
@@ -618,6 +620,7 @@ function puzzleOyna(nler, tamOdul, bitti){
   function dene(t){
     if(kapandi) return;
     if(t === kelime) return bitirPuzzle(true);
+    LG_ses("yanlis");
     uyar("Olmadı, bir harf açılıyor");
     sonAcma = Date.now() - bas;          // sayaci sifirla
     if(!harfAc()) return bitirPuzzle(false);
@@ -626,7 +629,7 @@ function puzzleOyna(nler, tamOdul, bitti){
   ustYaz(); yaz();
   klavyeCiz(harfGir, sil, () => {
     const t = tahmin();
-    if(t === null){ uyar("Boş kutular var"); return; }
+    if(t === null){ LG_ses("gecersiz"); uyar("Boş kutular var"); return; }
     dene(t);
   });
   durdur(); sureGoster(true); sureKap.classList.remove("az");
@@ -636,7 +639,8 @@ function puzzleOyna(nler, tamOdul, bitti){
     sureBar.style.width = (100*kalan/(TOPSURE*1000)) + "%";
     sureKap.classList.toggle("az", kalan < TOPSURE*1000*0.25);
     const yeniSn = Math.ceil(kalan/1000);
-    if(yeniSn !== kalanSn){ kalanSn = yeniSn; ustYaz(); }
+    if(yeniSn !== kalanSn){ kalanSn = yeniSn; ustYaz();
+      if(yeniSn <= 5 && yeniSn > 0) LG_ses("sure"); }
     if(gecen - sonAcma >= ARALIK*1000){ sonAcma = gecen; harfAc(); }
     if(kalan <= 0){ uyar("Süre doldu"); bitirPuzzle(false); }
   }, 100);

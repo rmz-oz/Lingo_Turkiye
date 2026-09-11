@@ -13,7 +13,7 @@
 
     var t = document.createElement("button");
     t.id = "mnk"; t.className = "mnk"; t.type = "button";
-    t.setAttribute("aria-label", "Menü"); t.innerHTML = "⋯";
+    t.setAttribute("aria-label", "Menü"); t.innerHTML = "☰";
 
     var sag = kap.querySelector(".sag") || kap.querySelector(".hb") || kap;
     sag.appendChild(t);

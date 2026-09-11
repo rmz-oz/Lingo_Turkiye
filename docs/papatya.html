@@ -144,6 +144,9 @@ button{font:inherit;cursor:pointer}
 .kucuk{font-size:13px;color:var(--soluk_yazi);line-height:1.55}
 .eyebrow{font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--altin_yazi);
   font-weight:800}
+.kural{text-align:left;font-size:13.5px;line-height:1.5;color:var(--soluk_yazi);
+  display:flex;flex-direction:column;gap:7px;margin:12px 0 4px}
+.kural b{color:var(--murekkep_yazi)}
 .kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 .kgrid button{background:var(--r11340_zemin);border:1.5px solid var(--cizgi_kenar);color:var(--murekkep_yazi);
   border-radius:11px;padding:12px 8px;font-weight:700;font-size:15px}
@@ -187,35 +190,46 @@ button{font:inherit;cursor:pointer}
   font-size:14px}
 .dgm button.ana{background:var(--sap_zemin);border-color:var(--sap_kenar);color:var(--r94169_yazi);flex:1.3}
 /* ---- saksilar ---- */
-.saksilar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+.saksilar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;
   max-width:470px;width:100%}
-.sk{border:1.5px dashed var(--cizgi_kenar);border-radius:10px;min-height:46px;
-  padding:6px 3px;text-align:center;background:var(--r11340_zemin);font-size:13px;line-height:1.3;
-  font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:800;
-  display:flex;flex-direction:column;justify-content:center;gap:2px;
-  overflow:hidden;text-overflow:ellipsis}
+.sk{position:relative;border:1.5px dashed var(--cizgi_kenar);border-radius:14px;
+  min-height:62px;padding:8px 4px 9px;text-align:center;background:var(--r11340_zemin);
+  font-size:13px;line-height:1.25;font-family:ui-monospace,"SF Mono",Menlo,monospace;
+  font-weight:800;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;overflow:hidden;
+  transition:transform .14s,border-color .14s,background .14s}
+.sk .ik{font-size:17px;line-height:1;opacity:.55;font-family:-apple-system,system-ui,sans-serif}
 .sk i{font-style:normal;font-family:-apple-system,system-ui,sans-serif;font-size:9px;
   letter-spacing:.1em;color:var(--soluk_yazi);text-transform:uppercase;font-weight:700}
-.sk.dolu{border-style:solid;border-color:var(--sap_kenar);color:var(--r37010_yazi);background:var(--r34619_zemin)}
-.sk.tam{border-color:var(--altin_kenar)}
-.sk.tam.dolu{border-color:var(--altin_kenar);background:var(--r1419_zemin);color:var(--altin_yazi)}
+.sk.dolu{border-style:solid;border-color:var(--sap_kenar);color:var(--r37010_yazi);
+  background:var(--r34619_zemin);box-shadow:0 3px 12px rgba(63,125,77,.18)}
+.sk.dolu .ik{opacity:1}
+.sk.yeni{animation:skac .45s ease-out}
+@keyframes skac{0%{transform:scale(.82)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
+.sk.tam{border-color:var(--altin_kenar);border-width:2px}
+.sk.tam.dolu{border-color:var(--altin_kenar);background:var(--r1419_zemin);color:var(--altin_yazi);
+  box-shadow:0 3px 14px rgba(224,169,46,.25)}
 .sk.ipucu{border-color:var(--sari_kenar)}
 .yard{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:470px;width:100%}
 .yard button{flex:1 1 auto;background:transparent;border:1px solid var(--cizgi_kenar);
   color:var(--soluk_yazi);border-radius:99px;padding:8px 11px;font-size:12.5px;font-weight:700}
 .yard button:disabled{opacity:.35}
 #not{max-width:470px;width:100%;font-size:14px;line-height:1.55;color:var(--soluk_yazi);
-  min-height:42px;text-align:center}
+  min-height:24px;text-align:center;margin-bottom:2px}
 #not b{color:var(--murekkep_yazi)}
 #not .iyi{color:var(--sap_yazi);font-weight:800}
 #not .kotu{color:var(--kirmizi_yazi);font-weight:800}
 #not .ars{color:var(--altin_yazi);font-weight:800}
-.bahce{max-width:470px;width:100%;border:1px solid var(--cizgi_kenar);border-radius:12px;
-  background:var(--r11340_zemin);padding:10px 12px}
+.bahce{max-width:470px;width:100%;border:1px solid rgba(90,166,106,.38);
+  border-radius:16px;background:linear-gradient(180deg,rgba(90,166,106,.13),
+  rgba(90,166,106,.05));padding:12px 14px 13px}
 .bahce b{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--soluk_yazi);display:block;margin-bottom:5px}
-.bahce span{font-family:ui-monospace,Menlo,monospace;font-size:13px;color:var(--r44080_yazi);
-  word-spacing:.3em;text-transform:uppercase;letter-spacing:.06em}
+  color:var(--sap_yazi);display:block;margin-bottom:8px}
+.bahce .fisler{display:flex;flex-wrap:wrap;gap:6px}
+.bahce .fis{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--r44080_yazi);
+  background:rgba(90,166,106,.16);border:1px solid rgba(90,166,106,.3);
+  border-radius:99px;padding:4px 10px}
 .uyari{position:fixed;left:50%;transform:translateX(-50%);bottom:34px;background:var(--r64892_zemin);
   color:var(--r44327_yazi);padding:9px 16px;border-radius:999px;font-weight:700;font-size:14.5px;
   z-index:20;box-shadow:0 6px 22px var(--r55744_golge);max-width:88vw;text-align:center}
@@ -263,8 +277,8 @@ table.rk tr:last-child td{border-bottom:0}
 
 /* --- uc nokta menusu --- */
 .mnk{width:44px;height:38px;flex:none;border:1px solid var(--cizgi);border-radius:99px;
-  background:transparent;color:var(--murekkep);font-size:22px;line-height:1;
-  padding:0 0 4px;margin-left:auto;cursor:pointer;font-family:inherit}
+  background:transparent;color:var(--murekkep);font-size:19px;line-height:1;
+  padding:0;margin-left:auto;cursor:pointer;font-family:inherit}
 .mnk:active{opacity:.6}
 .mnf{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60;display:none}
 .mnf.acik{display:block}
@@ -430,10 +444,12 @@ function saksiHtml(){
   return `<div class="saksilar">` + SAKSI.map((t, k) => {
     const w = S.saksi[k], tam = t === "T";
     const ip = S.ipucu[k];
+    const ik = w ? (tam ? "🌻" : "🌼") : (ip ? "🌱" : "🪴");
     return `<div class="sk${w ? " dolu" : ""}${tam ? " tam" : ""}${
-      !w && ip ? " ipucu" : ""}">
+      !w && ip ? " ipucu" : ""}" data-k="${k}">
+      <span class="ik">${ik}</span>
       <i>${tam ? "tam papatya" : t + " harf"}</i>
-      ${w ? TRU(w) : (ip ? TRU(ip) + "···" : "&nbsp;")}</div>`;
+      ${w ? TRU(w) : (ip ? TRU(ip) + "···" : "")}</div>`;
   }).join("") + `</div>`;
 }
 function oyunCiz(mesaj){
@@ -462,11 +478,11 @@ function oyunCiz(mesaj){
          >📖 sözlük</button>
        <button type="button" onclick="durEkran()">☰ menü</button>
      </div>
-     <div id="not">${mesaj || `Göbek harfi <b>${TRU(ADAY.gobek)}</b> her kelimede
-       olmak zorunda. Sarı yaprak <b>${TRU(S.yaprak)}</b>, onu kullanan kelime iki katı.
-       🃏 <b>Joker harf</b> papatyada olmayan bir harfin yerini tutar; puanın yarısı.`}</div>` +
-    (S.bahce.length ? `<div class="bahce"><b>Bahçe · ${S.bahce.length} kelime</b>
-       <span>${S.bahce.map(TRU).join(" ")}</span></div>` : ""), false);
+     <div id="not">${mesaj || `Göbek harfi <b>${TRU(ADAY.gobek)}</b> zorunlu ·
+       sarı yaprak <b>${TRU(S.yaprak)}</b> iki katı · kurallar için <b>☰ menü</b>`}</div>` +
+    (S.bahce.length ? `<div class="bahce"><b>🪴 Bahçe · ${S.bahce.length} kelime</b>
+       <div class="fisler">${S.bahce.map(w =>
+         `<span class="fis">${TRU(w)}</span>`).join("")}</div></div>` : ""), false);
 }
 
 /* ---- giris ---- */
@@ -728,6 +744,13 @@ function durEkran(){
       <p class="kucuk">Göbek <b>${TRU(PAP[S.i][1])}</b> · sarı yaprak
         <b>${TRU(S.yaprak)}</b> · zorluk <b>${ZORAD[PAP[S.i][2]]}</b> ·
         <b>${S.saksi.filter(Boolean).length}/12</b> saksı · <b>${TL(S.puan)}</b> puan</p>
+      <div class="kural">
+        <div><b>Göbek harfi</b> her kelimede olmak zorunda, diğer harfler serbest.</div>
+        <div><b>Sarı yaprak</b> hangi kelimede geçerse o kelime iki kat puan.</div>
+        <div><b>🃏 Joker harf</b> papatyada olmayan bir harfin yerini tutar, puanın yarısı.</div>
+        <div><b>Saksılar</b> uzunluğa göre dolar; yayında sorulmuş kelimeler saksıya,
+          sözlükten bulduklarınız <b>bahçeye</b> girer.</div>
+      </div>
       <button class="buton" onclick="geri()">DEVAM ET ▸</button>
       <button class="buton ikinci" onclick="kasaEkran()">📓 REKORLAR</button>
       <button class="buton ikinci" onclick="yeniOyun(null)">🌼 BAŞKA PAPATYA</button>
