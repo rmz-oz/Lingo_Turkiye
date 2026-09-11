@@ -230,6 +230,17 @@ button{font:inherit;cursor:pointer}
 #klavye button.yok{background:var(--tusYok);color:var(--tusYokInk)}
 #klavye.kilit{opacity:.35;pointer-events:none}
 .izle{text-align:center;font-size:13px;color:var(--soluk);padding:9px}
+/* bekleme odasi */
+.lobi{display:flex;flex-direction:column;gap:8px;margin:12px 0 14px}
+.lobisat{display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+  background:var(--ickart);border:1.5px solid var(--cizgi);border-radius:13px;
+  padding:13px 14px;color:var(--murekkep);font:inherit;font-size:16px;cursor:pointer}
+.lobisat.var{border-color:var(--yesil)}
+.lobisat.ben{border-color:var(--altin);background:rgba(244,201,93,.10)}
+.lobisat b{flex:1;font-weight:800}
+.lobisat i{font-style:normal;font-size:12.5px;color:var(--soluk);letter-spacing:.4px}
+.lnok{width:11px;height:11px;border-radius:50%;background:var(--cizgi);flex:none}
+.lnok.on{background:var(--yesil);box-shadow:0 0 0 3px rgba(46,158,91,.22)}
 .buzz{width:100%;max-width:460px;background:var(--kirmizi);color:var(--kirmiziUst);border:0;
   border-radius:16px;padding:26px;font-size:26px;font-weight:800;letter-spacing:2px;
   box-shadow:0 6px 22px var(--kirmiziGolge);animation:nab 1s infinite}
@@ -412,7 +423,27 @@ const DUKAD = ["Yola çıkmadan önce, dükkan açık",
                "Final öncesi, son dükkan"];
 const ETAPAD = ["1. ETAP","2. ETAP","3. ETAP: DÜELLO","FİNAL"];
 /* tek sabit oda: kod yazmaya gerek yok, herkes ayni odaya girer */
-const ODA = "lingotr-ailecuk-szyr", ODAAD = "AİLECÜK";
+const ODAKOK = "lingotr-ailecuk-";
+const KODHARF = "ABCDEFGHJKLMNPRSTUVYZ23456789";
+function kodUret(n){
+  let k = "";
+  for(let i = 0; i < (n || 4); i++)
+    k += KODHARF[Math.floor(Math.random() * KODHARF.length)];
+  return k;
+}
+function kodOku(){
+  try{
+    const u = new URLSearchParams(location.search).get("oda");
+    if(u) return u.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 6) || "AILE";
+  }catch(e){}
+  return "AILE";
+}
+let ODAKOD = kodOku();
+const ODAAD = "AİLECÜK";
+function odaAdres(){ return ODAKOK + ODAKOD.toLowerCase(); }
+function odaLink(){
+  return location.origin + location.pathname + "?oda=" + ODAKOD;
+}
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
 /* okunmasi karisan harfler adiyla soylenir */
 const HARFAD = {"ğ":"yumuşak G", "ı":"noktasız I", "i":"noktalı İ"};
@@ -1181,15 +1212,15 @@ const M = {
 const NET = {
   peer:null, host:false, baglar:[], baglanti:null, kod:null, benim:-1,
   kurucuBasla(kod, tamam){
-    this.host=true; this.kod=ODAAD;
-    this.peer=new Peer(ODA, {debug:0});
+    this.host=true; this.kod=ODAKOD;
+    this.peer=new Peer(odaAdres(), {debug:0});
     this.peer.on("open", ()=>tamam(null));
     this.peer.on("error", e=>tamam(e.type||"hata"));
     this.peer.on("connection", c=>{
       this.baglar.push(c);
       c.on("data", m=>this.hostMesaj(c, m));
-      c.on("open", ()=>{ if(M.S) c.send({t:"durum", d:M.temiz()}); agYaz(); });
-      c.on("close", ()=>{ this.baglar=this.baglar.filter(x=>x!==c); agYaz(); });
+      c.on("open", ()=>{ if(M.S) c.send({t:"durum", d:M.temiz()}); agYaz(); this.lobiYolla(); });
+      c.on("close", ()=>{ this.baglar=this.baglar.filter(x=>x!==c); agYaz(); this.lobiYolla(); });
     });
   },
   hostMesaj(c, m){
@@ -1197,7 +1228,7 @@ const NET = {
       c.masa=(typeof m.masa==="number")?m.masa:-1; c.ad=m.ad;
       if(M.S && M.S.masalar[c.masa]) M.S.masalar[c.masa].online=true;
       c.send({t:"sen", masa:m.masa});
-      agYaz(); if(M.S) M.gonder();
+      agYaz(); if(M.S) M.gonder(); else this.lobiYolla();
       return;
     }
     if(!M.S) return;
@@ -1212,7 +1243,8 @@ const NET = {
     if(m.t==="masa"){
       c.masa=m.i;
       if(M.S && M.S.masalar[m.i]) M.S.masalar[m.i].online=true;
-      agYaz(); M.gonder(); return;
+      agYaz(); if(M.S) M.gonder(); else this.lobiYolla();
+      return;
     }
     if(c.masa!==S.cevaplayan) return;
     if(m.t==="harf") M.harf(m.c);
@@ -1220,6 +1252,25 @@ const NET = {
     else if(m.t==="gonder") M.gonderTahmin();
   },
   yayinla(m){ for(const c of this.baglar) if(c.open) c.send(m); },
+  /* bekleme odasi: kim oturdu, kim bekleniyor */
+  oturanlar(){
+    const d = ADLAR.map((ad, i) => ({ad: ad, masa: i, online: false, ben: false}));
+    if(this.benim >= 0 && d[this.benim]){ d[this.benim].online = true; d[this.benim].ben = true; }
+    for(const c of this.baglar)
+      if(c.open && typeof c.masa === "number" && c.masa >= 0 && d[c.masa])
+        d[c.masa].online = true;
+    return d;
+  },
+  izleyiciSay(){
+    let n = 0;
+    for(const c of this.baglar) if(c.open && (c.masa == null || c.masa < 0)) n++;
+    return n;
+  },
+  lobiYolla(){
+    if(!this.host || !M.S) return;
+    M.gonder();
+    if(M.S.faz === "lobi") lobiCiz(M.S);
+  },
   yayinlaDurum(d){
     const gizli = d.perde!=null ? perdele(d) : null;
     for(const c of this.baglar) if(c.open)
@@ -1235,14 +1286,15 @@ const NET = {
   veri(m){
     this.sonVeri=Date.now(); this.denemeSay=0;
     if(m.t==="durum") ciz(m.d);
+
     if(m.t==="sen") this.benim=m.masa;
     agYaz();
   },
   katilBasla(kod, ad, masa, tamam){
-    this.host=false; this.kod=ODAAD; this.benim=masa;
+    this.host=false; this.kod=ODAKOD; this.benim=masa;
     this.peer=new Peer({debug:0});
     this.peer.on("open", ()=>{
-      const c=this.peer.connect(ODA, {reliable:true});
+      const c=this.peer.connect(odaAdres(), {reliable:true});
       this.baglanti=c;
       c.on("open", ()=>{ this.sonVeri=Date.now(); c.send({t:"katil", masa, ad});
         tamam(null); agYaz(); });
@@ -1296,7 +1348,7 @@ const NET = {
       }
       if(this.peer.disconnected){ try{ this.peer.reconnect(); }catch(e){} }
       try{ if(this.baglanti) this.baglanti.close(); }catch(e){}
-      const c=this.peer.connect(ODA, {reliable:true});
+      const c=this.peer.connect(odaAdres(), {reliable:true});
       this.baglanti=c;
       c.on("open", ()=>{ this.sonVeri=Date.now(); this.denemeSay=0;
         c.send({t:"katil", masa:this.benim, ad:""}); agYaz(); });
@@ -1492,8 +1544,8 @@ function jokerAcikMi(S, i, id){
 }
 function ciz(S){
   SON=S;
+  if(S.faz==="lobi"){ masaSoruldu=true; return lobiCiz(S); }
   if(!NET.host && !masaSoruldu) return masaSecEkrani(S);
-  if(S.faz==="lobi") return;
   kodEl.classList.remove("gizli"); kodEl.textContent=NET.kod||"";
   etEl.textContent = S.bitti ? "OYUN BİTTİ"
     : (S.faz==="dukkan" ? "DÜKKAN" : ETAPAD[Math.min(S.etap,3)]);
@@ -1857,41 +1909,106 @@ function giris(){
       olacağını seçer. Jokerli oyunda dört kez <b>joker dükkanı</b> açılır;
       jokerler biriktirilen parayla alınır, ilk dükkanda eksiye düşebilirsiniz.</p>
 
+    <p class="izle" style="margin-top:6px">Şu anki oda: <b>${ODAKOD}</b></p>
     <button class="buton mor" onclick="odaAc()">MASAYI BEN KURARIM</button>
-    <button class="buton ikinci" onclick="katilEkran()">BEN HAZIRA KONARIM</button>`);
+    <button class="buton ikinci" onclick="katilEkran()">BEN HAZIRA KONARIM</button>
+    <p class="izle" style="margin-top:14px">Başka bir grupla ayrı bir oyun için:</p>
+    <button class="buton ikinci" onclick="yeniOda()">🎲 YENİ KODLA MASA KUR</button>
+    <button class="buton ikinci" onclick="kodEkrani()">🔑 KODLA KATIL</button>`);
 }
+/* --- oda kodu --- */
+window.yeniOda = function(){
+  ODAKOD = kodUret(4);
+  odaAc();
+};
+window.kodEkrani = function(){
+  ekran(`<h2>Oda kodu</h2>
+    <p class="izle">Masayı kuran kişideki dört harfli kodu yazın.</p>
+    <input class="ad" id="kodgir" maxlength="6" placeholder="ÖRN: K3MP"
+      style="text-transform:uppercase;letter-spacing:4px;text-align:center;font-size:22px">
+    <button class="buton" onclick="kodIle()">KATIL ▸</button>
+    <button class="buton ikinci" onclick="giris()">geri</button>`);
+  setTimeout(()=>{ const e=document.getElementById("kodgir"); if(e) e.focus(); }, 200);
+};
+window.kodIle = function(){
+  const e = document.getElementById("kodgir");
+  const k = (e ? e.value : "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if(k.length < 3) return uyariGoster("Kodu eksiksiz yazın");
+  ODAKOD = k;
+  katilEkran();
+};
 function odaAc(){
   ekran(`<h2>Oda açılıyor…</h2><p class="izle">Bağlantı kuruluyor</p>`);
   NET.kurucuBasla(null, err=>{
     if(err) return ekran(`<h2>Oda açılamadı</h2>
       <p>${err==="unavailable-id"
-        ? "Zaten açık bir oda var, başka bir cihazda ya da sekmede. Onu kapatıp tekrar deneyin."
+        ? "<b>"+ODAKOD+"</b> odası zaten açık. Bu odaya katılabilir ya da yeni kodla kendi masanızı kurabilirsiniz."
         : "Bağlantı kurulamadı: "+err}</p>
-      <button class="buton" onclick="odaAc()">TEKRAR DENE</button>
+      ${err==="unavailable-id" ? `<button class="buton" onclick="katilEkran()">BU ODAYA KATIL ▸</button>
+      <button class="buton ikinci" onclick="yeniOda()">YENİ KODLA MASA KUR</button>` : ""}
+      <button class="buton ikinci" onclick="odaAc()">TEKRAR DENE</button>
       <button class="buton ikinci" onclick="giris()">geri</button>`);
     M.kur(ADLAR); NET.tazele();
-    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAKOD;
     sayiEkrani();
     agYaz();
   });
 }
-function odaEkrani(){
-    const url=location.origin+location.pathname;
-    ekran(`<h2>Oda hazır</h2>
-      <p>Herkes bu sayfayı açıp <b>BEN HAZIRA KONARIM</b>'a dokunsun,
-         sonra masasını seçsin. Kod yok.</p>
-      <a class="buton mor" style="text-decoration:none"
-         href="https://wa.me/?text=${encodeURIComponent("Ailecük başlıyor! Aç ve masanı seç: "+url)}">
-         WHATSAPP'TAN LİNK GÖNDER</a>
-      <p class="izle" id="bek">Katılanlar bekleniyor…</p>
+/* --- bekleme odasi: iki tarafta da ayni ekran --- */
+let LOBI = null;
+function lobiCiz(S){
+  LOBI = S || LOBI;
+  if(!LOBI || !LOBI.masalar) return;
+  const host = NET.host;
+  const oy = LOBI.masalar.map((m, i) => ({
+    ad: m.ad, masa: i, ben: NET.benim === i,
+    online: !!m.online || NET.benim === i
+  }));
+  const dolu = oy.filter(x => x.online).length;
+  const satir = oy.map(x => `
+    <button class="lobisat${x.online ? " var" : ""}${x.ben ? " ben" : ""}"
+      onclick="lobiOtur(${x.masa})">
+      <span class="lnok ${x.online ? "on" : ""}"></span>
+      <b>${x.ad}</b>
+      <i>${x.ben ? "sen" : (x.online ? "bağlandı" : "bekleniyor")}</i>
+    </button>`).join("");
+  ekran(`<span class="rozet">ODA ${ODAKOD}</span>
+    <h2>Bekleme odası</h2>
+    <p class="izle">${dolu} / ${oy.length} masa oturdu${
+      ""}.
+      Masana oturmak için ismine dokun.</p>
+    <div class="lobi">${satir}</div>
+    ${host ? `
       ${sayiSatiri("")}
       ${modSatiri("")}
       <button class="buton" onclick="M.basla()">OYUNU BAŞLAT ▸</button>
       <button class="buton ikinci" onclick="isimEkrani()">İSİMLERİ DEĞİŞTİR</button>
-      <p class="izle">Masa yönetimi sizde. Siz de bir masaya oturabilirsiniz:</p>
-      ${ADLAR.map((a,i)=>`<button class="buton ikinci" onclick="NET.benim=${i};agYaz();
-        uyariGoster('${a.replace(/'/g,"")} masasındasınız')">${a}</button>`).join("")}`);
+      <a class="buton mor" style="text-decoration:none"
+         href="https://wa.me/?text=${encodeURIComponent(
+           "Ailecük başlıyor! Oda kodu " + ODAKOD + ", aç ve masanı seç: " + odaLink())}">
+         WHATSAPP'TAN DAVET GÖNDER</a>
+      <button class="buton ikinci" onclick="kodKopya()">DAVET LİNKİNİ KOPYALA</button>`
+    : `<p class="izle">Masayı kuran kişi başlatınca oyun açılacak.</p>
+       <button class="buton ikinci" onclick="lobiOtur(-1)">SADECE İZLEYECEĞİM</button>`}`);
 }
+window.lobiOtur = function(i){
+  NET.benim = i;
+  try{ localStorage.setItem("lingo_masa_ben", String(i)); }catch(e){}
+  if(NET.host) NET.lobiYolla();
+  else NET.yolla({t:"masa", i:i});
+  agYaz();
+  if(LOBI && LOBI.masalar){
+    if(LOBI.masalar[i]) LOBI.masalar[i].online = true;
+    lobiCiz(LOBI);
+  }
+};
+window.kodKopya = function(){
+  const t = odaLink();
+  if(navigator.clipboard) navigator.clipboard.writeText(t)
+    .then(()=>uyariGoster("Davet linki kopyalandı"));
+  else uyariGoster("Oda kodu: " + ODAKOD);
+};
+function odaEkrani(){ if(M.S) lobiCiz(M.S); }
 function isimEkrani(){
   const H=hazirSetler(KISI_SAY);
   ekran(`<h2>Masa isimleri</h2>
@@ -1934,7 +2051,7 @@ function katilEkran(){
          Önce biri <b>MASAYI BEN KURARIM</b>'a dokunsun.</p>
       <button class="buton" onclick="katilEkran()">TEKRAR DENE</button>
       <button class="buton ikinci" onclick="giris()">geri</button>`);
-    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAKOD;
     ekran(`<h2>Bağlandınız</h2><p class="izle">Masalar bekleniyor…</p>`);
   });
 }
@@ -1985,7 +2102,7 @@ function otoKatil(){
       <p>Masayı kuran cihazın sayfası açık olmalı.</p>
       <button class="buton" onclick="location.reload()">TEKRAR DENE</button>
       <button class="buton ikinci" onclick="giris()">baştan başla</button>`);
-    kodEl.classList.remove("gizli"); kodEl.textContent=ODAAD;
+    kodEl.classList.remove("gizli"); kodEl.textContent=ODAKOD;
     NET.benim=i; masaSoruldu=true;
     NET.yolla({t:"masa", i});
     agYaz();
