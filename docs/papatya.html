@@ -306,6 +306,23 @@ table.rk tr:last-child td{border-bottom:0}
   background:rgba(15,23,32,.08)}
 :root[data-tema="gunduz"] .sesdurum{background:rgba(255,255,255,.94);color:#5b6673}
 :root[data-tema="gunduz"] .sesdurum b{color:#8a6d1f}
+
+/* --- papatya: porselen yaprak + altin varak sari yaprak --- */
+.pap .yp{background:linear-gradient(160deg,#f6f9fc,#dde5ee);border:1px solid #d3dbe4;
+  color:#16202b;
+  box-shadow:0 6px 14px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.7)}
+.pap .yp:active{filter:brightness(.94);transform-origin:50% 113px}
+.pap .yp.bon{background:linear-gradient(135deg,#fff0bd,#d9a52a 45%,#8c6a12 92%);
+  border-color:#a9811d;color:#2e2100;
+  box-shadow:0 6px 18px rgba(217,165,42,.45), inset 0 2px 4px rgba(255,255,255,.7)}
+.pap .gb{background:radial-gradient(circle at 35% 30%,#ffe29a,#f0b93c 72%);color:#3a2a00;
+  box-shadow:0 0 0 10px rgba(244,201,93,.16), 0 6px 16px rgba(0,0,0,.28)}
+.pap .sp{background:linear-gradient(#7fae7a,#4f7d4b)}
+:root[data-tema="gunduz"] .pap .yp{background:linear-gradient(160deg,#ffffff,#e9eff6);
+  border-color:#dfe5ec;
+  box-shadow:0 5px 12px rgba(15,23,32,.12), inset 0 2px 3px rgba(255,255,255,.95)}
+:root[data-tema="gunduz"] .pap .gb{
+  box-shadow:0 0 0 10px rgba(244,201,93,.24), 0 6px 14px rgba(15,23,32,.16)}
 </style><link rel="icon" href="fiko-32.png?v=3" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="fiko-180.png?v=3">
@@ -471,12 +488,13 @@ function oyunCiz(mesaj){
        <button type="button" class="ana" onclick="gonder()">EKLE</button>
      </div>` + saksiHtml() +
     `<div class="yard">
-       <button type="button" onclick="filiz()" ${S.yardim.filiz >= 2 || !bos ? "disabled" : ""}
+       <button type="button" onclick="yardimSor('filiz')"
+         ${S.yardim.filiz >= 2 || !bos ? "disabled" : ""}
          >🌱 filiz (${2 - S.yardim.filiz})</button>
-       <button type="button" onclick="su()" ${S.yardim.su >= 1 || !bos ? "disabled" : ""}
-         >💧 su</button>
-       <button type="button" onclick="sozluk()" ${S.yardim.tanim >= 1 || !bos ? "disabled" : ""}
-         >📖 sözlük</button>
+       <button type="button" onclick="yardimSor('su')"
+         ${S.yardim.su >= 1 || !bos ? "disabled" : ""}>💧 su</button>
+       <button type="button" onclick="yardimSor('sozluk')"
+         ${S.yardim.tanim >= 1 || !bos ? "disabled" : ""}>📖 sözlük</button>
        <button type="button" onclick="durEkran()">☰ menü</button>
      </div>
      <div id="not">${mesaj || `Göbek harfi <b>${TRU(ADAY.gobek)}</b> zorunlu ·
@@ -609,6 +627,34 @@ function saksiAdaylari(k){
   if(t === "T") return ADAY.tam.filter(w => !kullanilan.has(w));
   return ADAY.ars[t].filter(w => !kullanilan.has(w));
 }
+/* --- yardimlarin ne yaptigini anlat, sonra kullan --- */
+const YARDIMBILGI = {
+  filiz: {em:"🌱", ad:"Filiz",
+    ne:"Boş saksılardan birinin kelimesinin <b>ilk harfini</b> açar, o saksıda küçük bir filiz belirir.",
+    hak:"Oyun başına 2 hak"},
+  su: {em:"💧", ad:"Su",
+    ne:"Boş saksıların her birinde <b>kaç aday kelime kaldığını</b> söyler; hangisinin kolay olduğunu görürsün.",
+    hak:"Oyun başına 1 hak"},
+  sozluk: {em:"📖", ad:"Sözlük",
+    ne:"Boş saksılardan birinin kelimesinin <b>sözlük anlamını</b> gösterir, kelimeyi tarifinden bulursun.",
+    hak:"Oyun başına 1 hak"}
+};
+window.yardimSor = function(tip){
+  const y = YARDIMBILGI[tip]; if(!y) return;
+  ekran(`<div class="kutu">
+      <div class="eyebrow">Yardım</div>
+      <h2>${y.em} ${y.ad}</h2>
+      <p class="kucuk" style="font-size:14.5px;line-height:1.6">${y.ne}</p>
+      <p class="kucuk" style="color:var(--altin_yazi)">${y.hak}</p>
+      <button class="buton yesil" onclick="yardimKullan('${tip}')">KULLAN ▸</button>
+      <button class="buton ikinci" onclick="geri()">VAZGEÇ</button>
+    </div>`);
+};
+window.yardimKullan = function(tip){
+  if(tip === "filiz") return filiz();
+  if(tip === "su") return su();
+  if(tip === "sozluk") return sozluk();
+};
 window.filiz = function(){
   const bos = bosSaksilar().filter(k => !S.ipucu[k]);
   if(!bos.length) return uyar("Açacak saksı kalmadı");
@@ -754,6 +800,9 @@ function durEkran(){
         <div><b>🃏 Joker harf</b> papatyada olmayan bir harfin yerini tutar, puanın yarısı.</div>
         <div><b>Saksılar</b> uzunluğa göre dolar; yayında sorulmuş kelimeler saksıya,
           sözlükten bulduklarınız <b>bahçeye</b> girer.</div>
+        <div><b>🌱 Filiz</b> bir saksının ilk harfini açar (2 hak) ·
+          <b>💧 Su</b> boş saksılarda kaç aday kaldığını söyler (1 hak) ·
+          <b>📖 Sözlük</b> bir saksı kelimesinin anlamını verir (1 hak).</div>
       </div>
       <button class="buton" onclick="geri()">DEVAM ET ▸</button>
       <button class="buton ikinci" onclick="kasaEkran()">📓 REKORLAR</button>
