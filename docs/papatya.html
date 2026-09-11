@@ -404,6 +404,9 @@ function adaylariKur(i){
       if(n === 7 && new Set(w).size === 7) out.tam.push(w);
     }
   }
+  /* tam papatya cevabi gunluk kullanimdaki kelimelerden secilir */
+  const gunlukTam = (PAP[i][4] || "").split(" ").filter(Boolean);
+  if(gunlukTam.length) out.tam = gunlukTam;
   out.harf = harf; out.gobek = gobek; out.kume = kume;
   out.ars = {4:[], 5:[], 6:[], 7:[]};
   for(const n of [4,5,6,7]) out.ars[n] = out[n].filter(w => KAC[w] > 0);
@@ -414,7 +417,7 @@ const tammi = w => w.length === 7 && new Set(w).size === 7;
 
 /* ---- durum ---- */
 function bosDurum(i, gun){
-  return {i:i, gun:gun || null, saksi:SAKSI.map(() => null), bahce:[], puan:0,
+  return {i:i, harf:PAP[i][0], gun:gun || null, saksi:SAKSI.map(() => null), bahce:[], puan:0,
           yardim:{filiz:0, su:0, tanim:0}, ipucu:{}, bitti:false, jokerKalan:2,
           jokerli:[], yaprak: gunYapragi(i, gun || ("s" + Date.now()))};
 }
@@ -903,7 +906,9 @@ function basla(){
   if(!KISI || KISI === LG_KAYITSIZ || KISILER.indexOf(KISI) < 0) return kisiEkran();
   metaOku();
   S = oku();
-  if(S && (!PAP[S.i] || !Array.isArray(S.saksi) || S.saksi.length !== 12)) S = null;
+  /* papatya listesi degisince eski kayit baska bir papatyaya denk gelebilir */
+  if(S && (!PAP[S.i] || S.harf !== PAP[S.i][0] ||
+     !Array.isArray(S.saksi) || S.saksi.length !== 12)) S = null;
   if(!S) return girisEkran();
   ADAY = adaylariKur(S.i);
   sira = PAP[S.i][0].slice(1).split("");
