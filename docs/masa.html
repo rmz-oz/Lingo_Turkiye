@@ -235,6 +235,14 @@ button{font:inherit;cursor:pointer}
   border-radius:12px;background:rgba(90,166,106,.16);border:1px solid rgba(90,166,106,.34);
   font-size:13px;line-height:1.5;text-align:center}
 .papodul b{font-weight:800}
+.odakod{display:inline-flex;align-items:center;gap:10px;margin:0 auto 4px;
+  background:var(--ickart);border:1.5px solid var(--altin);border-radius:999px;
+  padding:9px 16px;color:var(--murekkep);font:inherit;cursor:pointer}
+.odakod i{font-style:normal;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--soluk)}
+.odakod b{font-size:24px;font-weight:800;letter-spacing:4px;color:var(--altin)}
+.odakod u{text-decoration:none;font-size:11px;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--soluk)}
 .rehber{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:6px}
 .rehber button{background:var(--ickart);border:1px solid var(--cizgi);color:var(--murekkep);
   border-radius:99px;padding:9px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer}
@@ -2049,7 +2057,8 @@ function lobiCiz(S){
       <i>${x.ben ? "sen · adını değiştir" : (x.online ? "bağlandı" : "boş, otur")}</i>
     </button>`;
   }).join("");
-  ekran(`<span class="rozet">ODA ${ODAKOD}</span>
+  ekran(`<button class="odakod" onclick="kodSadeKopya()" title="Kodu kopyala">
+      <i>oda kodu</i><b>${ODAKOD}</b><u>kopyala</u></button>
     <h2>Bekleme odası</h2>
     <p class="izle">${dolu} / ${oy.length} masa oturdu${
       ""}.
@@ -2061,11 +2070,12 @@ function lobiCiz(S){
       <button class="buton" onclick="M.basla()">OYUNU BAŞLAT ▸</button>
       <button class="buton ikinci" onclick="isimEkrani()">İSİMLERİ DEĞİŞTİR</button>
       <a class="buton mor" style="text-decoration:none"
-         href="https://wa.me/?text=${encodeURIComponent(
-           "Ailecük başlıyor! Oda kodu " + ODAKOD + ", aç ve masanı seç: " + odaLink())}">
+         href="https://wa.me/?text=${encodeURIComponent(davetMetni())}">
          WHATSAPP'TAN DAVET GÖNDER</a>
       <button class="buton ikinci" onclick="kodKopya()">DAVET LİNKİNİ KOPYALA</button>`
     : `<p class="izle">Masayı kuran kişi başlatınca oyun açılacak.</p>
+       <p class="izle" style="font-size:12px">Uygulaman kuruluysa Fiko'yu açıp
+         <b>🔑 KODLA KATIL</b> ile <b>${ODAKOD}</b> kodunu da girebilirsin.</p>
        <button class="buton ikinci" onclick="lobiOtur(-1)">SADECE İZLEYECEĞİM</button>`}`);
 }
 /* papatya odulunu kullanarak joker al */
@@ -2136,10 +2146,21 @@ function lobiYerles(i, ad){
     lobiCiz(LOBI);
   }
 }
+function davetMetni(){
+  return "Ailecük başlıyor!\n"
+    + "Oda kodu: " + ODAKOD + "\n"
+    + "Fiko uygulaman varsa aç, KODLA KATIL de ve bu kodu yaz.\n"
+    + "Uygulaman yoksa şu linke dokun: " + odaLink();
+}
 window.kodKopya = function(){
-  const t = odaLink();
+  const t = davetMetni();
   if(navigator.clipboard) navigator.clipboard.writeText(t)
-    .then(()=>uyariGoster("Davet linki kopyalandı"));
+    .then(()=>uyariGoster("Davet metni kopyalandı"));
+  else uyariGoster("Oda kodu: " + ODAKOD);
+};
+window.kodSadeKopya = function(){
+  if(navigator.clipboard) navigator.clipboard.writeText(ODAKOD)
+    .then(()=>uyariGoster("Oda kodu kopyalandı: " + ODAKOD));
   else uyariGoster("Oda kodu: " + ODAKOD);
 };
 function odaEkrani(){ if(M.S) lobiCiz(M.S); }
