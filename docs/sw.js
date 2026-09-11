@@ -1,6 +1,6 @@
 /* Fiko: cevrimdisi calisma katmani. Otomatik uretildi, elle duzenleme.
-   Uretim: 2026-09-11 14:40 */
-const SURUM = "fiko-35745d6b03";
+   Uretim: 2026-09-11 14:52 */
+const SURUM = "fiko-b0bb2dd305";
 const DOSYALAR = [
   "./",
   "4harf.html",
