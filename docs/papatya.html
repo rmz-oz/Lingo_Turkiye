@@ -307,14 +307,11 @@ table.rk tr:last-child td{border-bottom:0}
 :root[data-tema="gunduz"] .sesdurum{background:rgba(255,255,255,.94);color:#5b6673}
 :root[data-tema="gunduz"] .sesdurum b{color:#8a6d1f}
 
-/* --- papatya: porselen yaprak + altin varak sari yaprak --- */
+/* --- papatya: porselen yaprak, altin gobek --- */
 .pap .yp{background:linear-gradient(160deg,#f6f9fc,#dde5ee);border:1px solid #d3dbe4;
   color:#16202b;
   box-shadow:0 6px 14px rgba(0,0,0,.18), inset 0 2px 3px rgba(255,255,255,.7)}
 .pap .yp:active{filter:brightness(.94);transform-origin:50% 113px}
-.pap .yp.bon{background:linear-gradient(135deg,#fff0bd,#d9a52a 45%,#8c6a12 92%);
-  border-color:#a9811d;color:#2e2100;
-  box-shadow:0 6px 18px rgba(217,165,42,.45), inset 0 2px 4px rgba(255,255,255,.7)}
 .pap .gb{background:radial-gradient(circle at 35% 30%,#ffe29a,#f0b93c 72%);color:#3a2a00;
   box-shadow:0 0 0 10px rgba(244,201,93,.16), 0 6px 16px rgba(0,0,0,.28)}
 .pap .sp{background:linear-gradient(#7fae7a,#4f7d4b)}
@@ -450,7 +447,7 @@ const SURUMSAT = () => `<p class="kucuk" style="opacity:.45;margin-top:10px;
 /* ---- papatya cizimi ---- */
 function papHtml(){
   const yp = sira.map((c, k) =>
-    `<button type="button" class="yp${c === S.yaprak ? " bon" : ""}"
+    `<button type="button" class="yp"
       style="transform:rotate(${k*60}deg)" onclick="bas('${c}')"
       aria-label="${TRU(c)} harfi"><span
       style="display:block;transform:rotate(${-k*60}deg)">${TRU(c)}</span></button>`).join("");
@@ -498,7 +495,7 @@ function oyunCiz(mesaj){
        <button type="button" onclick="durEkran()">☰ menü</button>
      </div>
      <div id="not">${mesaj || `Göbek harfi <b>${TRU(ADAY.gobek)}</b> zorunlu ·
-       sarı yaprak <b>${TRU(S.yaprak)}</b> iki katı · kurallar için <b>☰ menü</b>`}</div>` +
+       kurallar için <b>☰ menü</b>`}</div>` +
     (S.bahce.length ? `<div class="bahce"><b>🪴 Bahçe · ${S.bahce.length} kelime</b>
        <div class="fisler">${S.bahce.map(w =>
          `<span class="fis">${TRU(w)}</span>`).join("")}</div></div>` : ""), false);
@@ -578,7 +575,7 @@ window.gonder = function(){
   }
 
   const ars = KAC[w] || 0, tam = tammi(w);
-  let p = PUAN[w.length] * (ars ? 2 : 1) * (w.indexOf(S.yaprak) >= 0 ? 2 : 1);
+  let p = PUAN[w.length] * (ars ? 2 : 1);
   if(tam) p += TAMBONUS;
   if(jokerli){ p = Math.max(1, Math.round(p / 2)); S.jokerli.push(w); }
   let yer = -1;
@@ -600,7 +597,6 @@ window.gonder = function(){
   if(tam) m += ` · <span class="ars">🌼 TAM PAPATYA +${TAMBONUS}</span>`;
   if(ars) m += ` · <span class="ars">yayında ${ars} kez soruldu</span>`;
   else m += ` · sözlükten geldi, <b>bahçeye</b> girdi`;
-  if(w.indexOf(S.yaprak) >= 0) m += ` · sarı yaprak ×2`;
   if(S.saksi.filter(Boolean).length === 12) return bitir();
   kaydet(); oyunCiz(m);
 };
@@ -791,12 +787,10 @@ function durEkran(){
   ekran(`<div class="kutu">
       <div class="eyebrow">${S.gun ? "Günün papatyası" : "Serbest papatya"}</div>
       <h2>${TRU(PAP[S.i][0])}</h2>
-      <p class="kucuk">Göbek <b>${TRU(PAP[S.i][1])}</b> · sarı yaprak
-        <b>${TRU(S.yaprak)}</b> · zorluk <b>${ZORAD[PAP[S.i][2]]}</b> ·
+      <p class="kucuk">Göbek <b>${TRU(PAP[S.i][1])}</b> · zorluk <b>${ZORAD[PAP[S.i][2]]}</b> ·
         <b>${S.saksi.filter(Boolean).length}/12</b> saksı · <b>${TL(S.puan)}</b> puan</p>
       <div class="kural">
         <div><b>Göbek harfi</b> her kelimede olmak zorunda, diğer harfler serbest.</div>
-        <div><b>Sarı yaprak</b> hangi kelimede geçerse o kelime iki kat puan.</div>
         <div><b>🃏 Joker harf</b> papatyada olmayan bir harfin yerini tutar, puanın yarısı.</div>
         <div><b>Saksılar</b> uzunluğa göre dolar; yayında sorulmuş kelimeler saksıya,
           sözlükten bulduklarınız <b>bahçeye</b> girer.</div>
