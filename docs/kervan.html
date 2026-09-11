@@ -366,9 +366,23 @@ table.rek td.tl{text-align:right;color:var(--yesil_yazi);font-weight:800;
   text-decoration:none;cursor:pointer}
 .mnl button:active,.mnl a:active{background:rgba(127,127,127,.18)}
 .mnl i{font-style:normal;font-size:19px;width:24px;text-align:center}
-</style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
+
+/* --- menu ve ses kutusu renkleri: iki temada da net --- */
+.mnk{color:#eef2f6;border-color:rgba(255,255,255,.30);background:transparent}
+.mnl{background:#18222d;border-color:#2b3846;box-shadow:0 12px 34px rgba(0,0,0,.5)}
+.mnl button,.mnl a{color:#eef2f6}
+.sesdurum{background:rgba(24,34,45,.92);color:#95a3b2}
+:root[data-tema="gunduz"] .mnk{color:#0f1720;border-color:rgba(15,23,32,.3)}
+:root[data-tema="gunduz"] .mnl{background:#ffffff;border-color:#dde2e8;
+  box-shadow:0 12px 30px rgba(15,23,32,.18)}
+:root[data-tema="gunduz"] .mnl button,:root[data-tema="gunduz"] .mnl a{color:#0f1720}
+:root[data-tema="gunduz"] .mnl button:active,:root[data-tema="gunduz"] .mnl a:active{
+  background:rgba(15,23,32,.08)}
+:root[data-tema="gunduz"] .sesdurum{background:rgba(255,255,255,.94);color:#5b6673}
+:root[data-tema="gunduz"] .sesdurum b{color:#8a6d1f}
+</style><link rel="icon" href="fiko-32.png?v=3" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="fiko-180.png?v=2">
+<link rel="apple-touch-icon" href="fiko-180.png?v=3">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -441,15 +455,15 @@ const YOL = {
 const YOLSIRA = ["normal","uzun","tuzsuz","gece"];
 /* --- yolcu seviyesi: kalici bonuslar --- */
 const SEVIYE = [
- {p:10,  ad:"Çanta Kayışı",  ac:"Yola +25 stater fazlasıyla çıkarsın"},
+ {p:10,  ad:"Çanta Kayışı",  ac:"Yola +25 akçe fazlasıyla çıkarsın"},
  {p:30,  ad:"Yedek Matara",  ac:"Yolculuğa bir matara fazlasıyla başlarsın"},
  {p:60,  ad:"Avlu Tezgahı",  ac:"Bütün konaklarda beşinci bir ürün görünür"},
  {p:100, ad:"Yolcu İtibarı", ac:"Bütün fiyatlar %5 daha ucuz"},
- {p:150, ad:"Dolu Kese",     ac:"Yola +50 stater daha fazlasıyla çıkarsın"}
+ {p:150, ad:"Dolu Kese",     ac:"Yola +50 akçe daha fazlasıyla çıkarsın"}
 ];
-const BASLANGIC = 100;   /* yola cikarken kesedeki stater */
+const BASLANGIC = 100;   /* yola cikarken kesedeki akçe */
 const TABAN = {4:500, 5:1000, 6:2000, 7:4000};
-const AKCE  = {4:30, 5:40, 6:65, 7:90};    /* uzunluk basina stater degeri */
+const AKCE  = {4:30, 5:40, 6:65, 7:90};    /* uzunluk basina akçe degeri */
 const SUPER = 250000;
 
 /* ================= saticilar ================= */
@@ -457,7 +471,7 @@ const SATICI = [
  [ {ad:"Ramiz",  duk:"Ramiz'in Yol İşaretleri",
     rep:"Kaydını tuttum: yolun yarısındasın, borcun yok. Şimdi gel, harflere bakalım."},
    {ad:"Elif",   duk:"Elif'in Harf Tezgahı",
-    rep:"İlk harf bedava, gerisi stater. Ben de bir yerden başlamalıyım."},
+    rep:"İlk harf bedava, gerisi akçe. Ben de bir yerden başlamalıyım."},
    {ad:"Ömer",   duk:"Ömer'in İpucu Çardağı",
     rep:"Sana harf vereyim ama sırrını söylemem. Sır bu işin yarısı."},
    {ad:"Ezgi",   duk:"Ezgi'nin Sesli Çeşmesi",
@@ -559,7 +573,7 @@ const URUN = [
   kilit:{u:3}},
  {id:"ciftevurgu", ad:"Ramiz'in Çifte Vurgusu", em:"✖️", tip:"joker", han:0, fiyat:90, tek:1,
   kisa:"Bilirsen o etabın ödülü iki katı",
-  tam:"Riskli joker: etabı bilirsen ödül iki katına çıkar, bilemezsen harcadığın stater "+
+  tam:"Riskli joker: etabı bilirsen ödül iki katına çıkar, bilemezsen harcadığın akçe "+
       "boşa gider. Kolay göründüğün bir kelimede kullan.", kilit:{r:"Seri"}},
  {id:"anagram", ad:"Çağrı'nın Anagramı", em:"🔀", tip:"joker", han:0, fiyat:100, tek:1,
   agirlik:2,
@@ -576,7 +590,7 @@ const URUN = [
   kisa:"Hız primini iki katına çıkarır",
   tam:"Bonkör kese, erken bilene cömert davranır: kullanmadığın her tahmin hakkının getirdiği "+
       "hız primi ikiye katlanır. Yedi harfli bir kelimeyi ilk tahminde bilmek normalde "+
-      "360 stater hız primi getirirken bu keseyle 720 stater getirir.",
+      "360 akçe hız primi getirirken bu keseyle 720 akçe getirir.",
   kilit:null},
  {id:"tuccardili", ad:"Berna'nın Tüccar Dili", em:"🤝", tip:"yetenek", han:1, fiyat:150,
   kisa:"Bütün konaklarda %20 indirim",
@@ -584,8 +598,8 @@ const URUN = [
       "fazlasıyla amorti eder.", kilit:{r:"Hızlı"}},
  {id:"kervanbereketi", ad:"Nurdan'ın Azığı", em:"🌾", tip:"yetenek", han:1, fiyat:160,
   yigin:1,
-  kisa:"Her etap sonunda 30 stater fazla",
-  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 30 stater eklenir. "+
+  kisa:"Her etap sonunda 30 akçe fazla",
+  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 30 akçe eklenir. "+
       "Yolun başında alınırsa kalan etap sayısı kadar tekrarlanır.", kilit:{u:4}},
  {id:"saatustasi", ad:"Bülent'in Güneş Saati", em:"⌛", tip:"yetenek", han:1, fiyat:170,
   yigin:1,
@@ -630,7 +644,7 @@ const URUN = [
       "fazladan hak burada en çok işe yarar.", kilit:{r:"Beşli Ustası"}},
  {id:"cingirak", ad:"Belgin'in Çıngırağı", em:"🔔", tip:"tilsim", han:1, fiyat:135,
   kisa:"Her konakta bir kez daha ürün yenileme hakkı",
-  tam:"Normalde konakta ürünleri bir kez yenileyebilirsin (20 stater). Bu tılsımla iki kez "+
+  tam:"Normalde konakta ürünleri bir kez yenileyebilirsin (20 akçe). Bu tılsımla iki kez "+
       "yenileyebilirsin, aradığın ürünü bulma şansın artar.", kilit:null},
  {id:"nazarboncugu", ad:"Nazük'ün Nazar Boncuğu", em:"🧿", tip:"tilsim", han:2, fiyat:145,
   kisa:"Bir kez, matara kaybını engeller",
@@ -701,8 +715,8 @@ const URUN = [
   tam:"Yanlış yazdığın son tahmin tahtadan silinir ve o hak sana geri verilir. "+
       "Acele edip yanlış tuşa bastığın anlar için.", kilit:{u:4}},
  {id:"bereket", ad:"Figen'in Bereket Tohumu", em:"🌱", tip:"joker", han:0, fiyat:70, tek:1,
-  kisa:"Bu etaptan kazanacağın stater iki katı",
-  tam:"O etabın sonunda kesene girecek stater ikiye katlanır, taban, hız primi ve kalan "+
+  kisa:"Bu etaptan kazanacağın akçe iki katı",
+  tam:"O etabın sonunda kesene girecek akçe ikiye katlanır, taban, hız primi ve kalan "+
       "süre dahil. Yedi harfli bir etapta kullanmak en karlısıdır.",
   kilit:{r:"Yüzler"}},
  {id:"kestirme", ad:"Sadi Baba'nın Kestirmesi", em:"➡️", tip:"joker", han:0, fiyat:110, tek:1,
@@ -713,8 +727,8 @@ const URUN = [
  /* --- ek yetenekler --- */
  {id:"tazminat", ad:"Bülent'in Yedek Matarası", em:"💰", tip:"yetenek", han:1, fiyat:180,
   yigin:1,
-  kisa:"Matara kaybettiğinde 150 stater tazminat",
-  tam:"Bir etabı bilemeyip matara kaybettiğinde kesene 150 stater girer. Kaybı paraya "+
+  kisa:"Matara kaybettiğinde 150 akçe tazminat",
+  tam:"Bir etabı bilemeyip matara kaybettiğinde kesene 150 akçe girer. Kaybı paraya "+
       "çeviren yetenek: kötü giden yolculuklarda konakta yine alışveriş yapabilirsin.",
   kilit:{u:5}},
  {id:"sayac", ad:"Nurdan'ın Yol Defteri", em:"📋", tip:"yetenek", han:1, fiyat:200,
@@ -723,8 +737,8 @@ const URUN = [
       "olduğunu gösterir. Az adaylı bir harf geldiğinde riski bilerek oynarsın.",
   kilit:{u:6}},
  {id:"sarraf", ad:"Berna'nın Sarrafı", em:"⚖️", tip:"yetenek", han:1, fiyat:230,
-  kisa:"Yolculuk sonunda devreden stater iki katı",
-  tam:"Yolculuk bittiğinde kesende kalan staterin bir sonraki yolculuğa devreden kısmı "+
+  kisa:"Yolculuk sonunda devreden akçe iki katı",
+  tam:"Yolculuk bittiğinde kesende kalan akçenin bir sonraki yolculuğa devreden kısmı "+
       "ikiye katlanır. Uzun vadede en karlı yetenek; erken alınırsa kendini katlar.",
   kilit:{r:"Programlı"}},
  /* --- ek tilsimlar --- */
@@ -735,8 +749,8 @@ const URUN = [
       "etaplarda her tahmin için 10 saniye daha verir.", kilit:{r:"Yedi Sütun"}},
  {id:"pesin", ad:"Sevilen'in Peşin Ödemesi", em:"💵", tip:"tilsim", han:2, fiyat:175,
   yigin:1,
-  kisa:"Her bölüm başında 120 stater",
-  tam:"Her bölüme girerken kesene 120 stater eklenir. Yolun başında alınırsa kalan bölüm "+
+  kisa:"Her bölüm başında 120 akçe",
+  tam:"Her bölüme girerken kesene 120 akçe eklenir. Yolun başında alınırsa kalan bölüm "+
       "sayısı kadar tekrarlanır, konaklarda alışverişi rahatlatır.", kilit:{u:7}},
  /* --- ek efsanevi --- */
  {id:"ciftyurek", ad:"Mehmet'in Çifte Matarası", em:"💗", tip:"efsane", han:3, fiyat:320,
@@ -793,8 +807,8 @@ const URUN = [
   kilit:{r:"Uzun Seri"}},
  {id:"boncukdizi", ad:"Nazük'ün Boncuk Dizisi", em:"📿", tip:"tilsim", han:2, fiyat:180,
   yigin:1,
-  kisa:"Mataran tamsa her bölüm başında 200 stater",
-  tam:"Yeni bir bölüme girerken hiç matara kaybetmemişsen kesene 200 stater eklenir. "+
+  kisa:"Mataran tamsa her bölüm başında 200 akçe",
+  tam:"Yeni bir bölüme girerken hiç matara kaybetmemişsen kesene 200 akçe eklenir. "+
       "Temiz oynamanın ödülü.", kilit:{r:"İstikrar"}}
 ,
  /* --- Melek Hatun'un mallari --- */
@@ -813,8 +827,8 @@ const URUN = [
   tam:"Tahtaya iki satır birden eklenir. Beş hak bitmek üzereyken etabı kurtarmanın "+
       "en hızlı yolu.", kilit:{u:4}},
  {id:"mKese", ad:"Melek Hatun'un Kesesi", em:"👛", tip:"yetenek", han:1, fiyat:165, yigin:1,
-  kisa:"Her etap sonunda 50 stater fazla",
-  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 50 stater eklenir. "+
+  kisa:"Her etap sonunda 50 akçe fazla",
+  tam:"Etabı bilsen de bilemesen de her etap sonunda kesene 50 akçe eklenir. "+
       "Birden fazla alabilirsin, etkisi toplanır.", kilit:null},
  {id:"mBereket", ad:"Melek Hatun'un Bereketi", em:"🌾", tip:"yetenek", han:1, fiyat:240,
   kisa:"Bütün ödüller %15 fazla",
@@ -843,8 +857,8 @@ const URUN = [
   tam:"Keskin Göz yalnızca ilk tahminden sonra çalışır; ayna her yanlış tahminden "+
       "sonra kelimede olmayan bir harfi klavyede karartır.", kilit:{r:"Usta Nişancı"}},
  {id:"mBilezik", ad:"Melek Hatun'un Bileziği", em:"💫", tip:"tilsim", han:2, fiyat:175,
-  kisa:"Kalan süre priminin stateri iki katı",
-  tam:"Etap sonunda kalan her saniye için aldığın stater ikiye katlanır. Hızlı "+
+  kisa:"Kalan süre priminin akçeyi iki katı",
+  tam:"Etap sonunda kalan her saniye için aldığın akçe ikiye katlanır. Hızlı "+
       "oynayanların tılsımı.", kilit:null},
  {id:"mSal", ad:"Melek Hatun'un Şalı", em:"🧣", tip:"tilsim", han:2, fiyat:245, yigin:1,
   kisa:"6 ve 7 harfli etaplarda bir tahmin hakkı daha",
@@ -1324,7 +1338,7 @@ function etapBasla(zorlaKelime){
         } else mataraNotu = "Bir mataran boşaldı.";
         if(kac("tazminat")){ const tz = kac("tazminat") * 150;
           S.akce += tz; akce += tz;
-          mataraNotu += ` 💰 Yedek matara ${TL(tz)} stater ödedi.`; }
+          mataraNotu += ` 💰 Yedek matara ${TL(tz)} akçe ödedi.`; }
       }
     }
     S.etap++;
@@ -1345,11 +1359,11 @@ function etapBasla(zorlaKelime){
         ${TANIM[gizli] ? `<p class="kucuk" style="margin-top:8px">${TANIM[gizli]}</p>` : ""}
         <div class="ozet">
           <div><b>₺${TL(kazanc)}</b><span>ödül</span></div>
-          <div><b>${TL(akce)}</b><span>stater</span></div>
+          <div><b>${TL(akce)}</b><span>akçe</span></div>
           <div><b>${S.seri}</b><span>seri</span></div>
           <div><b>${S.kalp}</b><span>matara</span></div>
         </div>
-        <p class="kucuk">Stater dökümü: ${n} harfli taban <b>${birim}</b>${
+        <p class="kucuk">Akçe dökümü: ${n} harfli taban <b>${birim}</b>${
           hizPrimi ? ` · ${hak}. tahminde bildin, hız primi <b>+${TL(hizPrimi)}</b>` : ""}${
           sureAkce ? ` · kalan süre <b>+${TL(sureAkce)}</b>` : ""}${
           sahipmi("kervanbereketi") ? ` · azık <b>+30</b>` : ""}${
@@ -1531,7 +1545,7 @@ function etapBasla(zorlaKelime){
         uyar("Son tahmin geri alındı"); }
     } else if(id === "bereket"){
       if(akceCift) oldu = false;
-      else { akceCift = true; uyar("Bu etabın stateri iki katı"); }
+      else { akceCift = true; uyar("Bu etabın akçeyi iki katı"); }
     } else if(id === "kestirme"){
       S.jok[id]--; if(!S.jok[id]) delete S.jok[id];
       bitti = true; durdur(); sureGoster(false);
@@ -1610,11 +1624,11 @@ function bolumGiris(b){
   let pesinNot = "";
   if(kac("pesin")){ const pz = kac("pesin") * 120; S.akce += pz;
     pesinNot = `<p class="kucuk">💵 Sevilen'in Peşin Ödemesi: kesene
-      <b>${TL(pz)} stater</b> eklendi.</p>`; }
+      <b>${TL(pz)} akçe</b> eklendi.</p>`; }
   if(kac("boncukdizi") && S.kalp >= S.maxKalp){ const bz = kac("boncukdizi") * 200;
     S.akce += bz;
     pesinNot += `<p class="kucuk">📿 Nazük'ün Boncuk Dizisi: mataran tam,
-      kesene <b>${TL(bz)} stater</b> eklendi.</p>`; }
+      kesene <b>${TL(bz)} akçe</b> eklendi.</p>`; }
   kaydet();
   const bl = BL(b), carp = (bl.carpan * YY().carpan).toFixed(2)
     .replace(/0+$/,"").replace(/\.$/,"").replace(".",",");
@@ -1634,7 +1648,7 @@ function yolEkran(){
   ekran(`<div class="kutu">
       <div class="eyebrow">${YY().em} ${YY().ad}</div>
       <h2>${KISI} · yolun ${S.etap}/${TOPETAP()}</h2>
-      <p class="kucuk">Kese <b>🪙 ${TL(S.akce)} stater</b> · birikim <b>₺${TL(S.para)}</b> ·
+      <p class="kucuk">Kese <b>🪙 ${TL(S.akce)} akçe</b> · birikim <b>₺${TL(S.para)}</b> ·
         matara <b>${S.kalp}/${S.maxKalp}</b>${S.seri > 1 ? ` · seri <b>${S.seri}</b>` : ""}</p>
       <button class="buton" onclick="ilerle()">DEVAM ET ▸</button>
       <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
@@ -1875,7 +1889,7 @@ function hanEkran(h){
         <span class="em">${u.em}</span>
         <span class="gv"><b>${u.ad}</b><span>${u.kisa}</span></span>
         <span class="fy">${kilitliMi ? "🔒" : TL(f)}<em>${
-          kilitliMi ? "kilitli" : (indirim ? "kredi" : "stater")}</em></span>
+          kilitliMi ? "kilitli" : (indirim ? "kredi" : "akçe")}</em></span>
       </button>
       <div class="ac gizli" id="a_${id}">
         <p><span class="etiket ${u.tip}">${
@@ -1890,8 +1904,8 @@ function hanEkran(h){
             ? `<p class="kucuk" style="color:var(--yesil_yazi)">Bu ürün sende zaten var.</p>`
             : `<button class="buton" ${S.akce < f ? "disabled" : ""}
                 onclick="satinAl('${id}')">${S.akce < f
-                  ? `${TL(f)} stater gerekiyor, kesende ${TL(S.akce)} var`
-                  : `SATIN AL · ${TL(f)} stater`}</button>`)}
+                  ? `${TL(f)} akçe gerekiyor, kesende ${TL(S.akce)} var`
+                  : `SATIN AL · ${TL(f)} akçe`}</button>`)}
       </div></div>`;
   };
   const yenHak = 1 + (sahipmi("cingirak") ? 1 : 0);
@@ -1905,15 +1919,15 @@ function hanEkran(h){
       </div>
       <p class="hikaye" style="margin-top:10px">“${sat.rep}”</p>
       ${ilk ? `<p class="ozet1">Yol henüz başlamadı. Kesende
-        <b>🪙 ${TL(S.akce)} stater</b> var: <b>ilk alışverişini burada yap</b>, sonra
+        <b>🪙 ${TL(S.akce)} akçe</b> var: <b>ilk alışverişini burada yap</b>, sonra
         ilk bölüme geçilecek. Bir şey almadan da devam edebilirsin.</p>`
-        : `<p class="kucuk">Kesende <b>🪙 ${TL(S.akce)} stater</b> var. Ürüne dokunursan
+        : `<p class="kucuk">Kesende <b>🪙 ${TL(S.akce)} akçe</b> var. Ürüne dokunursan
         ne işe yaradığını ve nasıl açıldığını okursun.${h > 0 ?
         " Bu konakta <b>önceki konakların malları da</b> tezgahta." : ""}</p>`}
       ${S.stok.urun.map(id => kart(id, false)).join("")}
       ${S.stok.kilitli ? kart(S.stok.kilitli, true) : ""}
       <button class="buton ikinci" ${S.yenileme >= yenHak || S.akce < 20 ? "disabled" : ""}
-        onclick="yenile(${h})">🔄 ÜRÜNLERİ YENİLE · 20 stater
+        onclick="yenile(${h})">🔄 ÜRÜNLERİ YENİLE · 20 akçe
         (${yenHak - S.yenileme} hak)</button>
       <button class="buton ikinci" onclick="envanterEkran()">🎒 ENVANTERİM</button>
       <button class="buton" onclick="handanCik(${h})">${
@@ -1929,7 +1943,7 @@ window.urunAc = function(id){
 };
 window.satinAl = function(id){
   const u = URUNID[id], f = fiyat(u);
-  if(S.akce < f) return uyar("Stater yetmiyor");
+  if(S.akce < f) return uyar("Akçe yetmiyor");
   S.akce -= f;
   if(u.tek) S.jok[id] = (S.jok[id] || 0) + 1;
   else {
@@ -1949,7 +1963,7 @@ window.satinAl = function(id){
   if(S.stok) hanEkran(S.stok.h);
 };
 window.yenile = function(h){
-  if(S.akce < 20) return uyar("Stater yetmiyor");
+  if(S.akce < 20) return uyar("Akçe yetmiyor");
   S.akce -= 20; const y = S.yenileme + 1; stokKur(h); S.yenileme = y;
   kaydet(); hanEkran(h);
 };
@@ -1992,7 +2006,7 @@ function katalogEkran(){
             <span class="em">${u.em}</span>
             <span class="gv"><b>${u.ad}</b><span>${u.kisa}</span></span>
             <span class="fy">${k.acik ? TL(fiyat(u)) : "🔒"}<em>${
-              k.acik ? "stater" : "kilitli"}</em></span></button>
+              k.acik ? "akçe" : "kilitli"}</em></span></button>
           <div class="ac gizli" id="a_k${u.id}">
             <p><span class="etiket ${u.tip}">${
               u.tip === "joker" ? "Joker · tek kullanım" :
@@ -2074,7 +2088,7 @@ function yolculukIsle(){
   else if(sahipmi("kupasuyu")) toplam = S.para * 2;
   else toplam = S.para;
 
-  /* 1 · kese devri: kalan staterin %10'u, basarili bitirdiyse %25 */
+  /* 1 · kese devri: kalan akçenin %10'u, basarili bitirdiyse %25 */
   const oran = (kazandi ? 0.25 : 0.10) * (sahipmi("sarraf") ? 2 : 1);
   M.devirAkce = Math.round(S.akce * oran / 5) * 5;
   /* 3 · konak kredisi: yarida kalan yolculukta alinan kalici urunler sonrakinde yarim fiyat */
@@ -2155,8 +2169,8 @@ function sonEkran(){
 
       <p class="eyebrow" style="margin-top:14px">Sonraki yolculuğa kalanlar</p>
       <div class="devir">
-        ${dv("🪙", TL(M.devirAkce) + " stater",
-          `kesende kalan ${TL(S.akce)} staterin %${kazandi ? 25 : 10}'i`)}
+        ${dv("🪙", TL(M.devirAkce) + " akçe",
+          `kesende kalan ${TL(S.akce)} akçenin %${kazandi ? 25 : 10}'i`)}
         ${M.bonusKalp ? dv("💧", "+" + M.bonusKalp + " matara",
           "başarılı yolculuk ödülü, sonraki yola fazladan matarayla çıkarsın") : ""}
         ${M.hediye ? dv(URUNID[M.hediye].em, URUNID[M.hediye].ad,
@@ -2195,7 +2209,7 @@ function yolSecEkran(){
   ekran(`<div class="kutu">
       <div class="eyebrow">Hangi yoldan?</div>
       <h2>Yolunu seç</h2>
-      <p class="kucuk">Kesede <b>🪙 ${TL(bas)} stater</b> ile yola çıkacaksın${
+      <p class="kucuk">Kesede <b>🪙 ${TL(bas)} akçe</b> ile yola çıkacaksın${
         M.devirAkce ? ` (${TL(M.devirAkce)}'i geçen yolculuktan devretti)` : ""}.
         ${M.bonusKalp ? `Başarı ödülü olarak <b>+${M.bonusKalp} matara</b> ` : ""}${
         M.hediye ? `${M.bonusKalp ? "ve " : ""}<b>${URUNID[M.hediye].ad}</b> hediyesi ` : ""}${
@@ -2258,7 +2272,7 @@ function girisEkran(){
           <span>${YY().bolumler.length} durak, her birinde 4·5·6·7 harfli birer kelime</span></div>
         <div><div class="em">💧💧💧</div><b>${S.maxKalp} matara</b>
           <span>beş tahmin de biterse biri boşalır</span></div>
-        <div><div class="em">🪙</div><b>Stater</b>
+        <div><div class="em">🪙</div><b>Akçe</b>
           <span>erken bilirsen artar; konakta joker alırsın</span></div>
         <div><div class="em">🗿</div><b>Yazıt</b>
           <span>son taşı çözersen ödül iki katı + ₺${TL(SUPER)}</span></div>
@@ -2296,7 +2310,7 @@ window.sifirla = function(){
   ekran(`<div class="kutu ort">
       <h2>Emin misin?</h2>
       <p class="kucuk">Aynı anda tek yolculuk tutuluyor. Yenisine başlarsan
-        ${S.etap}. etaptaki bu yolculuk, kesendeki <b>${TL(S.akce)} stater</b> ve
+        ${S.etap}. etaptaki bu yolculuk, kesendeki <b>${TL(S.akce)} akçe</b> ve
         <b>₺${TL(S.para)}</b> birikim silinir. Yol defteri ve nişanlar kalır.</p>
       <button class="buton" onclick="yolSecEkran()">EVET, YENİ YOLCULUK</button>
       <button class="buton ikinci" onclick="devamEkran()">VAZGEÇ</button>

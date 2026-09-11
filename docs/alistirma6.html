@@ -476,9 +476,23 @@ input.adg{width:100%;background:var(--r9515_zemin);border:1.5px solid var(--cizg
 #klavye button{height:var(--tush);font-size:clamp(17px,2.5vh,22px);border-radius:8px}
 #klavye .sr{margin-bottom:5px}
 #klavye button.gnis,#klavye button.dar{font-size:clamp(12.5px,1.7vh,15px)}
-</style><link rel="icon" href="fiko-32.png?v=2" sizes="32x32">
+
+/* --- menu ve ses kutusu renkleri: iki temada da net --- */
+.mnk{color:#eef2f6;border-color:rgba(255,255,255,.30);background:transparent}
+.mnl{background:#18222d;border-color:#2b3846;box-shadow:0 12px 34px rgba(0,0,0,.5)}
+.mnl button,.mnl a{color:#eef2f6}
+.sesdurum{background:rgba(24,34,45,.92);color:#95a3b2}
+:root[data-tema="gunduz"] .mnk{color:#0f1720;border-color:rgba(15,23,32,.3)}
+:root[data-tema="gunduz"] .mnl{background:#ffffff;border-color:#dde2e8;
+  box-shadow:0 12px 30px rgba(15,23,32,.18)}
+:root[data-tema="gunduz"] .mnl button,:root[data-tema="gunduz"] .mnl a{color:#0f1720}
+:root[data-tema="gunduz"] .mnl button:active,:root[data-tema="gunduz"] .mnl a:active{
+  background:rgba(15,23,32,.08)}
+:root[data-tema="gunduz"] .sesdurum{background:rgba(255,255,255,.94);color:#5b6673}
+:root[data-tema="gunduz"] .sesdurum b{color:#8a6d1f}
+</style><link rel="icon" href="fiko-32.png?v=3" sizes="32x32">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="fiko-180.png?v=2">
+<link rel="apple-touch-icon" href="fiko-180.png?v=3">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
