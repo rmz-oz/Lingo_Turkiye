@@ -198,7 +198,7 @@ header{padding-top:calc(11px + env(safe-area-inset-top,0px))}
 <header><a class="geri" href="index.html" aria-label="Ana sayfa">←</a><b>Sertifika</b></header>
 <div class="sar" id="alan"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="rozet.js?v=6"></script>
+<script src="rozet.js?v=7"></script>
 <script>
 const $ = s => document.querySelector(s);
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -314,10 +314,20 @@ const METIN = {
   {g:"Bu sertifika, programın tamamını bitirerek bu uzun hazırlığın sonuna ulaşan ve artık yarışma gününü beklemekten başka işi kalmayan",
    a:"adına, {kelime} kelime çözdükten sonra “asıl iş şimdi başlıyor” dediği için düzenlenmiştir."} ]
 };
-/* kisi + kademe sabit secim, her yuz kelimede bir sonraki metne gecer */
-function metinSec(tip, kelime){
+/* baski sayaci: her bastirmada bir sonraki metin gelir, on baskida tur tamamlanir */
+function sayacAnahtar(){ return "lingo_sert_" + KISI; }
+function sayacOku(){
+  try{ const o = JSON.parse(localStorage.getItem(sayacAnahtar()) || "{}");
+       return (o && typeof o === "object") ? o : {}; }catch(e){ return {}; }
+}
+function sayacArtir(tip){
+  const o = sayacOku(); o[tip] = (o[tip] || 0) + 1;
+  try{ localStorage.setItem(sayacAnahtar(), JSON.stringify(o)); }catch(e){}
+}
+/* baslangic kisiye ozel: Serpil ile Zeynep ayni kademede ayni metni almaz */
+function metinSec(tip){
   const L = METIN[tip];
-  return L[(karma(KISI + "·" + tip) + Math.floor((kelime || 0) / 100)) % L.length];
+  return L[(karma(KISI + "·" + tip) + (sayacOku()[tip] || 0)) % L.length];
 }
 function metinDoldur(s, kelime){
   return String(s).replace(/\{kelime\}/g, (kelime || 0).toLocaleString("tr-TR"));
@@ -393,6 +403,18 @@ function adBlok(ad){
     <div class="ad adYazi" style="font-size:${fs}pt">${ad}</div>`;
 }
 
+/* --- baski sonrasi: bir dahaki sefere baska metin gelsin --- */
+let AKTIF = null;
+function bastirildi(){
+  if(!AKTIF) return;
+  sayacArtir(AKTIF);
+  setTimeout(() => { ciz(); }, 1200);
+}
+window.yazdir = function(){
+  window.print();
+  bastirildi();
+};
+
 /* --- sertifikayi yuksek cozunurluklu resme cevir --- */
 const PNGEN = 2400;                     /* uzun kenar · A4 yatayda ~205 dpi */
 async function pngYap(mod){
@@ -435,6 +457,7 @@ async function pngYap(mod){
       a.href = u; a.download = dosya; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(u), 4000);
     }
+    bastirildi();
   }catch(e){
     if(!(e && e.name === "AbortError")) uyar("Resim yapılamadı: " + ((e&&e.message)||e));
   }finally{
@@ -471,8 +494,10 @@ function sertifika(K, d, ra){
   const t = new Date();
   const gun = String(t.getDate()).padStart(2,"0");
   const tarih = gun+" "+AYLAR[t.getMonth()]+" "+t.getFullYear();
-  const nis = ra.slice(0,7).map(r=>`<span>${r.a}</span>`).join("")
-    + (ra.length > 7 ? `<span class="artik">+${ra.length - 7}</span>` : "");
+  /* nisan seridi: kazanilanlarin en zor yedisi, kolaylar degil */
+  const zorlu = (typeof LG_zorSirali === "function" ? LG_zorSirali(KISI) : ra);
+  const nis = zorlu.slice(0,7).map(r=>`<span>${r.a}</span>`).join("")
+    + (zorlu.length > 7 ? `<span class="artik">+${zorlu.length - 7}</span>` : "");
   const stil = `--kagit:${K.kagit};--kagit2:${K.kagit2};--ink:${K.ink};--metal:${K.metal};
     --metalK:${K.metalK};--metalA:${K.metalA};--soluk2:${K.soluk};--yumusak:${K.metal}22;
     background:${K.kagit}`;
@@ -487,7 +512,7 @@ function sertifika(K, d, ra){
 
   let ic, sus, taban;
   if(K.tip === "altin"){
-    const A = metinSec("altin", d.length);
+    const A = metinSec("altin");
     sus = `<div class="cerceve"></div><div class="cerceve2"></div>
       ${KOSE("tl")}${KOSE("tr")}${KOSE("bl")}${KOSE("br")}`;
     ic = `<div class="eyebrow">${TRU("Lingo Türkiye · Hazırlık Programı")}</div>
@@ -499,12 +524,12 @@ function sertifika(K, d, ra){
       <div class="unvan">${TRU(U.simdi.ad)}</div>
       ${ist}
       <p class="giris kucukAlt">${metinDoldur(A.a, d.length)}</p>
-      <div class="nisanBas" style="margin-top:auto">${TRU("Başlıca Nişanlar")}</div>
+      <div class="nisanBas" style="margin-top:auto">${TRU("En Zor Nişanlar")} · ${zorlu.length}</div>
       <div class="nisan">${nis}</div>`;
     taban = `<div class="imzaBlok"><div class="tarihBuyuk">${tarih}</div>
       <div class="cizgiA"></div><div class="kim">${TRU("Düzenleme tarihi")}</div></div>${imza}`;
   } else {
-    const L = metinSec(K.tip, d.length);
+    const L = metinSec(K.tip);
     const adH = K.tip === "gumus"
       ? `<div class="defneSar">${DAL("")}
           <div class="adSar"><div class="ad defneAd"
@@ -518,7 +543,7 @@ function sertifika(K, d, ra){
       ${adH}
       <div class="lakap">${TRU(L.l)}</div>
       <p class="giris">${metinDoldur(L.g, d.length)}</p>
-      <div class="nisanBas">${TRU("Kazanılan Nişanlar")} · ${ra.length}</div>
+      <div class="nisanBas">${TRU("En Zor Nişanlar")} · ${zorlu.length}</div>
       <div class="nisan">${nis}</div>
       ${ist}
       <p class="dipnot">${metinDoldur(L.d, d.length)}</p>`;
@@ -562,12 +587,13 @@ function ciz(){
       onclick="kademeSec('${x.tip}')"><i>${x.em}</i><b>${x.ad}</b>
       <u>${acik ? (sec ? "seçili" : "bas") : kalan + " kelime daha"}</u></button>`;
   }).join("")}</div>`;
+  AKTIF = kad.tip;
   $("#alan").innerHTML = secErit + kadSec + sertifika(kad, d, ra) +
     `<button class="buton" id="pngbtn" onclick="pngYap('paylas')">
        📷 RESİM OLARAK KAYDET / PAYLAŞ</button>
      <p class="not">WhatsApp'ta en iyi görünen budur: yüksek çözünürlüklü tek bir
        resim. Telefonda paylaşma menüsü açılır, bilgisayarda dosya olarak iner.</p>
-     <button class="buton ikinci" onclick="window.print()">🖨 PDF olarak yazdır</button>
+     <button class="buton ikinci" onclick="yazdir()">🖨 PDF olarak yazdır</button>
      <p class="not">Yazdır ekranında <b>hedef: PDF olarak kaydet</b>, <b>yön: yatay</b>,
        <b>arka plan grafikleri: açık</b> seçin.</p>` +
     `<p class="not">Kazandığın her kademeyi istediğin zaman, <b>o günkü güncel
