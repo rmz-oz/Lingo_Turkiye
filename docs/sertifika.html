@@ -224,16 +224,104 @@ const KADEME = [
   kagit:"#FDF8F1", kagit2:"#F1E2CE", ink:"#231A11", metal:"#A9662F",
   metalK:"#7B4A20", metalA:"#E2C29B", soluk:"#7C6349"}
 ];
-const LAKAP = {
-  gumus:["Harfleri yerine koyma sanatçısı",
-   "Yanlış yerdeki sarı harfleri doğru yerine koyarken gösterdiği zarafet, izleyenler "+
-   "tarafından sanat olarak nitelendirilmiştir.",
-   "Eserler kalıcı değildir; her tur yeniden üretilir."],
-  bronz:["Bu evde artık herkes “neden olmasın” diyor",
-   "Bir zamanlar “bu kelime çıkmaz” diyenler, artık her kelimeyi denemeye değer buluyor. "+
-   "Bu iyimserliğin kaynağı, tahtanın karşısında geçirilen saatlerdir.",
-   "“Neden olmasın” demenin bedeli: bir kelime daha, bir tur daha."]
+/* isimden sabit sayi uretir, secim her acilista ayni kalsin diye */
+function karma(s){ let h = 2166136261;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return Math.abs(h); }
+/* Sertifika metinleri: kisiye ve kademeye gore degisir, on ayri kurgu. */
+const METIN = {
+ bronz:[
+  {l:"Bu evde artık herkes “neden olmasın” diyor",
+   g:"Bir zamanlar “bu kelime çıkmaz” diyenler, artık her kelimeyi denemeye değer buluyor. Bu iyimserliğin kaynağı, tahtanın karşısında geçirilen saatlerdir.",
+   d:"“Neden olmasın” demenin bedeli: bir kelime daha, bir tur daha."},
+  {l:"Tahtanın karşısına korkusuzca oturan",
+   g:"Harfleri tek tek sayanlardan değildir; boş kutuları görür görmez bir kelime dener. Cesaretin doğru cevaptan önce geldiği, {kelime} kelimede kanıtlanmıştır.",
+   d:"İlk tahmin tutmazsa ikincisi hazırdır, üçüncüsü zaten aklına gelmiştir."},
+  {l:"Dört harflinin tadını almış olan",
+   g:"Dört harfli kelimelerde tereddüt kalmadı; sarı harfi görür görmez yerini değiştiriyor. Beş harfliye geçmek için gereken tek şey bir tur daha.",
+   d:"Dört harften beşe geçmek harf meselesi değil, alışkanlık meselesidir."},
+  {l:"Kahveden önce bir tur atan kişi",
+   g:"Günün ilk kelimesi kahveden önce, ikincisi kahve soğumadan çözülür. Bu programın en verimli saatleri, evin en sessiz saatleri oldu.",
+   d:"Kahve soğur, tahta soğumaz."},
+  {l:"“Bir tur daha” diyenlerin başı",
+   g:"Oyunun biteceği saat baştan bellidir, ama hiçbir zaman o saatte bitmez. Ekranda kalan son kelime, hep bir sonrakini davet eder.",
+   d:"Son tur diye bir şey yoktur, sondan bir önceki tur vardır."},
+  {l:"Yanlış cevaba da gülebilen nadir insan",
+   g:"Tutmayan tahminler burada utanç değil, yol gösterici sayılır; hangi harfin nerede olmadığını öğrenmek de bilgidir. {kelime} kelime böyle birikti.",
+   d:"Yanlış harf, doğru harfin adresini verir."},
+  {l:"İlk iki yüz elli kelimenin sahibi",
+   g:"Bu rakam, televizyonda kolay görünen işin aslında sabır istediğini bilenlerin rakamıdır. İlk iki yüz elli kelime, en zor olanlarıdır.",
+   d:"Başlangıç sayılan bu rakam, çoğu kişinin hiç ulaşamadığı yerdir."},
+  {l:"Pas demeyi öğrenmiş olan",
+   g:"Bilmediği kelimede inat etmek yerine sırayı devretmeyi bilir; kaybedilen saniye, kazanılan turdan daha ucuzdur. Bu da bir taktiktir.",
+   d:"Pas demek vazgeçmek değil, doğru zamanı beklemektir."},
+  {l:"Ekrandan önce cevabı söyleyen",
+   g:"Kelime tahtada belirmeden evin içinde çoktan söylenmiş olur; sunucudan hızlı çıkan sesin sahibi artık belli. Kanıtı {kelime} kelimedir.",
+   d:"Televizyonun sesini kısmanın sebebi budur."},
+  {l:"Bu işin kolayına kaçmayan",
+   g:"Joker beklemek yerine kelimeyi arar, ipucu gelmeden tahtayı okumaya çalışır. Zor yoldan öğrenilen kelime, akılda daha uzun kalır.",
+   d:"Kolay gelen kelime çabuk gider, zor bulunan kalır."} ],
+ gumus:[
+  {l:"Harfleri yerine koyma sanatçısı",
+   g:"Yanlış yerdeki sarı harfleri doğru yerine koyarken gösterdiği zarafet, izleyenler tarafından oyunun bir parçası değil, sanat olarak nitelendirilmiştir.",
+   d:"Eserler kalıcı değildir; her tur yeniden üretilir."},
+  {l:"Bin kelimeyi geride bırakan",
+   g:"Bu noktadan sonra kelime aramak değil, kelimeyi hatırlamak söz konusudur. Arşivin büyük kısmı artık tanıdık bir yüz gibi karşılıyor.",
+   d:"Bin kelime, tahtanın karşısında geçmiş yüzlerce sessiz dakikadır."},
+  {l:"Açılış ikilisini ezbere bilen",
+   g:"Turun ilk iki kelimesi düşünülerek değil, refleksle yazılır; harf eleme işi daha oyunun başında bitmiştir. Gerisi yalnızca dikkat ister.",
+   d:"İyi bir açılış, kelimenin yarısını daha ilk satırda söyler."},
+  {l:"Altı harflide gözü kararmayan",
+   g:"Uzun kelimeler çoğu oyuncuyu ürkütür, burada tam tersi olur; kutular arttıkça ihtimaller azalır ve doğru cevap kendiliğinden görünür hale gelir.",
+   d:"Altı harfli kelime, dört harflinin uzunudur, zoru değil."},
+  {l:"Sarı harfin dilinden anlayan",
+   g:"Sarı harf çoğu kişi için uyarıdır, burada davettir; harfin bulunduğu yer değil, hangi harfle komşu olduğu aranır. {kelime} kelime bu yöntemle çözüldü.",
+   d:"Harfin kendisi kadar, hangi harfle yan yana durduğu da bilgidir."},
+  {l:"Süre bitmeden bitiren",
+   g:"Saniyeler azalırken yavaşlamak yerine hızlanan ender oyunculardandır; baskı altında kelime bulmak, sakin kafayla bulmaktan çok daha zordur.",
+   d:"Son on saniye, çözülen kelimenin en kıymetli kısmıdır."},
+  {l:"Zor bölümlerin sessiz kahramanı",
+   g:"Herkesin takılıp kaldığı bölümlerde ekranın karşısından kalkmayan, cevabı yayın bittikten sonra bile aramaya devam eden kişidir.",
+   d:"Zor bölüm, iyi oyuncunun kendini gösterdiği yerdir."},
+  {l:"Kelimeyi ikinci satırda gören",
+   g:"İlk tahmin bilgi toplamak içindir, ikinci tahminde ise elde yeterli veri birikmiş olur. Bu düzen {kelime} kelime boyunca hiç bozulmadan işledi.",
+   d:"İlk satır soru, ikinci satır cevaptır."},
+  {l:"Tahtayı okumayı bilen kişi",
+   g:"Boş kutulara bakıp hangi harfin oraya sığmayacağını görmek, bu oyunun en az konuşulan ama en çok işe yarayan becerisi olarak kabul edilir.",
+   d:"Tahtada olmayan harfler, olanlar kadar yol gösterir."},
+  {l:"Bin kelimelik sabrın sahibi",
+   g:"Bu sertifika hızın değil, devam etmenin belgesidir; aynı saatte, aynı ekranın karşısında oturup bir tur daha demenin toplamından ibarettir.",
+   d:"Sabır, bu oyunda en sık kazanan harf dizilimidir."} ],
+ altin:[
+  {g:"Bu sertifika, şu ana kadar yayınlanmış bütün bölümlerin cevap arşivinden hazırlanan çalışma programını baştan sona, eksiksiz biçimde tamamlayan",
+   a:"adına, {kelime} kelime çözmüş olmasına rağmen hala “ben pek bilmiyorum” dediği için düzenlenmiştir."},
+  {g:"Bu sertifika, arşivdeki bütün bölümleri tek tek çalışıp programın en sonuna kadar giden ve yol boyunca hiçbir kademeyi atlamadan ilerleyen",
+   a:"adına, {kelime} kelimenin ardından hala “bugün bir tur daha yaparım” dediği için düzenlenmiştir."},
+  {g:"Bu sertifika, dört harfliden yedi harfliye kadar bütün uzunlukları bitiren, çalışma programında eksik tek bir bölüm dahi bırakmayan",
+   a:"adına, {kelime} kelime boyunca kimseye danışmadan, kendi başına çalıştığı için düzenlenmiştir."},
+  {g:"Bu sertifika, yayınlanmış bölümlerin tamamını çalışarak bu evdeki en yüksek kademeye ulaşan ve rekoru kimseye kaptırmadan elinde tutan",
+   a:"adına, {kelime} kelimeyi bitirdikten sonra bile arşivi yeniden açtığı için düzenlenmiştir."},
+  {g:"Bu sertifika, programın başından sonuna kadar hiç ara vermeden çalışan, en zor bölümlerde bile aynı sabrı ve dikkati gösterebilen",
+   a:"adına, {kelime} kelime çözerek bu işin şansla olmadığını kanıtladığı için düzenlenmiştir."},
+  {g:"Bu sertifika, cevap arşivinin tamamını gözden geçirip programda kendisine ayrılan her bölümü zamanında ve eksiksiz olarak tamamlayan",
+   a:"adına, {kelime} kelimenin hepsini tahtanın karşısında tek tek yazdığı için düzenlenmiştir."},
+  {g:"Bu sertifika, yayındaki bütün bölümleri bitirmekle kalmayıp yeni bölüm gelene kadar eskilerini baştan tekrar etmeyi alışkanlık edinen",
+   a:"adına, {kelime} kelimeden sonra hala yeni bir kelime öğrenmeyi beklediği için düzenlenmiştir."},
+  {g:"Bu sertifika, çalışma programını eksiksiz tamamlayarak evin geri kalanına hem örnek hem de karşısına çıkması güç bir rakip olan",
+   a:"adına, {kelime} kelimeyi bitirip sıradakine geçme telaşı gösterdiği için düzenlenmiştir."},
+  {g:"Bu sertifika, arşivdeki her kelimeyi görmüş, unuttuklarını not edip geri dönerek yeniden çalışmış ve hepsini yerine oturtmuş olan",
+   a:"adına, {kelime} kelimenin ardından tahtayı hala ilk günkü gibi okuduğu için düzenlenmiştir."},
+  {g:"Bu sertifika, programın tamamını bitirerek bu uzun hazırlığın sonuna ulaşan ve artık yarışma gününü beklemekten başka işi kalmayan",
+   a:"adına, {kelime} kelime çözdükten sonra “asıl iş şimdi başlıyor” dediği için düzenlenmiştir."} ]
 };
+/* kisi + kademe sabit secim, her yuz kelimede bir sonraki metne gecer */
+function metinSec(tip, kelime){
+  const L = METIN[tip];
+  return L[(karma(KISI + "·" + tip) + Math.floor((kelime || 0) / 100)) % L.length];
+}
+function metinDoldur(s, kelime){
+  return String(s).replace(/\{kelime\}/g, (kelime || 0).toLocaleString("tr-TR"));
+}
 
 const KOSE = y => `<svg class="ks ${y}" viewBox="0 0 60 60" fill="none" stroke="currentColor"
  stroke-width="1.1"><path d="M6 54 V22 Q6 6 22 6 H54"/>
@@ -399,25 +487,24 @@ function sertifika(K, d, ra){
 
   let ic, sus, taban;
   if(K.tip === "altin"){
+    const A = metinSec("altin", d.length);
     sus = `<div class="cerceve"></div><div class="cerceve2"></div>
       ${KOSE("tl")}${KOSE("tr")}${KOSE("bl")}${KOSE("br")}`;
     ic = `<div class="eyebrow">${TRU("Lingo Türkiye · Hazırlık Programı")}</div>
       <div class="ayrac"><i></i><b></b><i></i></div>
       <h1>${TRU("Altın Hazırlık Sertifikası")}</h1>
-      <p class="giris">Bu sertifika, şu ana kadar yayınlanmış bölümlerin cevap arşivinden
-        hazırlanan çalışma programını eksiksiz tamamlayan</p>
+      <p class="giris">${A.g}</p>
       <div class="ad" style="margin-top:4.5mm;font-size:${adPunto(KISI,"altin")}pt">
         ${TRU(KISI)}</div>
       <div class="unvan">${TRU(U.simdi.ad)}</div>
       ${ist}
-      <p class="giris kucukAlt">adına, ${d.length.toLocaleString("tr-TR")} kelime çözmüş
-        olmasına rağmen hala “ben pek bilmiyorum” dediği için düzenlenmiştir.</p>
+      <p class="giris kucukAlt">${metinDoldur(A.a, d.length)}</p>
       <div class="nisanBas" style="margin-top:auto">${TRU("Başlıca Nişanlar")}</div>
       <div class="nisan">${nis}</div>`;
     taban = `<div class="imzaBlok"><div class="tarihBuyuk">${tarih}</div>
       <div class="cizgiA"></div><div class="kim">${TRU("Düzenleme tarihi")}</div></div>${imza}`;
   } else {
-    const L = LAKAP[K.tip];
+    const L = metinSec(K.tip, d.length);
     const adH = K.tip === "gumus"
       ? `<div class="defneSar">${DAL("")}
           <div class="adSar"><div class="ad defneAd"
@@ -429,12 +516,12 @@ function sertifika(K, d, ra){
     ic = `<div class="eyebrow">${TRU("Lingo Türkiye · Hazırlık Programı")}</div>
       <h1>${TRU(K.ad + " Hazırlık Sertifikası")}</h1>
       ${adH}
-      <div class="lakap">${TRU(L[0])}</div>
-      <p class="giris">${L[1]}</p>
+      <div class="lakap">${TRU(L.l)}</div>
+      <p class="giris">${metinDoldur(L.g, d.length)}</p>
       <div class="nisanBas">${TRU("Kazanılan Nişanlar")} · ${ra.length}</div>
       <div class="nisan">${nis}</div>
       ${ist}
-      <p class="dipnot">${L[2]}</p>`;
+      <p class="dipnot">${metinDoldur(L.d, d.length)}</p>`;
     taban = `<span class="tarihK">${tarih}<em>${TRU("Düzenleme tarihi")}</em></span>${imza}`;
   }
   return `<div class="kadraj" id="kadraj"><div class="sayfa" lang="tr" style="${stil}">
