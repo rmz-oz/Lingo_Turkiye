@@ -4,7 +4,7 @@
    internet varken toplu yollar. Gonderilen: zaman, kisi, tur, sayfa, kelime, hak, detay. */
 (function(){
   var URL_ = "https://script.google.com/macros/s/AKfycbxzJs95sQsFsdx17EUPjgp4qRRAekBhgm_wXAFNy75D82TZ3FRrvY-Mmxo0FlXZqhTvrg/exec";
-  var KAYITSIZ = "__kayitsiz__", K_KUYRUK = "lingo_gonder_kuyruk", K_SON = "lingo_gonder_son_",
+  var KAYITSIZ = "__kayitsiz__", K_KUYRUK = "lingo_gonder_kuyruk", K_YOLDA = "lingo_gonder_yolda", K_SON = "lingo_gonder_son_",
       K_IZIN = "lingo_fiko_defter_", SAYFA = (location.pathname.split("/").pop() || "index.html").replace(".html","");
 
   function oku(k, v){ try{ var s = localStorage.getItem(k); return s === null ? v : s; }catch(e){ return v; } }
@@ -22,24 +22,31 @@
   }
   var zam = null, ugras = false;
   function planla(){ clearTimeout(zam); zam = setTimeout(gonder, 1500); }
+  function dus(n){ var k = kuyruk().slice(n); yaz(K_KUYRUK, JSON.stringify(k)); }
+  /* yolda: fetch cevabi gelmeden sayfa kapanirsa (keepalive yine teslim eder) bir sonraki
+     acilista ayni kayitlar tekrar gitmesin diye kac kaydin yolda oldugu not edilir */
   function gonder(){
     if(ugras || !navigator.onLine) return;
     var d = kuyruk(); if(!d.length) return;
-    ugras = true;
+    ugras = true; yaz(K_YOLDA, String(d.length));
     fetch(URL_, {method:"POST", mode:"no-cors", keepalive:true,
                  headers:{"Content-Type":"text/plain"}, body: JSON.stringify(d)})
-      .then(function(){ var k = kuyruk().slice(d.length); yaz(K_KUYRUK, JSON.stringify(k)); })
-      .catch(function(){})
-      .then(function(){ ugras = false; if(kuyruk().length) setTimeout(gonder, 30000); });
+      .then(function(){ dus(d.length); return true; })
+      .catch(function(){ return false; })
+      .then(function(ok){ try{ localStorage.removeItem(K_YOLDA); }catch(e){}
+                          ugras = false;   /* bu arada birikenler hemen, hata varsa 30 sn sonra */
+                          if(kuyruk().length) setTimeout(gonder, ok ? 1000 : 30000); });
   }
-  /* sayfa kapanirken kalanlari beacon ile at; basarili sayilir, tekrar denemez */
+  /* sayfa kapanirken kalanlari beacon ile at; fetch zaten yoldaysa ona birakilir (keepalive) */
   function kapanis(){
+    if(ugras) return;
     var d = kuyruk(); if(!d.length || !navigator.sendBeacon) return;
     try{
       if(navigator.sendBeacon(URL_, new Blob([JSON.stringify(d)], {type:"text/plain"})))
         yaz(K_KUYRUK, "[]");
     }catch(e){}
   }
+  (function(){ var n = +oku(K_YOLDA, "0"); if(n > 0){ dus(n); } try{ localStorage.removeItem(K_YOLDA); }catch(e){} })();
   window.addEventListener("online", gonder);
   window.addEventListener("pagehide", kapanis);
   document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "hidden") kapanis(); });
