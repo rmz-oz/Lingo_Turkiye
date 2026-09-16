@@ -15,6 +15,13 @@
 
   /* ---- kuyruk ---- */
   function kuyruk(){ try{ var d = JSON.parse(oku(K_KUYRUK, "[]")); return Array.isArray(d) ? d : []; }catch(e){ return []; } }
+  /* Turkiye saati (UTC+3, yaz saati yok), "16.09.2026 09:47" */
+  function zaman(d){
+    var t = new Date((d instanceof Date ? d.getTime() : +d || Date.now()) + 3 * 3600000);
+    var iki = function(n){ return (n < 10 ? "0" : "") + n; };
+    return iki(t.getUTCDate()) + "." + iki(t.getUTCMonth() + 1) + "." + t.getUTCFullYear() +
+           " " + iki(t.getUTCHours()) + ":" + iki(t.getUTCMinutes());
+  }
   function ekle(o){
     if(!acik()) return;
     var d = kuyruk(); d.push(o); while(d.length > 500) d.shift();
@@ -65,7 +72,7 @@
     }
     for(var i = 0; i < yeni.length; i++){
       var s = yeni[i]; if(!s || !s.w || !(s.t > son)) continue;
-      ekle({t: new Date(s.t).toISOString(), kisi: ad, tur: "kelime", sayfa: SAYFA,
+      ekle({t: zaman(s.t), kisi: ad, tur: "kelime", sayfa: SAYFA,
             kelime: s.w, hak: s.k, detay: ""});
       if(s.t > enSon) enSon = s.t;
     }
@@ -97,7 +104,7 @@
   }, true);
   function hata(m){
     var k = kisi(); if(!k) return;
-    ekle({t: new Date().toISOString(), kisi: k, tur: "hata", sayfa: SAYFA, kelime: "", hak: "",
+    ekle({t: zaman(), kisi: k, tur: "hata", sayfa: SAYFA, kelime: "", hak: "",
           detay: (m + " || son: " + hamle.join(" > ")).slice(0, 900)});
   }
   window.addEventListener("error", function(e){
@@ -108,7 +115,7 @@
   });
   function acilis(){
     var k = kisi(); if(!k) return;
-    ekle({t: new Date().toISOString(), kisi: k, tur: "acilis", sayfa: SAYFA, kelime: "", hak: "",
+    ekle({t: zaman(), kisi: k, tur: "acilis", sayfa: SAYFA, kelime: "", hak: "",
           detay: cihaz() + " | " + (window.LG_SURUM || "")});
   }
 
