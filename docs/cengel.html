@@ -506,7 +506,7 @@ function lobi(){
   const pay = $("#lpay"); if(pay) pay.onclick = () => paylas(gKey);
   document.querySelectorAll("[data-kademe]").forEach(b => b.onclick = () => { const t = b.dataset.kademe;
     if(!acikMi(t)){ uyar("Önce " + KILIT_ESIK + " " + (t === "orta" ? "kolay" : "orta") + " bulmaca çöz"); return; } secici(t); });
-  document.querySelectorAll("[data-tema]").forEach(b => b.onclick = () => secici("tema-" + b.dataset.tema));
+  document.querySelectorAll("#lobi .tema [data-tema]").forEach(b => b.onclick = () => secici("tema-" + b.dataset.tema));
   $("#ltekrar").onclick = tekrarKur;
 }
 
