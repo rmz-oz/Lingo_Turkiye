@@ -18,6 +18,7 @@
   "shortcuts": [
     { "name": "Ailecük", "url": "./masa.html" },
     { "name": "Papatya Çayı", "url": "./papatya.html" },
+    { "name": "Çengel", "url": "./cengel.html" },
     { "name": "Final alıştırması", "url": "./final.html" }
   ]
 }
