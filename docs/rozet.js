@@ -88,13 +88,30 @@ function LG_papatyaMeta(ad){
   try{ const v = JSON.parse(localStorage.getItem("lingo_papatya_meta_"+ad) || "null");
        return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
 }
+/* --- Cengel meta durumu: lingo_cengel_<kisi> kaydindan ozet --- */
+function LG_cengelMeta(ad){
+  try{
+    const k = JSON.parse(localStorage.getItem("lingo_cengel_"+ad) || "null");
+    if(!k || typeof k !== "object") return {};
+    const b = k.b || {}, biten = Object.keys(b).filter(x => b[x] && b[x].bitti);
+    const say = on => biten.filter(x => x.indexOf(on) === 0).length;
+    const temaTam = {};
+    biten.filter(x => x.indexOf("tema-") === 0).forEach(x => { const t = x.split(":")[0]; temaTam[t] = (temaTam[t]||0) + 1; });
+    return {
+      cozulen: biten.length, zor: say("zor:"), gun: say("gun:"), tekrar: say("tekrar:"),
+      temaBitti: Object.keys(temaTam).filter(t => temaTam[t] >= 5).length,
+      yardimsiz: biten.filter(x => !(b[x].ip > 0)).length,
+      enSeri: (k.seri && k.seri.n) || 0
+    };
+  }catch(e){ return {}; }
+}
 /* --- Final alistirmasi meta durumu --- */
 function LG_finalMeta(ad){
   try{ const v = JSON.parse(localStorage.getItem("lingo_final_"+ad) || "null");
        return v && typeof v === "object" ? v : {}; }catch(e){ return {}; }
 }
-function LG_rozet(d, p, kv, pv){
-  p = p || {}; const K = kv || {}, P = pv || {};
+function LG_rozet(d, p, kv, pv, cv){
+  p = p || {}; const K = kv || {}, P = pv || {}, C = cv || {};
   const bil = d.filter(r=>r.k>0), ilk = bil.filter(r=>r.k===1).length;
   const sonhak = bil.filter(r=>r.k>=5).length;
   let seri = 0, enSeri = 0;
@@ -247,19 +264,28 @@ function LG_rozet(d, p, kv, pv){
    {e:"🫖",a:"Demlik",z:4,         s:"bir papatyanın 12 saksısını doldur", v:(P.demlik||0)>=1},
    {e:"🌱",a:"Filizsiz",z:5,       s:"hiç yardım almadan 12/12",      v:!!P.yardimsiz},
    {e:"📅",a:"Yedi Gün",z:5,       s:"yedi gün üst üste günün papatyası", v:(P.enSeri||0)>=7},
-   {e:"🌾",a:"Bahçıvan",z:4,       s:"papatyalarda 500 kelime",       v:(P.kelime||0)>=500}
+   {e:"🌾",a:"Bahçıvan",z:4,       s:"papatyalarda 500 kelime",       v:(P.kelime||0)>=500},
+   /* --- Cengel --- */
+   {e:"🔗",a:"İlk Çengel",z:2,     s:"bir çengeli bitir",              v:(C.cozulen||0)>=1},
+   {e:"🪝",a:"Çengelci",z:3,       s:"10 çengel",                      v:(C.cozulen||0)>=10},
+   {e:"🧿",a:"Çengel Ustası",z:4,  s:"40 çengel",                      v:(C.cozulen||0)>=40},
+   {e:"✨",a:"Kendi Başına",z:4,   s:"5 çengeli hiç yardımsız bitir",  v:(C.yardimsiz||0)>=5},
+   {e:"💎",a:"Zor Çengel",z:4,     s:"5 zor çengel",                   v:(C.zor||0)>=5},
+   {e:"🗂",a:"Tema Gezgini",z:4,   s:"3 temanın hepsini bitir",        v:(C.temaBitti||0)>=3},
+   {e:"🔥",a:"Yedi Gün Çengel",z:5,s:"yedi gün üst üste günün çengeli", v:(C.enSeri||0)>=7},
+   {e:"🧠",a:"Tekrar Ustası",z:4,  s:"zorlandığın kelimelerden çengel çöz", v:(C.tekrar||0)>=1}
   ];
 }
 /* kazanilan rozetler, en zordan en kolaya; sertifikada ilk siradakiler basilir */
 function LG_zorSirali(ad){
-  const hepsi = LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad), LG_papatyaMeta(ad));
+  const hepsi = LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad), LG_papatyaMeta(ad), LG_cengelMeta(ad));
   return hepsi.map((r, i) => [r, i]).filter(x => x[0].v)
               .sort((a, b) => (b[0].z - a[0].z) || (b[1] - a[1]))
               .map(x => x[0]);
 }
 function LG_acik(ad){
   return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad),
-                  LG_papatyaMeta(ad)).filter(r=>r.v); }
+                  LG_papatyaMeta(ad), LG_cengelMeta(ad)).filter(r=>r.v); }
 /* yeni acilan rozetleri dondur; ilk cagrida sessizce isaretler */
 function LG_yeni(ad){
   if(!ad || ad === LG_KAYITSIZ) return [];
@@ -270,7 +296,7 @@ function LG_yeni(ad){
   try{ localStorage.setItem("lingo_rozet_"+ad, JSON.stringify(acik)); }catch(e){}
   if(bilinen === null) return [];                     /* ilk kurulum: duyurma */
   const yeniAd = acik.filter(a => bilinen.indexOf(a) < 0);
-  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad), LG_papatyaMeta(ad))
+  return LG_rozet(LG_defter(ad), LG_plan(ad), LG_kervanMeta(ad), LG_papatyaMeta(ad), LG_cengelMeta(ad))
     .filter(r => yeniAd.indexOf(r.a) >= 0);
 }
 /* --- rozet vitrini: en fazla 3 favori --- */

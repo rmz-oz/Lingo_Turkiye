@@ -363,6 +363,7 @@ button{font:inherit;cursor:pointer;color:inherit}
 
 <script src="ses.js?v=3"></script>
 <script src="odul.js?v=1"></script>
+<script src="rozet.js?v=8"></script>
 <script>
 const $ = s => document.querySelector(s);
 const TRU = s => s.replace(/i/g,"İ").replace(/ı/g,"I").toUpperCase();
@@ -730,9 +731,22 @@ function kontrol(hk){
     }
   });
 }
+/* çözülen kelime kişinin çalışma defterine girer: yardımsız k:2 (Papatya gibi), yardımla k:4;
+   rapor, ünvan ve rozetler oradan beslenir */
+function defterYaz(w, yardimli){
+  const ad = kisi(); if(!ad) return;
+  try{
+    const a = "lingo_defter_" + ad, d = JSON.parse(localStorage.getItem(a) || "[]");
+    const kel = w.k.replace(/İ/g, "i").replace(/I/g, "ı").toLowerCase();
+    d.push({w: kel, n: kel.length, h: kel[0], k: yardimli ? 4 : 2, t: Date.now()});
+    while(d.length > 3000) d.shift();
+    localStorage.setItem(a, JSON.stringify(d));
+  }catch(e){}
+}
 function coz(w, ipli){
   D.coz.push(w.i);
   if(ipli && !D.ipli.includes(w.i)) D.ipli.push(w.i);
+  defterYaz(w, D.ipli.includes(w.i));
   if(!D.ipli.includes(w.i)){ D.puan += w.k.length * 2; if(ANAHTAR.startsWith("tekrar:") && K.zor[w.k]) delete K.zor[w.k]; }
   w.hucreler.forEach((k, j) => { const e = izgEl[k]; harfYaz(k, false);
     e.style.animationDelay = (j * 45) + "ms"; e.classList.remove("dalga"); void e.offsetWidth; e.classList.add("dalga"); });
@@ -833,6 +847,8 @@ function bitir(){
   yaz();
   try{ LG_Odul.kazan(kazanc); }catch(e){} akceYaz();
   konfeti(); LG_ses("rozet");
+  let yeniRoz = [], yeniUnvan = null;
+  try{ if(kisi()){ yeniRoz = LG_yeni(kisi()); yeniUnvan = LG_unvanYeni(kisi()); } }catch(e){}
   const o = document.createElement("div"); o.className = "ortu";
   const sonraki = sonrakiAnahtar();
   o.innerHTML = `<div class="kart"><div class="tac">🏆</div><h2>${tur === "gun" ? "Günün çengeli çözüldü" : "Çengel çözüldü"}</h2>
@@ -840,6 +856,9 @@ function bitir(){
     <div class="say"><div><b>${kelimeler.length}</b><span>kelime</span></div>
       <div><b>${D.puan}</b><span>puan</span></div><div><b>${D.ip}</b><span>yardım</span></div></div>
     <div class="akcekazan">+${kazanc} akçe kazandın${temiz < kelimeler.length ? " (yardımsız " + temiz + " kelime)" : ""}</div>
+    ${yeniUnvan ? `<div class="akcekazan" style="color:var(--mor_yazi)">Yeni ünvan: ${yeniUnvan.yeni}</div>` : ""}
+    ${yeniRoz.length ? `<div class="akcekazan" style="color:var(--sap_yazi)">Yeni nişan: ${yeniRoz.map(r => r.e + " " + r.a).join(" · ")}</div>` : ""}
+    ${kisi() ? `<p style="margin-top:8px;font-size:12.5px">Kelimeler <b>${kisi()}</b>'in defterine yazıldı; rapor, ünvan ve nişanlar buradan da ilerler.</p>` : ""}
     <div class="ozet">${kelimeler.map(w => `<div><b class="${D.ipli.includes(w.i) ? "ipli" : ""}">${w.k}</b><span>${w.ip}</span></div>`).join("")}</div>
     <div class="dgm">${tur === "gun" ? `<button type="button" class="buton" id="bpay">Paylaş</button>` : `<button type="button" class="buton" id="bkal">Kalsın</button>`}
       <button type="button" class="buton ana" id="bson">${sonraki ? "Sonraki bulmaca ›" : "Lobiye dön"}</button></div></div>`;
@@ -891,7 +910,7 @@ function tekrarKur(){
   yaz(); ac(key);
 }
 function izgaraKur(adaylar, W, H){
-  const h = {}, k = [];
+  const h = {}, k = [], yn = {};
   const al = (x, y) => h[x + "," + y];
   function dene(w, x, y, yon){
     const dx = yon === "y" ? 1 : 0, dy = yon === "y" ? 0 : 1, n = w.length;
@@ -900,11 +919,11 @@ function izgaraKur(adaylar, W, H){
     let kes = 0;
     for(let i = 0; i < n; i++){ const cx = x + dx * i, cy = y + dy * i, v = al(cx, cy);
       if(v === undefined){ if(al(cx + dy, cy + dx) || al(cx - dy, cy - dx)) return -1; }
-      else if(v === w[i]) kes++; else return -1; }
+      else if(v === w[i]){ if((yn[cx + "," + cy] || "").includes(yon)) return -1; kes++; } else return -1; }
     if((kes === 0 && k.length) || kes === n) return -1; return kes;
   }
   function koy(a, x, y, yon){ const dx = yon === "y" ? 1 : 0, dy = yon === "y" ? 0 : 1, hc = [];
-    for(let i = 0; i < a.k.length; i++){ h[(x + dx * i) + "," + (y + dy * i)] = a.k[i]; hc.push([x + dx * i, y + dy * i]); }
+    for(let i = 0; i < a.k.length; i++){ const p = (x + dx * i) + "," + (y + dy * i); h[p] = a.k[i]; yn[p] = (yn[p] || "") + yon; hc.push([x + dx * i, y + dy * i]); }
     k.push({w:a.k, x, y, yon, ip:a.ip, hucre:hc}); }
   const ilk = adaylar.reduce((m, a) => a.k.length > m.k.length ? a : m, adaylar[0]);
   koy(ilk, Math.floor((W - ilk.k.length) / 2), Math.floor(H / 2), "y");
