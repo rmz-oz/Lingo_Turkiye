@@ -548,7 +548,12 @@ function ac(key){
     }
     kelimeler.push(w);
   });
-  D = K.b[key] || {h:{}, coz:[], kilit:[], bitti:0, ip:0, yanlis:0, puan:0, ipli:[]};
+  /* veri yenilenip bulmaca değiştiyse eski ilerleme uymaz: imza tutmuyorsa sıfırdan başla */
+  const imza = B.kelimeler.map(k => k.k + k.x + k.y).join("|");
+  D = K.b[key];
+  if(D && D.imza && D.imza !== imza) D = null;
+  D = D || {h:{}, coz:[], kilit:[], bitti:0, ip:0, yanlis:0, puan:0, ipli:[]};
+  D.imza = imza;
   if(!D.ipli) D.ipli = [];
   if(tur === "tekrar") D.bul = B;
   K.b[key] = D; yaz();
