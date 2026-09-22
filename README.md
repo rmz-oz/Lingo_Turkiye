@@ -26,6 +26,8 @@ Fiko: Lingo Türkiye yarışmacıları için kelime oyunları, alıştırmalar, 
 
 ## 📱 [FİKO'YA EKRANINIZDA BİR MİNDER SERİN](https://rmz-oz.github.io/Lingo_Turkiye/kur.html)
 
+### Kurulum
+
 Linke telefondan dokunun, çıkan **Ana ekrana ekle** tuşuna basın, gerisi kendiliğinden
 olur. Bütün oyunlar, alıştırmalar, çalışma planı, gelişim raporu ve sertifikalar içinde.
 Bir kez kurulduktan sonra internet olmadan da çalışır.
