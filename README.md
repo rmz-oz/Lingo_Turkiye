@@ -1,5 +1,7 @@
 # Tebrikler! Sizler bizim gururumuzsunuz. 🏆
 
+Fiko: Lingo Türkiye yarışmacıları için kelime oyunları, alıştırmalar, çalışma planı ve sertifikalar. Telefona kurulan, internetsiz de çalışan bir uygulama.
+
 ## 👩 Serpil &nbsp;·&nbsp; 👧 Zeynep
 
 ### Lingo Türkiye'de başarılar!
